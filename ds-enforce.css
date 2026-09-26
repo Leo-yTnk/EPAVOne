@@ -249,6 +249,10 @@
   --button-primary-bg: var(--button-bg-default);
   --card-radius: var(--radius-xl);
   --navigation-active-bg: var(--surface-selected);
+  --navigation-island-height: 3.75rem;
+  --navigation-island-bg: color-mix(in srgb, var(--color-bg-surface) 68%, transparent);
+  --navigation-island-border: color-mix(in srgb, var(--color-border-subtle) 72%, transparent);
+  --navigation-item-hover-bg: color-mix(in srgb, var(--color-bg-surface-subtle) 56%, transparent);
   --chart-grid-color: var(--color-chart-grid);
 }
 
@@ -467,6 +471,19 @@
 .ds-shadow-sm { box-shadow: var(--shadow-sm); }
 .ds-shadow-md { box-shadow: var(--shadow-md); }
 .ds-shadow-lg { box-shadow: var(--shadow-lg); }
+
+/* COMPONENTS: Navigation island ------------------------------------------ */
+.ds-navigation-island {
+  box-sizing: border-box;
+  height: var(--navigation-island-height);
+  min-height: var(--navigation-island-height);
+  border: 1px solid var(--navigation-island-border);
+  border-radius: var(--radius-xl);
+  background: var(--navigation-island-bg);
+  box-shadow: var(--shadow-sm);
+  backdrop-filter: blur(0.5rem);
+  -webkit-backdrop-filter: blur(0.5rem);
+}
 
 /* COMPONENTS: Button ------------------------------------------------------ */
 .ds-btn {

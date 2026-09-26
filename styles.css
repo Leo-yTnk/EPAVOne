@@ -76,13 +76,6 @@ a { color: inherit; }
   pointer-events: none;
 }
 .header-island {
-  min-height: 3.75rem;
-  border: 1px solid color-mix(in srgb, var(--border-subtle) 72%, transparent);
-  border-radius: var(--radius-xl);
-  background: color-mix(in srgb, var(--surface-primary) 68%, transparent);
-  box-shadow: var(--shadow-sm);
-  backdrop-filter: blur(0.5rem);
-  -webkit-backdrop-filter: blur(0.5rem);
   pointer-events: auto;
 }
 .brand {
@@ -118,7 +111,7 @@ a { color: inherit; }
   padding: var(--space-1);
   border: 0;
   border-radius: calc(var(--radius-xl) - var(--space-2));
-  background: color-mix(in srgb, var(--surface-secondary) 72%, transparent);
+  background: transparent;
 }
 .tab {
   position: relative;
@@ -168,7 +161,7 @@ a { color: inherit; }
   font: 650 var(--label-md-size)/1 var(--font-sans);
 }
 .header-action:hover,
-.account-button:hover { color: var(--text-primary); background: var(--surface-secondary); }
+.account-button:hover { color: var(--text-primary); background: var(--navigation-item-hover-bg); }
 .header-divider { width: 1px; height: 1.5rem; background: var(--border-subtle); }
 .account-avatar { display: grid; place-items: center; width: 1.875rem; height: 1.875rem; border-radius: var(--radius-full); color: var(--button-content-default); background: var(--brand-700); font-size: var(--label-sm-size); }
 
