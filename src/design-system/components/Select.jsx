@@ -9,6 +9,7 @@ export function NativeSelect({ label, helper, id, children, className='', ...pro
 export function Select({ label, options, value, onChange, disabled=false, helper }) {
   const autoId = useId();
   const labelId = autoId + '-label';
+  const valueId = autoId + '-value';
   const [open, setOpen] = useState(false);
   const triggerRef = useRef(null);
   const menuRef = useRef(null);
@@ -52,7 +53,7 @@ export function Select({ label, options, value, onChange, disabled=false, helper
 
   return <div className="ds-field ds-selectbox" onKeyDown={onKeyDown}>
     <span className="ds-input-label" id={labelId}>{label}</span>
-    <button ref={triggerRef} className="ds-select-trigger" type="button" aria-haspopup="listbox" aria-expanded={open} aria-labelledby={labelId} aria-label={label + ': ' + (selected?.label ?? '')} disabled={disabled} onClick={() => setOpen(current => !current)}><span>{selected?.label}</span><span aria-hidden="true">⌄</span></button>
+    <button ref={triggerRef} className="ds-select-trigger" type="button" aria-haspopup="listbox" aria-expanded={open} aria-labelledby={labelId + ' ' + valueId} disabled={disabled} onClick={() => setOpen(current => !current)}><span id={valueId}>{selected?.label}</span><span aria-hidden="true">⌄</span></button>
     {open && <div ref={menuRef} className="ds-select-menu" role="listbox" aria-labelledby={labelId}>{options.map(option => <Option key={option.value} selected={option.value === value} disabled={option.disabled} onClick={() => choose(option)}>{option.label}</Option>)}</div>}
     {helper && <span className="ds-input-helper">{helper}</span>}
   </div>;
