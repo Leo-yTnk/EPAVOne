@@ -8,10 +8,32 @@ body {
     linear-gradient(90deg, var(--color-chart-grid) 1px, transparent 1px);
   background-size: 2rem 2rem;
   color: var(--text-primary);
+  transition: background-color var(--motion-base) var(--ease-out);
+}
+[data-page="home"] body {
+  background-image:
+    linear-gradient(var(--color-chart-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-chart-grid) 1px, transparent 1px),
+    radial-gradient(circle at 10% 8%, color-mix(in srgb, var(--ref-color-one-300) 24%, transparent) 0, transparent 31rem),
+    radial-gradient(circle at 88% 20%, color-mix(in srgb, var(--ref-color-insights-300) 20%, transparent) 0, transparent 29rem),
+    radial-gradient(circle at 52% 72%, color-mix(in srgb, var(--ref-color-accent-pink-300) 15%, transparent) 0, transparent 34rem),
+    linear-gradient(135deg, color-mix(in srgb, var(--ref-color-one-100) 18%, transparent), color-mix(in srgb, var(--ref-color-accent-peach-100) 12%, transparent));
+  background-size: 2rem 2rem, 2rem 2rem, auto, auto, auto, auto;
+  background-attachment: scroll, scroll, fixed, fixed, fixed, fixed;
+}
+[data-theme="dark"][data-page="home"] body {
+  background-image:
+    linear-gradient(var(--color-chart-grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-chart-grid) 1px, transparent 1px),
+    radial-gradient(circle at 10% 8%, color-mix(in srgb, var(--ref-color-one-500) 14%, transparent) 0, transparent 31rem),
+    radial-gradient(circle at 88% 20%, color-mix(in srgb, var(--ref-color-insights-500) 10%, transparent) 0, transparent 29rem),
+    radial-gradient(circle at 52% 72%, color-mix(in srgb, var(--ref-color-accent-pink-600) 8%, transparent) 0, transparent 34rem);
+  background-size: 2rem 2rem, 2rem 2rem, auto, auto, auto;
+  background-attachment: scroll, scroll, fixed, fixed, fixed;
 }
 a { color: inherit; }
 .shell {
-  width: min(100% - (2 * var(--space-6)), 90rem);
+  width: min(100% - (2 * var(--space-7)), 90rem);
   min-height: 100vh;
   margin-inline: auto;
   display: flex;
@@ -91,22 +113,6 @@ a { color: inherit; }
   border-radius: var(--radius-lg);
   background: var(--surface-secondary);
 }
-.tab-indicator {
-  position: absolute;
-  z-index: var(--z-base);
-  inset-block: var(--space-1);
-  left: var(--space-1);
-  border-radius: var(--radius-md);
-  background: var(--button-bg-default);
-  box-shadow: var(--shadow-sm);
-  pointer-events: none;
-}
-.tab-indicator.is-ready {
-  transition:
-    width var(--motion-slow) var(--ease-out),
-    transform var(--motion-slow) var(--ease-out),
-    background-color var(--motion-base) var(--ease-out);
-}
 .tab {
   position: relative;
   z-index: 1;
@@ -118,11 +124,19 @@ a { color: inherit; }
   background: transparent;
   font: 650 var(--label-md-size)/1 var(--font-sans);
   cursor: pointer;
-  transition: color var(--motion-base) var(--ease-out), transform var(--motion-fast) var(--ease-press);
+  transition:
+    color var(--motion-base) var(--ease-out),
+    background-color var(--motion-base) var(--ease-out),
+    box-shadow var(--motion-base) var(--ease-out),
+    transform var(--motion-fast) var(--ease-press);
 }
 .tab:hover { color: var(--text-primary); }
 .tab:active { transform: scale(var(--press-scale)); }
-.tab[aria-selected="true"] { color: var(--button-content-default); }
+.tab[aria-selected="true"] {
+  color: var(--button-content-default);
+  background: var(--button-bg-default);
+  box-shadow: var(--shadow-sm);
+}
 .tab:focus-visible,
 .brand:focus-visible,
 .shortcut:focus-visible,
@@ -139,6 +153,8 @@ main {
   flex: 1;
   min-width: 0;
 }
+.page-forward { --page-direction: 1; }
+.page-backward { --page-direction: -1; }
 .page-leaving {
   animation: page-leave var(--motion-fast) var(--ease-exit) both;
   pointer-events: none;
@@ -195,8 +211,8 @@ main {
   content: '';
   position: absolute;
   inset: var(--space-2);
-  border: 1px dashed color-mix(in srgb, currentColor 24%, transparent);
-  border-radius: calc(var(--radius-xl) - var(--space-1));
+  border: 2px dashed color-mix(in srgb, currentColor 28%, transparent);
+  border-radius: calc(var(--radius-xl) - var(--space-2));
   pointer-events: none;
 }
 .hero-panel .panel-kicker { color: color-mix(in srgb, var(--brand-300) 76%, white); }
@@ -230,6 +246,7 @@ main {
   margin: var(--space-3) 0 var(--space-5);
 }
 .section-heading h2 { margin: var(--space-2) 0 0; }
+.section-kicker { color: var(--text-brand); }
 .section-heading p { max-width: 25rem; margin: 0; color: var(--text-secondary); line-height: 1.5; }
 .shortcuts {
   display: grid;
@@ -356,7 +373,7 @@ main {
 }
 
 @media (max-width: 56.25rem) {
-  .shell { width: min(100% - (2 * var(--space-5)), 90rem); }
+  .shell { width: min(100% - (2 * var(--space-6)), 90rem); }
   .hero { grid-template-columns: 1fr; gap: var(--space-5); }
   .hero-panel { max-width: 40.625rem; }
   .shortcuts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -366,7 +383,7 @@ main {
   .theme-toggle { margin-left: auto; }
 }
 @media (max-width: 37.5rem) {
-  .shell { width: min(100% - (2 * var(--space-4)), 90rem); }
+  .shell { width: min(100% - (2 * var(--space-5)), 90rem); }
   .hero,
   .detail,
   .workspace { padding: var(--space-7) 0; }
@@ -380,7 +397,6 @@ main {
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .tab-indicator,
   .tab,
   .shortcut,
   .brand-mark { transition: none; }

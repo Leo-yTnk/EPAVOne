@@ -42,7 +42,7 @@ const navigationStatus = document.querySelector('#navigation-status');
 const toggle = document.querySelector('#theme-toggle');
 
 function tabNavigation() {
-  tabList.innerHTML = `<span class="tab-indicator" aria-hidden="true"></span>${tabs.map(({ key, label }) => `<button class="tab" type="button" role="tab" id="tab-${key}" aria-controls="main" aria-selected="false" tabindex="-1" data-tab="${key}">${label}</button>`).join('')}`;
+  tabList.innerHTML = tabs.map(({ key, label }) => `<button class="tab" type="button" role="tab" id="tab-${key}" aria-controls="main" aria-selected="false" tabindex="-1" data-tab="${key}">${label}</button>`).join('');
 }
 
 function parseRoute() {
@@ -83,7 +83,7 @@ function home() {
       <div class="mini-flow"><span><b>1</b> Planeje com o Planner</span><span><b>2</b> Entenda com o Insights</span><span><b>3</b> Prepare com o Writer</span></div>
     </aside>
   </section>
-  <section id="ferramentas" aria-labelledby="tools-title"><div class="section-heading"><div><span class="ds-overline" style="color:var(--text-brand)">Ferramentas</span><h2 id="tools-title" class="ds-heading-h2">Escolha por onde começar</h2></div><p class="ds-body-sm-regular">Acesse o espaço de cada ferramenta e conheça seu papel na rotina do EPAV.</p></div>
+  <section id="ferramentas" aria-labelledby="tools-title"><div class="section-heading"><div><span class="section-kicker ds-overline">Ferramentas</span><h2 id="tools-title" class="ds-heading-h2">Escolha por onde começar</h2></div><p class="ds-body-sm-regular">Acesse o espaço de cada ferramenta e conheça seu papel na rotina do EPAV.</p></div>
     <div class="shortcuts">${Object.keys(products).map(card).join('')}</div></section>`;
 }
 
@@ -146,26 +146,17 @@ function productTheme(key) {
   return 'one';
 }
 
-function moveTabIndicator(key, animate = true) {
-  const selectedTab = tabList.querySelector(`[data-tab="${key}"]`);
-  const indicator = tabList.querySelector('.tab-indicator');
-  if (!selectedTab || !indicator) return;
-  if (animate) indicator.classList.add('is-ready');
-  indicator.style.width = `${selectedTab.offsetWidth}px`;
-  indicator.style.transform = `translateX(${selectedTab.offsetLeft - parseFloat(getComputedStyle(tabList).paddingLeft)}px)`;
-}
-
-function selectTab(key, animate = true) {
+function selectTab(key) {
   tabList.querySelectorAll('[role="tab"]').forEach(tab => {
     const selected = tab.dataset.tab === key;
     tab.setAttribute('aria-selected', String(selected));
     tab.tabIndex = selected ? 0 : -1;
   });
-  moveTabIndicator(key, animate);
 }
 
 function commitPage(route) {
   document.documentElement.dataset.product = productTheme(route.key);
+  document.documentElement.dataset.page = route.key;
   main.innerHTML = renderContent(route);
   main.setAttribute('role', 'tabpanel');
   main.setAttribute('aria-labelledby', `tab-${route.key}`);
@@ -223,7 +214,8 @@ async function render() {
     const previousKey = renderedSignature?.split('/')[0] || 'home';
     const previousIndex = tabs.findIndex(tab => tab.key === previousKey);
     const nextIndex = tabs.findIndex(tab => tab.key === nextRoute.key);
-    main.style.setProperty('--page-direction', nextIndex >= previousIndex ? '1' : '-1');
+    main.classList.toggle('page-forward', nextIndex >= previousIndex);
+    main.classList.toggle('page-backward', nextIndex < previousIndex);
     commitPage(nextRoute);
     renderedSignature = signature(nextRoute);
 
@@ -273,8 +265,6 @@ tabList.addEventListener('keydown', event => {
   navigateTo(destination.dataset.tab);
 });
 window.addEventListener('hashchange', render);
-window.addEventListener('resize', () => moveTabIndicator(parseRoute().key, false));
 tabNavigation();
-selectTab(parseRoute().key, false);
-requestAnimationFrame(() => tabList.querySelector('.tab-indicator')?.classList.add('is-ready'));
+selectTab(parseRoute().key);
 render();
