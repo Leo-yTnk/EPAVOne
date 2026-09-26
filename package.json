@@ -1,0 +1,33 @@
+{
+  "name": "epavone",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check:architecture": "node scripts/check-architecture.mjs",
+    "verify": "npm run lint && npm run check:architecture && npm run test && npm run build"
+  },
+  "dependencies": {
+    "preact": "^10.27.2"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.2",
+    "@testing-library/preact": "^3.2.4",
+    "eslint": "^9.35.0",
+    "globals": "^16.3.0",
+    "jsdom": "^26.1.0",
+    "prettier": "^3.6.2",
+    "vite": "^7.1.7",
+    "vitest": "^3.2.4",
+    "eslint-plugin-react": "^7.37.5",
+    "@eslint/js": "^9.39.5"
+  }
+}

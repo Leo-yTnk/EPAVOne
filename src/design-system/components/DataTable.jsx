@@ -1,0 +1,4 @@
+import { Card } from './Card.jsx';
+export function DataTable({ columns, rows, caption }) {
+  return <Card className="ds-table-card"><div className="ds-table-wrap"><table className="ds-data-table">{caption && <caption className="sr-only">{caption}</caption>}<thead><tr>{columns.map(column => <th key={column.key} className={column.numeric ? 'is-numeric' : ''}>{column.label}</th>)}</tr></thead><tbody>{rows.map((row,index) => <tr key={row.id ?? index}>{columns.map(column => <td key={column.key} className={column.numeric ? 'is-numeric' : ''}>{column.render ? column.render(row) : row[column.key]}</td>)}</tr>)}</tbody></table></div></Card>;
+}

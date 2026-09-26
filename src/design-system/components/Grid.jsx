@@ -1,0 +1,1 @@
+export function Grid({ as:Component='div', columns=12, className='', children, ...props }) { return <Component className={'ds-grid '+className} style={{'--grid-columns':columns}} {...props}>{children}</Component>; }

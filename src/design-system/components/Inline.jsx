@@ -1,0 +1,1 @@
+export function Inline({ as:Component='div', gap, className='', children, ...props }) { return <Component className={'ds-inline '+className} style={gap?{'--inline-gap':gap}:undefined} {...props}>{children}</Component>; }

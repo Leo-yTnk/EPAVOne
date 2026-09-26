@@ -1,0 +1,1 @@
+export function Divider(props) { return <hr className="ds-divider" {...props}/>; }

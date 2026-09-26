@@ -1,0 +1,2 @@
+import { cx } from '../../shared/utils/cx.js';
+export function Option({ selected=false, disabled=false, children, className='', ...props }) { return <button className={cx('ds-option',className)} type="button" role="option" aria-selected={selected} aria-disabled={disabled||undefined} disabled={disabled} {...props}>{children}</button>; }

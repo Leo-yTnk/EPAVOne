@@ -1,0 +1,1 @@
+export function Tooltip({ label, children }) { return <span className="ds-tooltip-host">{children}<span role="tooltip" className="ds-tooltip">{label}</span></span>; }

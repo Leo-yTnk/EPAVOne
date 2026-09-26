@@ -1,0 +1,2 @@
+import { Badge, Card, PageHeader } from '../../design-system/components/index.js';
+export function PlannerRoutes() { return <section className="product-page"><PageHeader eyebrow="EPAVPlanner" title="Uma semana bem planejada faz diferença." description="O produto tem boundary próprio e só importa o design system e shared."/><Card className="placeholder-card"><Badge>Em desenvolvimento</Badge><h2 className="ds-heading-h3">Planner isolado</h2><p>Componentes específicos do Planner ficarão em <code>src/products/planner</code>.</p></Card></section>; }

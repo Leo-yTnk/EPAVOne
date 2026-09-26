@@ -1,0 +1,1 @@
+export function Icon({ children, label, size='1.125rem', ...props }) { return <svg className="ds-icon" width={size} height={size} viewBox="0 0 24 24" aria-hidden={label?undefined:'true'} aria-label={label} {...props}>{children}</svg>; }

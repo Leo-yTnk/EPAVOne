@@ -2,60 +2,81 @@
 
 Portal do EPAV para **EPAVInsights**, **EPAVPlanner** e **EPAVWriter**.
 
+## Stack
+
+- Preact + JSX
+- Vite
+- CSS modular do design system
+- Vitest + Testing Library
+- ESLint + Prettier
+- GitHub Actions
+
 ## Executar
 
-Abra `index.html` em um navegador ou sirva a pasta com um servidor estático.
+```bash
+npm install
+npm run dev
+```
 
-As rotas usam fragmentos (`#/...`) para continuar funcionando em hospedagem estática sem regras de rewrite. O shell aceita subrotas profundas, por exemplo:
+Validação completa:
+
+```bash
+npm run verify
+```
+
+## Estrutura
+
+```
+src/
+├── app/                 # shell, router, theme e bootstrap
+├── design-system/
+│   ├── components/      # um componente público por arquivo
+│   └── styles/          # tokens, base e famílias de componentes
+├── products/
+│   ├── home/
+│   ├── insights/
+│   ├── planner/
+│   └── writer/
+├── shared/              # erros, serviços e utilitários cross-product
+└── dev/
+    └── component-lab/   # laboratório, fora da home de produção
+```
+
+As rotas continuam em hash para suportar hospedagem estática:
 
 ```
 #/insights/clientes/123/historico
-#/insights/indicadores
 #/planner
 #/writer
+#/dev/components
 ```
+
+## Regras importantes
+
+- Produto não importa internals de outro produto.
+- UI de produto não acessa Supabase ou `fetch` diretamente; usa services.
+- Não criar source code de aplicação na raiz.
+- Não usar `transition: all`, `!important` ou prefixo `yc-*`.
+- Inline style só é permitido para CSS custom properties derivadas de dados.
+- **Todo Card é stitched por padrão.** Use o componente `Card`; não crie uma superfície de card manual.
+- Componentes compartilhados entram em `src/design-system` ou `src/shared`, nunca dentro de outro produto.
+
+As regras são verificadas por `scripts/check-architecture.mjs` e pelo workflow de CI.
 
 ## Design system
 
-A fundação do EPAVOne é canônica neste repositório. Ela **não é mais uma cópia a ser sincronizada do Yourcipe**.
+A fonte canônica do DS está em:
 
-- `ds-enforce.css`: tokens primitivos, semânticos e de componentes + primitives reutilizáveis.
-- `styles.css`: composição do portal e do shell; não redefine a fundação.
-- `DESIGN-SYSTEM-V1.md`: decisões, princípios, arquitetura, escopo e critérios de fechamento.
+- `src/design-system/components/`
+- `src/design-system/styles/`
+- `DESIGN-SYSTEM-V1.md`
+- `COMPONENT-CATALOG.md`
 
-### Identidade
+O laboratório de componentes fica em **`#/dev/components`**.
 
-- Início do EPAVOne: azul.
-- EPAVPlanner: roxo.
-- EPAVInsights: laranja.
-- EPAVWriter: turquesa.
-- Base: Warm Paper.
-- Display/editorial: DM Serif Display.
-- Hierarquia: Inter Tight.
-- Interface e dados: Inter.
-- Temas claro e escuro.
-- Grid escolar sutil e stitched cards apenas onde ajudam a identidade.
-- Superfícies integradas, com elevação discreta; evitar aparência de caixas empilhadas.
+## Documentação
 
-As fontes são carregadas por **uma única estratégia** no `index.html` via Google Fonts. O CSS não declara `@font-face` duplicado.
-
-## Movimento
-
-Movimento deve explicar estado e continuidade, nunca atrasar trabalho:
-
-- propriedades preferidas: `opacity` e `transform`;
-- sem `transition: all`;
-- sem blur de contêiner em transições de página;
-- `prefers-reduced-motion` deve continuar funcional;
-- duração e easing vêm dos tokens do design system.
-
-## Status da fundação
-
-A fundação está em **v1 RC (release candidate)**. Ela é suficiente para iniciar o fluxo piloto do EPAVInsights.
-
-O rótulo **v1.0** só deve ser congelado depois que a primeira página real do Insights validar em contexto: filtros, métricas, gráficos, tabela/lista, loading, vazio, erro, responsividade e acessibilidade.
-
-
-## Component Lab
-
-A home inclui uma seção **Component Foundation** com valores fictícios para inspeção visual e funcional dos componentes do design system, incluindo controles, navegação, estados, métricas, tabela, gráfico e feedback. Essa seção é um laboratório de validação e não contém dados reais do EPAV.
+- `ARCHITECTURE.md` — boundaries e fluxo técnico.
+- `DESIGN-SYSTEM-V1.md` — decisões visuais e regras de interface.
+- `COMPONENT-CATALOG.md` — componentes públicos.
+- `AGENTS.md` — regras para Codex/Claude/agentes.

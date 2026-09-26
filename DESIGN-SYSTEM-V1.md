@@ -18,7 +18,7 @@ Esses princípios têm prioridade sobre preferências pontuais de cor, raio ou a
 
 EPAVOne é a camada compartilhada. Cada produto tem uma cor de identidade sem criar um design system separado:
 
-- **EPAVOne / EPAVPlanner:** roxo;
+- **EPAVOne:** azul;\n- **EPAVPlanner:** roxo;
 - **EPAVInsights:** laranja;
 - **EPAVWriter:** turquesa.
 
@@ -36,7 +36,7 @@ O carregamento é centralizado no `index.html`; não há `@font-face` duplicado 
 
 - Evitar composição que pareça uma coleção de caixas independentes.
 - Preferir superfícies contínuas e suspensas, com separação por espaço, borda e elevação leve.
-- Stitched/dashed é assinatura visual, não decoração universal.
+- **Todo card é stitched.** O tratamento dashed faz parte do contrato de `Card` e não deve ser aplicado manualmente por página.
 - Grid de fundo deve permanecer sutil e nunca competir com dados.
 
 ### Temas
@@ -283,7 +283,7 @@ Essa página é o teste de estresse que decide o congelamento da v1.0.
 
 ## 12. Component Foundation implementada
 
-A home do EPAVOne funciona como laboratório visual temporário para validar os componentes antes da migração do EPAVInsights.
+O laboratório visual vive em `#/dev/components`, separado da home de produção, e valida os componentes reais antes da migração do EPAVInsights.
 
 ### Fundação e layout
 
@@ -319,7 +319,7 @@ A home do EPAVOne funciona como laboratório visual temporário para validar os 
 - Toolbar;
 - FilterBar;
 - DateRange;
-- Card / Stitched Card;
+- Card — stitched por padrão;
 - Badge / Tag.
 
 ### Feedback
@@ -352,4 +352,19 @@ A home do EPAVOne funciona como laboratório visual temporário para validar os 
 - light/dark;
 - accent por produto.
 
-O Component Lab da home usa somente valores fictícios e existe para inspeção e prova de estresse. Ele não representa a arquitetura final do dashboard.
+O Component Lab usa somente valores fictícios e existe para inspeção e prova de estresse. Ele não representa a arquitetura final do dashboard.
+
+
+## 13. Arquitetura de componentes
+
+A implementação oficial usa Preact/JSX. Componentes públicos vivem individualmente em `src/design-system/components/` e são exportados pelo barrel `index.js`.
+
+Regras:
+
+- uma página compõe componentes; não recria sua aparência;
+- `Card` adiciona `ds-card` + `ds-stitched-card` automaticamente;
+- MetricCard, DataTable e ChartContainer compõem `Card`;
+- Dialog e Drawer também recebem o stitched treatment;
+- styles do DS ficam separados em tokens, base, layout, actions, forms, navigation, data e feedback;
+- estilos específicos de produto ficam dentro do próprio produto;
+- nenhum produto pode importar internals de outro produto.

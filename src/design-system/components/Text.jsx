@@ -1,0 +1,2 @@
+import { cx } from '../../shared/utils/cx.js';
+export function Text({ as:Component='p', size='md', weight='regular', className='', children, ...props }) { return <Component className={cx('ds-text','ds-body-'+size+'-'+weight,className)} {...props}>{children}</Component>; }

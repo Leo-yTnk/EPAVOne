@@ -1,54 +1,91 @@
 # EPAVOne — Component Catalog
 
-Inventário implementado da Component Foundation. O CSS canônico está em `ds-enforce.css`; a home contém exemplos executáveis com dados fictícios.
+Os componentes React-compatible são implementados em **Preact/JSX**, um por arquivo público em `src/design-system/components/`.
 
-| Família | Componente | Estados / variantes |
-|---|---|---|
-| Typography | Text / Heading | display, h1–h6, body, label, caption, overline |
-| Layout | Stack / Inline / Container / Grid / Divider | tokens de gap/spacing |
-| Icon | Icon | currentColor, tamanho base |
-| Action | Button | primary, secondary, ghost, danger; sm/md/lg; loading/disabled/focus/pressed |
-| Action | IconButton | sm/md/lg; hover/focus/pressed/disabled |
-| Form | Input | default, helper, error, success, disabled |
-| Form | Select nativo | hover/focus/disabled/dark |
-| Form | Select + Option | open, selected, highlighted, disabled, keyboard |
-| Form | Checkbox | checked/focus/active/disabled |
-| Form | Radio | checked/focus/active/disabled |
-| Form | Switch | checked/focus/disabled |
-| Form | Slider | progress/focus/disabled |
-| Navigation | Navigation Island | light/dark |
-| Navigation | Nav / NavItem | active/hover/disabled |
-| Navigation | Tabs | active/hover/focus/disabled |
-| Navigation | Breadcrumb | deep routes |
-| Navigation | Sidebar | composed NavItems |
-| Structure | PageHeader | title/context/actions |
-| Structure | Toolbar | groups/actions |
-| Structure | FilterBar | responsive controls |
-| Structure | DateRange | start/end |
-| Data | Card / Stitched Card | hover/elevation |
-| Data | Badge | default/info/success/danger |
-| Data | Tag | default/removable |
-| Insights | MetricCard | positive/negative/neutral trend |
-| Insights | DataTable | header/row hover/numeric |
-| Insights | ChartContainer | header/legend/plot |
-| Feedback | Spinner | md/lg |
-| Feedback | Skeleton | title/line/circle |
-| Feedback | Alert | info/success/warning/danger |
-| Feedback | EmptyState | icon/copy/action |
-| Feedback | ErrorState | danger treatment |
-| Feedback | Dialog | modal/actions; showcase adds Escape + focus trap |
-| Feedback | Drawer | right panel; showcase adds Escape + focus trap |
-| Feedback | Toast | success/error/info + aria-live integration |
-| Feedback | Tooltip | hover/focus |
+## Fundação
+
+| Componente | Arquivo |
+|---|---|
+| Text | `Text.jsx` |
+| Heading | `Heading.jsx` |
+| Icon | `Icon.jsx` |
+| Link | `Link.jsx` |
+| Stack | `Stack.jsx` |
+| Inline | `Inline.jsx` |
+| Container | `Container.jsx` |
+| Grid | `Grid.jsx` |
+| Divider | `Divider.jsx` |
+
+## Interação
+
+| Componente | Estados / variantes |
+|---|---|
+| Button | primary, secondary, ghost, danger; sm/md/lg; loading/disabled |
+| IconButton | sm/md/lg; hover/focus/disabled |
+| Input | helper, error, success, disabled |
+| NativeSelect | select nativo estilizado |
+| Select + Option | open, selected, disabled, keyboard |
+| Checkbox | checked/focus/disabled |
+| Radio | checked/focus/disabled |
+| Switch | checked/focus/disabled |
+| Slider | progress/focus/disabled |
+| Tabs | active/disabled + teclado |
+
+## Navegação e estrutura
+
+- Nav
+- NavItem
+- Breadcrumb
+- Sidebar
+- PageHeader
+- Toolbar
+- FilterBar / FilterControl
+- DateRange
+
+## Data display
+
+- **Card — sempre stitched**
+- Badge
+- Tag
+- MetricCard — compõe Card
+- DataTable — compõe Card
+- ChartContainer — compõe Card
+
+## Feedback
+
+- Spinner
+- Skeleton
+- Alert
+- EmptyState
+- ErrorState
+- Dialog — stitched
+- Drawer — stitched
+- Toast / ToastRegion
+- Tooltip
 
 ## Keyboard contract
 
-- **Tabs:** arrow keys are supported by the global product tabs; the showcase tabs expose correct roles/states.
-- **Select + Option:** Arrow Up/Down, Enter/Space and Escape.
-- **Dialog/Drawer:** Escape closes; Tab/Shift+Tab stay inside while open.
-- **Tooltip:** visible on hover and focus-within.
-- Native form controls preserve native keyboard behavior.
+- Tabs: Arrow Left/Right, Home e End.
+- Select: teclado nativo do trigger + opções acessíveis.
+- Dialog: Escape e focus trap.
+- Drawer: Escape; foco retorna ao elemento anterior.
+- Tooltip: hover e focus-within.
+- Controles nativos preservam comportamento nativo.
 
-## Motion contract
+## Card contract
 
-Animations use component-specific properties and design tokens. `transition: all` is prohibited. Reduced-motion rules remain active.
+Não existe variante de Card sem stitched no design system v1.
+
+```jsx
+<Card>...</Card>
+```
+
+O checker arquitetural bloqueia uso direto de `className="ds-card"` fora de `Card.jsx`.
+
+## Component Lab
+
+Todos os componentes principais podem ser inspecionados em:
+
+```
+#/dev/components
+```

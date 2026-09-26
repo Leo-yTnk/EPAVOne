@@ -1,0 +1,4 @@
+import { Card } from './Card.jsx';
+export function ChartContainer({ title, subtitle, legend='Vendas', data }) {
+  return <Card className="ds-chart-container"><div className="ds-chart-header"><div><div className="ds-chart-title">{title}</div>{subtitle && <div className="ds-chart-subtitle">{subtitle}</div>}</div><div className="ds-chart-legend"><span><i></i>{legend}</span></div></div><div className="ds-chart-plot" role="img" aria-label={title}>{data.map(item => <div key={item.label} className="ds-chart-bar" style={{'--bar-height':item.height+'%'}} data-label={item.label} title={item.value}></div>)}</div></Card>;
+}

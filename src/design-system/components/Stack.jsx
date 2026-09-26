@@ -1,0 +1,1 @@
+export function Stack({ as:Component='div', gap, className='', children, ...props }) { return <Component className={'ds-stack '+className} style={gap?{'--stack-gap':gap}:undefined} {...props}>{children}</Component>; }
