@@ -247,7 +247,7 @@
 
   /* Component tokens */
   --button-primary-bg: var(--button-bg-default);
-  --card-radius: var(--radius-lg);
+  --card-radius: var(--radius-xl);
   --navigation-active-bg: var(--surface-selected);
   --chart-grid-color: var(--color-chart-grid);
 }
@@ -810,10 +810,26 @@
 .ds-card {
   background: var(--surface-primary);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
+  border-radius: var(--card-radius);
   padding: var(--space-5);
   box-shadow: var(--shadow-sm);
   transition: border-color var(--motion-base) var(--ease-out), background-color var(--motion-base) var(--ease-out), box-shadow var(--motion-base) var(--ease-out), transform var(--motion-base) var(--ease-out);
+}
+
+/* Stitched Card is the shared visual treatment for every card surface. */
+.ds-stitched-card {
+  position: relative;
+  border-radius: var(--card-radius);
+  overflow: hidden;
+}
+
+.ds-stitched-card::after {
+  content: '';
+  position: absolute;
+  inset: var(--space-2);
+  border: 2px dashed color-mix(in srgb, currentColor 18%, transparent);
+  border-radius: calc(var(--card-radius) - var(--space-2));
+  pointer-events: none;
 }
 
 .ds-card:hover {
