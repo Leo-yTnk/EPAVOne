@@ -1,6 +1,8 @@
 import { cx } from '../../shared/utils/cx.js';
 
-export function Tag({ removable=false, className='', children, ...props }) {
-  const Component = removable ? 'button' : 'span';
-  return <Component className={cx('ds-tag', removable && 'is-removable', className)} type={removable ? 'button' : undefined} {...props}>{children}</Component>;
+export function Tag({ onRemove, className='', children, ...props }) {
+  if(onRemove){
+    return <button className={cx('ds-tag','is-removable',className)} type="button" onClick={onRemove} {...props}>{children}</button>;
+  }
+  return <span className={cx('ds-tag',className)} {...props}>{children}</span>;
 }

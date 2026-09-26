@@ -1,90 +1,119 @@
 # EPAVOne — Component Catalog
 
-Os componentes React-compatible são implementados em **Preact/JSX**, um por arquivo público em `src/design-system/components/`.
+Os componentes públicos são Preact/JSX e vivem individualmente em `src/design-system/components/`.
 
 ## Fundação
 
-| Componente | Arquivo |
+| Componente | Responsabilidade |
 |---|---|
-| Text | `Text.jsx` |
-| Heading | `Heading.jsx` |
-| Icon | `Icon.jsx` |
-| Link | `Link.jsx` |
-| Stack | `Stack.jsx` |
-| Inline | `Inline.jsx` |
-| Container | `Container.jsx` |
-| Grid | `Grid.jsx` |
-| Divider | `Divider.jsx` |
+| Text | corpo tipográfico |
+| Heading | heading/display |
+| Icon | ícone vetorial |
+| Link | link textual |
+| Stack | layout vertical |
+| Inline | layout horizontal |
+| Container | largura máxima |
+| Grid | grid |
+| Divider | separação |
 
 ## Interação
 
-| Componente | Estados / variantes |
+| Componente | Contrato |
 |---|---|
-| Button | primary, secondary, ghost, danger; sm/md/lg; loading/disabled |
-| IconButton | sm/md/lg; hover/focus/disabled |
-| Input | helper, error, success, disabled |
-| NativeSelect | select nativo estilizado |
-| Select + Option | open, selected, disabled, keyboard |
+| Button | primary/secondary/ghost/danger, tamanhos, loading e disabled |
+| IconButton | ação compacta acessível |
+| Input | label/helper/error/success |
+| Textarea | campo multilinha padronizado |
+| Select | **único Select público**, portal, teclado e anchored layer |
+| Option | option do Select |
 | Checkbox | checked/focus/disabled |
 | Radio | checked/focus/disabled |
 | Switch | checked/focus/disabled |
 | Slider | progress/focus/disabled |
-| Tabs | active/disabled + teclado |
+| Tabs | active/disabled + Arrow/Home/End |
+| Menu | anchored layer em portal |
+| Pagination | anterior/próxima + status |
 
 ## Navegação e estrutura
 
-- Nav
-- NavItem
-- Breadcrumb
-- Sidebar
-- PageHeader
-- Toolbar
-- FilterBar / FilterControl
-- DateRange
+- Nav;
+- NavItem;
+- Breadcrumb;
+- Sidebar;
+- PageHeader;
+- Toolbar;
+- FilterBar;
+- FilterControl;
+- DateRange.
 
-## Data display
+## Dados
 
-- **Card — sempre stitched**
-- Badge
-- Tag
-- MetricCard — compõe Card
-- DataTable — compõe Card
-- ChartContainer — compõe Card
+- **Card — sempre stitched**;
+- Badge;
+- Tag;
+- MetricCard;
+- DataTable;
+- ChartContainer;
+- Progress.
 
 ## Feedback
 
-- Spinner
-- Skeleton
-- Alert
-- EmptyState
-- ErrorState
-- Dialog — stitched
-- Drawer — stitched
-- Toast / ToastRegion
-- Tooltip
+- Spinner;
+- Skeleton;
+- Alert;
+- EmptyState;
+- ErrorState;
+- Dialog;
+- Drawer;
+- Toast / ToastRegion;
+- Tooltip.
 
-## Keyboard contract
+## Portal contract
 
-- Tabs: Arrow Left/Right, Home e End.
-- Select: teclado nativo do trigger + opções acessíveis.
-- Dialog: Escape e focus trap.
-- Drawer: Escape; foco retorna ao elemento anterior.
-- Tooltip: hover e focus-within.
-- Controles nativos preservam comportamento nativo.
+Select, Menu, Tooltip, Dialog, Drawer e Toast são renderizados fora da árvore visual da página por `Portal`.
+
+Isso é obrigatório para evitar clipping e stacking bugs.
+
+## Select contract
+
+Não existe `NativeSelect`.
+
+O Select canônico:
+- abre acima/abaixo conforme viewport;
+- acompanha scroll/resize;
+- nasce do trigger;
+- não é cortado por Card com overflow;
+- separa highlight de selected;
+- suporta teclado completo.
+
+## Feedback contract
+
+Uma ação visualmente habilitada deve produzir comportamento ou feedback.
+
+- EmptyState não mostra CTA sem callback;
+- ErrorState não mostra retry sem callback;
+- Tag só vira removível quando recebe `onRemove`;
+- Button loading bloqueia nova interação.
 
 ## Card contract
 
-Não existe variante de Card sem stitched no design system v1.
+Não existe Card sem stitched na v1.
 
 ```jsx
 <Card>...</Card>
 ```
 
-O checker arquitetural bloqueia uso direto de `className="ds-card"` fora de `Card.jsx`.
+O checker bloqueia uso direto de `ds-card` fora de `Card.jsx`.
+
+## Motion contract
+
+- sem `transition: all`;
+- blur é permitido como parte de motion funcional;
+- layers usam opacity + scale + blur + deslocamento curto;
+- rotas usam View Transitions com fallback;
+- reduced motion é obrigatório.
 
 ## Component Lab
-
-Todos os componentes principais podem ser inspecionados em:
 
 ```
 #/dev/components
