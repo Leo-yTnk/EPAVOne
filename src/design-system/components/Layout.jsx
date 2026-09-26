@@ -1,0 +1,5 @@
+export function Stack({ as:Component='div', gap, className='', children, ...props }) { return <Component className={'ds-stack '+className} style={gap?{'--stack-gap':gap}:undefined} {...props}>{children}</Component>; }
+export function Inline({ as:Component='div', gap, className='', children, ...props }) { return <Component className={'ds-inline '+className} style={gap?{'--inline-gap':gap}:undefined} {...props}>{children}</Component>; }
+export function Container({ as:Component='div', className='', children, ...props }) { return <Component className={'ds-container '+className} {...props}>{children}</Component>; }
+export function Grid({ as:Component='div', columns=12, className='', children, ...props }) { return <Component className={'ds-grid '+className} style={{'--grid-columns':columns}} {...props}>{children}</Component>; }
+export function Divider() { return <hr className="ds-divider"/>; }
