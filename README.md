@@ -1,31 +1,20 @@
 # EPAVOne
 
-Workspace React que conecta **EPAVInsights**, **EPAVPlanner** e **EPAVWriter** em uma experiência única, modular e pronta para crescer.
+Portal inicial para EPAVInsights, EPAVPlanner e EPAVWriter.
 
-## Começando
+## Executar
 
-```bash
-npm install
-npm run dev
-```
+Abra `index.html` em um navegador ou sirva a pasta com um servidor estático.
+As rotas são links por fragmento (`#/insights`, `#/planner`, `#/writer`), portanto funcionam também em hospedagem estática sem configuração de reescrita.
 
-Para validar a versão de produção, use `npm run build` e `npm run preview`.
+## Design system
 
-## Estrutura
+`ds-enforce.css` é uma cópia do arquivo de mesmo nome em
+[Yourcipe-EPAV](https://github.com/Leo-yTnk/Yourcipe-EPAV/blob/main/ds-enforce.css).
+`styles.css` contém apenas a composição da home e das páginas de entrada,
+usando as cores semânticas, tipografia, espaçamentos, raios, sombras, movimento
+e classes de componentes já definidos no design system. Quando o original
+mudar, atualize a cópia e confira as páginas nos modos claro e escuro.
 
-```text
-src/
-├── components/       # Componentes compartilhados e primitivos de interface
-├── data/             # Conteúdo e configurações desacoplados da apresentação
-├── App.jsx           # Composição da experiência
-├── main.jsx          # Ponto de entrada React
-└── styles.css        # Design system completo e estilos da aplicação
-```
-
-Os componentes de `ui.jsx` — `Button`, `Card`, `Badge`, `Select`, `Slider`, `Progress` e `Icon` — são a base para novas interfaces. Evite recriar controles localmente: amplie suas variantes mantendo API, acessibilidade e estados consistentes.
-
-## Princípio de produto
-
-> **“Design is not just what it looks like and feels like. Design is how it works.”**
-
-O princípio é um critério de aceite, não decoração. Toda entrega deve oferecer feedback claro, entendível, constante e completo; animações intencionais que expliquem mudanças; e responsividade impecável, do menor viewport ao desktop. Leia as regras completas em [`CONTRIBUTING.md`](./CONTRIBUTING.md).
+As páginas das três ferramentas descrevem o papel de cada uma e indicam
+honestamente que suas funcionalidades ainda estão em desenvolvimento.
