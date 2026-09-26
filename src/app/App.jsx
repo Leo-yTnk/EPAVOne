@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useLayoutEffect, useState } from 'preact/hooks';
 import { AppShell } from './AppShell.jsx';
 import { useHashRoute } from './useHashRoute.js';
 import { applyTheme, getInitialTheme } from './theme.js';
