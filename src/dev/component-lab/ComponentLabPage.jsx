@@ -77,10 +77,13 @@ export function ComponentLabPage(){
   const [tab,setTab]=useState('resumo');
   const [dialog,setDialog]=useState(false);
   const [drawer,setDrawer]=useState(false);
-  const [toast,setToast]=useState(false);
+  const [toast,setToast]=useState(null);
+  const [tagVisible,setTagVisible]=useState(true);
   const [page,setPage]=useState(2);
   const [start,setStart]=useState('2026-09-21');
   const [end,setEnd]=useState('2026-09-26');
+
+  const notify=message=>setToast(message);
 
   return <section className="component-lab-page">
     <Breadcrumb items={[{label:'EPAVOne',href:'#/'},{label:'Dev'},{label:'Componentes'}]}/>
@@ -94,8 +97,8 @@ export function ComponentLabPage(){
     <LabSection title="Ações e formulários">
       <Card className="lab-card">
         <h3 className="ds-heading-h5">Button + IconButton</h3>
-        <Inline><Button>Primário</Button><Button variant="secondary">Secundário</Button><Button variant="ghost">Ghost</Button><Button variant="danger">Excluir</Button><Button loading>Salvando</Button><Button disabled>Disabled</Button></Inline>
-        <Inline><IconButton size="sm" label="Anterior">←</IconButton><IconButton label="Favoritar">♡</IconButton><IconButton size="lg" label="Adicionar">＋</IconButton></Inline>
+        <Inline><Button onClick={()=>notify('Ação primária executada.')}>Primário</Button><Button variant="secondary" onClick={()=>notify('Ação secundária executada.')}>Secundário</Button><Button variant="ghost" onClick={()=>notify('Ação discreta executada.')}>Ghost</Button><Button variant="danger" onClick={()=>notify('Ação destrutiva demonstrada.')}>Excluir</Button><Button loading>Salvando</Button><Button disabled>Disabled</Button></Inline>
+        <Inline><IconButton size="sm" label="Anterior" onClick={()=>notify('Voltar.')}>←</IconButton><IconButton label="Favoritar" onClick={()=>notify('Favorito atualizado.')}>♡</IconButton><IconButton size="lg" label="Adicionar" onClick={()=>notify('Item adicionado.')}>＋</IconButton></Inline>
       </Card>
 
       <Card className="lab-card">
@@ -154,7 +157,7 @@ export function ComponentLabPage(){
 
       <Card className="lab-card lab-span-2">
         <h3 className="ds-heading-h5">Toolbar + FilterBar + DateRange</h3>
-        <Toolbar start={<><strong>Visão geral</strong><Badge>Semana 39</Badge></>} end={<><Button size="sm" variant="secondary">Exportar</Button><Button size="sm">Novo relatório</Button></>}/>
+        <Toolbar start={<><strong>Visão geral</strong><Badge>Semana 39</Badge></>} end={<><Button size="sm" variant="secondary" onClick={()=>notify('Exportação preparada.')}>Exportar</Button><Button size="sm" onClick={()=>notify('Novo relatório iniciado.')}>Novo relatório</Button></>}/>
         <FilterBar>
           <FilterControl><Select label="Vendedor" options={sellerOptions} value={seller} onChange={setSeller}/></FilterControl>
           <FilterControl><Select label="Categoria" options={categoryOptions} value={category} onChange={setCategory}/></FilterControl>
@@ -191,15 +194,15 @@ export function ComponentLabPage(){
         </Stack>
       </Card>
 
-      <EmptyState title="Nenhum pedido" description="Nenhum pedido encontrado para os filtros selecionados." actionLabel="Criar pedido"/>
-      <ErrorState title="Erro ao carregar" description="Não foi possível carregar os indicadores fictícios."/>
+      <EmptyState title="Nenhum pedido" description="Nenhum pedido encontrado para os filtros selecionados." actionLabel="Criar pedido" onAction={()=>notify('Fluxo de criação acionado.')}/>
+      <ErrorState title="Erro ao carregar" description="Não foi possível carregar os indicadores fictícios." onAction={()=>notify('Nova tentativa solicitada.')}/>
 
       <Card className="lab-card">
         <h3 className="ds-heading-h5">Overlays + Tooltip</h3>
         <Inline>
           <Button onClick={()=>setDialog(true)}>Dialog</Button>
           <Button variant="secondary" onClick={()=>setDrawer(true)}>Drawer</Button>
-          <Button variant="ghost" onClick={()=>setToast(true)}>Toast</Button>
+          <Button variant="ghost" onClick={()=>notify('Notificação de exemplo.')}>Toast</Button>
           <Tooltip label="Tooltip em portal, por hover ou foco"><IconButton label="Ajuda">?</IconButton></Tooltip>
         </Inline>
       </Card>
@@ -207,13 +210,13 @@ export function ComponentLabPage(){
       <Card className="lab-card">
         <h3 className="ds-heading-h5">Badge + Tag</h3>
         <Inline><Badge>Default</Badge><Badge tone="info">Info</Badge><Badge tone="success">Sucesso</Badge><Badge tone="danger">Erro</Badge></Inline>
-        <Inline><Tag>Suínos</Tag><Tag>Semana 39</Tag><Tag removable>Promoção ×</Tag></Inline>
+        <Inline><Tag>Suínos</Tag><Tag>Semana 39</Tag>{tagVisible&&<Tag onRemove={()=>{setTagVisible(false);notify('Tag removida.');}}>Promoção ×</Tag>}</Inline>
       </Card>
     </LabSection>
 
-    <Dialog open={dialog} title="Confirmar ação" onClose={()=>setDialog(false)} actions={<><Button variant="secondary" onClick={()=>setDialog(false)}>Cancelar</Button><Button onClick={()=>setDialog(false)}>Confirmar</Button></>}>Este dialog usa portal, focus trap, Escape e retorno de foco.</Dialog>
-    <Drawer open={drawer} title="Filtros avançados" onClose={()=>setDrawer(false)}><Stack><Input id="drawer-client" label="Cliente" value="Marina Oliveira" readOnly/><Switch defaultChecked>Somente oportunidades</Switch><Button onClick={()=>setDrawer(false)}>Aplicar filtros</Button></Stack></Drawer>
-    <ToastRegion>{toast&&<Toast tone="success" title="Pronto!" onDismiss={()=>setToast(false)}>Toast fictício exibido com sucesso.</Toast>}</ToastRegion>
+    <Dialog open={dialog} title="Confirmar ação" onClose={()=>setDialog(false)} actions={<><Button variant="secondary" onClick={()=>setDialog(false)}>Cancelar</Button><Button onClick={()=>{setDialog(false);notify('Ação confirmada.');}}>Confirmar</Button></>}>Este dialog usa portal, focus trap, Escape e retorno de foco.</Dialog>
+    <Drawer open={drawer} title="Filtros avançados" onClose={()=>setDrawer(false)}><Stack><Input id="drawer-client" label="Cliente" value="Marina Oliveira" readOnly/><Switch defaultChecked>Somente oportunidades</Switch><Button onClick={()=>{setDrawer(false);notify('Filtros aplicados.');}}>Aplicar filtros</Button></Stack></Drawer>
+    <ToastRegion>{toast&&<Toast tone="success" title="Feedback" onDismiss={()=>setToast(null)}>{toast}</Toast>}</ToastRegion>
   </section>;
 }
 
