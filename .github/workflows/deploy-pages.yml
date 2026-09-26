@@ -32,6 +32,15 @@ jobs:
       - name: Install dependencies
         run: npm install --no-audit --no-fund
 
+      - name: Lint
+        run: npm run lint
+
+      - name: Check architecture
+        run: npm run check:architecture
+
+      - name: Test
+        run: npm run test
+
       - name: Build
         run: npm run build
 
