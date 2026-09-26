@@ -16,12 +16,16 @@ export function App() {
   const routeKey=[route.product,...route.segments].join('/');
 
   useEffect(()=>{applyTheme(theme);},[theme]);
-  useEffect(()=>{
+
+  useLayoutEffect(()=>{
     document.documentElement.dataset.product=productTheme(route.product==='dev'?'home':route.product);
     document.documentElement.dataset.page=route.product;
+  },[route.product]);
+
+  useEffect(()=>{
     window.scrollTo({top:0,behavior:'auto'});
     requestAnimationFrame(()=>document.querySelector('#main')?.focus({preventScroll:true}));
-  },[routeKey,route.product]);
+  },[routeKey]);
 
   function toggleTheme(){
     const next=theme==='dark'?'light':'dark';
