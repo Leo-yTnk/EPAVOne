@@ -68,16 +68,22 @@ a { color: inherit; }
   z-index: var(--z-sticky);
   display: flex;
   align-items: center;
-  gap: var(--space-5);
+  gap: var(--space-3);
   min-height: 4.75rem;
   margin-top: var(--space-3);
-  padding: var(--space-2) var(--space-3);
-  border: 1px solid var(--border-subtle);
+  padding: 0;
+  background: transparent;
+  pointer-events: none;
+}
+.header-island {
+  min-height: 3.75rem;
+  border: 1px solid color-mix(in srgb, var(--border-subtle) 72%, transparent);
   border-radius: var(--radius-xl);
-  background: color-mix(in srgb, var(--surface-primary) 90%, transparent);
+  background: color-mix(in srgb, var(--surface-primary) 68%, transparent);
   box-shadow: var(--shadow-sm);
-  backdrop-filter: blur(1rem);
-  -webkit-backdrop-filter: blur(1rem);
+  backdrop-filter: blur(0.5rem);
+  -webkit-backdrop-filter: blur(0.5rem);
+  pointer-events: auto;
 }
 .brand {
   display: inline-flex;
@@ -87,6 +93,7 @@ a { color: inherit; }
   letter-spacing: -0.04em;
   text-decoration: none;
   white-space: nowrap;
+  padding: var(--space-2) var(--space-4) var(--space-2) var(--space-2);
 }
 .brand-mark {
   display: grid;
@@ -102,16 +109,16 @@ a { color: inherit; }
   transition: background-color var(--motion-base) var(--ease-out);
 }
 .brand-one { color: var(--text-brand); }
-.site-nav { display: flex; align-items: center; margin-left: auto; }
+.site-nav { display: flex; align-items: center; margin-left: auto; padding: var(--space-2); }
 .tab-list {
   position: relative;
   display: flex;
   align-items: center;
   gap: var(--space-1);
   padding: var(--space-1);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-lg);
-  background: var(--surface-secondary);
+  border: 0;
+  border-radius: calc(var(--radius-xl) - var(--space-2));
+  background: color-mix(in srgb, var(--surface-secondary) 72%, transparent);
 }
 .tab {
   position: relative;
@@ -147,7 +154,23 @@ a { color: inherit; }
   outline: 2px solid var(--border-focus);
   outline-offset: 3px;
 }
-.theme-toggle { white-space: nowrap; }
+.header-actions { display: flex; align-items: center; padding: var(--space-2); }
+.header-action,
+.account-button {
+  display: inline-flex;
+  min-height: 2.625rem;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-md);
+  color: var(--text-secondary);
+  background: transparent;
+  font: 650 var(--label-md-size)/1 var(--font-sans);
+}
+.header-action:hover,
+.account-button:hover { color: var(--text-primary); background: var(--surface-secondary); }
+.header-divider { width: 1px; height: 1.5rem; background: var(--border-subtle); }
+.account-avatar { display: grid; place-items: center; width: 1.875rem; height: 1.875rem; border-radius: var(--radius-full); color: var(--button-content-default); background: var(--brand-700); font-size: var(--label-sm-size); }
 
 main {
   flex: 1;
@@ -201,19 +224,10 @@ main {
 .hero-panel {
   position: relative;
   padding: var(--space-6);
-  border-radius: var(--radius-xl);
+  --card-radius: 2rem;
   background: var(--surface-inverse);
   color: var(--text-inverse);
   overflow: hidden;
-}
-.hero-panel::after,
-.shortcut::after {
-  content: '';
-  position: absolute;
-  inset: var(--space-2);
-  border: 2px dashed color-mix(in srgb, currentColor 28%, transparent);
-  border-radius: calc(var(--radius-xl) - var(--space-2));
-  pointer-events: none;
 }
 .hero-panel .panel-kicker { color: color-mix(in srgb, var(--brand-300) 76%, white); }
 [data-theme="dark"] .hero-panel .panel-kicker { color: var(--brand-300); }
@@ -378,9 +392,9 @@ main {
   .hero-panel { max-width: 40.625rem; }
   .shortcuts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .site-header { flex-wrap: wrap; }
-  .site-nav { order: 3; width: 100%; overflow-x: auto; padding-bottom: var(--space-1); }
+  .site-nav { order: 3; width: 100%; overflow-x: auto; }
   .tab-list { min-width: max-content; }
-  .theme-toggle { margin-left: auto; }
+  .header-actions { margin-left: auto; }
 }
 @media (max-width: 37.5rem) {
   .shell { width: min(100% - (2 * var(--space-5)), 90rem); }
@@ -393,6 +407,7 @@ main {
   .detail-steps { grid-template-columns: 1fr; }
   .shortcut { min-height: 15.625rem; }
   .tab { padding-inline: var(--space-3); }
+  .action-label { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
   .site-footer { flex-direction: column; }
 }
 @media (prefers-reduced-motion: reduce) {

@@ -65,7 +65,7 @@ function navigateTo(key) {
 
 function card(key) {
   const item = products[key];
-  return `<a class="ds-card shortcut" href="#/${key}" aria-label="Conhecer ${item.name}">
+  return `<a class="ds-card ds-stitched-card shortcut" href="#/${key}" aria-label="Conhecer ${item.name}">
     <span class="shortcut-top"><span class="shortcut-glyph" aria-hidden="true">${item.glyph}</span><span class="shortcut-number ds-overline">${item.number}</span></span>
     <h3 class="ds-heading-h4">${item.name}</h3><p class="ds-body-sm-regular">${item.summary}</p>
     <span class="shortcut-action ds-label-md">Conhecer ferramenta →</span></a>`;
@@ -78,7 +78,7 @@ function home() {
       <p class="ds-body-lg-regular">Planeje a semana, entenda seus resultados e prepare os pedidos em um só lugar. Três ferramentas para apoiar cada etapa do seu trabalho.</p>
       <div class="hero-actions"><a class="ds-btn ds-btn-primary" href="#ferramentas">Explorar ferramentas</a><a class="ds-btn ds-btn-secondary" href="#/planner">Começar pelo planejamento</a></div>
     </div>
-    <aside class="hero-panel" aria-label="Etapas de trabalho"><span class="panel-kicker ds-overline">Um fluxo mais simples</span>
+    <aside class="hero-panel ds-stitched-card" aria-label="Etapas de trabalho"><span class="panel-kicker ds-overline">Um fluxo mais simples</span>
       <h2 class="ds-heading-h4">Da ideia ao pedido, passo a passo.</h2>
       <div class="mini-flow"><span><b>1</b> Planeje com o Planner</span><span><b>2</b> Entenda com o Insights</span><span><b>3</b> Prepare com o Writer</span></div>
     </aside>
@@ -91,7 +91,7 @@ function detail(key) {
   const item = products[key];
   return `<section class="detail" aria-labelledby="detail-title"><a class="back-link" href="#/">← Voltar ao início</a>
     <div><span class="eyebrow ds-overline">Ferramenta ${item.number}</span><h1 id="detail-title" class="ds-display-small">${item.title}</h1><p class="detail-lede ds-body-lg-regular">${item.lede}</p></div>
-    <div class="ds-card detail-panel"><span class="ds-badge">Em desenvolvimento</span><h2 class="ds-heading-h3">${item.name}</h2>
+    <div class="ds-card ds-stitched-card detail-panel"><span class="ds-badge">Em desenvolvimento</span><h2 class="ds-heading-h3">${item.name}</h2>
       <ol class="detail-steps">${item.steps.map(([heading, copy]) => `<li><strong>${heading}</strong>${copy}</li>`).join('')}</ol>
       <a class="ds-btn ds-btn-secondary" href="#/">Ver outras ferramentas</a>
     </div></section>`;
@@ -125,7 +125,7 @@ function insightsWorkspace(route) {
     <h1 id="workspace-title" class="ds-display-small">${title.charAt(0).toUpperCase() + title.slice(1)}</h1>
     <p class="workspace-lede ds-body-lg-regular">Esta rota já está preparada para receber a migração do Yourcipe sem alterar o shell global do EPAVOne.</p>
     <nav class="product-nav" aria-label="Navegação interna do EPAVInsights">${nav}</nav>
-    <div class="ds-card workspace-panel">
+    <div class="ds-card ds-stitched-card workspace-panel">
       <span class="ds-badge is-info">Rota preparada</span>
       <h2 class="ds-heading-h3">Shell pronto para conteúdo real</h2>
       <p class="ds-body-md-regular">O dashboard piloto substituirá este estado sem criar CSS específico de página. Rotas profundas permanecem no produto e mantêm a navegação global estável.</p>
@@ -235,7 +235,7 @@ function setTheme(dark) {
   document.documentElement.dataset.theme = dark ? 'dark' : 'light';
   toggle.setAttribute('aria-pressed', String(dark));
   toggle.setAttribute('aria-label', dark ? 'Ativar modo claro' : 'Ativar modo escuro');
-  toggle.textContent = dark ? 'Modo claro' : 'Modo escuro';
+  toggle.querySelector('[aria-hidden="true"]').textContent = dark ? '☀' : '◐';
 }
 
 try { setTheme(localStorage.getItem('epavone-theme') === 'dark'); } catch { setTheme(false); }
