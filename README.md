@@ -25,7 +25,8 @@ A fundação do EPAVOne é canônica neste repositório. Ela **não é mais uma 
 
 ### Identidade
 
-- EPAVOne + EPAVPlanner: roxo.
+- Início do EPAVOne: azul.
+- EPAVPlanner: roxo.
 - EPAVInsights: laranja.
 - EPAVWriter: turquesa.
 - Base: Warm Paper.

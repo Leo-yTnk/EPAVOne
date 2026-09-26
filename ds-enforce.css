@@ -43,6 +43,8 @@
 
   --ref-color-info-500: #3453B2;
   --ref-color-info-600: #314581;
+  --ref-color-home-100: #E8EEFF;
+  --ref-color-home-300: #AFC0FF;
   --ref-color-success-500: #34A853;
   --ref-color-success-600: #2B7C3E;
   --ref-color-warning-500: #C98A13;
@@ -249,7 +251,7 @@
   --button-primary-bg: var(--button-bg-default);
   --card-radius: var(--radius-xl);
   --navigation-active-bg: var(--surface-selected);
-  --navigation-island-height: 3.75rem;
+  --navigation-island-height: 3.25rem;
   --navigation-island-bg: color-mix(in srgb, var(--color-bg-surface) 68%, transparent);
   --navigation-island-border: color-mix(in srgb, var(--color-border-subtle) 42%, transparent);
   --navigation-divider: color-mix(in srgb, var(--color-border-subtle) 45%, transparent);
@@ -307,6 +309,15 @@
   --brand-600: var(--ref-color-writer-600);
   --brand-700: var(--ref-color-writer-700);
   --brand-900: var(--ref-color-writer-900);
+}
+
+[data-product="home"] {
+  --brand-100: var(--ref-color-home-100);
+  --brand-300: var(--ref-color-home-300);
+  --brand-500: var(--ref-color-info-500);
+  --brand-600: var(--ref-color-info-600);
+  --brand-700: var(--ref-color-info-500);
+  --brand-900: var(--ref-color-info-600);
 }
 
 
