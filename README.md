@@ -18,3 +18,11 @@ mudar, atualize a cópia e confira as páginas nos modos claro e escuro.
 
 As páginas das três ferramentas descrevem o papel de cada uma e indicam
 honestamente que suas funcionalidades ainda estão em desenvolvimento.
+
+### O Poder das Animações
+
+Evite mudanças bruscas na interface. Combine movimento, fade-in, fade-out e
+blur para criar transições fluidas e naturais, sempre com moderação. As
+animações devem orientar a atenção e dar continuidade à experiência sem
+exageros ou impacto significativo no desempenho. Respeite também a preferência
+do usuário por movimento reduzido (`prefers-reduced-motion`).
