@@ -1,3 +1,4 @@
+import './component-lab.css';
 import { useState } from 'preact/hooks';
 import {
   Alert,Badge,Breadcrumb,Button,Card,ChartContainer,Checkbox,DataTable,DateRange,Dialog,Drawer,EmptyState,ErrorState,
