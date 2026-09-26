@@ -27,6 +27,15 @@ const tabs = [
   ...Object.entries(products).map(([key, product]) => ({ key, label: product.name.replace('EPAV', ''), hash: `#/${key}` }))
 ];
 
+const insightsNav = [
+  { slug: '', label: 'Visão geral' },
+  { slug: 'receitas', label: 'Receitas' },
+  { slug: 'produtos', label: 'Produtos' },
+  { slug: 'indicadores', label: 'Indicadores' },
+  { slug: 'historico', label: 'Histórico' },
+  { slug: 'perfil', label: 'Perfil' }
+];
+
 const main = document.querySelector('#main');
 const tabList = document.querySelector('[role="tablist"]');
 const navigationStatus = document.querySelector('#navigation-status');
@@ -36,9 +45,21 @@ function tabNavigation() {
   tabList.innerHTML = `<span class="tab-indicator" aria-hidden="true"></span>${tabs.map(({ key, label }) => `<button class="tab" type="button" role="tab" id="tab-${key}" aria-controls="main" aria-selected="false" tabindex="-1" data-tab="${key}">${label}</button>`).join('')}`;
 }
 
+function parseRoute() {
+  const raw = location.hash.startsWith('#/') ? location.hash.slice(2) : '';
+  const segments = raw.split('/').filter(Boolean);
+  const key = Object.hasOwn(products, segments[0]) ? segments[0] : 'home';
+  return { key, segments: key === 'home' ? [] : segments.slice(1), raw };
+}
+
+function routeHash(key, segments = []) {
+  return `#/${[key, ...segments].filter(Boolean).join('/')}`;
+}
+
 function navigateTo(key) {
   const destination = tabs.find(tab => tab.key === key) || tabs[0];
-  if (location.hash === destination.hash) render();
+  const current = parseRoute();
+  if (current.key === destination.key && current.segments.length === 0) render();
   else location.hash = destination.hash;
 }
 
@@ -76,15 +97,59 @@ function detail(key) {
     </div></section>`;
 }
 
-function currentRoute() {
-  return location.hash.match(/^#\/(insights|planner|writer)\/?$/)?.[1] || 'home';
+function insightsWorkspace(route) {
+  const [section = '', ...rest] = route.segments;
+  const knownSection = insightsNav.some(item => item.slug === section);
+  const currentSection = knownSection ? section : '';
+  const nav = insightsNav.map(item => {
+    const href = item.slug ? routeHash('insights', [item.slug]) : '#/insights';
+    const current = item.slug === currentSection && rest.length === 0;
+    return `<a href="${href}"${current ? ' aria-current="page"' : ''}>${item.label}</a>`;
+  }).join('');
+
+  const labels = route.segments.map(segment => decodeURIComponent(segment).replace(/[-_]/g, ' '));
+  const crumbItems = [
+    '<a href="#/">EPAVOne</a>',
+    '<a href="#/insights">Insights</a>',
+    ...labels.map((label, index) => {
+      const isLast = index === labels.length - 1;
+      const path = route.segments.slice(0, index + 1);
+      return isLast ? `<span aria-current="page">${label}</span>` : `<a href="${routeHash('insights', path)}">${label}</a>`;
+    })
+  ];
+
+  const title = labels.length ? labels.at(-1) : 'Visão geral';
+  return `<section class="workspace" aria-labelledby="workspace-title">
+    <nav class="crumbs" aria-label="Breadcrumb">${crumbItems.join('<span aria-hidden="true">/</span>')}</nav>
+    <span class="eyebrow ds-overline">EPAVInsights</span>
+    <h1 id="workspace-title" class="ds-display-small">${title.charAt(0).toUpperCase() + title.slice(1)}</h1>
+    <p class="workspace-lede ds-body-lg-regular">Esta rota já está preparada para receber a migração do Yourcipe sem alterar o shell global do EPAVOne.</p>
+    <nav class="product-nav" aria-label="Navegação interna do EPAVInsights">${nav}</nav>
+    <div class="ds-card workspace-panel">
+      <span class="ds-badge is-info">Rota preparada</span>
+      <h2 class="ds-heading-h3">Shell pronto para conteúdo real</h2>
+      <p class="ds-body-md-regular">O dashboard piloto substituirá este estado sem criar CSS específico de página. Rotas profundas permanecem no produto e mantêm a navegação global estável.</p>
+      <code class="route-code">${location.hash || '#/insights'}</code>
+    </div>
+  </section>`;
+}
+
+function renderContent(route) {
+  if (route.key === 'home') return home();
+  if (route.key === 'insights' && route.segments.length) return insightsWorkspace(route);
+  return detail(route.key);
+}
+
+function productTheme(key) {
+  if (key === 'insights') return 'insights';
+  if (key === 'writer') return 'writer';
+  return 'one';
 }
 
 function moveTabIndicator(key, animate = true) {
   const selectedTab = tabList.querySelector(`[data-tab="${key}"]`);
   const indicator = tabList.querySelector('.tab-indicator');
   if (!selectedTab || !indicator) return;
-
   if (animate) indicator.classList.add('is-ready');
   indicator.style.width = `${selectedTab.offsetWidth}px`;
   indicator.style.transform = `translateX(${selectedTab.offsetLeft - parseFloat(getComputedStyle(tabList).paddingLeft)}px)`;
@@ -99,69 +164,83 @@ function selectTab(key, animate = true) {
   moveTabIndicator(key, animate);
 }
 
-function commitPage(key) {
-  main.innerHTML = key === 'home' ? home() : detail(key);
+function commitPage(route) {
+  document.documentElement.dataset.product = productTheme(route.key);
+  main.innerHTML = renderContent(route);
   main.setAttribute('role', 'tabpanel');
-  main.setAttribute('aria-labelledby', `tab-${key}`);
-  document.title = key === 'home' ? 'EPAVOne — seu espaço de trabalho' : `${products[key].name} — EPAVOne`;
-  navigationStatus.textContent = `${tabs.find(tab => tab.key === key).label} selecionado`;
-  if (location.hash === '#ferramentas') {
-    requestAnimationFrame(() => document.querySelector('#ferramentas')?.scrollIntoView());
-  } else {
-    window.scrollTo(0, 0);
-  }
+  main.setAttribute('aria-labelledby', `tab-${route.key}`);
+
+  const pageName = route.key === 'home'
+    ? 'EPAVOne — seu espaço de trabalho'
+    : route.segments.length
+      ? `${decodeURIComponent(route.segments.at(-1)).replace(/[-_]/g, ' ')} — ${products[route.key].name}`
+      : `${products[route.key].name} — EPAVOne`;
+
+  document.title = pageName;
+  const selectedLabel = tabs.find(tab => tab.key === route.key)?.label || 'Início';
+  navigationStatus.textContent = `${selectedLabel} selecionado`;
+
+  if (location.hash === '#ferramentas') requestAnimationFrame(() => document.querySelector('#ferramentas')?.scrollIntoView());
+  else window.scrollTo(0, 0);
 }
 
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-let renderedKey;
-let requestedKey = currentRoute();
+let renderedSignature;
+let requestedRoute = parseRoute();
 let transitionRunning = false;
+
+function signature(route) {
+  return [route.key, ...route.segments].join('/');
+}
 
 function waitForAnimation(element) {
   return new Promise(resolve => {
     const finish = () => resolve();
     element.addEventListener('animationend', finish, { once: true });
-    setTimeout(finish, 400);
+    setTimeout(finish, 320);
   });
 }
 
 async function render() {
-  requestedKey = currentRoute();
-  selectTab(requestedKey, renderedKey !== undefined);
+  requestedRoute = parseRoute();
+  const requestedSignature = signature(requestedRoute);
+  selectTab(requestedRoute.key, renderedSignature !== undefined);
 
-  if (renderedKey === requestedKey && location.hash === '#ferramentas') {
+  if (renderedSignature === requestedSignature && location.hash === '#ferramentas') {
     requestAnimationFrame(() => document.querySelector('#ferramentas')?.scrollIntoView());
   }
-
   if (transitionRunning) return;
   transitionRunning = true;
 
-  while (renderedKey !== requestedKey) {
-    if (renderedKey !== undefined && !reducedMotion.matches) {
+  while (renderedSignature !== requestedSignature) {
+    if (renderedSignature !== undefined && !reducedMotion.matches) {
       main.classList.add('page-leaving');
       await waitForAnimation(main);
       main.classList.remove('page-leaving');
     }
 
-    const nextKey = requestedKey;
-    const previousIndex = renderedKey === undefined ? 0 : tabs.findIndex(tab => tab.key === renderedKey);
-    const nextIndex = tabs.findIndex(tab => tab.key === nextKey);
+    const nextRoute = requestedRoute;
+    const previousKey = renderedSignature?.split('/')[0] || 'home';
+    const previousIndex = tabs.findIndex(tab => tab.key === previousKey);
+    const nextIndex = tabs.findIndex(tab => tab.key === nextRoute.key);
     main.style.setProperty('--page-direction', nextIndex >= previousIndex ? '1' : '-1');
-    commitPage(nextKey);
-    renderedKey = nextKey;
+    commitPage(nextRoute);
+    renderedSignature = signature(nextRoute);
 
     if (!reducedMotion.matches) {
       main.classList.add('page-entering');
       await waitForAnimation(main);
       main.classList.remove('page-entering');
     }
+
+    requestedRoute = parseRoute();
   }
 
   transitionRunning = false;
 }
 
 function setTheme(dark) {
-  document.documentElement.classList.toggle('yc-dark', dark);
+  document.documentElement.dataset.theme = dark ? 'dark' : 'light';
   toggle.setAttribute('aria-pressed', String(dark));
   toggle.setAttribute('aria-label', dark ? 'Ativar modo claro' : 'Ativar modo escuro');
   toggle.textContent = dark ? 'Modo claro' : 'Modo escuro';
@@ -169,7 +248,7 @@ function setTheme(dark) {
 
 try { setTheme(localStorage.getItem('epavone-theme') === 'dark'); } catch { setTheme(false); }
 toggle.addEventListener('click', () => {
-  const dark = !document.documentElement.classList.contains('yc-dark');
+  const dark = document.documentElement.dataset.theme !== 'dark';
   setTheme(dark);
   try { localStorage.setItem('epavone-theme', dark ? 'dark' : 'light'); } catch { /* armazenamento indisponível */ }
 });
@@ -181,7 +260,12 @@ tabList.addEventListener('keydown', event => {
   const tabButtons = [...tabList.querySelectorAll('[role="tab"]')];
   const currentIndex = tabButtons.indexOf(document.activeElement);
   if (currentIndex < 0) return;
-  const destinations = { ArrowRight: (currentIndex + 1) % tabButtons.length, ArrowLeft: (currentIndex - 1 + tabButtons.length) % tabButtons.length, Home: 0, End: tabButtons.length - 1 };
+  const destinations = {
+    ArrowRight: (currentIndex + 1) % tabButtons.length,
+    ArrowLeft: (currentIndex - 1 + tabButtons.length) % tabButtons.length,
+    Home: 0,
+    End: tabButtons.length - 1
+  };
   if (!(event.key in destinations)) return;
   event.preventDefault();
   const destination = tabButtons[destinations[event.key]];
@@ -189,8 +273,8 @@ tabList.addEventListener('keydown', event => {
   navigateTo(destination.dataset.tab);
 });
 window.addEventListener('hashchange', render);
-window.addEventListener('resize', () => moveTabIndicator(currentRoute(), false));
+window.addEventListener('resize', () => moveTabIndicator(parseRoute().key, false));
 tabNavigation();
-selectTab(currentRoute(), false);
+selectTab(parseRoute().key, false);
 requestAnimationFrame(() => tabList.querySelector('.tab-indicator')?.classList.add('is-ready'));
 render();
