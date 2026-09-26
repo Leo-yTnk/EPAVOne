@@ -1,28 +1,55 @@
 # EPAVOne
 
-Portal inicial para EPAVInsights, EPAVPlanner e EPAVWriter.
+Portal do EPAV para **EPAVInsights**, **EPAVPlanner** e **EPAVWriter**.
 
 ## Executar
 
 Abra `index.html` em um navegador ou sirva a pasta com um servidor estático.
-As rotas são links por fragmento (`#/insights`, `#/planner`, `#/writer`), portanto funcionam também em hospedagem estática sem configuração de reescrita.
+
+As rotas usam fragmentos (`#/...`) para continuar funcionando em hospedagem estática sem regras de rewrite. O shell aceita subrotas profundas, por exemplo:
+
+```
+#/insights/clientes/123/historico
+#/insights/indicadores
+#/planner
+#/writer
+```
 
 ## Design system
 
-`ds-enforce.css` é uma cópia do arquivo de mesmo nome em
-[Yourcipe-EPAV](https://github.com/Leo-yTnk/Yourcipe-EPAV/blob/main/ds-enforce.css).
-`styles.css` contém apenas a composição da home e das páginas de entrada,
-usando as cores semânticas, tipografia, espaçamentos, raios, sombras, movimento
-e classes de componentes já definidos no design system. Quando o original
-mudar, atualize a cópia e confira as páginas nos modos claro e escuro.
+A fundação do EPAVOne é canônica neste repositório. Ela **não é mais uma cópia a ser sincronizada do Yourcipe**.
 
-As páginas das três ferramentas descrevem o papel de cada uma e indicam
-honestamente que suas funcionalidades ainda estão em desenvolvimento.
+- `ds-enforce.css`: tokens primitivos, semânticos e de componentes + primitives reutilizáveis.
+- `styles.css`: composição do portal e do shell; não redefine a fundação.
+- `DESIGN-SYSTEM-V1.md`: decisões, princípios, arquitetura, escopo e critérios de fechamento.
 
-### O Poder das Animações
+### Identidade
 
-Evite mudanças bruscas na interface. Combine movimento, fade-in, fade-out e
-blur para criar transições fluidas e naturais, sempre com moderação. As
-animações devem orientar a atenção e dar continuidade à experiência sem
-exageros ou impacto significativo no desempenho. Respeite também a preferência
-do usuário por movimento reduzido (`prefers-reduced-motion`).
+- EPAVOne + EPAVPlanner: roxo.
+- EPAVInsights: laranja.
+- EPAVWriter: turquesa.
+- Base: Warm Paper.
+- Display/editorial: DM Serif Display.
+- Hierarquia: Inter Tight.
+- Interface e dados: Inter.
+- Temas claro e escuro.
+- Grid escolar sutil e stitched cards apenas onde ajudam a identidade.
+- Superfícies integradas, com elevação discreta; evitar aparência de caixas empilhadas.
+
+As fontes são carregadas por **uma única estratégia** no `index.html` via Google Fonts. O CSS não declara `@font-face` duplicado.
+
+## Movimento
+
+Movimento deve explicar estado e continuidade, nunca atrasar trabalho:
+
+- propriedades preferidas: `opacity` e `transform`;
+- sem `transition: all`;
+- sem blur de contêiner em transições de página;
+- `prefers-reduced-motion` deve continuar funcional;
+- duração e easing vêm dos tokens do design system.
+
+## Status da fundação
+
+A fundação está em **v1 RC (release candidate)**. Ela é suficiente para iniciar o fluxo piloto do EPAVInsights.
+
+O rótulo **v1.0** só deve ser congelado depois que a primeira página real do Insights validar em contexto: filtros, métricas, gráficos, tabela/lista, loading, vazio, erro, responsividade e acessibilidade.
