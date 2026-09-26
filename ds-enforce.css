@@ -1940,6 +1940,7 @@ a:focus-visible {
 }
 
 /* Utility state ----------------------------------------------------------- */
+[hidden] { display: none; }
 .ds-no-scroll { overflow: hidden; }
 
 @keyframes dsSpin { to { transform: rotate(360deg); } }
