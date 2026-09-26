@@ -279,3 +279,77 @@ Só marcar **1.0** quando o piloto do EPAVInsights provar, em uma página real:
 Migrar **uma única página representativa do EPAVInsights** para este shell — preferencialmente uma visão geral que combine navegação, filtros, métricas, visualização, lista/tabela e estados de carregamento/erro/vazio.
 
 Essa página é o teste de estresse que decide o congelamento da v1.0.
+
+
+## 12. Component Foundation implementada
+
+A home do EPAVOne funciona como laboratório visual temporário para validar os componentes antes da migração do EPAVInsights.
+
+### Fundação e layout
+
+- Text / Heading (utilities tipográficas existentes);
+- Stack;
+- Inline;
+- Container;
+- Grid;
+- Divider;
+- Icon.
+
+### Interação
+
+- Button: primary, secondary, ghost, danger; sm/md/lg; hover/focus/pressed/disabled/loading;
+- IconButton: sm/md/lg + disabled;
+- Link;
+- Input: default, helper, error, success, focus, disabled;
+- Select nativo;
+- Select customizado + Option: selected, hover/highlight, disabled e teclado;
+- Checkbox;
+- Radio;
+- Switch;
+- Slider / Range;
+- Tabs.
+
+### Navegação e estrutura
+
+- Navigation Island;
+- Nav / NavItem;
+- Breadcrumb;
+- Sidebar;
+- PageHeader;
+- Toolbar;
+- FilterBar;
+- DateRange;
+- Card / Stitched Card;
+- Badge / Tag.
+
+### Feedback
+
+- Spinner;
+- Skeleton;
+- Alert (info/success/warning/danger);
+- EmptyState;
+- ErrorState;
+- Dialog com Escape e focus trap no showcase;
+- Drawer com Escape e focus trap no showcase;
+- Toast com região aria-live no showcase;
+- Tooltip acessível por hover ou foco.
+
+### Insights
+
+- MetricCard;
+- DataTable;
+- ChartContainer;
+- legenda;
+- filtros;
+- DateRange.
+
+### Regras preservadas
+
+- sem `transition: all`;
+- sem `!important`;
+- sem animação de blur em páginas;
+- reduced motion;
+- light/dark;
+- accent por produto.
+
+O Component Lab da home usa somente valores fictícios e existe para inspeção e prova de estresse. Ele não representa a arquitetura final do dashboard.

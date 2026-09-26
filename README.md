@@ -54,3 +54,8 @@ Movimento deve explicar estado e continuidade, nunca atrasar trabalho:
 A fundação está em **v1 RC (release candidate)**. Ela é suficiente para iniciar o fluxo piloto do EPAVInsights.
 
 O rótulo **v1.0** só deve ser congelado depois que a primeira página real do Insights validar em contexto: filtros, métricas, gráficos, tabela/lista, loading, vazio, erro, responsividade e acessibilidade.
+
+
+## Component Lab
+
+A home inclui uma seção **Component Foundation** com valores fictícios para inspeção visual e funcional dos componentes do design system, incluindo controles, navegação, estados, métricas, tabela, gráfico e feedback. Essa seção é um laboratório de validação e não contém dados reais do EPAV.
