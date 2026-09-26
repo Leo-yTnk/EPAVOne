@@ -1322,6 +1322,88 @@ a:focus-visible {
   font-family: var(--font-sans);
 }
 
+
+/* Advanced Select / Option ------------------------------------------------ */
+.ds-selectbox {
+  position: relative;
+  width: 100%;
+}
+
+.ds-select-trigger {
+  width: 100%;
+  min-height: var(--control-md);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 0 var(--space-3);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  background: var(--surface-primary);
+  color: var(--text-primary);
+  font: 500 var(--body-sm-regular-size)/1 var(--font-sans);
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color var(--motion-base) var(--ease-out),
+    background-color var(--motion-base) var(--ease-out),
+    box-shadow var(--motion-base) var(--ease-out);
+}
+
+.ds-select-trigger:hover { border-color: var(--border-strong); }
+.ds-select-trigger[aria-expanded="true"] { border-color: var(--border-focus); box-shadow: var(--focus-ring); }
+.ds-select-trigger:disabled { opacity: 0.52; cursor: not-allowed; }
+
+.ds-select-menu {
+  position: absolute;
+  z-index: var(--z-overlay);
+  top: calc(100% + var(--space-2));
+  left: 0;
+  right: 0;
+  max-height: 14rem;
+  overflow-y: auto;
+  padding: var(--space-1);
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-md);
+  background: var(--surface-primary);
+  box-shadow: var(--shadow-lg);
+  animation: dsSelectIn var(--motion-fast) var(--ease-out);
+}
+
+.ds-option {
+  width: 100%;
+  min-height: var(--control-sm);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-primary);
+  font: 500 var(--body-sm-regular-size)/1.25 var(--font-sans);
+  text-align: left;
+  cursor: pointer;
+}
+
+.ds-option:hover,
+.ds-option.is-highlighted { background: var(--surface-secondary); }
+
+.ds-option[aria-selected="true"] {
+  background: var(--surface-selected);
+  color: var(--text-brand);
+  font-weight: 700;
+}
+
+.ds-option[aria-selected="true"]::after { content: '✓'; }
+
+.ds-option:disabled,
+.ds-option[aria-disabled="true"] {
+  opacity: 0.46;
+  cursor: not-allowed;
+}
+
 /* Switch ----------------------------------------------------------------- */
 .ds-switch {
   display: inline-flex;
