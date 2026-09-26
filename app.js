@@ -141,6 +141,7 @@ function renderContent(route) {
 }
 
 function productTheme(key) {
+  if (key === 'home') return 'home';
   if (key === 'insights') return 'insights';
   if (key === 'writer') return 'writer';
   return 'one';
