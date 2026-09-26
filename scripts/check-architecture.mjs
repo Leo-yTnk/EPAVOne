@@ -83,4 +83,4 @@ if(failures.length){
   console.error('Architecture check failed:\n- '+failures.join('\n- '));
   process.exit(1);
 }
-console.log('Architecture check passed.');
+process.stdout.write('Architecture check passed.\n');
