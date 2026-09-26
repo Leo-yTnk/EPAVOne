@@ -87,13 +87,14 @@ Usar apenas quando a decisão não puder ser representada de modo claro por um t
 --navigation-island-height
 --navigation-island-bg
 --navigation-island-border
+--navigation-island-shadow
 --navigation-item-hover-bg
 --chart-grid-color
 ```
 
 Ilhas de navegação usam a primitive `.ds-navigation-island`. A altura, a superfície
-translúcida e a borda pertencem ao design system; composições de produto não devem
-empilhar outra superfície sobre a ilha, preservando sua transparência.
+translúcida, a borda e a elevação pertencem ao design system; composições de produto
+não devem empilhar outra superfície sobre a ilha, preservando sua transparência.
 
 ### Convenções
 

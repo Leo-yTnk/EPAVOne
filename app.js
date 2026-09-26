@@ -157,6 +157,7 @@ function selectTab(key) {
 function commitPage(route) {
   document.documentElement.dataset.product = productTheme(route.key);
   document.documentElement.dataset.page = route.key;
+  selectTab(route.key);
   main.innerHTML = renderContent(route);
   main.setAttribute('role', 'tabpanel');
   main.setAttribute('aria-labelledby', `tab-${route.key}`);
@@ -186,49 +187,58 @@ function signature(route) {
 
 function waitForAnimation(element) {
   return new Promise(resolve => {
-    const finish = () => resolve();
-    element.addEventListener('animationend', finish, { once: true });
-    setTimeout(finish, 320);
+    let timeout;
+    const finish = event => {
+      if (event && event.target !== element) return;
+      element.removeEventListener('animationend', finish);
+      clearTimeout(timeout);
+      resolve();
+    };
+    element.addEventListener('animationend', finish);
+    timeout = setTimeout(finish, 320);
   });
 }
 
 async function render() {
   requestedRoute = parseRoute();
-  const requestedSignature = signature(requestedRoute);
-  selectTab(requestedRoute.key, renderedSignature !== undefined);
 
-  if (renderedSignature === requestedSignature && location.hash === '#ferramentas') {
+  if (renderedSignature === signature(requestedRoute) && location.hash === '#ferramentas') {
     requestAnimationFrame(() => document.querySelector('#ferramentas')?.scrollIntoView());
   }
   if (transitionRunning) return;
   transitionRunning = true;
 
-  while (renderedSignature !== requestedSignature) {
-    if (renderedSignature !== undefined && !reducedMotion.matches) {
-      main.classList.add('page-leaving');
-      await waitForAnimation(main);
-      main.classList.remove('page-leaving');
+  try {
+    // Always compare against the latest requested route. Hash changes can arrive
+    // while either animation is awaiting completion, so a captured signature
+    // would keep this loop chasing an obsolete destination forever.
+    while (renderedSignature !== signature(requestedRoute)) {
+      if (renderedSignature !== undefined && !reducedMotion.matches) {
+        main.classList.add('page-leaving');
+        await waitForAnimation(main);
+        main.classList.remove('page-leaving');
+      }
+
+      const nextRoute = requestedRoute;
+      const previousKey = renderedSignature?.split('/')[0] || 'home';
+      const previousIndex = tabs.findIndex(tab => tab.key === previousKey);
+      const nextIndex = tabs.findIndex(tab => tab.key === nextRoute.key);
+      main.classList.toggle('page-forward', nextIndex >= previousIndex);
+      main.classList.toggle('page-backward', nextIndex < previousIndex);
+      commitPage(nextRoute);
+      renderedSignature = signature(nextRoute);
+
+      if (!reducedMotion.matches) {
+        main.classList.add('page-entering');
+        await waitForAnimation(main);
+        main.classList.remove('page-entering');
+      }
+
+      requestedRoute = parseRoute();
     }
-
-    const nextRoute = requestedRoute;
-    const previousKey = renderedSignature?.split('/')[0] || 'home';
-    const previousIndex = tabs.findIndex(tab => tab.key === previousKey);
-    const nextIndex = tabs.findIndex(tab => tab.key === nextRoute.key);
-    main.classList.toggle('page-forward', nextIndex >= previousIndex);
-    main.classList.toggle('page-backward', nextIndex < previousIndex);
-    commitPage(nextRoute);
-    renderedSignature = signature(nextRoute);
-
-    if (!reducedMotion.matches) {
-      main.classList.add('page-entering');
-      await waitForAnimation(main);
-      main.classList.remove('page-entering');
-    }
-
-    requestedRoute = parseRoute();
+  } finally {
+    transitionRunning = false;
   }
-
-  transitionRunning = false;
 }
 
 function setTheme(dark) {
