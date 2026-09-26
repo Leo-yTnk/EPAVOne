@@ -51,7 +51,7 @@ export function Select({ label, options, value, onChange, disabled=false, helper
 
   return <div className="ds-field ds-selectbox" onKeyDown={onKeyDown}>
     <span className="ds-input-label" id={labelId}>{label}</span>
-    <button ref={triggerRef} className="ds-select-trigger" type="button" aria-haspopup="listbox" aria-expanded={open} aria-labelledby={labelId} disabled={disabled} onClick={() => setOpen(current => !current)}><span>{selected?.label}</span><span aria-hidden="true">⌄</span></button>
+    <button ref={triggerRef} className="ds-select-trigger" type="button" aria-haspopup="listbox" aria-expanded={open} aria-labelledby={labelId} aria-label={label + ': ' + (selected?.label ?? '')} disabled={disabled} onClick={() => setOpen(current => !current)}><span>{selected?.label}</span><span aria-hidden="true">⌄</span></button>
     {open && <div ref={menuRef} className="ds-select-menu" role="listbox" aria-labelledby={labelId}>{options.map(option => <button key={option.value} className="ds-option" role="option" aria-selected={option.value === value} aria-disabled={option.disabled || undefined} disabled={option.disabled} onClick={() => choose(option)}>{option.label}</button>)}</div>}
     {helper && <span className="ds-input-helper">{helper}</span>}
   </div>;
