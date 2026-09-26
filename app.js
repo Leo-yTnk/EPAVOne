@@ -33,7 +33,7 @@ const navigationStatus = document.querySelector('#navigation-status');
 const toggle = document.querySelector('#theme-toggle');
 
 function tabNavigation() {
-  tabList.innerHTML = tabs.map(({ key, label }) => `<button class="tab" type="button" role="tab" id="tab-${key}" aria-controls="main" aria-selected="false" tabindex="-1" data-tab="${key}">${label}</button>`).join('');
+  tabList.innerHTML = `<span class="tab-indicator" aria-hidden="true"></span>${tabs.map(({ key, label }) => `<button class="tab" type="button" role="tab" id="tab-${key}" aria-controls="main" aria-selected="false" tabindex="-1" data-tab="${key}">${label}</button>`).join('')}`;
 }
 
 function navigateTo(key) {
@@ -76,16 +76,33 @@ function detail(key) {
     </div></section>`;
 }
 
-function render() {
-  const key = location.hash.match(/^#\/(insights|planner|writer)\/?$/)?.[1] || 'home';
-  main.innerHTML = key === 'home' ? home() : detail(key);
-  main.setAttribute('role', 'tabpanel');
-  main.setAttribute('aria-labelledby', `tab-${key}`);
+function currentRoute() {
+  return location.hash.match(/^#\/(insights|planner|writer)\/?$/)?.[1] || 'home';
+}
+
+function moveTabIndicator(key, animate = true) {
+  const selectedTab = tabList.querySelector(`[data-tab="${key}"]`);
+  const indicator = tabList.querySelector('.tab-indicator');
+  if (!selectedTab || !indicator) return;
+
+  if (animate) indicator.classList.add('is-ready');
+  indicator.style.width = `${selectedTab.offsetWidth}px`;
+  indicator.style.transform = `translateX(${selectedTab.offsetLeft - parseFloat(getComputedStyle(tabList).paddingLeft)}px)`;
+}
+
+function selectTab(key, animate = true) {
   tabList.querySelectorAll('[role="tab"]').forEach(tab => {
     const selected = tab.dataset.tab === key;
     tab.setAttribute('aria-selected', String(selected));
     tab.tabIndex = selected ? 0 : -1;
   });
+  moveTabIndicator(key, animate);
+}
+
+function commitPage(key) {
+  main.innerHTML = key === 'home' ? home() : detail(key);
+  main.setAttribute('role', 'tabpanel');
+  main.setAttribute('aria-labelledby', `tab-${key}`);
   document.title = key === 'home' ? 'EPAVOne — seu espaço de trabalho' : `${products[key].name} — EPAVOne`;
   navigationStatus.textContent = `${tabs.find(tab => tab.key === key).label} selecionado`;
   if (location.hash === '#ferramentas') {
@@ -93,6 +110,54 @@ function render() {
   } else {
     window.scrollTo(0, 0);
   }
+}
+
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+let renderedKey;
+let requestedKey = currentRoute();
+let transitionRunning = false;
+
+function waitForAnimation(element) {
+  return new Promise(resolve => {
+    const finish = () => resolve();
+    element.addEventListener('animationend', finish, { once: true });
+    setTimeout(finish, 400);
+  });
+}
+
+async function render() {
+  requestedKey = currentRoute();
+  selectTab(requestedKey, renderedKey !== undefined);
+
+  if (renderedKey === requestedKey && location.hash === '#ferramentas') {
+    requestAnimationFrame(() => document.querySelector('#ferramentas')?.scrollIntoView());
+  }
+
+  if (transitionRunning) return;
+  transitionRunning = true;
+
+  while (renderedKey !== requestedKey) {
+    if (renderedKey !== undefined && !reducedMotion.matches) {
+      main.classList.add('page-leaving');
+      await waitForAnimation(main);
+      main.classList.remove('page-leaving');
+    }
+
+    const nextKey = requestedKey;
+    const previousIndex = renderedKey === undefined ? 0 : tabs.findIndex(tab => tab.key === renderedKey);
+    const nextIndex = tabs.findIndex(tab => tab.key === nextKey);
+    main.style.setProperty('--page-direction', nextIndex >= previousIndex ? '1' : '-1');
+    commitPage(nextKey);
+    renderedKey = nextKey;
+
+    if (!reducedMotion.matches) {
+      main.classList.add('page-entering');
+      await waitForAnimation(main);
+      main.classList.remove('page-entering');
+    }
+  }
+
+  transitionRunning = false;
 }
 
 function setTheme(dark) {
@@ -124,5 +189,8 @@ tabList.addEventListener('keydown', event => {
   navigateTo(destination.dataset.tab);
 });
 window.addEventListener('hashchange', render);
+window.addEventListener('resize', () => moveTabIndicator(currentRoute(), false));
 tabNavigation();
+selectTab(currentRoute(), false);
+requestAnimationFrame(() => tabList.querySelector('.tab-indicator')?.classList.add('is-ready'));
 render();
