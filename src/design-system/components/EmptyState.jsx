@@ -1,2 +1,10 @@
 import { Button } from './Button.jsx';
-export function EmptyState({ title, description, actionLabel, onAction }) { return <div className="ds-state"><span className="ds-state-icon">＋</span><h3>{title}</h3><p>{description}</p>{actionLabel && <Button size="sm" onClick={onAction}>{actionLabel}</Button>}</div>; }
+
+export function EmptyState({ title, description, actionLabel, onAction }) {
+  return <div className="ds-state">
+    <span className="ds-state-icon">＋</span>
+    <h3>{title}</h3>
+    <p>{description}</p>
+    {actionLabel&&onAction&&<Button size="sm" onClick={onAction}>{actionLabel}</Button>}
+  </div>;
+}
