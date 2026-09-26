@@ -3,6 +3,7 @@
   border:1px solid var(--border-default);border-radius:var(--radius-lg);background:color-mix(in srgb,var(--surface-primary) 94%,transparent);
   box-shadow:var(--shadow-lg);backdrop-filter:blur(1rem);overflow:hidden;isolation:isolate
 }
+.ds-layer-anchor[data-positioned="false"]{visibility:hidden;opacity:0}
 .ds-layer-anchor[data-side="bottom"]{top:var(--layer-top);transform-origin:var(--layer-origin-x,50%) top;animation:ds-layer-in-bottom var(--duration-normal) var(--ease-enter) both}
 .ds-layer-anchor[data-side="top"]{bottom:var(--layer-bottom);transform-origin:var(--layer-origin-x,50%) bottom;animation:ds-layer-in-top var(--duration-normal) var(--ease-enter) both}
 .ds-layer-anchor[data-kind="tooltip"]{width:max-content;max-width:min(20rem,calc(100vw - 2*var(--space-3)));padding:var(--space-2) var(--space-3);background:color-mix(in srgb,var(--text-primary) 94%,transparent);color:var(--surface-primary);font-size:.75rem;line-height:var(--leading-body-compact);pointer-events:none}
