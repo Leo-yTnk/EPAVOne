@@ -205,6 +205,19 @@
   --neutral-800: #E9E4E2;
   --neutral-900: #F5F2F0;
   --neutral-950: #FFFFFF;
+
+  /* Semantic colors are adjusted independently from the inverted neutral
+     scale so brand actions and supporting text keep WCAG AA contrast. */
+  --text-tertiary: #C8BDB7;
+  --text-brand: #F2A184;
+  --text-danger: #FF9A84;
+  --text-success: #86D98D;
+  --text-info: #AFC0FF;
+  --surface-selected: #4A2D24;
+  --button-content-default: #FFFFFF;
+  --button-content-hover: #FFFFFF;
+  --button-content-pressed: #FFFFFF;
+  --button-content-disabled: #A99D97;
 }
 
 /* UTILITIES: Typography ---------------------------------------------------- */
@@ -1090,4 +1103,3 @@ a:focus-visible {
   from { opacity: 0; transform: translateY(-6px) scale(0.98); }
   to { opacity: 1; transform: translateY(0) scale(1); }
 }
-

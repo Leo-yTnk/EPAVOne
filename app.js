@@ -22,9 +22,25 @@ const products = {
   }
 };
 
+const tabs = [
+  { key: 'home', label: 'Início', hash: '#/' },
+  ...Object.entries(products).map(([key, product]) => ({ key, label: product.name.replace('EPAV', ''), hash: `#/${key}` }))
+];
+
 const main = document.querySelector('#main');
-const nav = document.querySelectorAll('[data-nav]');
+const tabList = document.querySelector('[role="tablist"]');
+const navigationStatus = document.querySelector('#navigation-status');
 const toggle = document.querySelector('#theme-toggle');
+
+function tabNavigation() {
+  tabList.innerHTML = tabs.map(({ key, label }) => `<button class="tab" type="button" role="tab" id="tab-${key}" aria-controls="main" aria-selected="false" tabindex="-1" data-tab="${key}">${label}</button>`).join('');
+}
+
+function navigateTo(key) {
+  const destination = tabs.find(tab => tab.key === key) || tabs[0];
+  if (location.hash === destination.hash) render();
+  else location.hash = destination.hash;
+}
 
 function card(key) {
   const item = products[key];
@@ -63,12 +79,20 @@ function detail(key) {
 function render() {
   const key = location.hash.match(/^#\/(insights|planner|writer)\/?$/)?.[1] || 'home';
   main.innerHTML = key === 'home' ? home() : detail(key);
-  nav.forEach(link => {
-    if (link.dataset.nav === key) link.setAttribute('aria-current', 'page');
-    else link.removeAttribute('aria-current');
+  main.setAttribute('role', 'tabpanel');
+  main.setAttribute('aria-labelledby', `tab-${key}`);
+  tabList.querySelectorAll('[role="tab"]').forEach(tab => {
+    const selected = tab.dataset.tab === key;
+    tab.setAttribute('aria-selected', String(selected));
+    tab.tabIndex = selected ? 0 : -1;
   });
   document.title = key === 'home' ? 'EPAVOne — seu espaço de trabalho' : `${products[key].name} — EPAVOne`;
-  if (location.hash !== '#ferramentas') window.scrollTo(0, 0);
+  navigationStatus.textContent = `${tabs.find(tab => tab.key === key).label} selecionado`;
+  if (location.hash === '#ferramentas') {
+    requestAnimationFrame(() => document.querySelector('#ferramentas')?.scrollIntoView());
+  } else {
+    window.scrollTo(0, 0);
+  }
 }
 
 function setTheme(dark) {
@@ -84,5 +108,21 @@ toggle.addEventListener('click', () => {
   setTheme(dark);
   try { localStorage.setItem('epavone-theme', dark ? 'dark' : 'light'); } catch { /* armazenamento indisponível */ }
 });
+tabList.addEventListener('click', event => {
+  const tab = event.target.closest('[role="tab"]');
+  if (tab) navigateTo(tab.dataset.tab);
+});
+tabList.addEventListener('keydown', event => {
+  const tabButtons = [...tabList.querySelectorAll('[role="tab"]')];
+  const currentIndex = tabButtons.indexOf(document.activeElement);
+  if (currentIndex < 0) return;
+  const destinations = { ArrowRight: (currentIndex + 1) % tabButtons.length, ArrowLeft: (currentIndex - 1 + tabButtons.length) % tabButtons.length, Home: 0, End: tabButtons.length - 1 };
+  if (!(event.key in destinations)) return;
+  event.preventDefault();
+  const destination = tabButtons[destinations[event.key]];
+  destination.focus();
+  navigateTo(destination.dataset.tab);
+});
 window.addEventListener('hashchange', render);
+tabNavigation();
 render();
