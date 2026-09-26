@@ -2,64 +2,42 @@
 
 ## Objetivo
 
-Evitar que o EPAVOne repita a evolução monolítica do Yourcipe. A arquitetura separa aplicação, design system, produtos, compartilhados e ferramentas de desenvolvimento.
+Evitar que o EPAVOne repita a evolução monolítica do Yourcipe.
 
 ## Boundaries
 
 ### `src/app`
 
-Somente responsabilidades globais:
-
 - bootstrap;
 - AppShell;
 - router;
 - theme;
+- motion de navegação;
 - providers futuros.
-
-Não contém lógica de negócio do Insights, Planner ou Writer.
 
 ### `src/design-system`
 
-Somente componentes e estilos reutilizáveis.
+- componentes reutilizáveis;
+- behaviors compartilhados;
+- portal/layers;
+- tokens;
+- styles por família.
 
-- componente visual público: um arquivo;
-- tokens e CSS por família;
-- nenhuma dependência de produto;
-- Card sempre stitched.
+Um componente público deve ter um arquivo próprio.
 
 ### `src/products/<produto>`
 
-Cada produto é uma feature boundary.
-
-Estrutura recomendada:
-
-```
-products/insights/
-├── pages/
-├── components/
-├── services/
-├── models/
-├── hooks/
-└── tests/
-```
+Feature boundary de cada produto.
 
 Um produto não importa internals de outro produto.
 
 ### `src/shared`
 
-Código genuinamente compartilhado:
-
-- serviços base;
-- erros;
-- utilitários;
-- constantes;
-- tipos/modelos cross-product.
-
-Não mover algo para shared apenas para contornar boundary.
+Somente código genuinamente cross-product.
 
 ### `src/dev`
 
-Ferramentas de desenvolvimento que não fazem parte do fluxo normal do usuário, como Component Lab.
+Ferramentas de desenvolvimento, como Component Lab.
 
 ## Fluxo de dados
 
@@ -73,15 +51,13 @@ repository / adapter
 API / Supabase
 ```
 
-UI não chama Supabase ou fetch diretamente.
+UI não chama Supabase nem fetch diretamente.
 
 ## Estado
 
-- local: dialog, input, tab, hover;
-- feature: filtros, seleção e dados do produto;
+- local: dialog, input, tab, menu;
+- feature: filtros e dados do produto;
 - global: sessão, usuário, tema e produto atual.
-
-Não criar um store global para estado local de feature.
 
 ## CSS
 
@@ -95,36 +71,76 @@ design-system/styles/
 ├── navigation.css
 ├── data.css
 ├── feedback.css
+├── layers.css
 └── index.css
 ```
 
-CSS específico de produto fica ao lado do produto.
+## Layer architecture
 
-Proibidos:
+Floating UI não depende do DOM local.
 
-- `transition: all`;
-- `!important`;
-- `yc-*`;
-- aparência de componente duplicada em página;
-- inline styles, exceto CSS custom properties alimentadas por dados.
+```
+trigger
+  ↓
+useAnchoredLayer
+  ↓
+Portal(document.body)
+  ↓
+Select / Menu / Tooltip layer
+```
+
+Modal UI:
+
+```
+Dialog / Drawer
+  ↓
+Portal
+  ↓
+useModalLayer
+  ├── focus trap
+  ├── Escape
+  ├── return focus
+  └── body scroll lock
+```
+
+## Motion architecture
+
+- View Transition API quando disponível;
+- fallback CSS quando não;
+- tokens únicos de duração/easing/distância/blur;
+- reduced motion obrigatório;
+- animação nunca substitui feedback funcional.
+
+## Radius architecture
+
+Containers que possuem elementos próximos às bordas devem declarar:
+
+```css
+--container-radius
+--container-padding
+--nested-radius
+```
+
+O nested radius deriva de outer radius - padding.
 
 ## Cards
 
-Todo card é stitched.
-
-O componente `Card` aplica o contrato automaticamente e componentes derivados compõem `Card`. Páginas não devem criar card manual por CSS.
+Todo Card é stitched.
 
 ## Quality gate
 
-Todo PR deve passar:
+Todo PR passa por:
 
 1. ESLint;
 2. architecture checker;
 3. Vitest;
 4. Vite build.
 
-`npm run verify` executa a mesma sequência localmente.
-
-## Agentes
-
-`AGENTS.md` é obrigatório para agentes de código e resume as regras que não podem ser violadas.
+O checker valida também:
+- ausência de Select nativo;
+- uso de componentes em páginas;
+- portal em floating/overlay feedback;
+- motion contract;
+- compact line-height;
+- stitched Card;
+- boundaries entre produtos.
