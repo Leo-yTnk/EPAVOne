@@ -1,0 +1,8 @@
+import { useEffect, useRef } from 'preact/hooks';
+import { IconButton } from './IconButton.jsx';
+export function Dialog({ open, title, children, actions, onClose }) {
+  const dialogRef=useRef(null);
+  useEffect(()=>{ if(!open) return; const previous=document.activeElement; const dialog=dialogRef.current; dialog?.focus(); const handler=event=>{ if(event.key==='Escape') onClose?.(); if(event.key!=='Tab'||!dialog) return; const focusable=[...dialog.querySelectorAll('button,input,select,textarea,a[href],[tabindex]:not([tabindex="-1"])')].filter(node=>!node.disabled); if(!focusable.length) return; const first=focusable[0],last=focusable.at(-1); if(event.shiftKey&&document.activeElement===first){event.preventDefault();last.focus();} else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first.focus();} }; document.addEventListener('keydown',handler); return()=>{document.removeEventListener('keydown',handler);previous?.focus?.();}; },[open,onClose]);
+  if(!open) return null;
+  return <div className="ds-dialog-overlay" onMouseDown={event=>event.target===event.currentTarget&&onClose?.()}><section ref={dialogRef} className="ds-dialog ds-stitched-card" role="dialog" aria-modal="true" aria-labelledby="ds-dialog-title" tabIndex="-1"><div className="ds-dialog-head"><h2 id="ds-dialog-title" className="ds-dialog-title">{title}</h2><IconButton label="Fechar" onClick={onClose}>×</IconButton></div><div className="ds-dialog-content">{children}</div>{actions&&<div className="ds-dialog-actions">{actions}</div>}</section></div>;
+}
