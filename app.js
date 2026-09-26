@@ -137,14 +137,29 @@ function home() {
               <span class="ds-input-error">Código fictício inválido.</span>
             </div>
             <div>
-              <label class="ds-input-label" for="lab-category">Categoria</label>
+              <label class="ds-input-label" for="lab-category">Select nativo</label>
               <select id="lab-category" class="ds-select">
                 <option>Suínos</option>
                 <option>Aves</option>
                 <option>Bovinos</option>
                 <option>Pescados</option>
               </select>
-              <span class="ds-input-helper">Options seguem tipografia e tema do controle nativo.</span>
+            </div>
+            <div>
+              <span class="ds-input-label" id="lab-selectbox-label">Select + Option padronizados</span>
+              <div class="ds-selectbox" data-ds-selectbox>
+                <button class="ds-select-trigger" type="button" aria-haspopup="listbox" aria-expanded="false" aria-labelledby="lab-selectbox-label lab-selectbox-value" data-ds-select-trigger>
+                  <span id="lab-selectbox-value" data-ds-select-value>Suínos</span><span aria-hidden="true">⌄</span>
+                </button>
+                <div class="ds-select-menu" role="listbox" aria-labelledby="lab-selectbox-label" data-ds-select-menu hidden>
+                  <button class="ds-option" role="option" aria-selected="true" data-value="Suínos">Suínos</button>
+                  <button class="ds-option" role="option" aria-selected="false" data-value="Aves">Aves</button>
+                  <button class="ds-option" role="option" aria-selected="false" data-value="Bovinos">Bovinos</button>
+                  <button class="ds-option" role="option" aria-selected="false" data-value="Pescados">Pescados</button>
+                  <button class="ds-option" role="option" aria-selected="false" aria-disabled="true" disabled data-value="Congelados">Congelados</button>
+                </div>
+              </div>
+              <span class="ds-input-helper">Menu customizado com selected, hover, disabled e teclado.</span>
             </div>
           </div>
         </article>
@@ -530,6 +545,41 @@ tabList.addEventListener('keydown', event => {
 
 let labLastFocus = null;
 
+
+function closeSelectbox(selectbox, { focusTrigger = false } = {}) {
+  if (!selectbox) return;
+  const trigger = selectbox.querySelector('[data-ds-select-trigger]');
+  const menu = selectbox.querySelector('[data-ds-select-menu]');
+  trigger?.setAttribute('aria-expanded', 'false');
+  if (menu) menu.hidden = true;
+  menu?.querySelectorAll('.ds-option').forEach(option => option.classList.remove('is-highlighted'));
+  if (focusTrigger) trigger?.focus();
+}
+
+function openSelectbox(selectbox) {
+  if (!selectbox) return;
+  document.querySelectorAll('[data-ds-selectbox]').forEach(other => {
+    if (other !== selectbox) closeSelectbox(other);
+  });
+  const trigger = selectbox.querySelector('[data-ds-select-trigger]');
+  const menu = selectbox.querySelector('[data-ds-select-menu]');
+  trigger?.setAttribute('aria-expanded', 'true');
+  if (menu) menu.hidden = false;
+  const selected = menu?.querySelector('.ds-option[aria-selected="true"]:not(:disabled)') || menu?.querySelector('.ds-option:not(:disabled)');
+  selected?.classList.add('is-highlighted');
+  selected?.focus();
+}
+
+function selectOption(option) {
+  if (!option || option.disabled || option.getAttribute('aria-disabled') === 'true') return;
+  const selectbox = option.closest('[data-ds-selectbox]');
+  const value = selectbox?.querySelector('[data-ds-select-value]');
+  selectbox?.querySelectorAll('.ds-option').forEach(item => item.setAttribute('aria-selected', String(item === option)));
+  if (value) value.textContent = option.dataset.value || option.textContent.trim();
+  closeSelectbox(selectbox, { focusTrigger: true });
+}
+
+
 function setSliderProgress(input) {
   const min = Number(input.min || 0);
   const max = Number(input.max || 100);
@@ -575,6 +625,24 @@ main.addEventListener('input', event => {
 });
 
 main.addEventListener('click', event => {
+  const selectTrigger = event.target.closest('[data-ds-select-trigger]');
+  if (selectTrigger) {
+    const selectbox = selectTrigger.closest('[data-ds-selectbox]');
+    const expanded = selectTrigger.getAttribute('aria-expanded') === 'true';
+    expanded ? closeSelectbox(selectbox) : openSelectbox(selectbox);
+    return;
+  }
+
+  const option = event.target.closest('.ds-option');
+  if (option) {
+    selectOption(option);
+    return;
+  }
+
+  if (!event.target.closest('[data-ds-selectbox]')) {
+    document.querySelectorAll('[data-ds-selectbox]').forEach(selectbox => closeSelectbox(selectbox));
+  }
+
   const tab = event.target.closest('[data-lab-tab]');
   if (tab && !tab.disabled) {
     const target = tab.dataset.labTab;
@@ -602,6 +670,41 @@ main.addEventListener('click', event => {
 });
 
 document.addEventListener('keydown', event => {
+  const option = document.activeElement?.closest?.('.ds-option');
+  if (option) {
+    const menu = option.closest('[data-ds-select-menu]');
+    const selectbox = option.closest('[data-ds-selectbox]');
+    const enabled = [...menu.querySelectorAll('.ds-option:not(:disabled)')];
+    const index = enabled.indexOf(option);
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      option.classList.remove('is-highlighted');
+      const next = event.key === 'ArrowDown'
+        ? enabled[(index + 1) % enabled.length]
+        : enabled[(index - 1 + enabled.length) % enabled.length];
+      next.classList.add('is-highlighted');
+      next.focus();
+      return;
+    }
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      selectOption(option);
+      return;
+    }
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      closeSelectbox(selectbox, { focusTrigger: true });
+      return;
+    }
+  }
+
+  const trigger = document.activeElement?.closest?.('[data-ds-select-trigger]');
+  if (trigger && (event.key === 'ArrowDown' || event.key === 'Enter' || event.key === ' ')) {
+    event.preventDefault();
+    openSelectbox(trigger.closest('[data-ds-selectbox]'));
+    return;
+  }
+
   const openOverlay = document.querySelector('.ds-dialog-overlay:not([hidden]), .ds-drawer-overlay:not([hidden])');
   if (!openOverlay) return;
 
