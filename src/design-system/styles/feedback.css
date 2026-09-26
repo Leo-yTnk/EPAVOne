@@ -35,7 +35,7 @@
 .ds-dialog-content{margin:var(--space-4) 0;color:var(--text-secondary);line-height:var(--leading-body)}
 .ds-dialog-actions{display:flex;justify-content:flex-end;gap:var(--space-3)}
 .ds-drawer-overlay{justify-items:end}
-.ds-drawer{width:min(28rem,92vw);height:100%;border-radius:var(--radius-2xl) 0 0 var(--radius-2xl);animation:ds-drawer-in var(--duration-slow) var(--ease-enter) both}
+.ds-drawer{width:min(28rem,92vw);height:100%;border-radius:var(--radius-2xl) 0 0 var(--radius-2xl);animation:ds-drawer-in var(--duration-slow) var(--ease-enter) both}\n.ds-drawer::after{border-radius:max(var(--radius-xs),calc(var(--radius-2xl) - var(--card-stitch-inset))) 0 0 max(var(--radius-xs),calc(var(--radius-2xl) - var(--card-stitch-inset)))}
 
 .ds-toast-region{position:fixed;right:var(--space-5);bottom:var(--space-5);z-index:var(--z-toast);display:grid;gap:var(--space-2);width:min(24rem,calc(100vw - 2*var(--space-4)))}
 .ds-toast{display:grid;grid-template-columns:1fr auto;gap:var(--space-3);align-items:start;padding:var(--space-4);border:1px solid var(--border-default);border-radius:var(--radius-lg);background:color-mix(in srgb,var(--surface-primary) 94%,transparent);box-shadow:var(--shadow-lg);backdrop-filter:blur(1rem);animation:ds-toast-in var(--duration-slow) var(--ease-enter) both}
