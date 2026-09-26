@@ -1,0 +1,2 @@
+import { Badge, Card, PageHeader } from '../../design-system/components/index.js';
+export function WriterRoutes() { return <section className="product-page"><PageHeader eyebrow="EPAVWriter" title="Do atendimento ao pedido, com mais clareza." description="O Writer compartilha a fundação, mas mantém lógica e componentes exclusivos dentro do produto."/><Card className="placeholder-card"><Badge>Em desenvolvimento</Badge><h2 className="ds-heading-h3">Writer isolado</h2><p>Componentes específicos do Writer ficarão em <code>src/products/writer</code>.</p></Card></section>; }

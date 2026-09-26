@@ -1,0 +1,2 @@
+import { cx } from '../../shared/utils/cx.js';
+export function NavItem({ active=false, className='', children, ...props }) { return <a className={cx('ds-nav-item',active&&'is-active',className)} aria-current={active?'page':undefined} {...props}>{children}</a>; }

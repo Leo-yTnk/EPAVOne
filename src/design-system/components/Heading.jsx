@@ -1,0 +1,2 @@
+import { cx } from '../../shared/utils/cx.js';
+export function Heading({ as:Component='h2', level=2, display, className='', children, ...props }) { const token=display ? 'ds-display-'+display : 'ds-heading-h'+level; return <Component className={cx(token,className)} {...props}>{children}</Component>; }

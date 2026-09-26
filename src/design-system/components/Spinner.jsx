@@ -1,0 +1,2 @@
+import { cx } from '../../shared/utils/cx.js';
+export function Spinner({ size='md', label='Carregando' }) { return <span className={cx('ds-spinner',size==='lg' && 'ds-spinner-lg')} role="status" aria-label={label}></span>; }

@@ -1,0 +1,2 @@
+import { cx } from '../../shared/utils/cx.js';
+export function Skeleton({ variant='line', className='' }) { return <span className={cx('ds-skeleton','ds-skeleton-'+variant,className)} aria-hidden="true"></span>; }
