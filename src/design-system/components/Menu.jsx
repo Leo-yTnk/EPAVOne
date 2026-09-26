@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from 'preact/hooks';
+import { useEffect, useId, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { useAnchoredLayer } from '../behaviors/useAnchoredLayer.js';
 import { Button } from './Button.jsx';
 import { Portal } from './Portal.jsx';
@@ -13,11 +13,15 @@ export function Menu({ label, items, variant='ghost', size='sm' }) {
   const position=useAnchoredLayer(triggerRef,layerRef,open,{offset:7,minWidth:180});
   const enabledIndexes=items.map((item,index)=>item.disabled?null:index).filter(index=>index!==null);
 
-  useEffect(()=>{
-    if(!open) return undefined;
+  useLayoutEffect(()=>{
+    if(!open) return;
     const first=enabledIndexes[0] ?? 0;
     setHighlighted(first);
-    requestAnimationFrame(()=>itemRefs.current[first]?.focus());
+    itemRefs.current[first]?.focus();
+  },[open]);
+
+  useEffect(()=>{
+    if(!open) return undefined;
 
     function closeOnPointer(event){
       if(triggerRef.current?.contains(event.target) || layerRef.current?.contains(event.target)) return;
