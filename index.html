@@ -8,26 +8,10 @@
     <title>EPAVOne — seu espaço de trabalho</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-    <link rel="stylesheet" href="./ds-enforce.css">
-    <link rel="stylesheet" href="./styles.css">
-    <script src="./app.js" defer></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap">
   </head>
   <body>
-    <a class="skip-link" href="#main">Ir para o conteúdo</a>
-    <div class="shell">
-      <header class="site-header">
-        <a class="brand" href="#/" aria-label="EPAVOne, página inicial"><span class="brand-mark" aria-hidden="true">e.</span><span>EPAV<span class="brand-one">One</span></span></a>
-        <nav class="site-nav" aria-label="Navegação principal">
-          <a href="#/" data-nav="home">Início</a>
-          <a href="#/insights" data-nav="insights">Insights</a>
-          <a href="#/planner" data-nav="planner">Planner</a>
-          <a href="#/writer" data-nav="writer">Writer</a>
-        </nav>
-        <button class="ds-btn ds-btn-secondary ds-btn-sm theme-toggle" type="button" id="theme-toggle" aria-label="Ativar modo escuro" aria-pressed="false">Modo escuro</button>
-      </header>
-      <main id="main" tabindex="-1"></main>
-      <footer class="site-footer"><span>EPAVOne · Experiências Práticas em Atividades de Varejo</span><span>Planeje. Entenda. Prepare.</span></footer>
-    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
