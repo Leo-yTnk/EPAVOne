@@ -1,3 +1,4 @@
+import './home.css';
 import { Badge, Button, Card, PageHeader } from '../../design-system/components/index.js';
 
 const products = [
