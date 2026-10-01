@@ -27,3 +27,6 @@
   .ds-date-range{grid-template-columns:1fr}
   .ds-date-range-separator{display:none}
 }
+.ds-page-header-copy,.ds-toolbar-group,.ds-filter-control{min-width:0}
+.ds-page-header-copy{overflow-wrap:anywhere}
+.ds-page-header>.ds-inline{flex-wrap:wrap;max-width:100%}

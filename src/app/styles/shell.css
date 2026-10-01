@@ -9,7 +9,7 @@
 .navigation-island{
   --container-radius:var(--radius-2xl);--container-padding:var(--space-1);
   pointer-events:auto;border:1px solid var(--border-subtle);border-radius:var(--container-radius);
-  background:color-mix(in srgb,var(--surface-primary) 90%,transparent);box-shadow:var(--shadow-sm);backdrop-filter:blur(.75rem);
+  background:var(--surface-primary);box-shadow:var(--shadow-sm);
   transition:background-color var(--duration-normal) var(--ease-standard),border-color var(--duration-normal) var(--ease-standard),box-shadow var(--duration-normal) var(--ease-standard),transform var(--duration-normal) var(--ease-emphasized)
 }
 .navigation-island:hover{box-shadow:var(--shadow-md)}
@@ -45,11 +45,11 @@
 ::view-transition-old(epav-header){animation:ds-header-out var(--duration-fast) var(--ease-standard) both}
 ::view-transition-new(epav-header){animation:ds-header-in var(--duration-normal) var(--ease-enter) both}
 
-@keyframes ds-page-out{to{opacity:0;filter:blur(3px);transform:translateY(calc(var(--motion-distance-sm) * -1)) scale(.997)}}
-@keyframes ds-page-in{from{opacity:0;filter:blur(5px);transform:translateY(var(--motion-distance-md)) scale(.992)}to{opacity:1;filter:blur(0);transform:translateY(0) scale(1)}}
-@keyframes ds-header-out{to{opacity:.65;filter:blur(2px);transform:translateY(-2px)}}
-@keyframes ds-header-in{from{opacity:.65;filter:blur(2px);transform:translateY(-2px)}to{opacity:1;filter:blur(0);transform:translateY(0)}}
-@keyframes ds-route-fallback-in{from{opacity:0;filter:blur(4px);transform:translateY(var(--motion-distance-sm))}to{opacity:1;filter:blur(0);transform:translateY(0)}}
+@keyframes ds-page-out{to{opacity:0;transform:translateY(calc(var(--motion-distance-sm) * -1)) scale(.997)}}
+@keyframes ds-page-in{from{opacity:0;transform:translateY(var(--motion-distance-md)) scale(.992)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes ds-header-out{to{opacity:.65;transform:translateY(-2px)}}
+@keyframes ds-header-in{from{opacity:.65;transform:translateY(-2px)}to{opacity:1;transform:translateY(0)}}
+@keyframes ds-route-fallback-in{from{opacity:0;transform:translateY(var(--motion-distance-sm))}to{opacity:1;transform:translateY(0)}}
 
 @supports(view-transition-name:none){.route-frame{animation:none}}
 
@@ -63,4 +63,14 @@
 @media(prefers-reduced-motion:reduce){
   ::view-transition-old(epav-page),::view-transition-new(epav-page),::view-transition-old(epav-header),::view-transition-new(epav-header),.route-frame{animation:none}
   .product-tab:hover,.brand:hover .brand-mark{transform:none}
+}
+
+.site-header>*{min-width:0}
+.product-tabs{min-width:0}
+.product-tab{flex-shrink:0}
+@media(max-width:37.5rem){
+ .app-shell{width:calc(100% - 2 * var(--space-4))}
+ .brand{font-size:1.125rem;padding-right:var(--space-3)}
+ .header-actions .ds-btn{padding-inline:var(--space-3)}
+ .app-main{padding-block:var(--space-6)}
 }

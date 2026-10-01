@@ -28,7 +28,7 @@
 
 ## Motion
 
-- Motion is functional and may combine opacity, transform, blur and scale.
+- Motion is functional and uses opacity, small translations and subtle scale. Do not use blur filters or backdrop filters.
 - Do not use `transition: all`.
 - Keep durations short and use design-system tokens.
 - Anchored layers must transform from the trigger origin.

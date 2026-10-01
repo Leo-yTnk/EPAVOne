@@ -1,5 +1,5 @@
 .ds-alert{
-  display:grid;grid-template-columns:auto 1fr;gap:var(--space-3);padding:var(--space-4);border:1px solid var(--border-default);border-radius:var(--radius-lg);
+  display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--space-3);padding:var(--space-4);border:1px solid var(--border-default);border-radius:var(--radius-lg);
   background:var(--surface-primary);animation:ds-feedback-in var(--duration-normal) var(--ease-enter) both
 }
 .ds-alert p{color:var(--text-secondary);font-size:.875rem;line-height:var(--leading-body)}
@@ -21,7 +21,7 @@
 .ds-skeleton-line{height:.875rem}.ds-skeleton-title{height:1.5rem;width:58%}.ds-skeleton-circle{width:2.5rem;height:2.5rem;border-radius:50%}
 
 .ds-dialog-overlay,.ds-drawer-overlay{
-  position:fixed;inset:0;z-index:var(--z-overlay);display:grid;background:rgba(0,0,0,.38);backdrop-filter:blur(5px);
+  position:fixed;inset:0;z-index:var(--z-overlay);display:grid;background:rgba(0,0,0,.38);
   animation:ds-overlay-in var(--duration-normal) var(--ease-standard) both
 }
 .ds-dialog-overlay{place-items:center}
@@ -34,27 +34,38 @@
 .ds-dialog-head,.ds-drawer-header{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:var(--space-4)}
 .ds-dialog-title,.ds-drawer-title{font:700 var(--heading-4)/var(--leading-heading-small) var(--font-heading)}
 .ds-dialog-content{overflow:auto;min-height:0;padding:var(--space-1);margin:var(--space-4) 0;color:var(--text-secondary);line-height:var(--leading-body)}
-.ds-dialog-actions{display:flex;justify-content:flex-end;gap:var(--space-3)}
+.ds-dialog-actions{flex-shrink:0;flex-wrap:wrap;display:flex;justify-content:flex-end;gap:var(--space-3)}
 .ds-drawer-overlay{justify-items:end}
 .ds-drawer{width:min(28rem,92vw);height:100%;border-radius:var(--radius-2xl) 0 0 var(--radius-2xl);animation:ds-drawer-in var(--duration-slow) var(--ease-enter) both}
 
 .ds-toast-region{position:fixed;right:var(--space-5);bottom:var(--space-5);z-index:var(--z-toast);display:grid;gap:var(--space-2);width:min(24rem,calc(100vw - 2*var(--space-4)))}
-.ds-toast{display:grid;grid-template-columns:1fr auto;gap:var(--space-3);align-items:start;padding:var(--space-4);border:1px solid var(--border-default);border-radius:var(--radius-lg);background:color-mix(in srgb,var(--surface-primary) 94%,transparent);box-shadow:var(--shadow-lg);backdrop-filter:blur(1rem);animation:ds-toast-in var(--duration-slow) var(--ease-enter) both}
+.ds-toast{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--space-3);align-items:start;padding:var(--space-4);border:1px solid var(--border-default);border-radius:var(--radius-lg);background:var(--surface-primary);box-shadow:var(--shadow-lg);animation:ds-toast-in var(--duration-slow) var(--ease-enter) both}
 .ds-toast-content{line-height:var(--leading-body)}
 .ds-toast.is-success{border-left:4px solid var(--ref-color-success-500)}.ds-toast.is-error{border-left:4px solid var(--ref-color-danger-500)}.ds-toast.is-info{border-left:4px solid var(--ref-color-info-500)}
 
 .ds-layer-open{overflow:hidden}
 
-@keyframes ds-feedback-in{from{opacity:0;filter:blur(2px);transform:translateY(var(--motion-distance-sm))}to{opacity:1;filter:blur(0);transform:translateY(0)}}
+@keyframes ds-feedback-in{from{opacity:0;transform:translateY(var(--motion-distance-sm))}to{opacity:1;transform:translateY(0)}}
 @keyframes ds-shimmer{100%{transform:translateX(110%)}}
-@keyframes ds-overlay-in{from{opacity:0;backdrop-filter:blur(0)}to{opacity:1;backdrop-filter:blur(5px)}}
-@keyframes ds-dialog-in{from{opacity:0;filter:blur(var(--layer-blur));transform:translateY(var(--motion-distance-md)) scale(.975)}to{opacity:1;filter:blur(0);transform:translateY(0) scale(1)}}
-@keyframes ds-drawer-in{from{opacity:0;filter:blur(var(--layer-blur));transform:translateX(1.25rem) scale(.99)}to{opacity:1;filter:blur(0);transform:translateX(0) scale(1)}}
-@keyframes ds-toast-in{from{opacity:0;filter:blur(var(--layer-blur));transform:translateY(.75rem) scale(.985)}to{opacity:1;filter:blur(0);transform:translateY(0) scale(1)}}
+@keyframes ds-overlay-in{from{opacity:0;}to{opacity:1;}}
+@keyframes ds-dialog-in{from{opacity:0;transform:translateY(var(--motion-distance-md)) scale(.975)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes ds-drawer-in{from{opacity:0;transform:translateX(1.25rem) scale(.99)}to{opacity:1;transform:translateX(0) scale(1)}}
+@keyframes ds-toast-in{from{opacity:0;transform:translateY(.75rem) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
 
 @media(prefers-reduced-motion:reduce){
   .ds-alert,.ds-dialog-overlay,.ds-drawer-overlay,.ds-dialog,.ds-drawer,.ds-toast{animation:none}
   .ds-skeleton::after{animation:none}
 }
 
-@media(max-width:40rem){.ds-dialog{padding:var(--space-5)}.ds-dialog-head{gap:var(--space-2)}}
+@media(max-width:40rem){.ds-dialog-head{gap:var(--space-2)}}
+
+.ds-dialog-content{overscroll-behavior:contain}
+.ds-dialog-title,.ds-drawer-title{min-width:0;overflow-wrap:anywhere}
+.ds-dialog-head .ds-icon-btn,.ds-drawer-header .ds-icon-btn{flex-shrink:0}
+@media(max-width:40rem){
+ .ds-dialog{width:calc(100vw - 2 * var(--space-3));max-height:calc(100dvh - 2 * var(--space-3));padding:var(--space-4)}
+ .ds-dialog.is-large{width:calc(100vw - 2 * var(--space-3))}
+ .ds-dialog-actions>.ds-btn{flex:1}
+}
+
+.ds-alert>div,.ds-toast-content{min-width:0;overflow-wrap:anywhere}

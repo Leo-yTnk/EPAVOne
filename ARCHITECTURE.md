@@ -107,7 +107,7 @@ useModalLayer
 
 - View Transition API quando disponível;
 - fallback CSS quando não;
-- tokens únicos de duração/easing/distância/blur;
+- tokens únicos de duração/easing/distância;
 - reduced motion obrigatório;
 - animação nunca substitui feedback funcional.
 

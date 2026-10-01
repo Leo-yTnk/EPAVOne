@@ -111,8 +111,8 @@ O checker bloqueia uso direto de `ds-card` fora de `Card.jsx`. A costura usa `Ca
 ## Motion contract
 
 - sem `transition: all`;
-- blur é permitido como parte de motion funcional;
-- layers usam opacity + scale + blur + deslocamento curto;
+- blur e backdrop-filter são proibidos;
+- layers usam opacity + scale + deslocamento curto;
 - rotas usam View Transitions com fallback;
 - reduced motion é obrigatório.
 
@@ -121,3 +121,12 @@ O checker bloqueia uso direto de `ds-card` fora de `Card.jsx`. A costura usa `Ca
 ```
 #/dev/components
 ```
+
+
+## Layout e movimento leves
+
+O checker impede filtros de blur no CSS. Animações de páginas, menus, diálogos e feedback usam opacidade, deslocamento curto e escala sutil, com `prefers-reduced-motion`. Superfícies de texto são opacas, sem processamento de backdrop.
+
+Os menus respeitam a área visível do `visualViewport`, inclusive com teclado virtual, e agrupam resize/scroll em um único `requestAnimationFrame`, sem renderizar novamente quando a posição não muda. A altura disponível limita todo o seletor; a busca fica fora da região rolável das opções.
+
+Em telas estreitas, o Writer quebra nomes e rótulos por extenso, empilha controles, mantém ações com altura adaptável e limita o popup à largura e altura da viewport. O header permite rolagem interna das abas de produto sem aumentar a largura da página.

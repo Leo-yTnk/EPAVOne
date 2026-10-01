@@ -98,7 +98,6 @@ Tokens principais:
 
 --motion-distance-sm
 --motion-distance-md
---layer-blur
 ```
 
 ## 4. Movimento
@@ -111,13 +110,11 @@ Transições podem combinar, quando justificadas:
 
 - `opacity`;
 - `transform`;
-- `filter: blur()`;
-- `backdrop-filter`;
 - cor;
 - borda;
 - sombra.
 
-Blur não é proibido. O que é proibido é blur pesado, longo ou aplicado sem propósito em áreas extensas.
+Filtros de blur e backdrop-filter são proibidos por custo de renderização. Use opacidade, deslocamento curto e escala sutil, sem atrasar a interação.
 
 ### Regras
 
@@ -125,8 +122,8 @@ Blur não é proibido. O que é proibido é blur pesado, longo ou aplicado sem p
 - movimentos devem ser curtos e previsíveis;
 - entrada normalmente usa easing de desaceleração;
 - press usa scale sutil;
-- página pode combinar opacity + translate + blur;
-- layers podem combinar opacity + scale + translate + blur;
+- página pode combinar opacity + translate;
+- layers podem combinar opacity + scale + translate;
 - o transform-origin de uma layer ancorada deve partir do trigger;
 - `prefers-reduced-motion` remove coreografia e reduz durações;
 - nenhuma animação pode atrasar uma ação funcional.
@@ -136,8 +133,8 @@ Blur não é proibido. O que é proibido é blur pesado, longo ou aplicado sem p
 Rotas usam View Transitions quando disponíveis e fallback CSS quando não.
 
 A página:
-- sai com blur/opacity/movimento muito curto;
-- entra com opacity + blur + translate + scale sutil;
+- sai com opacity/movimento muito curto;
+- entra com opacity + translate + scale sutil;
 - mantém o header visualmente estável;
 - respeita reduced motion.
 
@@ -172,7 +169,7 @@ O menu:
 - mantém largura coerente com o trigger;
 - recalcula em scroll/resize;
 - usa transform-origin derivado do trigger;
-- anima com layer-blur + opacity + scale + pequeno movimento;
+- anima com opacity + scale + pequeno movimento;
 - mantém highlight separado de seleção;
 - suporta Arrow Up/Down, Home, End, Enter, Space, Escape e Tab.
 
