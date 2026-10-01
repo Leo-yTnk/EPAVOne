@@ -1,6 +1,6 @@
 import { Alert, Button, Card, Checkbox, Input } from '../../../design-system/components/index.js';
 const money = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
-export function OrderCart({ template, lines, onChange, onRemove, errors, busy, onExport, success }) {
+export function OrderCart({ template, lines, onChange, onRemove, errors = [], busy, onExport, success, readOnly = false }) {
   const total = lines.reduce(
     (sum, line) => sum + (template.products.find((item) => item.name === line.name)?.price ?? 0) * line.quantity,
     0
@@ -8,32 +8,45 @@ export function OrderCart({ template, lines, onChange, onRemove, errors, busy, o
   const files = Math.ceil(lines.length / template.capacity);
   return (
     <Card className="writer-cart">
-      <span className="ds-overline">4 · Conferência</span>
-      <h2 className="ds-heading-h3">Seu pedido</h2>
+      <span className="ds-overline">Produtos escolhidos</span>
+      <h2 className="ds-heading-h3">Seu carrinho</h2>
       {!lines.length && <p>Adicione produtos pelo catálogo.</p>}
       <ol className="writer-cart-list">
         {lines.map((line, index) => (
           <li key={line.name}>
             <strong>{line.name}</strong>
-            <Input
-              id={`writer-qty-${index}`}
-              type="number"
-              inputMode="numeric"
-              min="1"
-              max="9999"
-              step="1"
-              label="Quantidade"
-              value={line.quantity || ''}
-              onInput={(event) => onChange(line.name, { quantity: Number(event.currentTarget.value) })}
-            />
-            {template.kitOptions.includes('sim') && (
+            <span className="writer-muted">
+              {money.format((template.products.find((item) => item.name === line.name)?.price ?? 0) * line.quantity)}
+            </span>
+            {!readOnly && (
+              <Input
+                id={`writer-qty-${index}`}
+                type="number"
+                inputMode="numeric"
+                min="1"
+                max="9999"
+                step="1"
+                label="Quantidade"
+                value={line.quantity || ''}
+                onInput={(event) => onChange(line.name, { quantity: Number(event.currentTarget.value) })}
+              />
+            )}
+            {readOnly && (
+              <p>
+                {line.quantity} {line.quantity === 1 ? 'unidade' : 'unidades'}
+                {line.kit ? ' · Kit' : ''}
+              </p>
+            )}
+            {!readOnly && template.kitOptions.includes('sim') && (
               <Checkbox checked={Boolean(line.kit)} onChange={(event) => onChange(line.name, { kit: event.currentTarget.checked })}>
                 Kit
               </Checkbox>
             )}
-            <Button variant="ghost" size="sm" onClick={() => onRemove(line.name)}>
-              Remover
-            </Button>
+            {!readOnly && (
+              <Button variant="ghost" size="sm" onClick={() => onRemove(line.name)}>
+                Remover
+              </Button>
+            )}
           </li>
         ))}
       </ol>
@@ -61,15 +74,21 @@ export function OrderCart({ template, lines, onChange, onRemove, errors, busy, o
           </ul>
         </div>
       )}
-      <Button disabled={errors.length > 0 || busy} loading={busy} onClick={onExport}>
-        Validar e baixar {files > 1 ? 'pedidos' : 'pedido'}
-      </Button>
+      {onExport && (
+        <Button disabled={errors.length > 0 || busy} loading={busy} onClick={onExport}>
+          Validar e baixar {files > 1 ? 'pedidos' : 'pedido'}
+        </Button>
+      )}
       {success && (
         <Alert tone="success" title="Arquivos gerados">
           {success}
         </Alert>
       )}
-      <p className="writer-muted">Abra os arquivos no Excel para recalcular os campos automáticos e confira antes de enviar ao suporte.</p>
+      {onExport && (
+        <p className="writer-muted">
+          Abra os arquivos no Excel para recalcular os campos automáticos e confira antes de enviar ao suporte.
+        </p>
+      )}
     </Card>
   );
 }

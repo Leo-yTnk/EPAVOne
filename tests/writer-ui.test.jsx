@@ -2,7 +2,14 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/preact';
 import { describe, expect, it, vi } from 'vitest';
 import { WriterRoutes } from '../src/products/writer/WriterRoutes.jsx';
 import { ProductCatalog } from '../src/products/writer/components/ProductCatalog.jsx';
+import { writerTemplate } from './helpers/writerTemplate.js';
+import { importTemplate } from '../src/products/writer/services/templateService.js';
 vi.mock('../src/products/writer/services/swiftImagesService.js', () => ({ findSwiftImage: vi.fn().mockResolvedValue(null) }));
+vi.mock('../src/products/writer/services/templateService.js', () => ({ importTemplate: vi.fn() }));
+vi.mock('../src/products/writer/models/order.js', async (importOriginal) => ({
+  ...(await importOriginal()),
+  saoPauloDay: () => '2026-09-30'
+}));
 describe('Writer interactions', () => {
   it('requires a weekly upload before displaying the catalog or export action', () => {
     render(<WriterRoutes />);
@@ -27,5 +34,46 @@ describe('Writer interactions', () => {
     fireEvent.click(screen.getByText('Adicionar ao pedido'));
     expect(add).toHaveBeenCalledWith('Filé de Frango 1kg');
     await waitFor(() => expect(screen.queryByRole('img')).toBeNull());
+  });
+  it('starts with client data, guards each step and preserves the cart and corrected CPF when returning', async () => {
+    const actual = await vi.importActual('../src/products/writer/services/templateService.js');
+    const template = await actual.importTemplate(await writerTemplate(), '2026-09-30');
+    importTemplate.mockResolvedValueOnce(template);
+    render(<WriterRoutes />);
+    fireEvent.input(screen.getByLabelText(/Carregar pedido semanal/), { target: { files: [new File(['x'], 'pedido.xlsx')] } });
+    await screen.findByRole('region', { name: 'Etapa 1: Cliente' });
+    expect(screen.queryByLabelText('Buscar produto')).toBeNull();
+    expect(screen.getByRole('button', { name: 'Continuar para produtos' }).disabled).toBe(true);
+    const choose = (label, value) => {
+      fireEvent.click(screen.getByRole('button', { name: label }));
+      fireEvent.click(screen.getByRole('option', { name: value }));
+    };
+    choose(/Sala · obrigatória/, '8ºD');
+    choose(/Aluno · obrigatório/, 'Aluno');
+    choose(/Cliente · obrigatório/, 'Cliente');
+    expect(screen.queryByLabelText('Buscar cliente da sala')).toBeNull();
+    fireEvent.input(screen.getByLabelText(/CPF do cliente · obrigatório/), { target: { value: '01234567890' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Continuar para produtos' }));
+    await screen.findByRole('region', { name: 'Etapa 2: Produtos' });
+    expect(screen.getByRole('button', { name: 'Continuar para entrega' }).disabled).toBe(true);
+    fireEvent.click(screen.getAllByRole('button', { name: 'Adicionar ao pedido' })[0]);
+    fireEvent.click(screen.getByRole('button', { name: 'Continuar para entrega' }));
+    await screen.findByRole('region', { name: 'Etapa 3: Entrega' });
+    choose(/Entrega ou retirada/, 'Retira - Outras Lojas');
+    choose(/Loja para retirada/, 'Loja');
+    fireEvent.input(screen.getByLabelText(/Data de entrega ou retirada/), { target: { value: '2026-10-02' } });
+    choose(/Pagamento · obrigatório/, 'Pix');
+    fireEvent.click(screen.getByRole('button', { name: 'Continuar para conferência' }));
+    await screen.findByRole('region', { name: 'Etapa 4: Conferência' });
+    expect(screen.getByText('*01234567890')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'Validar e baixar pedido' }).disabled).toBe(false);
+    expect(screen.queryByLabelText('Quantidade')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Editar cliente' }));
+    expect(screen.getByLabelText(/CPF do cliente/).value).toBe('01234567890');
+    fireEvent.input(screen.getByLabelText(/CPF do cliente/), { target: { value: '' } });
+    expect(screen.getByRole('button', { name: 'Continuar para produtos' }).disabled).toBe(true);
+    fireEvent.input(screen.getByLabelText(/CPF do cliente/), { target: { value: '01234567890' } });
+    fireEvent.click(screen.getByRole('button', { name: 'Continuar para produtos' }));
+    expect(screen.getByLabelText('Quantidade').value).toBe('1');
   });
 });

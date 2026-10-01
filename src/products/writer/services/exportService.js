@@ -1,11 +1,14 @@
 import JSZip from 'jszip';
-import { splitLines, validateOrder } from '../models/order.js';
-import { patchInputCells, requestRecalculation, parseXml, sheetCells } from './xmlWorkbook.js';
+import { splitLines, validateOrder, orderCpf, exportCpf } from '../models/order.js';
+import { patchInputCells, requestRecalculation, parseXml, sheetCells, patchCpfValidation, cpfValidationFormula } from './xmlWorkbook.js';
 
 export async function exportOrder(template, order, today) {
   const errors = validateOrder(template, order, today);
   if (errors.length) throw new Error(errors.join('\n'));
   const parts = splitLines(order.lines, template.capacity);
+  const cpf = orderCpf(template, order);
+  const client = template.clients.find((item) => item.name === order.client && item.room === order.room);
+  const replaceCpf = cpf.startsWith('0') || (order.cpfOverride !== undefined && cpf !== String(client.cpf).replace(/\D/g, ''));
   const outputs = [];
   for (const [index, lines] of parts.entries()) {
     const updates = {
@@ -18,17 +21,20 @@ export async function exportOrder(template, order, today) {
       E23: order.phone.replace(/\D/g, ''),
       E24: order.payment
     };
+    if (replaceCpf) updates.E9 = exportCpf(cpf);
     for (let slot = 0; slot < template.capacity; slot++) {
       const row = slot + 27;
       updates[`C${row}`] = lines[slot]?.name ?? '';
       updates[`D${row}`] = lines[slot]?.kit ? 'sim' : '';
       updates[`F${row}`] = lines[slot]?.quantity ?? '';
     }
-    const patched = patchInputCells(template.model.xml, updates, template.model.cells);
+    let patched = patchInputCells(template.model.xml, updates, template.model.cells, { replaceCpf });
+    if (cpf.startsWith('0')) patched = patchCpfValidation(patched, template.model.cells);
     const cells = sheetCells(parseXml(patched), []);
     for (const [address, cell] of template.model.cells) {
       const current = cells.get(address);
-      if (cell.hasFormula && (!current?.hasFormula || current.formula !== cell.formula))
+      const expectedFormula = address === 'J9' && cpf.startsWith('0') ? cpfValidationFormula(template.model.cells) : cell.formula;
+      if (cell.hasFormula && !(replaceCpf && address === 'E9') && (!current?.hasFormula || current.formula !== expectedFormula))
         throw new Error(`A fórmula ${address} não foi preservada.`);
       if (current?.node.getAttribute('s') !== cell.node.getAttribute('s')) throw new Error(`A formatação ${address} não foi preservada.`);
     }

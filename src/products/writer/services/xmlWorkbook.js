@@ -84,12 +84,13 @@ export function listValues(source, sheets, names) {
   return [...new Set(values)];
 }
 
-export function patchInputCells(xml, updates, originalCells) {
+export function patchInputCells(xml, updates, originalCells, { replaceCpf = false } = {}) {
   const escape = (value) =>
     String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
   for (const [address, value] of Object.entries(updates)) {
     const original = originalCells.get(address);
-    if (!original || original.hasFormula) throw new Error(`Gravação bloqueada em célula ausente ou calculada: ${address}.`);
+    if (!original || (original.hasFormula && !(replaceCpf && address === 'E9')))
+      throw new Error(`Gravação bloqueada em célula ausente ou calculada: ${address}.`);
     const pattern = new RegExp(`<c\\b(?=[^>]*\\br="${address}")([^>]*?)(?:\\s*/>|>([\\s\\S]*?)</c>)`);
     const match = xml.match(pattern);
     if (!match) throw new Error(`Formato de célula não suportado: ${address}.`);
@@ -100,6 +101,19 @@ export function patchInputCells(xml, updates, originalCells) {
     xml = xml.replace(pattern, cell);
   }
   return xml;
+}
+
+export function cpfValidationFormula(cells) {
+  const original = cells.get('J9')?.formula;
+  if (!original || !/\bE9\b/.test(original)) throw new Error('A validação de CPF deste modelo não é compatível.');
+  return original.replace(/\bE9\b/g, 'SUBSTITUTE(E9,"*","")');
+}
+
+export function patchCpfValidation(xml, cells) {
+  const formula = cpfValidationFormula(cells).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+  const pattern = /<c\b(?=[^>]*\br="J9")[^>]*>[\s\S]*?<\/c>/;
+  if (!pattern.test(xml)) throw new Error('Célula de validação do CPF ausente.');
+  return xml.replace(pattern, (cell) => cell.replace(/(<f\b[^>]*>)[\s\S]*?<\/f>/, (_match, opening) => `${opening}${formula}</f>`));
 }
 
 export function requestRecalculation(xml) {

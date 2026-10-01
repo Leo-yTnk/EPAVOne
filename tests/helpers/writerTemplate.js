@@ -5,7 +5,7 @@ const cell = (address, value = '', formula) =>
 const sheet = (cells, validations = '') =>
   `<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main"><sheetData><row r="1">${cells}</row></sheetData>${validations}</worksheet>`;
 
-export async function writerTemplate({ period = '28/09/2026 à 03/10/2026', missingFormula = false } = {}) {
+export async function writerTemplate({ period = '28/09/2026 à 03/10/2026', missingFormula = false, cpf = '52998224725' } = {}) {
   const zip = new JSZip();
   const names = ['MODELO', 'BASES', 'Base Cadastros', 'Base Produtos', 'BASE PREÇOS', 'BASE LOJAS', 'Base_Clientes', 'Envio'];
   zip.file(
@@ -20,7 +20,7 @@ export async function writerTemplate({ period = '28/09/2026 à 03/10/2026', miss
   const automatic = ['E6', 'E8', 'E9', 'E10', 'E14', 'E16', 'E18', 'E19', 'E20', 'E22', 'J14', 'J15', 'J18', 'J19', 'I40', 'I3']
     .map((address) => cell(address, '', '1+1'))
     .join('');
-  let lines = '';
+  let lines = cell('J9', '', 'IF(E9="","Vazio",IF(LEN(E9)=11,"VÁLIDO","INVÁLIDO"))');
   for (let row = 27; row <= 38; row++) {
     lines += ['C', 'D', 'F'].map((column) => cell(`${column}${row}`)).join('');
     if (!missingFormula || row !== 38)
@@ -86,7 +86,7 @@ export async function writerTemplate({ period = '28/09/2026 à 03/10/2026', miss
   );
   zip.file(
     'xl/worksheets/sheet7.xml',
-    sheet(cell('E2', 'Cliente') + cell('R2', '52998224725') + cell('S2', 'Rua, 1, , Centro, 01001000') + cell('T2', '11999999999'))
+    sheet(cell('E2', 'Cliente') + cell('R2', cpf) + cell('S2', 'Rua, 1, , Centro, 01001000') + cell('T2', '11999999999'))
   );
   zip.file('xl/worksheets/sheet8.xml', sheet(cell('A1', 'Envio preservado')));
   const bytes = await zip.generateAsync({ type: 'uint8array' });

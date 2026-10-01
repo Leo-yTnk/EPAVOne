@@ -44,3 +44,4 @@ export * from './Textarea.jsx';
 export * from './Toast.jsx';
 export * from './Toolbar.jsx';
 export * from './Tooltip.jsx';
+export { FileInput } from './FileInput.jsx';
