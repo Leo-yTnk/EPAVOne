@@ -104,7 +104,9 @@ Não existe Card sem stitched na v1.
 <Card>...</Card>
 ```
 
-O checker bloqueia uso direto de `ds-card` fora de `Card.jsx`.
+O checker bloqueia uso direto de `ds-card` fora de `Card.jsx`. A costura usa `CardStitch`, um SVG decorativo sem interação, com cor `--border-subtle` em ambos os temas. Os tokens `--card-stitch-width` (0.125rem), `--card-stitch-dash` (0.375rem) e `--card-stitch-gap` (0.3125rem) controlam o traço sem deformá-lo conforme o tamanho do card.
+
+`Dialog` aceita `size="lg"` para seleção de conteúdo amplo. O cabeçalho fica fora da região rolável; a camada continua usando Portal, bloqueio de rolagem, Escape e retorno de foco.
 
 ## Motion contract
 

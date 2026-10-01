@@ -4,6 +4,8 @@ O Writer exige o upload do formulário da semana em cada sessão. Nenhum formul�
 
 Após validar o arquivo, o atendimento segue quatro etapas: Cliente, Produtos, Entrega e pagamento, Conferência. Cada avanço exige os dados da etapa atual; voltar mantém os dados e o carrinho. A busca pelo nome fica dentro do seletor Cliente. A lista corresponde aos cadastros da turma escolhida no formulário semanal. O controle de arquivo usa um botão de escolha, exibe o nome aceito e permite selecionar novamente o mesmo arquivo.
 
+Na etapa Produtos, o catálogo é montado somente ao abrir o popup “Adicionar produto”. A busca por nome sem acentos ou código e a paginação ficam no popup. A seleção fecha o popup e adiciona um card ao carrinho; selecionar novamente o mesmo produto aumenta sua quantidade. Cada card contém imagem oficial quando disponível, quantidade, kit e remoção. O resumo fica ao lado em telas largas e abaixo no celular.
+
 ## Organização
 
 - `models/order.js`: período em America/Sao_Paulo, dados obrigatórios, CPF, telefone, entrega e divisão em lotes de 12 linhas.

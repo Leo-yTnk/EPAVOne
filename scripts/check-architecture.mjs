@@ -86,7 +86,7 @@ const card=fs.readFileSync(path.join(src,'design-system/components/Card.jsx'),'u
 if(!card.includes("'ds-card'")||!card.includes("'ds-stitched-card'")) failures.push('Card.jsx: every Card must be stitched by default');
 
 const dataCss=fs.readFileSync(path.join(src,'design-system/styles/data.css'),'utf8');
-if(!/\.ds-card::after/.test(dataCss)||!dataCss.includes('var(--card-stitch-color)')) failures.push('data.css: stitched treatment must use the semantic stitch token');
+if(!dataCss.includes('.ds-stitch rect')||!dataCss.includes('var(--card-stitch-color)')||!card.includes('<CardStitch')) failures.push('data.css: stitched treatment must use the semantic stitch token');
 
 const layersCss=fs.readFileSync(path.join(src,'design-system/styles/layers.css'),'utf8');
 if(!layersCss.includes('filter:blur')||!layersCss.includes('scale(.97)')||!layersCss.includes('prefers-reduced-motion')){

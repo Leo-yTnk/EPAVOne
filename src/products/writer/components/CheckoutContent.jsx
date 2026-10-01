@@ -19,14 +19,17 @@ export function CheckoutContent({ step, template, order, today, change, add, upd
       readOnly={step === 3}
     />
   );
+  if (step === 1)
+    return (
+      <div className="writer-products-stage">
+        <ProductCatalog products={template.products} lines={order.lines} onAdd={add} />
+        {cart}
+      </div>
+    );
   return (
     <div className="writer-workspace">
       <div className="writer-main">
-        {step === 1 ? (
-          <ProductCatalog products={template.products} lines={order.lines} onAdd={add} />
-        ) : (
-          <OrderReview template={template} order={order} onNavigate={navigate} busy={busy} />
-        )}
+        <OrderReview template={template} order={order} onNavigate={navigate} busy={busy} />
       </div>
       <aside>{cart}</aside>
     </div>
