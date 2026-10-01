@@ -3,7 +3,7 @@
 .skip-link:focus{transform:none}
 
 .site-header{
-  view-transition-name:epav-header;position:sticky;top:var(--space-3);z-index:var(--z-sticky);display:flex;align-items:center;gap:var(--space-3);
+  position:sticky;top:var(--space-3);z-index:var(--z-sticky);display:flex;align-items:center;gap:var(--space-3);
   min-height:4.25rem;margin-top:var(--space-3);pointer-events:none
 }
 .navigation-island{
@@ -16,7 +16,7 @@
 
 .brand{display:inline-flex;align-items:center;gap:var(--space-2);padding:var(--container-padding) var(--space-4) var(--container-padding) var(--container-padding);font:700 var(--heading-4)/1 var(--font-heading);letter-spacing:-.04em;text-decoration:none;white-space:nowrap}
 .brand-mark{display:grid;place-items:center;width:2.25rem;height:2.25rem;border-radius:var(--nested-radius);background:var(--brand-700);color:#fff;font:400 var(--heading-3)/1 var(--font-display);transition:background-color var(--duration-normal) var(--ease-standard),transform var(--duration-fast) var(--ease-emphasized)}
-.brand:hover .brand-mark{transform:scale(1.035)}
+.brand:hover .brand-mark{transform:translateY(-1px)}
 .brand-one{color:var(--text-brand)}
 
 .product-tabs{display:flex;align-items:center;gap:var(--space-1);padding:var(--container-padding);margin-left:auto}
@@ -32,26 +32,15 @@
 .header-actions{display:flex;align-items:center;gap:var(--space-1);padding:var(--container-padding)}
 .header-actions .ds-btn{min-height:var(--control-sm);border-radius:var(--nested-radius)}
 
-.app-main{view-transition-name:epav-page;flex:1;min-width:0;padding:var(--space-8) 0}
-.route-frame{animation:ds-route-fallback-in var(--duration-slow) var(--ease-enter) both}
+.app-main{flex:1;min-width:0;padding:var(--space-8) 0}
+.route-frame{animation:ds-route-fallback-in var(--duration-normal) var(--ease-standard) both}
 
 .site-footer{display:flex;justify-content:space-between;gap:var(--space-3);padding:var(--space-5) 0;border-top:1px solid var(--border-subtle);color:var(--text-secondary);font-size:.75rem;line-height:var(--leading-control)}
 .product-page,.component-lab-page{display:grid;gap:var(--space-5)}
 .placeholder-card{display:grid;gap:var(--space-4);max-width:48rem}
 .placeholder-card p{color:var(--text-secondary);line-height:var(--leading-body)}
 
-::view-transition-old(epav-page){animation:ds-page-out var(--duration-fast) var(--ease-exit) both}
-::view-transition-new(epav-page){animation:ds-page-in var(--duration-slow) var(--ease-enter) both}
-::view-transition-old(epav-header){animation:ds-header-out var(--duration-fast) var(--ease-standard) both}
-::view-transition-new(epav-header){animation:ds-header-in var(--duration-normal) var(--ease-enter) both}
-
-@keyframes ds-page-out{to{opacity:0;transform:translateY(calc(var(--motion-distance-sm) * -1)) scale(.997)}}
-@keyframes ds-page-in{from{opacity:0;transform:translateY(var(--motion-distance-md)) scale(.992)}to{opacity:1;transform:translateY(0) scale(1)}}
-@keyframes ds-header-out{to{opacity:.65;transform:translateY(-2px)}}
-@keyframes ds-header-in{from{opacity:.65;transform:translateY(-2px)}to{opacity:1;transform:translateY(0)}}
-@keyframes ds-route-fallback-in{from{opacity:0;transform:translateY(var(--motion-distance-sm))}to{opacity:1;transform:translateY(0)}}
-
-@supports(view-transition-name:none){.route-frame{animation:none}}
+@keyframes ds-route-fallback-in{from{transform:translateX(var(--motion-distance-md))}to{transform:translateX(0)}}
 
 @media(max-width:56rem){
   .app-shell{width:min(100% - 2*var(--space-5),90rem)}
@@ -61,7 +50,7 @@
 }
 @media(max-width:37.5rem){.site-footer{flex-direction:column}.app-main{padding-top:var(--space-7)}}
 @media(prefers-reduced-motion:reduce){
-  ::view-transition-old(epav-page),::view-transition-new(epav-page),::view-transition-old(epav-header),::view-transition-new(epav-header),.route-frame{animation:none}
+  .route-frame{animation:none}
   .product-tab:hover,.brand:hover .brand-mark{transform:none}
 }
 
@@ -74,3 +63,7 @@
  .header-actions .ds-btn{padding-inline:var(--space-3)}
  .app-main{padding-block:var(--space-6)}
 }
+
+.product-tabs{position:relative;isolation:isolate}
+.product-tab{position:relative;z-index:1}
+.product-tab.is-active{background:transparent;box-shadow:none}

@@ -113,7 +113,7 @@ O checker bloqueia uso direto de `ds-card` fora de `Card.jsx`. A costura usa `Ca
 - sem `transition: all`;
 - blur e backdrop-filter são proibidos;
 - layers usam opacity + scale + deslocamento curto;
-- rotas usam View Transitions com fallback;
+- rotas usam deslocamento curto sem fade-out/fade-in;
 - reduced motion é obrigatório.
 
 ## Component Lab
@@ -130,3 +130,6 @@ O checker impede filtros de blur no CSS. Animações de páginas, menus, diálog
 Os menus respeitam a área visível do `visualViewport`, inclusive com teclado virtual, e agrupam resize/scroll em um único `requestAnimationFrame`, sem renderizar novamente quando a posição não muda. A altura disponível limita todo o seletor; a busca fica fora da região rolável das opções.
 
 Em telas estreitas, o Writer quebra nomes e rótulos por extenso, empilha controles, mantém ações com altura adaptável e limita o popup à largura e altura da viewport. O header permite rolagem interna das abas de produto sem aumentar a largura da página.
+
+
+`SelectionIndicator` mantém um único destaque montado e anima sua posição e dimensões entre itens com `aria-current`. É usado nas abas de produto e nas etapas do Writer. Recalcula a geometria quando o contêiner ou o item muda de tamanho e respeita movimento reduzido. Conteúdo, menus e diálogos usam deslocamentos de 4–6 px sem ficar transparentes; somente o fundo de bloqueio do modal varia a opacidade.

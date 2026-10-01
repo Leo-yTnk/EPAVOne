@@ -17,12 +17,18 @@ export function WriterRoutes() {
   const [success, setSuccess] = useState('');
   const [today, setToday] = useState(saoPauloDay);
   const [step, setStep] = useState(0);
+  const [direction, setDirection] = useState('forward');
   const [exportError, setExportError] = useState('');
   useEffect(() => {
     if (template) {
       const current = document.getElementById('writer-current-step');
       current?.focus({ preventScroll: true });
-      current?.scrollIntoView?.({ block: 'start', behavior: 'auto' });
+      const rect = current?.getBoundingClientRect();
+      const headerBottom = document.querySelector('.site-header')?.getBoundingClientRect().bottom ?? 0;
+      if (rect && (rect.top < headerBottom || rect.top > window.innerHeight - 80)) {
+        const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+        current.scrollIntoView?.({ block: 'start', behavior: reduced ? 'auto' : 'smooth' });
+      }
     }
   }, [step, template]);
   useEffect(() => {
@@ -93,6 +99,7 @@ export function WriterRoutes() {
       setToday(saoPauloDay());
       return;
     }
+    setDirection(index < step ? 'backward' : 'forward');
     setStep(index);
   }
   return (
@@ -121,6 +128,7 @@ export function WriterRoutes() {
             id="writer-current-step"
             tabIndex={-1}
             className="writer-stage"
+            data-direction={direction}
             role="region"
             aria-label={`Etapa ${step + 1}: ${CHECKOUT_STEPS[step]}`}
           >

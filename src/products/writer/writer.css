@@ -205,16 +205,14 @@
 }
 .writer-stage {
   outline: none;
-  animation: writer-step-enter var(--duration-normal) var(--ease-enter) both;
+  animation: writer-step-enter var(--duration-normal) var(--ease-standard) both;
 }
 @keyframes writer-step-enter {
   from {
-    opacity: 0;
-    transform: translateY(var(--motion-distance-sm));
+    transform: translateX(var(--writer-step-distance, var(--motion-distance-md)));
   }
   to {
-    opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0);
   }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -394,4 +392,23 @@
     white-space: normal;
     padding-block: var(--space-3);
   }
+}
+
+.writer-progress {
+  position: relative;
+  isolation: isolate;
+}
+.writer-progress ol {
+  position: relative;
+  z-index: 1;
+}
+.writer-progress .ds-btn[aria-current='step'] {
+  background: transparent;
+}
+.writer-progress .ds-selection-indicator {
+  border-radius: var(--radius-md);
+}
+
+.writer-stage[data-direction='backward'] {
+  --writer-step-distance: calc(var(--motion-distance-md) * -1);
 }

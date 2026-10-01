@@ -105,7 +105,7 @@ useModalLayer
 
 ## Motion architecture
 
-- View Transition API quando disponível;
+- deslocamento CSS curto, sem capturar ou dissolver a página inteira;
 - fallback CSS quando não;
 - tokens únicos de duração/easing/distância;
 - reduced motion obrigatório;
