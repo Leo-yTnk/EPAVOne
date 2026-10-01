@@ -1,11 +1,10 @@
+import { useMemo } from 'preact/hooks';
 import { OrderLine } from './OrderLine.jsx';
 import { Alert, Button, Card, EmptyState } from '../../../design-system/components/index.js';
 const money = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 export function OrderCart({ template, lines, onChange, onRemove, errors = [], busy, onExport, success, readOnly = false }) {
-  const total = lines.reduce(
-    (sum, line) => sum + (template.products.find((item) => item.name === line.name)?.price ?? 0) * line.quantity,
-    0
-  );
+  const productsByName = useMemo(() => new Map(template.products.map((product) => [product.name, product])), [template.products]);
+  const total = lines.reduce((sum, line) => sum + (productsByName.get(line.name)?.price ?? 0) * line.quantity, 0);
   const files = Math.ceil(lines.length / template.capacity);
   return (
     <section className={`writer-cart${readOnly ? ' is-readonly' : ''}`} aria-label="Seu carrinho">
@@ -20,7 +19,7 @@ export function OrderCart({ template, lines, onChange, onRemove, errors = [], bu
           {lines.map((line, index) => (
             <li key={line.name}>
               <OrderLine
-                product={template.products.find((item) => item.name === line.name) ?? { name: line.name, price: null }}
+                product={productsByName.get(line.name) ?? { name: line.name, price: null }}
                 line={line}
                 index={index}
                 kitEnabled={template.kitOptions.includes('sim')}

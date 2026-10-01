@@ -1,10 +1,10 @@
 # EPAVWriter
 
-O Writer exige o upload do formulário da semana em cada sessão. Nenhum formulário, cadastro de cliente ou carrinho é persistido no navegador ou enviado ao servidor. Apenas o código do produto é usado para consultar imagens públicas da Swift.
+O Writer exige o upload do formulário da semana em cada sessão. Nenhum formulário, cadastro de cliente ou carrinho é persistido no navegador ou enviado ao servidor. A seleção de produtos funciona localmente, sem consultas de imagens.
 
 Após validar o arquivo, o atendimento segue quatro etapas: Cliente, Produtos, Entrega e pagamento, Conferência. Cada avanço exige os dados da etapa atual; voltar mantém os dados e o carrinho. A busca pelo nome fica dentro do seletor Cliente. A lista corresponde aos cadastros da turma escolhida no formulário semanal. O controle de arquivo usa um botão de escolha, exibe o nome aceito e permite selecionar novamente o mesmo arquivo.
 
-Na etapa Produtos, o catálogo é montado somente ao abrir o popup “Adicionar produto”. A busca por nome sem acentos ou código e a paginação ficam no popup. A seleção fecha o popup e adiciona um card ao carrinho; selecionar novamente o mesmo produto aumenta sua quantidade. Cada card contém imagem oficial quando disponível, quantidade, kit e remoção. O resumo fica ao lado em telas largas e abaixo no celular.
+Na etapa Produtos, a lista é montada somente ao abrir o popup “Adicionar produto”. Os nomes aparecem por extenso, com quebra de linha, sem reticências. A busca por nome sem acentos ou código preserva o texto ao reabrir o popup. A paginação substitui os resultados e mantém no máximo 24 linhas no DOM; uma nova busca volta à primeira página. Os nomes são normalizados uma única vez por catálogo, e quantidades e preços são consultados por mapas. A seleção e o carrinho não solicitam imagens da Swift. O carrinho usa linhas com quantidade, kit e remoção; selecionar novamente o mesmo produto aumenta sua quantidade. O resumo fica ao lado em telas largas e abaixo no celular.
 
 ## Organização
 
@@ -12,7 +12,7 @@ Na etapa Produtos, o catálogo é montado somente ao abrir o popup “Adicionar 
 - `services/templateService.js`: leitura de OOXML, validações padrão e x14, período interno, menus e bases do formulário.
 - `services/xmlWorkbook.js`: referências dos menus e alterações somente nas células de entrada.
 - `services/exportService.js`: cópia integral do arquivo, preenchimento autorizado e ZIP quando necessário.
-- `services/swiftImagesService.js`: imagens oficiais identificadas pelo código de referência exato. Sem imagem quando não houver resultado, quando o acesso de rede falhar ou quando a Swift bloquear CORS.
+- `services/swiftImagesService.js`: adaptador de imagens reservado para uso futuro, sem chamadas pela interface de pedidos.
 - `components/`: upload, catálogo, produto, dados e carrinho, usando os componentes do design system.
 
 ## Contrato do formulário
