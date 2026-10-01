@@ -1,8 +1,11 @@
-import { Button } from '../../../design-system/components/index.js';
+import { useRef } from 'preact/hooks';
+import { Button, SelectionIndicator } from '../../../design-system/components/index.js';
 export const CHECKOUT_STEPS = ['Cliente', 'Produtos', 'Entrega', 'Conferência'];
 export function CheckoutProgress({ step, canVisit, busy, onNavigate }) {
+  const progressRef = useRef(null);
   return (
-    <nav aria-label="Etapas do pedido" className="writer-progress">
+    <nav ref={progressRef} aria-label="Etapas do pedido" className="writer-progress">
+      <SelectionIndicator containerRef={progressRef} value={step} />
       <ol>
         {CHECKOUT_STEPS.map((label, index) => (
           <li key={label}>

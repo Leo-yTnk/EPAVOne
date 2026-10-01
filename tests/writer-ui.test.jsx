@@ -57,7 +57,7 @@ describe('Writer interactions', () => {
     expect(screen.queryByLabelText('Buscar cliente da sala')).toBeNull();
     fireEvent.input(screen.getByLabelText(/CPF do cliente · obrigatório/), { target: { value: '01234567890' } });
     fireEvent.click(screen.getByRole('button', { name: 'Continuar para produtos' }));
-    await screen.findByRole('region', { name: 'Etapa 2: Produtos' });
+    expect((await screen.findByRole('region', { name: 'Etapa 2: Produtos' })).dataset.direction).toBe('forward');
     expect(screen.getByRole('button', { name: 'Continuar para entrega' }).disabled).toBe(true);
     fireEvent.click(screen.getByRole('button', { name: 'Adicionar produto' }));
     fireEvent.click(screen.getAllByRole('button', { name: 'Adicionar ao pedido' })[0]);
@@ -73,6 +73,7 @@ describe('Writer interactions', () => {
     expect(screen.getByRole('button', { name: 'Validar e baixar pedido' }).disabled).toBe(false);
     expect(screen.queryByLabelText(/^Quantidade de/)).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'Editar cliente' }));
+    expect(screen.getByRole('region', { name: 'Etapa 1: Cliente' }).dataset.direction).toBe('backward');
     expect(screen.getByLabelText(/CPF do cliente/).value).toBe('01234567890');
     fireEvent.input(screen.getByLabelText(/CPF do cliente/), { target: { value: '' } });
     expect(screen.getByRole('button', { name: 'Continuar para produtos' }).disabled).toBe(true);

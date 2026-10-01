@@ -49,3 +49,7 @@
 .ds-pagination-status{padding:0 var(--space-2);font-size:.75rem;color:var(--text-secondary);line-height:var(--leading-control)}
 
 @media(prefers-reduced-motion:reduce){.ds-nav-item:hover{transform:none}}
+
+.ds-selection-indicator{position:absolute;left:0;top:0;pointer-events:none;z-index:0;transform:translate(var(--selection-x,0px),var(--selection-y,0px));width:var(--selection-width,0px);height:var(--selection-height,0px);border-radius:var(--nested-radius);background:var(--button-bg-default);transition:transform var(--duration-normal) var(--ease-standard),width var(--duration-normal) var(--ease-standard),height var(--duration-normal) var(--ease-standard),background-color var(--duration-normal) var(--ease-standard)}
+.ds-selection-indicator[data-ready="false"]{visibility:hidden;transition:none}
+@media(prefers-reduced-motion:reduce){.ds-selection-indicator{transition:none}}

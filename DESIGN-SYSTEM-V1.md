@@ -122,19 +122,19 @@ Filtros de blur e backdrop-filter são proibidos por custo de renderização. Us
 - movimentos devem ser curtos e previsíveis;
 - entrada normalmente usa easing de desaceleração;
 - press usa scale sutil;
-- página pode combinar opacity + translate;
-- layers podem combinar opacity + scale + translate;
+- páginas se deslocam poucos pixels, mantendo a opacidade;
+- layers usam deslocamento curto sem escala de entrada ou desaparecimento;
 - o transform-origin de uma layer ancorada deve partir do trigger;
 - `prefers-reduced-motion` remove coreografia e reduz durações;
 - nenhuma animação pode atrasar uma ação funcional.
 
 ### Navegação
 
-Rotas usam View Transitions quando disponíveis e fallback CSS quando não.
+Rotas usam deslocamento CSS curto sem zerar a opacidade. O cabeçalho permanece montado; o indicador ativo se move entre posições. A troca de tema atualiza as superfícies existentes.
 
 A página:
-- sai com opacity/movimento muito curto;
-- entra com opacity + translate + scale sutil;
+- atualiza o conteúdo sem dissolver a página inteira;
+- entra com deslocamento de até 6 px, sem alterar a opacidade;
 - mantém o header visualmente estável;
 - respeita reduced motion.
 

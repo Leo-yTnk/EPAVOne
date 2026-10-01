@@ -90,12 +90,12 @@ const dataCss=fs.readFileSync(path.join(src,'design-system/styles/data.css'),'ut
 if(!dataCss.includes('.ds-stitch rect')||!dataCss.includes('var(--card-stitch-color)')||!card.includes('<CardStitch')) failures.push('data.css: stitched treatment must use the semantic stitch token');
 
 const layersCss=fs.readFileSync(path.join(src,'design-system/styles/layers.css'),'utf8');
-if(!layersCss.includes('opacity:0')||!layersCss.includes('scale(.97)')||!layersCss.includes('prefers-reduced-motion')){
+if(!layersCss.includes('transform:translateY')||!layersCss.includes('prefers-reduced-motion')){
   failures.push('layers.css: anchored layers must use the standard natural-motion contract with reduced-motion support');
 }
 
 const shellCss=fs.readFileSync(path.join(src,'app/styles/shell.css'),'utf8');
-if(!shellCss.includes('view-transition-name:epav-page')||!shellCss.includes('prefers-reduced-motion')){
+if(!shellCss.includes('@keyframes ds-route-fallback-in')||!shellCss.includes('prefers-reduced-motion')){
   failures.push('shell.css: page navigation must use the route motion contract with reduced-motion support');
 }
 
