@@ -29,10 +29,13 @@ describe('Writer interactions', () => {
         onAdd={add}
       />
     );
+    expect(screen.queryByLabelText('Buscar produto')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Adicionar produto' }));
     fireEvent.input(screen.getByLabelText('Buscar produto'), { target: { value: 'file' } });
     expect(screen.queryByText('Pão de Queijo 400g')).toBeNull();
     fireEvent.click(screen.getByText('Adicionar ao pedido'));
     expect(add).toHaveBeenCalledWith('Filé de Frango 1kg');
+    expect(screen.queryByRole('dialog')).toBeNull();
     await waitFor(() => expect(screen.queryByRole('img')).toBeNull());
   });
   it('starts with client data, guards each step and preserves the cart and corrected CPF when returning', async () => {
@@ -56,6 +59,7 @@ describe('Writer interactions', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Continuar para produtos' }));
     await screen.findByRole('region', { name: 'Etapa 2: Produtos' });
     expect(screen.getByRole('button', { name: 'Continuar para entrega' }).disabled).toBe(true);
+    fireEvent.click(screen.getByRole('button', { name: 'Adicionar produto' }));
     fireEvent.click(screen.getAllByRole('button', { name: 'Adicionar ao pedido' })[0]);
     fireEvent.click(screen.getByRole('button', { name: 'Continuar para entrega' }));
     await screen.findByRole('region', { name: 'Etapa 3: Entrega' });
@@ -67,13 +71,13 @@ describe('Writer interactions', () => {
     await screen.findByRole('region', { name: 'Etapa 4: Conferência' });
     expect(screen.getByText('*01234567890')).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Validar e baixar pedido' }).disabled).toBe(false);
-    expect(screen.queryByLabelText('Quantidade')).toBeNull();
+    expect(screen.queryByLabelText(/^Quantidade de/)).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'Editar cliente' }));
     expect(screen.getByLabelText(/CPF do cliente/).value).toBe('01234567890');
     fireEvent.input(screen.getByLabelText(/CPF do cliente/), { target: { value: '' } });
     expect(screen.getByRole('button', { name: 'Continuar para produtos' }).disabled).toBe(true);
     fireEvent.input(screen.getByLabelText(/CPF do cliente/), { target: { value: '01234567890' } });
     fireEvent.click(screen.getByRole('button', { name: 'Continuar para produtos' }));
-    expect(screen.getByLabelText('Quantidade').value).toBe('1');
+    expect(screen.getByLabelText(/^Quantidade de/).value).toBe('1');
   });
 });

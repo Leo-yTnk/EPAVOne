@@ -4,11 +4,31 @@
   box-shadow:var(--shadow-sm);overflow:hidden;
   transition:border-color var(--duration-normal) var(--ease-standard),box-shadow var(--duration-normal) var(--ease-standard),transform var(--duration-normal) var(--ease-emphasized),background-color var(--duration-normal) var(--ease-standard)
 }
-.ds-card::after,.ds-stitched-card::after{
-  content:'';position:absolute;inset:var(--card-stitch-inset);border:1.5px dashed var(--card-stitch-color);
-  border-radius:max(var(--radius-xs),calc(var(--card-radius) - var(--card-stitch-inset)));pointer-events:none
+.ds-stitch,
+.ds-card > .ds-stitch {
+  position: absolute;
+  inset: var(--card-stitch-inset);
+  width: calc(100% - 2 * var(--card-stitch-inset));
+  height: calc(100% - 2 * var(--card-stitch-inset));
+  pointer-events: none;
+  z-index: 2;
+  overflow: visible;
+  color: var(--card-stitch-color);
 }
-.ds-card>*{position:relative;z-index:1}
+.ds-stitch rect {
+  width: calc(100% - 2px);
+  height: calc(100% - 2px);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: var(--card-stitch-width);
+  stroke-dasharray: var(--card-stitch-dash) var(--card-stitch-gap);
+  rx: max(var(--radius-xs), calc(var(--card-radius) - var(--card-stitch-inset)));
+  vector-effect: non-scaling-stroke;
+}
+.ds-card > :not(.ds-stitch) {
+  position: relative;
+  z-index: 1;
+}
 a.ds-card:hover,.ds-card[data-interactive="true"]:hover{transform:translateY(-.1875rem);border-color:var(--border-brand);box-shadow:var(--shadow-md)}
 a.ds-card:active,.ds-card[data-interactive="true"]:active{transform:translateY(0) scale(.995)}
 
