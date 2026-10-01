@@ -74,13 +74,19 @@ export function deliveryLimits(template, method, today = saoPauloDay()) {
   return { min: today, max: addDays(today, home ? template.deliveryDays.home : template.deliveryDays.pickup) };
 }
 
-export function validateOrder(template, order, today = saoPauloDay()) {
+export function orderCpf(template, order) {
+  const client = template.clients.find((item) => item.name === order.client && item.room === order.room);
+  return String(order.cpfOverride ?? client?.cpf ?? '').replace(/\D/g, '');
+}
+
+export function exportCpf(cpf) {
+  const digits = String(cpf).replace(/\D/g, '');
+  if (!validCpf(digits)) throw new Error('Informe um CPF válido com 11 dígitos.');
+  return digits.startsWith('0') ? '*' + digits : digits;
+}
+
+export function validateCustomer(template, order, today = saoPauloDay()) {
   const errors = [];
-  try {
-    checkPeriod(template.period, today);
-  } catch (error) {
-    errors.push(error.message);
-  }
   if (!template.rooms.includes(order.room)) errors.push('Escolha uma sala disponível no formulário.');
   const student = template.students.find((item) => item.name === order.student && item.room === order.room);
   if (!student || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(student.email))
@@ -89,7 +95,7 @@ export function validateOrder(template, order, today = saoPauloDay()) {
   if (!client) errors.push('Selecione um cliente cadastrado nesta sala.');
   else {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(client.email)) errors.push('O cliente precisa de e-mail válido na base do formulário.');
-    if (!validCpf(client.cpf)) errors.push('O cliente precisa de CPF válido na base do formulário.');
+    if (!validCpf(orderCpf(template, order))) errors.push('Informe ou corrija o CPF do cliente: 11 dígitos válidos.');
     if (
       !Number.isFinite(client.birth) ||
       client.birth <= 0 ||
@@ -98,6 +104,12 @@ export function validateOrder(template, order, today = saoPauloDay()) {
       errors.push('A data de nascimento do cliente está ausente ou inválida na base.');
   }
   if (!validPhone(order.phone)) errors.push('Informe um telefone com DDD válido e 11 dígitos.');
+  return errors;
+}
+
+export function validateDelivery(template, order, today = saoPauloDay()) {
+  const errors = [];
+  const client = template.clients.find((item) => item.name === order.client && item.room === order.room);
   if (!template.methods.includes(order.method)) errors.push('Escolha uma modalidade de entrega ou retirada.');
   if (normalize(order.method) === 'entrega em casa') {
     const address = (client?.address ?? '').split(',').map((part) => part.trim());
@@ -124,6 +136,11 @@ export function validateOrder(template, order, today = saoPauloDay()) {
     order.date > bounds.max
   )
     errors.push(`A data deve estar entre ${bounds.min} e ${bounds.max}, conforme a validação do Excel.`);
+  return errors;
+}
+
+export function validateProducts(template, order) {
+  const errors = [];
   if (!order.lines?.length) errors.push('Adicione pelo menos um produto.');
   const seen = new Set();
   for (const line of order.lines ?? []) {
@@ -137,4 +154,21 @@ export function validateOrder(template, order, today = saoPauloDay()) {
     seen.add(line.name);
   }
   return [...new Set(errors)];
+}
+
+export function validateOrder(template, order, today = saoPauloDay()) {
+  const errors = [];
+  try {
+    checkPeriod(template.period, today);
+  } catch (error) {
+    errors.push(error.message);
+  }
+  return [
+    ...new Set([
+      ...errors,
+      ...validateCustomer(template, order, today),
+      ...validateProducts(template, order),
+      ...validateDelivery(template, order, today)
+    ])
+  ];
 }

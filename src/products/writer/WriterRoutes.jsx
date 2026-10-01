@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'preact/hooks';
 import { Alert, PageHeader } from '../../design-system/components/index.js';
-import { saoPauloDay, validateOrder } from './models/order.js';
+import { saoPauloDay, validateOrder, validateCustomer, validateProducts, validateDelivery } from './models/order.js';
 import { importTemplate } from './services/templateService.js';
 import { downloadExport, exportOrder } from './services/exportService.js';
 import { WeeklyUpload } from './components/WeeklyUpload.jsx';
-import { ProductCatalog } from './components/ProductCatalog.jsx';
-import { OrderDetails } from './components/OrderDetails.jsx';
-import { OrderCart } from './components/OrderCart.jsx';
+import { CheckoutContent } from './components/CheckoutContent.jsx';
+import { CheckoutProgress, CHECKOUT_STEPS } from './components/CheckoutProgress.jsx';
+import { CheckoutActions } from './components/CheckoutActions.jsx';
 import './writer.css';
 const emptyOrder = () => ({ room: '', student: '', client: '', phone: '', method: '', store: '', date: '', payment: '', lines: [] });
 export function WriterRoutes() {
@@ -16,6 +16,15 @@ export function WriterRoutes() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [today, setToday] = useState(saoPauloDay);
+  const [step, setStep] = useState(0);
+  const [exportError, setExportError] = useState('');
+  useEffect(() => {
+    if (template) {
+      const current = document.getElementById('writer-current-step');
+      current?.focus({ preventScroll: true });
+      current?.scrollIntoView?.({ block: 'start', behavior: 'auto' });
+    }
+  }, [step, template]);
   useEffect(() => {
     const refresh = () => setToday(saoPauloDay());
     const timer = setInterval(refresh, 30000);
@@ -31,6 +40,8 @@ export function WriterRoutes() {
     setSuccess('');
     setTemplate(null);
     setOrder(emptyOrder());
+    setStep(0);
+    setExportError('');
     try {
       setTemplate(await importTemplate(file));
     } catch (failure) {
@@ -41,6 +52,7 @@ export function WriterRoutes() {
   }
   function change(fields) {
     setSuccess('');
+    setExportError('');
     setOrder((current) => ({ ...current, ...fields }));
   }
   function add(name) {
@@ -57,20 +69,32 @@ export function WriterRoutes() {
   }
   async function download() {
     setBusy(true);
-    setError('');
+    setExportError('');
     setSuccess('');
     try {
       const output = await exportOrder(template, order);
       downloadExport(output);
       setSuccess(`${output.count} ${output.count === 1 ? 'formulário pronto' : 'formulários prontos'} para conferência no Excel.`);
     } catch (failure) {
-      setError(failure.message);
+      setExportError(failure.message);
     } finally {
       setBusy(false);
     }
   }
   const errors = template ? validateOrder(template, order, today) : [];
   const expired = template && today > template.period.end;
+  const stageErrors = template
+    ? [validateCustomer(template, order, today), validateProducts(template, order), validateDelivery(template, order, today)]
+    : [];
+  const canVisit = (index) => index <= step || stageErrors.slice(0, index).every((issues) => issues.length === 0);
+  function navigate(index) {
+    if (busy || !canVisit(index)) return;
+    if (saoPauloDay() > template.period.end) {
+      setToday(saoPauloDay());
+      return;
+    }
+    setStep(index);
+  }
   return (
     <section className="product-page writer-page">
       <PageHeader
@@ -91,24 +115,36 @@ export function WriterRoutes() {
               {warning}
             </Alert>
           ))}
-          <div className="writer-workspace">
-            <div className="writer-main">
-              <ProductCatalog products={template.products} lines={order.lines} onAdd={add} />
-              <OrderDetails template={template} order={order} onChange={change} />
-            </div>
-            <aside>
-              <OrderCart
-                template={template}
-                lines={order.lines}
-                onChange={updateLine}
-                onRemove={(name) => change({ lines: order.lines.filter((line) => line.name !== name) })}
-                errors={errors}
-                busy={busy}
-                onExport={download}
-                success={success}
-              />
-            </aside>
+          <CheckoutProgress step={step} canVisit={canVisit} busy={busy} onNavigate={navigate} />
+          <div
+            key={step}
+            id="writer-current-step"
+            tabIndex={-1}
+            className="writer-stage"
+            role="region"
+            aria-label={`Etapa ${step + 1}: ${CHECKOUT_STEPS[step]}`}
+          >
+            <CheckoutContent
+              step={step}
+              template={template}
+              order={order}
+              today={today}
+              change={change}
+              add={add}
+              updateLine={updateLine}
+              errors={errors}
+              busy={busy}
+              download={download}
+              success={success}
+              navigate={navigate}
+            />
           </div>
+          {exportError && (
+            <Alert tone="danger" title="Não foi possível gerar o pedido">
+              {exportError}
+            </Alert>
+          )}
+          <CheckoutActions step={step} errors={step < 3 ? stageErrors[step] : []} busy={busy} onNavigate={navigate} />
         </>
       )}
     </section>

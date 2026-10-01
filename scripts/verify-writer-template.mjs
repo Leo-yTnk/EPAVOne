@@ -5,8 +5,8 @@ import { JSDOM } from 'jsdom';
 import JSZip from 'jszip';
 import { importTemplate } from '../src/products/writer/services/templateService.js';
 import { exportOrder } from '../src/products/writer/services/exportService.js';
-import { validateOrder } from '../src/products/writer/models/order.js';
-import { parseXml, sheetCells } from '../src/products/writer/services/xmlWorkbook.js';
+import { validateOrder, orderCpf, exportCpf } from '../src/products/writer/models/order.js';
+import { cpfValidationFormula, parseXml, sheetCells } from '../src/products/writer/services/xmlWorkbook.js';
 
 globalThis.DOMParser = new JSDOM('').window.DOMParser;
 const [path, today = '2026-09-30'] = process.argv.slice(2);
@@ -42,8 +42,17 @@ for (const client of template.clients) {
 }
 assert.ok(order, 'At least one complete customer record is required for the acceptance check.');
 const original = await JSZip.loadAsync(bytes);
-for (const count of [1, 12, 13, 25]) {
-  const currentOrder = { ...order, lines: order.lines.slice(0, count) };
+for (const [count, correction] of [
+  [1, undefined],
+  [12, undefined],
+  [13, undefined],
+  [25, undefined],
+  [1, '01234567890'],
+  [13, '01234567890']
+]) {
+  const currentOrder = { ...order, cpfOverride: correction, lines: order.lines.slice(0, count) };
+  const cpf = orderCpf(template, currentOrder);
+  const replacesCpf = cpf.startsWith('0') || correction !== undefined;
   const output = await exportOrder(template, currentOrder, today);
   assert.equal(output.count, Math.ceil(count / 12));
   const archive = await JSZip.loadAsync(output.bytes);
@@ -69,8 +78,17 @@ for (const count of [1, 12, 13, 25]) {
     const modelXml = await book.file(template.model.path).async('string');
     const cells = sheetCells(parseXml(modelXml), []);
     for (const [address, cell] of template.model.cells) {
-      if (cell.hasFormula) assert.equal(cells.get(address).formula, cell.formula, `Formula ${address}`);
+      if (cell.hasFormula && !(address === 'E9' && replacesCpf))
+        assert.equal(
+          cells.get(address).formula,
+          address === 'J9' && cpf.startsWith('0') ? cpfValidationFormula(template.model.cells) : cell.formula,
+          `Formula ${address}`
+        );
       assert.equal(cells.get(address).node.getAttribute('s'), cell.node.getAttribute('s'), `Style ${address}`);
+    }
+    if (replacesCpf) {
+      assert.equal(cells.get('E9').value, exportCpf(cpf));
+      assert.equal(cells.get('E9').node.getAttribute('t'), 'inlineStr');
     }
     for (let row = 27; row <= 38; row++) if (cells.get(`C${row}`).value) exportedNames.push(cells.get(`C${row}`).value);
     assert.equal(
@@ -85,5 +103,5 @@ for (const count of [1, 12, 13, 25]) {
   );
 }
 process.stdout.write(
-  `PASS: ${template.products.length} dropdown products; weekly validity; 1/12/13/25 lines; all formulas, styles, merged cells, validations and other ZIP parts preserved. Native Excel recalculation still requires Excel verification.\n`
+  `PASS: ${template.products.length} dropdown products; weekly validity; 1/12/13/25 lines; corrected leading-zero CPF across split files; all other formulas, styles, merged cells, validations and ZIP parts preserved. Native Excel recalculation still requires Excel verification.\n`
 );

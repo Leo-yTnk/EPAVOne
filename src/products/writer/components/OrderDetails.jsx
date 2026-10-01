@@ -1,34 +1,26 @@
-import { useState } from 'preact/hooks';
 import { Card, Input, Select } from '../../../design-system/components/index.js';
-import { deliveryLimits, normalize } from '../models/order.js';
+import { orderCpf } from '../models/order.js';
 function options(values) {
   return [{ value: '', label: 'Selecione…' }, ...values.map((value) => ({ value, label: value }))];
 }
 export function OrderDetails({ template, order, onChange }) {
-  const [clientSearch, setClientSearch] = useState('');
   const client = template.clients.find((item) => item.name === order.client && item.room === order.room);
   const student = template.students.find((item) => item.name === order.student);
-  const availableClients = template.clients.filter(
-    (item) => item.room === order.room && (normalize(item.name).includes(normalize(clientSearch)) || item.name === order.client)
-  );
-  const storeNames = order.method.includes('Mercado J&F')
-    ? [template.market]
-    : template.stores.map((item) => item.name).filter((name) => name !== template.market);
-  const bounds = deliveryLimits(template, order.method);
+  const availableClients = template.clients.filter((item) => item.room === order.room);
   function chooseClient(name) {
     const selected = template.clients.find((item) => item.name === name && item.room === order.room);
-    onChange({ client: name, phone: selected?.phone ?? '' });
+    onChange({ client: name, phone: selected?.phone ?? '', cpfOverride: undefined });
   }
   return (
     <Card className="writer-details">
-      <span className="ds-overline">3 · Dados do pedido</span>
-      <h2 className="ds-heading-h3">Quem compra e como recebe</h2>
+      <span className="ds-overline">1 · Cliente</span>
+      <h2 className="ds-heading-h3">Para quem é o pedido?</h2>
       <div className="writer-fields">
         <Select
           label="Sala · obrigatória"
           options={options(template.rooms)}
           value={order.room}
-          onChange={(room) => onChange({ room, student: '', client: '', phone: '' })}
+          onChange={(room) => onChange({ room, student: '', client: '', phone: '', cpfOverride: undefined })}
         />
         <Select
           label="Aluno · obrigatório"
@@ -37,16 +29,10 @@ export function OrderDetails({ template, order, onChange }) {
           value={order.student}
           onChange={(name) => onChange({ student: name })}
         />
-        <Input
-          id="writer-client-search"
-          label="Buscar cliente da sala"
-          type="search"
-          disabled={!order.room}
-          value={clientSearch}
-          onInput={(event) => setClientSearch(event.currentTarget.value)}
-        />
         <Select
           label="Cliente · obrigatório"
+          searchable
+          helper="Clientes cadastrados na turma selecionada no formulário semanal. Abra a lista para buscar pelo nome."
           disabled={!order.room}
           options={options(availableClients.map((item) => item.name))}
           value={order.client}
@@ -65,8 +51,6 @@ export function OrderDetails({ template, order, onChange }) {
             <>
               <dt>E-mail do cliente</dt>
               <dd>{client.email || 'Ausente na base'}</dd>
-              <dt>CPF</dt>
-              <dd>{client.cpf || 'Ausente na base'}</dd>
               <dt>Nascimento</dt>
               <dd>
                 {typeof client.birth === 'number'
@@ -77,54 +61,30 @@ export function OrderDetails({ template, order, onChange }) {
           )}
         </dl>
       )}
-      <div className="writer-fields">
-        <Input
-          id="writer-phone"
-          label="Telefone com DDD · obrigatório"
-          type="tel"
-          inputMode="tel"
-          value={order.phone}
-          onInput={(event) => onChange({ phone: event.currentTarget.value })}
-        />
-        <Select
-          label="Entrega ou retirada · obrigatória"
-          options={options(template.methods)}
-          value={order.method}
-          onChange={(method) => onChange({ method, store: method.includes('Mercado J&F') ? template.market : '', date: '' })}
-        />
-        {order.method && normalize(order.method) !== 'entrega em casa' && (
-          <Select
-            label="Loja para retirada · obrigatória"
-            options={options(storeNames)}
-            value={order.store}
-            onChange={(store) => onChange({ store })}
+      {client && (
+        <div className="writer-fields">
+          <Input
+            id="writer-cpf"
+            label="CPF do cliente · obrigatório"
+            type="text"
+            inputMode="numeric"
+            maxLength={14}
+            value={orderCpf(template, order)}
+            onInput={(event) => onChange({ cpfOverride: event.currentTarget.value.replace(/\D/g, '').slice(0, 11) })}
+            helper="Confira ou corrija os 11 dígitos. Se começar com zero, o Excel receberá * antes do CPF."
           />
-        )}
-        <Input
-          id="writer-date"
-          label="Data de entrega ou retirada · obrigatória"
-          type="date"
-          min={bounds.min}
-          max={bounds.max}
-          value={order.date}
-          onInput={(event) => onChange({ date: event.currentTarget.value })}
-          helper={`Limites definidos no Excel: ${bounds.min} a ${bounds.max}.`}
-        />
-        <Select
-          label="Pagamento · obrigatório"
-          options={options(template.payments)}
-          value={order.payment}
-          onChange={(payment) => onChange({ payment })}
-        />
-      </div>
-      {normalize(order.method) === 'entrega em casa' && (
-        <p>
-          <strong>Endereço cadastrado:</strong> {client?.address || 'Ausente na base do formulário. Atualize o cadastro antes de exportar.'}
-        </p>
+          <Input
+            id="writer-phone"
+            label="Telefone com DDD · obrigatório"
+            type="tel"
+            inputMode="tel"
+            value={order.phone}
+            onInput={(event) => onChange({ phone: event.currentTarget.value })}
+          />
+        </div>
       )}
       <p className="writer-muted">
-        E-mail, CPF, nascimento, endereços e frete continuam automáticos no Excel. Se o cadastro estiver incompleto, será necessário
-        carregar um formulário com a base corrigida.
+        E-mail e nascimento vêm do cadastro do formulário. O CPF pode ser corrigido aqui, sem alterar os dados originais da base.
       </p>
     </Card>
   );
