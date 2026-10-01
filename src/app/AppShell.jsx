@@ -1,15 +1,26 @@
-import { useRef } from 'preact/hooks';
+import { useEffect, useRef } from 'preact/hooks';
 import { PRODUCT_META } from './routes.js';
 import { Button, Menu, SelectionIndicator } from '../design-system/components/index.js';
 
+import { YOURCIPE_URL } from '../shared/config/catalog.js';
+
 const accountItems = [
-  { label: 'Perfil do Insights', href: '#/insights/perfil' },
+  { label: 'Conta e recursos do Yourcipe ↗', href: YOURCIPE_URL },
   { label: 'Component Lab', href: '#/dev/components' }
 ];
 
 export function AppShell({ route, theme, onToggleTheme, children }) {
   const tabsRef = useRef(null);
   const selectedProduct = route.product === 'dev' ? 'home' : route.product;
+  useEffect(() => {
+    const selected = tabsRef.current?.querySelector('[aria-current]');
+    if (!selected) return;
+    const container = tabsRef.current;
+    if (selected.offsetLeft < container.scrollLeft) container.scrollLeft = selected.offsetLeft;
+    else if (selected.offsetLeft + selected.offsetWidth > container.scrollLeft + container.clientWidth) {
+      container.scrollLeft = selected.offsetLeft + selected.offsetWidth - container.clientWidth;
+    }
+  }, [selectedProduct]);
   return (
     <div className="app-shell">
       <a className="skip-link" href="#main">
