@@ -27,6 +27,7 @@ for(const file of files){
   const text=fs.readFileSync(file,'utf8');
   const isPageLayer=rel.startsWith('src/products/')||rel.startsWith('src/dev/');
 
+  if(rel.endsWith('.css')&&/\bblur\s*\(/i.test(text)) failures.push(rel+': blur is forbidden; use opacity and transform for motion');
   if(/transition\s*:\s*all\b/.test(text)) failures.push(rel+': transition: all is forbidden');
   if(/!important\b/.test(text)) failures.push(rel+': !important is forbidden');
   if(/\byc-/.test(text)) failures.push(rel+': legacy yc-* prefix is forbidden');
@@ -89,7 +90,7 @@ const dataCss=fs.readFileSync(path.join(src,'design-system/styles/data.css'),'ut
 if(!dataCss.includes('.ds-stitch rect')||!dataCss.includes('var(--card-stitch-color)')||!card.includes('<CardStitch')) failures.push('data.css: stitched treatment must use the semantic stitch token');
 
 const layersCss=fs.readFileSync(path.join(src,'design-system/styles/layers.css'),'utf8');
-if(!layersCss.includes('filter:blur')||!layersCss.includes('scale(.97)')||!layersCss.includes('prefers-reduced-motion')){
+if(!layersCss.includes('opacity:0')||!layersCss.includes('scale(.97)')||!layersCss.includes('prefers-reduced-motion')){
   failures.push('layers.css: anchored layers must use the standard natural-motion contract with reduced-motion support');
 }
 

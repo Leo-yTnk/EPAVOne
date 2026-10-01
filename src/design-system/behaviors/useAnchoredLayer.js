@@ -1,54 +1,61 @@
 import { useLayoutEffect, useState } from 'preact/hooks';
 
-const VIEWPORT_GAP = 12;
+import { anchoredPosition } from './anchoredPosition.js';
 
-export function useAnchoredLayer(triggerRef, layerRef, open, { offset=8, minWidth=0, matchWidth=false, placement='auto' }={}) {
-  const [position,setPosition]=useState(null);
+export function useAnchoredLayer(triggerRef, layerRef, open, { offset = 8, minWidth = 0, matchWidth = false, placement = 'auto' } = {}) {
+  const [position, setPosition] = useState(null);
 
-  useLayoutEffect(()=>{
-    if(!open){
+  useLayoutEffect(() => {
+    if (!open) {
       setPosition(null);
       return undefined;
     }
 
-    function update(){
-      const trigger=triggerRef.current;
-      const layer=layerRef.current;
-      if(!trigger || !layer) return;
+    function update() {
+      const trigger = triggerRef.current;
+      const layer = layerRef.current;
+      if (!trigger || !layer) return;
 
-      const rect=trigger.getBoundingClientRect();
-      const measuredWidth=matchWidth ? rect.width : layer.offsetWidth;
-      const width=Math.min(Math.max(measuredWidth,minWidth),window.innerWidth-(VIEWPORT_GAP*2));
-      const below=window.innerHeight-rect.bottom-offset-VIEWPORT_GAP;
-      const above=rect.top-offset-VIEWPORT_GAP;
-      const side=placement==='top' ? 'top' : placement==='bottom' ? 'bottom' : (below>=Math.min(180,layer.scrollHeight) || below>=above ? 'bottom' : 'top');
-      const available=Math.max(96,side==='bottom' ? below : above);
-      const triggerCenter=rect.left+(rect.width/2);
-      const left=Math.min(Math.max(VIEWPORT_GAP,triggerCenter-(width/2)),window.innerWidth-VIEWPORT_GAP-width);
-      const originX=Math.min(Math.max(12,triggerCenter-left),Math.max(12,width-12));
-
-      setPosition({
-        side,
-        style:{
-          '--layer-left':left+'px',
-          '--layer-width':width+'px',
-          '--layer-origin-x':originX+'px',
-          '--layer-max-height':Math.min(288,available)+'px',
-          ...(side==='bottom'
-            ? {'--layer-top':rect.bottom+offset+'px'}
-            : {'--layer-bottom':window.innerHeight-rect.top+offset+'px'})
-        }
-      });
+      const visual = window.visualViewport;
+      const next = anchoredPosition(
+        trigger.getBoundingClientRect(),
+        { width: layer.offsetWidth, height: layer.scrollHeight },
+        {
+          left: visual?.offsetLeft ?? 0,
+          top: visual?.offsetTop ?? 0,
+          width: visual?.width ?? window.innerWidth,
+          height: visual?.height ?? window.innerHeight,
+          layoutHeight: window.innerHeight
+        },
+        { offset, minWidth, matchWidth, placement }
+      );
+      setPosition((current) =>
+        current?.side === next.side && Object.entries(next.style).every(([key, value]) => current.style[key] === value) ? current : next
+      );
     }
 
-    update();
-    window.addEventListener('resize',update);
-    window.addEventListener('scroll',update,true);
-    return ()=>{
-      window.removeEventListener('resize',update);
-      window.removeEventListener('scroll',update,true);
+    let frame = null;
+    const schedule = () => {
+      if (frame !== null) return;
+      frame = requestAnimationFrame(() => {
+        frame = null;
+        update();
+      });
     };
-  },[layerRef,matchWidth,minWidth,offset,open,placement,triggerRef]);
+    const visual = window.visualViewport;
+    update();
+    window.addEventListener('resize', schedule);
+    window.addEventListener('scroll', schedule, true);
+    visual?.addEventListener('resize', schedule);
+    visual?.addEventListener('scroll', schedule);
+    return () => {
+      if (frame !== null) cancelAnimationFrame(frame);
+      window.removeEventListener('resize', schedule);
+      window.removeEventListener('scroll', schedule, true);
+      visual?.removeEventListener('resize', schedule);
+      visual?.removeEventListener('scroll', schedule);
+    };
+  }, [layerRef, matchWidth, minWidth, offset, open, placement, triggerRef]);
 
   return position;
 }

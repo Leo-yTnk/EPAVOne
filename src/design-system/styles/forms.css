@@ -65,3 +65,13 @@
 .ds-file-native{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .ds-file-name{min-width:0;overflow-wrap:anywhere;color:var(--text-secondary);font-size:.875rem}
 @media(max-width:40rem){.ds-file-control{flex-direction:column;align-items:stretch}}
+
+.ds-input,.ds-textarea{min-width:0}
+.ds-select-trigger>span:first-child,.ds-option>span{min-width:0;overflow-wrap:anywhere;white-space:normal}
+.ds-select-trigger-icon{flex-shrink:0}
+.ds-select-trigger,.ds-option{padding-block:var(--space-2)}
+.ds-checkbox-control,.ds-radio-control,.ds-switch-track{flex-shrink:0}
+
+.ds-select-menu{display:flex;flex-direction:column;max-height:var(--layer-max-height,18rem);overflow:hidden;gap:var(--space-1)}
+.ds-select-menu>.ds-field{flex-shrink:0}
+.ds-select-menu>.ds-layer-scroll{min-height:0;max-height:none;overflow:auto}

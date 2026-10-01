@@ -63,10 +63,10 @@ a.ds-card:active,.ds-card[data-interactive="true"]:active{transform:translateY(0
 .ds-chart-legend span{display:inline-flex;align-items:center;gap:var(--space-1)}
 .ds-chart-legend i{width:.625rem;height:.625rem;border-radius:50%;background:var(--brand-700)}
 .ds-chart-plot{display:flex;align-items:end;gap:var(--space-3);min-height:12rem;padding:var(--space-3) var(--space-2) var(--space-5);background-image:repeating-linear-gradient(to top,transparent 0 2.95rem,var(--chart-grid-color) 2.95rem 3rem)}
-.ds-chart-bar{position:relative;flex:1;min-width:1.5rem;height:var(--bar-height,50%);border-radius:var(--radius-sm) var(--radius-sm) 0 0;background:linear-gradient(to top,var(--brand-700),var(--brand-300));transform-origin:bottom;animation:ds-chart-rise var(--duration-slow) var(--ease-enter) both;transition:transform var(--duration-fast) var(--ease-emphasized),filter var(--duration-fast) var(--ease-standard)}
-.ds-chart-bar:hover{transform:translateY(-2px) scaleY(1.015);filter:saturate(1.08)}
+.ds-chart-bar{position:relative;flex:1;min-width:1.5rem;height:var(--bar-height,50%);border-radius:var(--radius-sm) var(--radius-sm) 0 0;background:linear-gradient(to top,var(--brand-700),var(--brand-300));transform-origin:bottom;animation:ds-chart-rise var(--duration-slow) var(--ease-enter) both;transition:transform var(--duration-fast) var(--ease-emphasized)}
+.ds-chart-bar:hover{transform:translateY(-2px) scaleY(1.015)}
 .ds-chart-bar::after{content:attr(data-label);position:absolute;inset:calc(100% + var(--space-2)) 0 auto;text-align:center;color:var(--text-tertiary);font-size:.6875rem;line-height:var(--leading-control)}
-@keyframes ds-chart-rise{from{opacity:0;transform:scaleY(.82);filter:blur(2px)}to{opacity:1;transform:scaleY(1);filter:blur(0)}}
+@keyframes ds-chart-rise{from{opacity:0;transform:scaleY(.82);}to{opacity:1;transform:scaleY(1);}}
 
 .ds-progress{display:grid;gap:var(--space-2)}
 .ds-progress-head{display:flex;justify-content:space-between;gap:var(--space-3);font-size:.875rem;line-height:var(--leading-control)}
