@@ -1,9 +1,9 @@
-import { Badge, Button, Card } from '../../../design-system/components/index.js';
+import { Badge, Button } from '../../../design-system/components/index.js';
 import { CatalogImage } from './CatalogImage.jsx';
 
 export function RecipeCard({ recipe, onOpen, compact = false }) {
   return (
-    <Card className={`insights-product insights-recipe-card${compact ? ' is-compact' : ''}`}>
+    <article className={`insights-product insights-recipe-card${compact ? ' is-compact' : ''}`}>
       <CatalogImage url={recipe.image_url} name={recipe.name} />
       <div className="insights-recipe-copy">
         {!compact && <Badge>{recipe.category?.name || 'Receita Swift'}</Badge>}
@@ -17,6 +17,6 @@ export function RecipeCard({ recipe, onOpen, compact = false }) {
           Ver receita
         </Button>
       </div>
-    </Card>
+    </article>
   );
 }

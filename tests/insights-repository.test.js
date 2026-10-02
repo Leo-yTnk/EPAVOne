@@ -47,7 +47,9 @@ describe('catalog repository and prices', () => {
     await catalogRepository.recipeIngredients('r');
     const params = new URL(transport.mock.calls[0][0]).searchParams;
     expect(params.get('recipe_id')).toBe('eq.r');
-    expect(params.get('select')).toContain('products!recipe_ingredients_product_id_fkey(id,name,unit,image_url)');
+    expect(params.get('select')).toContain('products!recipe_ingredients_product_id_fkey');
+    expect(params.get('select')).toContain('image_url,swift_product_url');
+    expect(params.get('select')).toContain('regular_price_cents');
   });
   it('deduplicates related recipes and restricts them to published site content', async () => {
     const transport = vi.fn().mockResolvedValue(response([{ recipe: { id: 'r' } }, { recipe: { id: 'r' } }], '0-1/2'));
