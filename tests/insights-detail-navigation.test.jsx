@@ -24,7 +24,7 @@ describe('Connected Insights details', () => {
   it('opens ingredient products in the same dialog and returns to the complete recipe', async () => {
     render(<RecipeDialog recipe={recipe} onClose={vi.fn()} />);
     const dialog = screen.getByRole('dialog');
-    expect(dialog.querySelector(':scope > .ds-stitch')).toBeNull();
+    expect(dialog.querySelector(':scope > .ds-stitch')).toBeTruthy();
     fireEvent.click(await within(dialog).findByRole('button', { name: 'Ver produto Frango Swift' }));
     expect(screen.getAllByRole('dialog')).toHaveLength(1);
     expect(within(dialog).getByRole('heading', { name: 'Frango Swift' })).toBeTruthy();
