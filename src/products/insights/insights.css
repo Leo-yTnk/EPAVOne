@@ -58,7 +58,8 @@
   place-items: center;
   --container-padding: 0rem;
   --card-radius: var(--radius-xl);
-  --card-stitch-color: var(--text-secondary);
+  --card-stitch-color: rgba(255, 255, 255, .82);
+  --card-stitch-underlay-color: rgba(0, 0, 0, .42);
   aspect-ratio: 3/2;
   box-shadow: none;
   overflow: hidden;
@@ -400,7 +401,7 @@
 
 /* Costura somente nas imagens; informações compartilham a superfície da página. */
 .insights-image > .ds-stitch {
-  opacity: 0.28;
+  opacity: 1;
 }
 .insights-image img {
   border-radius: var(--nested-radius);

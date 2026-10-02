@@ -6,7 +6,7 @@ export function CatalogImage({ url, name }) {
   const [failedUrl, setFailedUrl] = useState(null);
   const source = safeImage(url);
   return (
-    <Card as="div" className="insights-image">
+    <Card as="div" className="insights-image" stitchContrast>
       {source && failedUrl !== source ? (
         <img src={source} alt={name} loading="lazy" decoding="async" onError={() => setFailedUrl(source)} />
       ) : (
