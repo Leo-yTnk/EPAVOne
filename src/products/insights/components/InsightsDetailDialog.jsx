@@ -20,7 +20,7 @@ export function InsightsDetailDialog({ initial, onClose }) {
   }, [current]);
   const open = (kind, item) => setHistory((items) => [...items, { kind, item }]);
   return (
-    <Dialog open title={current.item.name} onClose={onClose} size="lg" stitched={false}>
+    <Dialog open title={current.item.name} onClose={onClose} size="lg">
       <div ref={contentRef} tabIndex="-1" className="insights-detail-content">
         {previous && (
           <Button variant="ghost" size="sm" className="insights-detail-back" onClick={() => setHistory((items) => items.slice(0, -1))}>

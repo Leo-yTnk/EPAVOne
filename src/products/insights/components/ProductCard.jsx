@@ -6,12 +6,14 @@ export function ProductCard({ product, onOpen }) {
   return (
     <article className="insights-product">
       <CatalogImage url={product.image_url} name={product.name} />
-      <Badge>{product.category?.name || 'Outros produtos'}</Badge>
-      <h2 className="insights-product-name">{product.name}</h2>
-      <ProductPrice product={product} />
-      <Button variant="secondary" size="sm" onClick={() => onOpen(product)} aria-label={`Ver detalhes de ${product.name}`}>
-        Ver detalhes
-      </Button>
+      <div className="insights-product-copy">
+        <Badge>{product.category?.name || 'Outros produtos'}</Badge>
+        <h2 className="insights-product-name">{product.name}</h2>
+        <ProductPrice product={product} />
+        <Button variant="secondary" size="sm" onClick={() => onOpen(product)} aria-label={`Ver detalhes de ${product.name}`}>
+          Ver detalhes
+        </Button>
+      </div>
     </article>
   );
 }
