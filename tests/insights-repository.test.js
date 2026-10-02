@@ -31,6 +31,16 @@ describe('catalog repository and prices', () => {
     expect(await catalogRepository.categories()).toHaveLength(1);
     expect(new URL(transport.mock.calls[0][0]).searchParams.get('type')).toBe('eq.proteina');
   });
+  it('reads only published site recipes with explicit category FK and complete details', async () => {
+    const transport = vi.fn().mockResolvedValue(response([{ id: 'r' }], '0-0/1'));
+    vi.stubGlobal('fetch', transport);
+    expect(await catalogRepository.recipes()).toHaveLength(1);
+    const params = new URL(transport.mock.calls[0][0]).searchParams;
+    expect(params.get('scope')).toBe('eq.site');
+    expect(params.get('status')).toBe('eq.published');
+    expect(params.get('select')).toContain('categories!recipes_category_id_fkey');
+    expect(params.get('select')).toContain('instructions,tips,extras');
+  });
   it('deduplicates related recipes and restricts them to published site content', async () => {
     const transport = vi.fn().mockResolvedValue(response([{ recipe: { id: 'r' } }, { recipe: { id: 'r' } }], '0-1/2'));
     vi.stubGlobal('fetch', transport);

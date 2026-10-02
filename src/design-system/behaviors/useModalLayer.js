@@ -1,9 +1,9 @@
-import { useEffect } from 'preact/hooks';
+import { useLayoutEffect } from 'preact/hooks';
 
 let modalLockCount=0;
 
 export function useModalLayer(ref, open, onClose) {
-  useEffect(()=>{
+  useLayoutEffect(()=>{
     if(!open) return undefined;
 
     const previous=document.activeElement;

@@ -7,9 +7,9 @@ import { ProductCard } from './ProductCard.jsx';
 import { ProductDetails } from './ProductDetails.jsx';
 
 const load = (_id, options) => catalogService.loadCatalog(options);
-export function ProductCatalogPage() {
+export function ProductCatalogPage({ initialCategory = '' }) {
   const resource = useCatalogResource(load, 'public');
-  const [filters, setFilters] = useState({ query: '', category: '', promotion: false });
+  const [filters, setFilters] = useState({ query: '', category: initialCategory, promotion: false });
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState(null);
   const filtered = useMemo(() => filterProducts(resource.data?.products || [], filters), [resource.data, filters]);

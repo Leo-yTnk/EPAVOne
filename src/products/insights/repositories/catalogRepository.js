@@ -2,7 +2,8 @@ import { catalogConfig } from '../../../shared/config/catalog.js';
 
 const PRODUCT_FIELDS =
   'id,product_code,name,category_id,unit,price,image_url,swift_product_url,price_cents,regular_price_cents,promo_price_cents,promo_min_quantity,pricing_type,price_unit,price_status,price_last_success_at,category:categories!products_category_id_fkey(id,name)';
-const RECIPE_FIELDS = 'id,name,prep_time,servings,difficulty,image_url,instructions,tips,extras';
+const RECIPE_FIELDS =
+  'id,name,category_id,prep_time,servings,difficulty,image_url,instructions,tips,extras,featured,category:categories!recipes_category_id_fkey(id,name)';
 
 // Anonymous REST reads use the existing Yourcipe RLS policies. No schema changes.
 export async function readCatalog(table, params, { signal } = {}) {
@@ -62,6 +63,17 @@ export const catalogRepository = {
         active: 'eq.true',
         type: 'eq.proteina',
         order: 'sort_order.asc,name.asc,id.asc'
+      },
+      options
+    ),
+  recipes: (options) =>
+    readAll(
+      'recipes',
+      {
+        select: RECIPE_FIELDS,
+        scope: 'eq.site',
+        status: 'eq.published',
+        order: 'name.asc,id.asc'
       },
       options
     ),

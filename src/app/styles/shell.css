@@ -68,61 +68,26 @@
 .product-tab{position:relative;z-index:1}
 .product-tab.is-active{background:transparent;box-shadow:none}
 
-/* Keep product navigation visible without forcing page-wide scrolling. */
-.site-header {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+/* Islands start at the same edge, with contextual navigation only in Insights. */
+.site-header{display:flex;flex-wrap:wrap;justify-content:flex-start}
+.product-tabs,.header-actions{margin-left:0}
+.product-tabs{order:0;width:auto;max-width:100%;overflow-x:auto;overscroll-behavior-x:contain}
+.insights-tabs{position:relative;isolation:isolate;display:flex;gap:var(--space-1);padding:var(--container-padding);min-width:0}
+.insights-tab{position:relative;z-index:1;font-size:.875rem}
+.insights-tab.is-active{background:transparent;color:var(--text-inverse)}
+@media(max-width:56rem){
+ .header-actions{order:1}
+ .product-tabs{order:2;flex-basis:100%;display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}
+ .product-tab{justify-content:center;min-width:0;padding-inline:var(--space-2)}
+ .insights-tabs{order:3;display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
 }
-.product-tabs {
-  justify-self: end;
-  max-width: 100%;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-padding-inline: var(--space-2);
+@media(max-width:24rem){
+ .site-header{gap:var(--space-2)}
+ .brand{padding-right:var(--space-2);gap:var(--space-1)}
+ .brand-mark{width:1.75rem;height:1.75rem}
+ .header-actions .ds-btn{padding-inline:var(--space-2);font-size:.75rem}
+ .product-tab{font-size:.8125rem}
 }
-@media (max-width: 56rem) {
-  .site-header {
-    grid-template-columns: minmax(0, 1fr) auto;
-  }
-  .product-tabs {
-    grid-column: 1/-1;
-    grid-row: 2;
-    justify-self: stretch;
-    margin: 0;
-    width: auto;
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-  .product-tab {
-    justify-content: center;
-    padding-inline: var(--space-2);
-    min-width: 0;
-  }
-  .header-actions {
-    margin: 0;
-    justify-self: end;
-  }
-}
-@media (max-width: 24rem) {
-  .site-header {
-    gap: var(--space-2);
-  }
-  .brand {
-    padding-right: var(--space-2);
-    gap: var(--space-1);
-  }
-  .brand-mark {
-    width: 1.75rem;
-    height: 1.75rem;
-  }
-  .header-actions .ds-btn {
-    padding-inline: var(--space-2);
-    font-size: 0.75rem;
-  }
-  .product-tab {
-    font-size: 0.8125rem;
-  }
-}
+.app-main:focus{outline:none;box-shadow:none}
 
-/* The route focus target is not an interactive control. */
-.app-main:focus{outline:none}
+@media(max-width:22rem){.brand{font-size:1rem}.header-actions .ds-btn{padding-inline:var(--space-1)}}
