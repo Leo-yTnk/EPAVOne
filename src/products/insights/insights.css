@@ -2,7 +2,7 @@
 .insights-detail,
 .insights-recipe {
   display: grid;
-  gap: var(--space-5);
+  gap: var(--space-4);
   min-width: 0;
 }
 .insights-filters {
@@ -10,6 +10,8 @@
   grid-template-columns: minmax(0, 2fr) minmax(0, 1fr) auto;
   gap: var(--space-4);
   align-items: end;
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
 }
 .insights-filters .ds-checkbox {
   align-self: center;
@@ -26,27 +28,35 @@
 }
 .insights-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--space-4);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 12rem), 1fr));
+  gap: var(--space-3);
+  align-items: stretch;
 }
 .insights-product {
+  --container-padding: var(--space-4);
   display: flex;
   flex-direction: column;
-  gap: var(--space-3);
+  gap: var(--space-2);
   min-width: 0;
 }
 .insights-product-name {
-  font: 650 var(--heading-5)/var(--leading-heading-small) var(--font-sans);
+  font: 650 1rem/var(--leading-heading-small) var(--font-sans);
   overflow-wrap: anywhere;
 }
-.insights-product > .ds-btn {
+.insights-product .ds-badge {
+  max-width: 100%;
+  width: fit-content;
+  overflow-wrap: anywhere;
+}
+.insights-product > .ds-btn,
+.insights-recipe-copy > .ds-btn {
   margin-top: auto;
   width: 100%;
 }
 .insights-image {
   display: grid;
   place-items: center;
-  aspect-ratio: 4/3;
+  aspect-ratio: 3/2;
   overflow: hidden;
   border-radius: var(--nested-radius);
   background: var(--surface-secondary);
@@ -61,24 +71,42 @@
 .insights-muted,
 .insights-price small {
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: 0.8125rem;
   line-height: var(--leading-body-compact);
+}
+.insights-image-fallback {
+  padding: var(--space-2);
+  text-align: center;
+  overflow-wrap: anywhere;
 }
 .insights-price {
   display: grid;
-  gap: var(--space-2);
+  gap: var(--space-1);
 }
 .insights-price strong {
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-variant-numeric: tabular-nums;
+}
+.insights-price span,
+.insights-promotion {
+  font-size: 0.8125rem;
 }
 .insights-price span {
   color: var(--text-secondary);
-  font-size: 0.875rem;
 }
 .insights-promotion {
   color: var(--text-brand);
-  font-size: 0.875rem;
+}
+.insights-recipe-copy {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
+}
+.insights-recipe-card .insights-image img,
+.insights-spotlight .insights-image img {
+  object-fit: cover;
 }
 .insights-related {
   display: grid;
@@ -86,219 +114,287 @@
   gap: var(--space-3);
 }
 .insights-related .ds-card {
+  --container-padding: var(--space-4);
   display: grid;
   gap: var(--space-3);
 }
-.insights-detail > .insights-image,
-.insights-recipe > .insights-image {
-  max-width: 22rem;
+.insights-detail > .insights-image {
+  max-width: 15rem;
   width: 100%;
   justify-self: center;
 }
-.insights-recipe li {
-  margin-block: var(--space-2);
+.insights-recipe-overview {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: center;
+}
+.insights-recipe-overview .insights-image {
+  aspect-ratio: 4/3;
+}
+.insights-ingredient-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+.insights-ingredient {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: center;
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.insights-ingredient .insights-image {
+  --container-radius: var(--radius-md);
+  --container-padding: 0rem;
+  aspect-ratio: 1;
+}
+.insights-ingredient .insights-image-fallback {
+  font-size: 0.625rem;
+  padding: var(--space-1);
+}
+.insights-ingredient > div:last-child {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+.insights-ingredient strong {
+  font-size: 0.875rem;
+  font-weight: 600;
   overflow-wrap: anywhere;
+}
+.insights-recipe li {
+  overflow-wrap: anywhere;
+}
+.insights-recipe > ol,
+.insights-recipe > ul:not(.insights-ingredient-list) {
+  padding-left: var(--space-5);
+  margin-block: 0;
+}
+.insights-recipe > ol li,
+.insights-recipe > ul:not(.insights-ingredient-list) li {
+  margin-block: var(--space-2);
+  font-size: 0.875rem;
 }
 .insights-recipe-tips {
   white-space: pre-line;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
 }
 .insights-loading {
   display: flex;
   align-items: center;
   gap: var(--space-3);
-  padding-block: var(--space-6);
+  padding-block: var(--space-5);
 }
-@media (max-width: 68rem) {
-  .insights-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-  .insights-filters {
-    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
-  }
-  .insights-filters > :last-child {
-    grid-column: 1/-1;
-  }
-}
-@media (max-width: 48rem) {
-  .insights-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-@media (max-width: 32rem) {
-  .insights-grid,
-  .insights-filters,
-  .insights-related {
-    grid-template-columns: minmax(0, 1fr);
-  }
-}
-
 .insights-detail-content:focus {
   outline: none;
   box-shadow: none;
 }
-
 .insights-home {
   display: grid;
-  gap: var(--space-7);
+  gap: var(--space-5);
 }
 .insights-home-hero {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(12rem, 1fr);
-  gap: var(--space-6);
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  padding-block: var(--space-4) var(--space-5);
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  padding-bottom: var(--space-5);
+  border-bottom: 1px solid var(--border-subtle);
 }
 .insights-home-hero > div:first-child {
   display: grid;
-  gap: var(--space-4);
-  max-width: 46rem;
+  gap: var(--space-2);
+  max-width: 40rem;
 }
 .insights-home-title {
-  font: 400 clamp(2.25rem, 4.5vw, 4.25rem)/var(--leading-heading) var(--font-display);
+  font: 400 clamp(1.875rem, 3vw, 2.625rem)/var(--leading-heading) var(--font-display);
   letter-spacing: -0.025em;
 }
 .insights-home-hero p {
   color: var(--text-secondary);
-  max-width: 39rem;
+  font-size: 0.875rem;
+}
+.insights-home-counts {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
 }
 .insights-home-actions {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--space-3);
+  gap: var(--space-2);
 }
-.insights-home-summary {
+.insights-home-columns {
   display: grid;
-  gap: var(--space-3);
-  border-left: 1px solid var(--border-subtle);
-  padding-left: var(--space-6);
-}
-.insights-home-summary strong {
-  font: 400 var(--heading-2)/var(--leading-heading) var(--font-display);
-  color: var(--text-brand);
-  margin-right: var(--space-2);
-  font-variant-numeric: tabular-nums;
-}
-.insights-home-editorial {
-  display: grid;
-  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  grid-template-columns: minmax(0, 3fr) minmax(15rem, 1fr);
   gap: var(--space-6);
   align-items: start;
 }
-.insights-spotlight {
+.insights-home-main,
+.insights-home-aside {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: var(--space-5);
-  align-items: center;
+  min-width: 0;
 }
-.insights-spotlight > div:last-of-type,
-.insights-home-conversation {
-  display: grid;
-  gap: var(--space-4);
-}
-.insights-spotlight .insights-image {
-  aspect-ratio: 1;
-  align-self: stretch;
-}
-.insights-home-conversation ol {
+.insights-home-aside {
+  border-left: 1px solid var(--border-subtle);
   padding-left: var(--space-5);
-  display: grid;
-  gap: var(--space-4);
-  color: var(--text-secondary);
-}
-.insights-home-conversation li strong {
-  color: var(--text-primary);
-}
-.insights-home-conversation > .ds-btn {
-  justify-self: start;
 }
 .insights-home-section {
   display: grid;
+  gap: var(--space-3);
+}
+.insights-spotlight {
+  --container-padding: var(--space-4);
+  display: grid;
+  grid-template-columns: 10rem minmax(0, 1fr);
   gap: var(--space-4);
+  align-items: center;
+}
+.insights-spotlight > .insights-image {
+  aspect-ratio: 4/3;
+}
+.insights-spotlight > div:last-of-type {
+  display: grid;
+  gap: var(--space-3);
+  justify-items: start;
 }
 .insights-section-heading {
   display: flex;
-  align-items: end;
+  align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: var(--space-3);
-}
-.insights-section-heading > div {
-  display: grid;
   gap: var(--space-2);
+}
+.insights-home .ds-heading-h4 {
+  font-size: 1.125rem;
 }
 .insights-category-links {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-2);
 }
+.insights-category-links .ds-btn {
+  max-width: 100%;
+  text-align: left;
+}
 .insights-home-recipes {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-4);
+  gap: var(--space-3);
+}
+.insights-recipe-card.is-compact {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+}
+.insights-recipe-card.is-compact > .insights-image {
+  aspect-ratio: 1;
+}
+.insights-recipe-card.is-compact .insights-product-name {
+  font-size: 0.875rem;
+}
+.insights-recipe-card.is-compact .ds-btn {
+  width: fit-content;
+  padding-inline: var(--space-2);
+  min-height: 2rem;
 }
 .insights-home-opportunities {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-4);
+  gap: var(--space-3);
 }
 .insights-opportunity {
-  display: flex;
-  align-items: center;
-  gap: var(--space-4);
-  justify-content: space-between;
-}
-.insights-opportunity > div {
+  --container-padding: var(--space-4);
   display: grid;
   gap: var(--space-3);
   min-width: 0;
 }
+.insights-opportunity > div {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.insights-opportunity h3 {
+  font-size: 1rem;
+}
+.insights-opportunity > .ds-btn {
+  justify-self: start;
+}
 @media (max-width: 68rem) {
-  .insights-home-editorial {
+  .insights-filters {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  }
+  .insights-filters > :last-child {
+    grid-column: 1/-1;
+  }
+  .insights-home-recipes {
     grid-template-columns: minmax(0, 1fr);
   }
-  .insights-home-conversation ol {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-5);
+  .insights-home-columns {
+    grid-template-columns: minmax(0, 2fr) minmax(14rem, 1fr);
   }
 }
 @media (max-width: 48rem) {
-  .insights-home-hero {
+  .insights-home-columns {
     grid-template-columns: minmax(0, 1fr);
   }
-  .insights-home-summary {
+  .insights-home-aside {
     border-left: 0;
     border-top: 1px solid var(--border-subtle);
     padding: var(--space-4) 0 0;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .insights-home-summary > .ds-overline {
-    grid-column: 1/-1;
+  .insights-home-recipes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .insights-home-summary strong {
-    display: block;
-    margin-bottom: var(--space-2);
+}
+@media (max-width: 36rem) {
+  .insights-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+  .insights-product-name {
+    font-size: 0.9375rem;
+  }
+  .insights-filters,
+  .insights-related,
+  .insights-home-aside,
   .insights-home-recipes,
+  .insights-ingredient-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .insights-spotlight {
+    grid-template-columns: 5rem minmax(0, 1fr);
+  }
+  .insights-spotlight .ds-badge {
+    max-width: 100%;
+  }
+  .insights-home-actions {
+    width: 100%;
+  }
   .insights-home-opportunities {
     grid-template-columns: minmax(0, 1fr);
   }
-  .insights-opportunity {
-    flex-wrap: wrap;
-  }
 }
-@media (max-width: 32rem) {
-  .insights-spotlight {
-    grid-template-columns: minmax(0, 1fr);
+@media (max-width: 22rem) {
+  .insights-product {
+    --container-padding: var(--space-3);
   }
-  .insights-home-conversation ol {
-    grid-template-columns: minmax(0, 1fr);
+  .insights-product .ds-badge {
+    font-size: 0.6875rem;
   }
-  .insights-home {
-    gap: var(--space-6);
+  .insights-product-name {
+    font-size: 0.875rem;
   }
 }
 
-.insights-recipe-card .insights-image img,
-.insights-spotlight .insights-image img {
-  object-fit: cover;
+.insights-home .ds-btn {
+  text-decoration: none;
 }

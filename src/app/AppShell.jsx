@@ -48,6 +48,12 @@ export function AppShell({ route, theme, onToggleTheme, children }) {
             </a>
           ))}
         </nav>
+        <div className="header-actions navigation-island">
+          <Button variant="ghost" size="sm" onClick={onToggleTheme}>
+            {theme === 'dark' ? '☀ Claro' : '◐ Escuro'}
+          </Button>
+          <Menu label="Conta" items={accountItems} />
+        </div>
         {selectedProduct === 'insights' && (
           <nav ref={insightsRef} className="insights-tabs navigation-island" aria-label="Navegação do Insights">
             <SelectionIndicator containerRef={insightsRef} value={insightsSection} />
@@ -58,12 +64,6 @@ export function AppShell({ route, theme, onToggleTheme, children }) {
             ))}
           </nav>
         )}
-        <div className="header-actions navigation-island">
-          <Button variant="ghost" size="sm" onClick={onToggleTheme}>
-            {theme === 'dark' ? '☀ Claro' : '◐ Escuro'}
-          </Button>
-          <Menu label="Conta" items={accountItems} />
-        </div>
       </header>
       <main id="main" className="app-main" tabIndex="-1">
         {children}

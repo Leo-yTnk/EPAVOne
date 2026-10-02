@@ -41,6 +41,14 @@ describe('catalog repository and prices', () => {
     expect(params.get('select')).toContain('categories!recipes_category_id_fkey');
     expect(params.get('select')).toContain('instructions,tips,extras');
   });
+  it('loads ingredient product images and keeps the recipe filter', async () => {
+    const transport = vi.fn().mockResolvedValue(response([], '*/0'));
+    vi.stubGlobal('fetch', transport);
+    await catalogRepository.recipeIngredients('r');
+    const params = new URL(transport.mock.calls[0][0]).searchParams;
+    expect(params.get('recipe_id')).toBe('eq.r');
+    expect(params.get('select')).toContain('products!recipe_ingredients_product_id_fkey(id,name,unit,image_url)');
+  });
   it('deduplicates related recipes and restricts them to published site content', async () => {
     const transport = vi.fn().mockResolvedValue(response([{ recipe: { id: 'r' } }, { recipe: { id: 'r' } }], '0-1/2'));
     vi.stubGlobal('fetch', transport);
