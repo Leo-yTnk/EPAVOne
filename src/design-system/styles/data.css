@@ -75,3 +75,8 @@ a.ds-card:active,.ds-card[data-interactive="true"]:active{transform:translateY(0
 @keyframes ds-progress-in{from{transform:scaleX(0);opacity:.5}to{transform:scaleX(1);opacity:1}}
 
 @media(prefers-reduced-motion:reduce){a.ds-card:hover,.ds-card[data-interactive="true"]:hover,.ds-chart-bar:hover{transform:none}.ds-chart-bar,.ds-progress-fill{animation:none}}
+
+.ds-stitch rect.ds-stitch-underlay {
+ stroke: var(--card-stitch-underlay-color, rgba(0,0,0,.45));
+ stroke-width: calc(var(--card-stitch-width) + .125rem);
+}
