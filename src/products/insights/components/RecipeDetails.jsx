@@ -1,6 +1,7 @@
 import { Button, ErrorState, Spinner } from '../../../design-system/components/index.js';
 import { catalogService } from '../services/catalogService.js';
 import { useCatalogResource } from '../hooks/useCatalogResource.js';
+import { RecipeIngredients } from './RecipeIngredients.jsx';
 import { CatalogImage } from './CatalogImage.jsx';
 
 export function RecipeDetails({ recipe, onBack }) {
@@ -17,13 +18,14 @@ export function RecipeDetails({ recipe, onBack }) {
           ← Voltar ao produto
         </Button>
       )}
-      <h3 className="ds-heading-h3">{recipe.name}</h3>
-      <CatalogImage url={recipe.image_url} name={recipe.name} />
-      <p className="insights-muted">
-        {[recipe.prep_time && `${recipe.prep_time} min`, recipe.servings && `${recipe.servings} porções`, recipe.difficulty]
-          .filter(Boolean)
-          .join(' · ')}
-      </p>
+      <div className="insights-recipe-overview">
+        <CatalogImage url={recipe.image_url} name={recipe.name} />
+        <p className="insights-muted">
+          {[recipe.prep_time && `${recipe.prep_time} min de preparo`, recipe.servings && `${recipe.servings} porções`, recipe.difficulty]
+            .filter(Boolean)
+            .join(' · ')}
+        </p>
+      </div>
       <h4>Ingredientes</h4>
       {resource.loading ? (
         <p role="status">
@@ -32,13 +34,7 @@ export function RecipeDetails({ recipe, onBack }) {
       ) : resource.error ? (
         <ErrorState title="Ingredientes indisponíveis" description={resource.error} onAction={resource.retry} />
       ) : resource.data.length ? (
-        <ul>
-          {resource.data.map((item) => (
-            <li key={item.id}>
-              {item.quantity} {item.product?.unit} · {item.product?.name || 'Ingrediente indisponível'}
-            </li>
-          ))}
-        </ul>
+        <RecipeIngredients ingredients={resource.data} />
       ) : (
         <p>Não há ingredientes cadastrados.</p>
       )}

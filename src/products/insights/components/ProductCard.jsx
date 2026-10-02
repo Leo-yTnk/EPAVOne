@@ -10,7 +10,7 @@ export function ProductCard({ product, onOpen }) {
       <h2 className="insights-product-name">{product.name}</h2>
       <ProductPrice product={product} />
       <Button variant="secondary" size="sm" onClick={() => onOpen(product)} aria-label={`Ver detalhes de ${product.name}`}>
-        Ver detalhes e receitas
+        Ver detalhes
       </Button>
     </Card>
   );

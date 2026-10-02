@@ -68,11 +68,11 @@
 .product-tab{position:relative;z-index:1}
 .product-tab.is-active{background:transparent;box-shadow:none}
 
-/* Islands start at the same edge, with contextual navigation only in Insights. */
+/* Global islands stay left; contextual Insights navigation sits at the right edge. */
 .site-header{display:flex;flex-wrap:wrap;justify-content:flex-start}
 .product-tabs,.header-actions{margin-left:0}
 .product-tabs{order:0;width:auto;max-width:100%;overflow-x:auto;overscroll-behavior-x:contain}
-.insights-tabs{position:relative;isolation:isolate;display:flex;gap:var(--space-1);padding:var(--container-padding);min-width:0}
+.insights-tabs{margin-left:auto;position:relative;isolation:isolate;display:flex;gap:var(--space-1);padding:var(--container-padding);min-width:0}
 .insights-tab{position:relative;z-index:1;font-size:.875rem}
 .insights-tab.is-active{background:transparent;color:var(--text-inverse)}
 @media(max-width:56rem){
