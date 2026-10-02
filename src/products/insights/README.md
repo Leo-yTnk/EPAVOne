@@ -1,7 +1,15 @@
-# EPAVInsights — primeira etapa da migração
+# EPAVInsights — catálogo e inspiração para atendimento
 
-O catálogo público do Yourcipe está disponível em `#/insights` e
-`#/insights/produtos`. Usuários e dados continuam no mesmo projeto Supabase;
+As páginas do Insights têm funções diferentes:
+
+- `#/insights` (ou `#/insights/home`): Home com receita em destaque, ideias para
+  o atendimento, atalhos por categoria e oportunidades por quantidade.
+- `#/insights/receitas`: catálogo de receitas publicadas com busca, filtro por
+  categoria, receitas de até 30 minutos e detalhes completos.
+- `#/insights/produtos`: catálogo de produtos com preços e receitas relacionadas.
+- `#/insights/produtos/categoria/<id>`: catálogo com a categoria da Home selecionada.
+
+Usuários e dados continuam no mesmo projeto Supabase;
 esta etapa não altera tabelas, políticas, usuários nem funções de preço.
 
 ## Recursos
@@ -28,7 +36,7 @@ sendo a autoridade. Não há operações de escrita ou sessão autenticada.
 O repositório lê todas as páginas, avançando pelo número efetivamente retornado
 pelo servidor para evitar truncamento. O transporte limita cada requisição a
 15 segundos. Componentes cancelam solicitações ao desmontar e ignoram
-respostas antigas. Receitas e ingredientes são carregados ao abrir detalhes.
+respostas antigas. O catálogo de receitas é carregado na Home e na página Receitas; os ingredientes são carregados ao abrir detalhes.
 
 Configuração opcional no build:
 
@@ -40,13 +48,20 @@ chaves administrativas ou service_role ao frontend.
 
 ## Navegação e transição
 
+As ilhas do header ficam agrupadas à esquerda. Somente no Insights aparece
+uma ilha adicional com Home, Receitas e Produtos, com indicador da página atual.
 A barra principal usa quatro colunas nas telas menores, mantendo Início,
 Insights, Planner e Writer acessíveis. Conta e recursos ainda não migrados
 continuam disponíveis pelo link para o Yourcipe. Login, personalização,
-administração e a página independente de receitas ficam para etapas seguintes.
+e administração ficam para etapas seguintes.
 
 ## Verificação
 
 `npm run verify` executa lint, verificação de arquitetura, testes e build.
 Os testes desta etapa cobrem paginação, pesquisa, filtros, preços condicionais,
 receitas, recuperação de erros, cancelamento e respostas atrasadas.
+
+A Home usa contagens e sugestões derivadas do catálogo real. Receitas em destaque
+são priorizadas, seguidas pelas de menor tempo conhecido. Produtos com preço por
+quantidade só aparecem quando essa condição existe no catálogo; não são criadas
+promoções nem indicadores de vendas fictícios.

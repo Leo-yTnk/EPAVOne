@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'preact/hooks';
-import { PRODUCT_META } from './routes.js';
-import { Button, Menu, SelectionIndicator } from '../design-system/components/index.js';
+import { INSIGHTS_NAV, PRODUCT_META } from './routes.js';
+import { Button, Menu, NavItem, SelectionIndicator } from '../design-system/components/index.js';
 
 import { YOURCIPE_URL } from '../shared/config/catalog.js';
 
@@ -11,6 +11,8 @@ const accountItems = [
 
 export function AppShell({ route, theme, onToggleTheme, children }) {
   const tabsRef = useRef(null);
+  const insightsRef = useRef(null);
+  const insightsSection = route.segments[0] === 'home' ? '' : route.segments[0] || '';
   const selectedProduct = route.product === 'dev' ? 'home' : route.product;
   useEffect(() => {
     const selected = tabsRef.current?.querySelector('[aria-current]');
@@ -46,6 +48,16 @@ export function AppShell({ route, theme, onToggleTheme, children }) {
             </a>
           ))}
         </nav>
+        {selectedProduct === 'insights' && (
+          <nav ref={insightsRef} className="insights-tabs navigation-island" aria-label="Navegação do Insights">
+            <SelectionIndicator containerRef={insightsRef} value={insightsSection} />
+            {INSIGHTS_NAV.map((item) => (
+              <NavItem key={item.href} className="product-tab insights-tab" href={item.href} active={insightsSection === item.section}>
+                {item.label}
+              </NavItem>
+            ))}
+          </nav>
+        )}
         <div className="header-actions navigation-island">
           <Button variant="ghost" size="sm" onClick={onToggleTheme}>
             {theme === 'dark' ? '☀ Claro' : '◐ Escuro'}

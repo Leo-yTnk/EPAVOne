@@ -21,3 +21,9 @@ export function routeHash(product, segments = []) {
   if (product === 'home') return '#/';
   return '#/' + [product, ...segments].filter(Boolean).join('/');
 }
+
+export const INSIGHTS_NAV = [
+  { label: 'Home', href: '#/insights', section: '' },
+  { label: 'Receitas', href: '#/insights/receitas', section: 'receitas' },
+  { label: 'Produtos', href: '#/insights/produtos', section: 'produtos' }
+];

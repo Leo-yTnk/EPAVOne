@@ -1,0 +1,89 @@
+import { useMemo, useState } from 'preact/hooks';
+import { Button, Checkbox, EmptyState, ErrorState, Input, Pagination, Select, Spinner } from '../../../design-system/components/index.js';
+import { catalogService } from '../services/catalogService.js';
+import { useCatalogResource } from '../hooks/useCatalogResource.js';
+import { filterRecipes } from '../models/recipes.js';
+import { CATALOG_PAGE_SIZE } from '../models/catalog.js';
+import { RecipeCard } from './RecipeCard.jsx';
+import { RecipeDialog } from './RecipeDialog.jsx';
+
+export function RecipesPage() {
+  const resource = useCatalogResource(catalogService.recipes, 'published');
+  const [filters, setFilters] = useState({ query: '', category: '', quick: false });
+  const [page, setPage] = useState(1);
+  const [selected, setSelected] = useState(null);
+  const recipes = resource.data || [];
+  const filtered = useMemo(() => filterRecipes(recipes, filters), [resource.data, filters]);
+  const categories = [
+    ...new Map(recipes.filter((recipe) => recipe.category).map((recipe) => [recipe.category.id, recipe.category])).values()
+  ].sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+  const pageCount = Math.max(1, Math.ceil(filtered.length / CATALOG_PAGE_SIZE));
+  const currentPage = Math.min(page, pageCount);
+  function update(patch) {
+    setFilters((current) => ({ ...current, ...patch }));
+    setPage(1);
+  }
+  function reset() {
+    update({ query: '', category: '', quick: false });
+  }
+  if (resource.loading)
+    return (
+      <p className="insights-loading" role="status">
+        <Spinner /> Carregando receitas…
+      </p>
+    );
+  if (resource.error)
+    return <ErrorState title="Não foi possível carregar as receitas" description={resource.error} onAction={resource.retry} />;
+  return (
+    <section className="insights-catalog" aria-label="Catálogo de receitas">
+      <div className="insights-filters">
+        <Input
+          id="insights-recipe-search"
+          label="Buscar receita"
+          type="search"
+          placeholder="Nome ou categoria"
+          value={filters.query}
+          onInput={(event) => update({ query: event.currentTarget.value })}
+        />
+        <Select
+          label="Categoria de receita"
+          options={[{ value: '', label: 'Todas as categorias' }, ...categories.map((item) => ({ value: item.id, label: item.name }))]}
+          value={filters.category}
+          onChange={(category) => update({ category })}
+          searchable
+        />
+        <Checkbox aria-label="Até 30 minutos" checked={filters.quick} onChange={(event) => update({ quick: event.currentTarget.checked })}>
+          Até 30 minutos
+        </Checkbox>
+      </div>
+      <div className="insights-results">
+        <p className="insights-muted" role="status">
+          {filtered.length} {filtered.length === 1 ? 'receita encontrada' : 'receitas encontradas'}
+        </p>
+        {filtered.length > 0 && (filters.query || filters.category || filters.quick) && (
+          <Button variant="ghost" size="sm" onClick={reset}>
+            Limpar filtros
+          </Button>
+        )}
+      </div>
+      {!filtered.length ? (
+        <EmptyState
+          title={recipes.length ? 'Nenhuma receita encontrada' : 'Ainda não há receitas publicadas'}
+          description={
+            recipes.length ? 'Tente outra busca ou ajuste os filtros.' : 'As receitas aparecerão aqui quando forem publicadas no catálogo.'
+          }
+          actionLabel={recipes.length ? 'Limpar filtros' : undefined}
+          onAction={reset}
+        />
+      ) : (
+        <div className="insights-grid">
+          {filtered.slice((currentPage - 1) * CATALOG_PAGE_SIZE, currentPage * CATALOG_PAGE_SIZE).map((recipe) => (
+            <RecipeCard key={recipe.id} recipe={recipe} onOpen={setSelected} />
+          ))}
+        </div>
+      )}
+      {pageCount > 1 && <Pagination page={currentPage} pageCount={pageCount} onChange={setPage} label="Páginas de receitas" />}
+      {selected && <RecipeDialog key={selected.id} recipe={selected} onClose={() => setSelected(null)} />}
+    </section>
+  );
+}

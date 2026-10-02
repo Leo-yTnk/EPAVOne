@@ -12,9 +12,11 @@ export function RecipeDetails({ recipe, onBack }) {
         .filter(Boolean);
   return (
     <section className="insights-recipe" aria-label={recipe.name}>
-      <Button variant="ghost" size="sm" onClick={onBack}>
-        ← Voltar ao produto
-      </Button>
+      {onBack && (
+        <Button variant="ghost" size="sm" onClick={onBack}>
+          ← Voltar ao produto
+        </Button>
+      )}
       <h3 className="ds-heading-h3">{recipe.name}</h3>
       <CatalogImage url={recipe.image_url} name={recipe.name} />
       <p className="insights-muted">
