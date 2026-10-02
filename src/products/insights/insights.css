@@ -58,8 +58,11 @@
   place-items: center;
   --container-padding: 0rem;
   --card-radius: var(--radius-xl);
-  --card-stitch-color: rgba(255, 255, 255, .82);
-  --card-stitch-underlay-color: rgba(0, 0, 0, .42);
+  --card-stitch-color: rgba(255, 255, 255, .40);
+  --card-stitch-underlay-color: rgba(0, 0, 0, .24);
+  --card-stitch-width: .0625rem;
+  --card-stitch-dash: .3125rem;
+  --card-stitch-gap: .375rem;
   aspect-ratio: 3/2;
   box-shadow: none;
   overflow: hidden;
@@ -408,6 +411,9 @@
 }
 .insights-image > .ds-stitch rect {
   rx: max(var(--radius-xs), calc(var(--card-radius) - var(--card-stitch-inset)));
+}
+.insights-image > .ds-stitch rect.ds-stitch-underlay {
+  stroke-width: calc(var(--card-stitch-width) + .0625rem);
 }
 .insights-product {
   padding: 0;
