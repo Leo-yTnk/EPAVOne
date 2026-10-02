@@ -95,7 +95,7 @@ export const catalogRepository = {
     return readAll(
       'recipe_ingredients',
       {
-        select: 'id,quantity,product:products!recipe_ingredients_product_id_fkey(id,name,unit,image_url)',
+        select: `id,quantity,product:products!recipe_ingredients_product_id_fkey(${PRODUCT_FIELDS})`,
         recipe_id: `eq.${recipeId}`,
         order: 'sort_order.asc,id.asc'
       },

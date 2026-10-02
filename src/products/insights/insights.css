@@ -28,8 +28,8 @@
 }
 .insights-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 12rem), 1fr));
-  gap: var(--space-3);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-6);
   align-items: stretch;
 }
 .insights-product {
@@ -53,12 +53,16 @@
   margin-top: auto;
   width: 100%;
 }
-.insights-image {
+.insights-image.ds-card {
   display: grid;
   place-items: center;
+  --container-padding: var(--space-2);
+  --card-radius: var(--radius-xl);
+  --card-stitch-color: var(--text-secondary);
   aspect-ratio: 3/2;
+  box-shadow: none;
   overflow: hidden;
-  border-radius: var(--nested-radius);
+  border-radius: var(--card-radius);
   background: var(--surface-secondary);
   min-width: 0;
 }
@@ -113,19 +117,13 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-3);
 }
-.insights-related .ds-card {
-  --container-padding: var(--space-4);
+.insights-related-recipe {
   display: grid;
   gap: var(--space-3);
 }
-.insights-detail > .insights-image {
-  max-width: 15rem;
-  width: 100%;
-  justify-self: center;
-}
 .insights-recipe-overview {
   display: grid;
-  grid-template-columns: 7rem minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--space-4);
   align-items: center;
 }
@@ -170,13 +168,13 @@
 .insights-recipe li {
   overflow-wrap: anywhere;
 }
-.insights-recipe > ol,
-.insights-recipe > ul:not(.insights-ingredient-list) {
+.insights-recipe-body > ol,
+.insights-recipe-body > ul:not(.insights-ingredient-list) {
   padding-left: var(--space-5);
   margin-block: 0;
 }
-.insights-recipe > ol li,
-.insights-recipe > ul:not(.insights-ingredient-list) li {
+.insights-recipe-body > ol li,
+.insights-recipe-body > ul:not(.insights-ingredient-list) li {
   margin-block: var(--space-2);
   font-size: 0.875rem;
 }
@@ -286,7 +284,7 @@
 }
 .insights-home-recipes {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: var(--space-3);
 }
 .insights-recipe-card.is-compact {
@@ -358,7 +356,7 @@
 }
 @media (max-width: 36rem) {
   .insights-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1fr);
   }
   .insights-product-name {
     font-size: 0.9375rem;
@@ -396,5 +394,142 @@
 }
 
 .insights-home .ds-btn {
+  text-decoration: none;
+}
+
+/* Costura somente nas imagens; informações compartilham a superfície da página. */
+.insights-image > .ds-stitch {
+  opacity: 0.28;
+}
+.insights-image img {
+  border-radius: var(--nested-radius);
+}
+.insights-image > .ds-stitch rect {
+  rx: max(var(--radius-xs), calc(var(--card-radius) - var(--card-stitch-inset)));
+}
+.insights-product {
+  padding: 0;
+  gap: var(--space-3);
+}
+.insights-product > .ds-btn,
+.insights-recipe-copy > .ds-btn {
+  width: fit-content;
+}
+.insights-spotlight {
+  padding: 0;
+}
+.insights-spotlight > .insights-image {
+  aspect-ratio: 1;
+}
+.insights-home-recipes {
+  gap: var(--space-5);
+}
+.insights-opportunity {
+  padding: 0;
+}
+.insights-detail-content {
+  display: grid;
+  gap: var(--space-4);
+}
+.insights-detail-back {
+  justify-self: start;
+}
+.insights-product-overview,
+.insights-recipe {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: var(--space-5);
+  align-items: start;
+}
+.insights-product-overview > .insights-image,
+.insights-recipe-overview > .insights-image {
+  aspect-ratio: 1;
+  width: 100%;
+}
+.insights-product-summary,
+.insights-recipe-body,
+.insights-detail-section {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+.insights-product-summary {
+  justify-items: start;
+}
+.insights-recipe-overview {
+  gap: var(--space-3);
+}
+.insights-recipe-overview img {
+  object-fit: cover;
+}
+.insights-recipe-body h3,
+.insights-detail-section h3 {
+  font: 650 1.125rem/var(--leading-heading-small) var(--font-sans);
+  color: var(--text-primary);
+}
+.insights-detail-section {
+  border-top: 1px solid var(--border-subtle);
+  padding-top: var(--space-5);
+}
+.insights-ingredient-list {
+  grid-template-columns: minmax(0, 1fr);
+}
+.insights-ingredient .ds-btn {
+  justify-self: start;
+  padding: 0;
+  min-height: var(--control-sm);
+}
+.insights-related-recipe {
+  grid-template-columns: 5rem minmax(0, 1fr);
+  align-items: start;
+}
+.insights-related-recipe > div:last-of-type {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
+  min-width: 0;
+}
+.insights-related-recipe h4 {
+  font-size: 0.9375rem;
+  overflow-wrap: anywhere;
+  color: var(--text-primary);
+}
+.insights-related-recipe .insights-image {
+  aspect-ratio: 1;
+}
+.insights-related-recipe .insights-image img {
+  object-fit: cover;
+}
+@media (max-width: 68rem) {
+  .insights-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 48rem) {
+  .insights-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 36rem) {
+  .insights-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+  .insights-product > .insights-image {
+    aspect-ratio: 16/9;
+  }
+  .insights-product-overview,
+  .insights-recipe {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .insights-product-overview > .insights-image,
+  .insights-recipe-overview > .insights-image {
+    aspect-ratio: 4/3;
+    max-width: 18rem;
+    justify-self: center;
+  }
+}
+
+.insights-detail-content .ds-btn {
   text-decoration: none;
 }

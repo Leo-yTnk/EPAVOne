@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { Badge, Button, Card, EmptyState, ErrorState, Spinner } from '../../../design-system/components/index.js';
+import { Badge, Button, EmptyState, ErrorState, Spinner } from '../../../design-system/components/index.js';
 import { catalogService } from '../services/catalogService.js';
 import { useCatalogResource } from '../hooks/useCatalogResource.js';
 import { productPricing } from '../models/catalog.js';
@@ -55,7 +55,7 @@ export function InsightsHomePage() {
               Em destaque
             </h2>
             {spotlight ? (
-              <Card as="section" className="insights-spotlight" aria-label="Uma ideia para começar">
+              <section className="insights-spotlight" aria-label="Uma ideia para começar">
                 <CatalogImage url={spotlight.image_url} name={spotlight.name} />
                 <div>
                   <Badge>Uma ideia para começar</Badge>
@@ -69,7 +69,7 @@ export function InsightsHomePage() {
                     Conhecer a receita
                   </Button>
                 </div>
-              </Card>
+              </section>
             ) : (
               <EmptyState title="Novas ideias em breve" description="As receitas publicadas aparecerão aqui." />
             )}
@@ -85,7 +85,7 @@ export function InsightsHomePage() {
                 </Button>
               </div>
               <div className="insights-home-recipes">
-                {suggestions.slice(1).map((item) => (
+                {suggestions.slice(1, 3).map((item) => (
                   <RecipeCard key={item.id} recipe={item} onOpen={setRecipe} compact />
                 ))}
               </div>
@@ -103,7 +103,7 @@ export function InsightsHomePage() {
               </div>
               <div className="insights-home-opportunities">
                 {opportunities.map((item) => (
-                  <Card key={item.id} className="insights-opportunity">
+                  <article key={item.id} className="insights-opportunity">
                     <div>
                       <h3>{item.name}</h3>
                       <ProductPrice product={item} />
@@ -111,7 +111,7 @@ export function InsightsHomePage() {
                     <Button variant="secondary" size="sm" onClick={() => setProduct(item)}>
                       Ver detalhes
                     </Button>
-                  </Card>
+                  </article>
                 ))}
               </div>
             </section>

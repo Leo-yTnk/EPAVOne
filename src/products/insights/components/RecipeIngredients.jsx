@@ -1,6 +1,7 @@
+import { Button } from '../../../design-system/components/index.js';
 import { CatalogImage } from './CatalogImage.jsx';
 
-export function RecipeIngredients({ ingredients }) {
+export function RecipeIngredients({ ingredients, onOpenProduct }) {
   return (
     <ul className="insights-ingredient-list" aria-label="Produtos da receita">
       {ingredients.map((item) => (
@@ -11,6 +12,11 @@ export function RecipeIngredients({ ingredients }) {
             <span className="insights-muted">
               {item.quantity} {item.product?.unit}
             </span>
+            {item.product?.id && onOpenProduct && (
+              <Button variant="ghost" size="sm" onClick={() => onOpenProduct(item.product)} aria-label={`Ver produto ${item.product.name}`}>
+                Ver produto →
+              </Button>
+            )}
           </div>
         </li>
       ))}

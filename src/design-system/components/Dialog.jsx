@@ -4,7 +4,7 @@ import { useModalLayer } from '../behaviors/useModalLayer.js';
 import { IconButton } from './IconButton.jsx';
 import { Portal } from './Portal.jsx';
 
-export function Dialog({ open, title, children, actions, onClose, size = 'md' }) {
+export function Dialog({ open, title, children, actions, onClose, size = 'md', stitched = true }) {
   const dialogRef = useRef(null);
   const titleId = useId();
   useModalLayer(dialogRef, open, onClose);
@@ -15,7 +15,7 @@ export function Dialog({ open, title, children, actions, onClose, size = 'md' })
       <div className="ds-dialog-overlay" onMouseDown={(event) => event.target === event.currentTarget && onClose?.()}>
         <section
           ref={dialogRef}
-          className={`ds-dialog ds-stitched-card${size === 'lg' ? ' is-large' : ''}`}
+          className={`ds-dialog${stitched ? ' ds-stitched-card' : ''}${size === 'lg' ? ' is-large' : ''}`}
           role="dialog"
           aria-modal="true"
           aria-labelledby={titleId}
@@ -31,7 +31,7 @@ export function Dialog({ open, title, children, actions, onClose, size = 'md' })
           </div>
           <div className="ds-dialog-content">{children}</div>
           {actions && <div className="ds-dialog-actions">{actions}</div>}
-          <CardStitch />
+          {stitched && <CardStitch />}
         </section>
       </div>
     </Portal>
