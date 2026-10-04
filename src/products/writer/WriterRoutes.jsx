@@ -9,7 +9,7 @@ import { CheckoutProgress, CHECKOUT_STEPS } from './components/CheckoutProgress.
 import { CheckoutActions } from './components/CheckoutActions.jsx';
 import './writer.css';
 const emptyOrder = () => ({ room: '', student: '', client: '', phone: '', method: '', store: '', date: '', payment: '', lines: [] });
-export function WriterRoutes() {
+export function WriterRoutes({ active = true }) {
   const [template, setTemplate] = useState(null);
   const [order, setOrder] = useState(emptyOrder);
   const [busy, setBusy] = useState(false);
@@ -20,7 +20,7 @@ export function WriterRoutes() {
   const [direction, setDirection] = useState('forward');
   const [exportError, setExportError] = useState('');
   useEffect(() => {
-    if (template) {
+    if (active && template && !document.activeElement?.closest('[role="tablist"]')) {
       const current = document.getElementById('writer-current-step');
       current?.focus({ preventScroll: true });
       const rect = current?.getBoundingClientRect();
@@ -30,7 +30,7 @@ export function WriterRoutes() {
         current.scrollIntoView?.({ block: 'start', behavior: reduced ? 'auto' : 'smooth' });
       }
     }
-  }, [step, template]);
+  }, [active, step, template]);
   useEffect(() => {
     const refresh = () => setToday(saoPauloDay());
     const timer = setInterval(refresh, 30000);
@@ -102,6 +102,7 @@ export function WriterRoutes() {
     setDirection(index < step ? 'backward' : 'forward');
     setStep(index);
   }
+  if (!active) return null;
   return (
     <section className="product-page writer-page">
       <PageHeader

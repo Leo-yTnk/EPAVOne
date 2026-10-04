@@ -1,11 +1,13 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/preact';
 import { describe, expect, it, vi } from 'vitest';
 import { WriterRoutes } from '../src/products/writer/WriterRoutes.jsx';
+import { App } from '../src/app/App.jsx';
 import { ProductCatalog } from '../src/products/writer/components/ProductCatalog.jsx';
 import { writerTemplate } from './helpers/writerTemplate.js';
 import { importTemplate } from '../src/products/writer/services/templateService.js';
 vi.mock('../src/products/writer/services/swiftImagesService.js', () => ({ findSwiftImage: vi.fn().mockResolvedValue(null) }));
 vi.mock('../src/products/writer/services/templateService.js', () => ({ importTemplate: vi.fn() }));
+vi.mock('../src/app/account/useAccount.js', () => ({ useAccount: () => ({ session: null }) }));
 vi.mock('../src/products/writer/models/order.js', async (importOriginal) => ({
   ...(await importOriginal()),
   saoPauloDay: () => '2026-09-30'
@@ -42,7 +44,9 @@ describe('Writer interactions', () => {
     const actual = await vi.importActual('../src/products/writer/services/templateService.js');
     const template = await actual.importTemplate(await writerTemplate(), '2026-09-30');
     importTemplate.mockResolvedValueOnce(template);
-    render(<WriterRoutes />);
+    window.location.hash = '#/writer';
+    vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
+    render(<App />);
     fireEvent.input(screen.getByLabelText(/Carregar pedido semanal/), { target: { files: [new File(['x'], 'pedido.xlsx')] } });
     await screen.findByRole('region', { name: 'Etapa 1: Cliente' });
     expect(screen.queryByLabelText('Buscar produto')).toBeNull();
@@ -61,6 +65,14 @@ describe('Writer interactions', () => {
     expect(screen.getByRole('button', { name: 'Continuar para entrega' }).disabled).toBe(true);
     fireEvent.click(screen.getByRole('button', { name: 'Adicionar produto' }));
     fireEvent.click(screen.getAllByRole('button', { name: 'Adicionar ao pedido' })[0]);
+    fireEvent.click(screen.getByRole('tab', { name: 'One' }));
+    fireEvent(window, new Event('hashchange'));
+    await screen.findByRole('heading', { name: 'Por onde vamos começar?' });
+    expect(screen.queryByRole('button', { name: 'Adicionar produto' })).toBeNull();
+    fireEvent.click(screen.getByRole('tab', { name: 'Writer' }));
+    fireEvent(window, new Event('hashchange'));
+    await screen.findByRole('region', { name: 'Etapa 2: Produtos' });
+    expect(screen.getByLabelText(/^Quantidade de/).value).toBe('1');
     fireEvent.click(screen.getByRole('button', { name: 'Continuar para entrega' }));
     await screen.findByRole('region', { name: 'Etapa 3: Entrega' });
     choose(/Entrega ou retirada/, 'Retira - Outras Lojas');

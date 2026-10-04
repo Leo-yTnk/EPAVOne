@@ -1,79 +1,102 @@
 import { useEffect, useRef } from 'preact/hooks';
-import { INSIGHTS_NAV, PRODUCT_META } from './routes.js';
-import { Button, Menu, NavItem, SelectionIndicator } from '../design-system/components/index.js';
-
+import { INSIGHTS_NAV, PRODUCT_META, routeHash } from './routes.js';
+import { Button, Menu, NavItem, SelectionIndicator, Tabs } from '../design-system/components/index.js';
 import { YOURCIPE_URL } from '../shared/config/catalog.js';
 
 const resourceItems = [
   { label: 'Conta e recursos do Yourcipe ↗', href: YOURCIPE_URL },
   { label: 'Component Lab', href: '#/dev/components' }
 ];
+const appGlyphs = { home: 'e.', insights: '↗', planner: '▦', writer: '✎' };
 
 export function AppShell({ route, theme, onToggleTheme, account, onOpenAccount, children }) {
   const tabsRef = useRef(null);
   const insightsRef = useRef(null);
+  const lastRoutes = useRef({});
   const insightsSection = route.segments[0] === 'home' ? '' : route.segments[0] || '';
   const selectedProduct = route.product === 'dev' ? 'home' : route.product;
   useEffect(() => {
-    const selected = tabsRef.current?.querySelector('[aria-current]');
-    if (!selected) return;
-    const container = tabsRef.current;
-    if (selected.offsetLeft < container.scrollLeft) container.scrollLeft = selected.offsetLeft;
-    else if (selected.offsetLeft + selected.offsetWidth > container.scrollLeft + container.clientWidth) {
-      container.scrollLeft = selected.offsetLeft + selected.offsetWidth - container.clientWidth;
-    }
-  }, [selectedProduct]);
+    if (route.product !== 'dev') lastRoutes.current[route.product] = routeHash(route.product, route.segments);
+    tabsRef.current?.querySelector('[aria-selected="true"]')?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
+  }, [route]);
+
+  function selectApp(product) {
+    window.location.hash = lastRoutes.current[product] || PRODUCT_META[product].href;
+  }
+
   return (
     <div className="app-shell">
       <a className="skip-link" href="#main">
         Ir para o conteúdo
       </a>
       <header className="site-header">
-        <a className="brand navigation-island" href="#/" aria-label="EPAVOne, página inicial">
-          <span className="brand-mark">e.</span>
-          <span>
-            EPAV<span className="brand-one">One</span>
-          </span>
-        </a>
-        <nav ref={tabsRef} className="product-tabs navigation-island" aria-label="Produtos EPAV">
-          <SelectionIndicator containerRef={tabsRef} value={selectedProduct} />
-          {Object.entries(PRODUCT_META).map(([key, item]) => (
-            <a
-              key={key}
-              className={'product-tab ' + (selectedProduct === key ? 'is-active' : '')}
-              href={item.href}
-              aria-current={selectedProduct === key ? 'page' : undefined}
-            >
-              {item.label}
-            </a>
-          ))}
-        </nav>
-        <div className="header-actions navigation-island">
-          <Button variant="ghost" size="sm" onClick={onToggleTheme}>
-            {theme === 'dark' ? '☀ Claro' : '◐ Escuro'}
-          </Button>
-          <Menu
-            label={account?.session ? 'Minha conta' : 'Conta'}
-            items={[{ label: account?.session ? 'Minha conta' : 'Entrar', onSelect: onOpenAccount }, ...resourceItems]}
+        <div className="header-toolbar">
+          <a className="brand" href="#/" aria-label="EPAVOne, página inicial">
+            <span className="brand-mark">e.</span>
+            <span>
+              EPAV<span className="brand-one">One</span>
+            </span>
+          </a>
+          <span className="workspace-label">Seu espaço de trabalho</span>
+          <div className="header-actions">
+            <Button variant="ghost" size="sm" onClick={onToggleTheme}>
+              {theme === 'dark' ? '☀ Claro' : '◐ Escuro'}
+            </Button>
+            <Menu
+              label={account?.session ? 'Minha conta' : 'Conta'}
+              items={[{ label: account?.session ? 'Minha conta' : 'Entrar', onSelect: onOpenAccount }, ...resourceItems]}
+            />
+          </div>
+        </div>
+        <div ref={tabsRef} className="workspace-apps">
+          <Tabs
+            label="Apps do EPAVOne"
+            className="app-tabs"
+            value={selectedProduct}
+            onChange={selectApp}
+            items={Object.entries(PRODUCT_META).map(([key, item]) => ({
+              value: key,
+              id: `app-tab-${key}`,
+              panelId: 'workspace-panel',
+              label: (
+                <span className="app-tab-label" data-product={item.product}>
+                  <span className="app-tab-glyph" aria-hidden="true">
+                    {appGlyphs[key]}
+                  </span>
+                  {item.label}
+                </span>
+              )
+            }))}
           />
         </div>
-        {selectedProduct === 'insights' && (
-          <nav ref={insightsRef} className="insights-tabs navigation-island" aria-label="Navegação do Insights">
-            <SelectionIndicator containerRef={insightsRef} value={insightsSection} />
-            {INSIGHTS_NAV.map((item) => (
-              <NavItem key={item.href} className="product-tab insights-tab" href={item.href} active={insightsSection === item.section}>
-                {item.label}
-              </NavItem>
-            ))}
-          </nav>
-        )}
+        <div className="workspace-context">
+          <span className="workspace-context-name">
+            {route.product === 'dev' ? 'Component Lab' : `EPAV${PRODUCT_META[selectedProduct].label}`}
+          </span>
+          {selectedProduct === 'insights' ? (
+            <nav ref={insightsRef} className="insights-tabs" aria-label="Navegação do Insights">
+              <SelectionIndicator containerRef={insightsRef} value={insightsSection} />
+              {INSIGHTS_NAV.map((item) => (
+                <NavItem key={item.href} className="product-tab insights-tab" href={item.href} active={insightsSection === item.section}>
+                  {item.label}
+                </NavItem>
+              ))}
+            </nav>
+          ) : (
+            <span className="workspace-context-description">
+              {selectedProduct === 'writer' ? 'Preparar pedido' : selectedProduct === 'planner' ? 'Planejar a semana' : 'Visão geral'}
+            </span>
+          )}
+        </div>
       </header>
       <main id="main" className="app-main" tabIndex="-1">
-        {children}
+        <div id="workspace-panel" role="tabpanel" aria-labelledby={`app-tab-${selectedProduct}`}>
+          {children}
+        </div>
       </main>
       <footer className="site-footer">
         <span>EPAVOne · Experiências Práticas em Atividades de Varejo</span>
-        <span>Planeje. Entenda. Prepare.</span>
+        <span>Planeje. Inspire. Prepare.</span>
       </footer>
     </div>
   );
