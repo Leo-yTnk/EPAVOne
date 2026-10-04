@@ -62,7 +62,7 @@ describe('Insights pages and contextual navigation', () => {
       </AppShell>
     );
     expect(screen.queryByRole('navigation', { name: 'Navegação do Insights' })).toBeNull();
-    expect(screen.getByRole('navigation', { name: 'Produtos EPAV' })).toBeTruthy();
+    expect(screen.getByRole('tablist', { name: 'Apps do EPAVOne' })).toBeTruthy();
   });
 
   it('makes Home an editorial starting point with real counts and working category and recipe actions', async () => {
@@ -70,7 +70,7 @@ describe('Insights pages and contextual navigation', () => {
     await screen.findByRole('heading', { name: 'Uma boa venda começa com uma boa ideia.' });
     expect(screen.queryByLabelText('Buscar produto')).toBeNull();
     expect(screen.queryByLabelText('Buscar receita')).toBeNull();
-    expect(screen.getByRole('heading', { name: 'Comece pela ocasião.' })).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: 'Comece pela ocasião.' })).toBeTruthy();
     expect(screen.getByRole('link', { name: 'Aves' }).getAttribute('href')).toBe('#/insights/produtos/categoria/aves');
     expect(screen.getByRole('link', { name: 'Encontrar uma receita' }).getAttribute('href')).toBe('#/insights/receitas');
     const open = screen.getByRole('button', { name: 'Conhecer a receita' });

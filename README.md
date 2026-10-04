@@ -2,6 +2,12 @@
 
 Portal do EPAV para **EPAVInsights**, **EPAVPlanner** e **EPAVWriter**.
 
+## Espaço de trabalho
+
+As abas **One**, **Insights**, **Planner** e **Writer** separam os apps da navegação entre páginas. O Insights mantém Home, Receitas e Produtos em uma segunda linha. Ao alternar apps, cada aba volta à última rota visitada durante a sessão.
+
+O Writer conserva o formulário carregado, dados do cliente, carrinho e etapa enquanto o usuário consulta outro app. Essa continuidade é em memória: recarregar ou fechar a página inicia uma nova sessão. As abas suportam setas, Home e End; as rotas em hash continuam funcionando com links diretos e histórico do navegador.
+
 ## Stack
 
 - Preact + JSX

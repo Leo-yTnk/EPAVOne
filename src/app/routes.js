@@ -1,5 +1,5 @@
 export const PRODUCT_META = {
-  home: { label: 'Início', product: 'home', href: '#/' },
+  home: { label: 'One', product: 'one', href: '#/' },
   insights: { label: 'Insights', product: 'insights', href: '#/insights' },
   planner: { label: 'Planner', product: 'one', href: '#/planner' },
   writer: { label: 'Writer', product: 'writer', href: '#/writer' }

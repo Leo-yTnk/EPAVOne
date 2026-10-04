@@ -29,7 +29,10 @@ export function App() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
-    requestAnimationFrame(() => document.querySelector('#main')?.focus({ preventScroll: true }));
+    const frame = requestAnimationFrame(() => {
+      if (!document.activeElement?.closest('[role="tablist"]')) document.querySelector('#main')?.focus({ preventScroll: true });
+    });
+    return () => cancelAnimationFrame(frame);
   }, [routeKey]);
 
   function toggleTheme() {
@@ -41,13 +44,16 @@ export function App() {
   let page = <HomePage />;
   if (route.product === 'insights') page = <InsightsRoutes route={route} />;
   if (route.product === 'planner') page = <PlannerRoutes route={route} />;
-  if (route.product === 'writer') page = <WriterRoutes route={route} />;
+  if (route.product === 'writer') page = null;
   if (route.product === 'dev' && route.segments[0] === 'components') page = <ComponentLabPage />;
 
   return (
     <AppShell route={route} theme={theme} onToggleTheme={toggleTheme} account={account} onOpenAccount={() => setAccountOpen(true)}>
       <div key={routeKey} className="route-frame">
         {page}
+      </div>
+      <div key="writer-workspace" className="route-frame" hidden={route.product !== 'writer'}>
+        <WriterRoutes active={route.product === 'writer'} />
       </div>
       {accountOpen && <AccountDialog account={account} onClose={() => setAccountOpen(false)} />}
     </AppShell>
