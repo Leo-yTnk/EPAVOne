@@ -1,0 +1,11 @@
+.account-content {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+.account-content p {
+  margin: 0;
+}
+.account-content .ds-btn {
+  max-width: 100%;
+}

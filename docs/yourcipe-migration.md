@@ -76,3 +76,27 @@ cancelamento prévio, respostas inválidas e erros HTTP/rede.
 Não há validação de login nem escrita no banco nesta etapa. Reverter este PR
 restaura o transporte anterior sem rollback de dados. Etapas seguintes precisam
 de testes de integração com o esquema real antes de liberar operações de escrita.
+
+## Etapa 2: login existente
+
+O menu Conta abre login por credencial/senha, restaura a sessão do SDK, consulta
+`profiles` e permite sair. O cliente Auth usa o storageKey padrão do mesmo projeto
+que o Yourcipe e renova tokens. Leituras públicas permanecem anônimas. Logout usa
+scope local (sessão atual); na mesma origem/storageKey isso também afeta o Yourcipe.
+O callback Auth apenas atualiza estado; consultas de perfil acontecem fora dele.
+Admin é lido de profiles; não concede autorização sem políticas do servidor.
+
+O Turnstile reutiliza a site key pública existente e pode ser configurado com
+`VITE_TURNSTILE_SITE_KEY`. Após cada tentativa, é necessário um novo token.
+Confirme no Cloudflare que `leo-ytnk.github.io` está autorizado no widget e que
+sua secret key correspondente permanece configurada no Supabase. Como os dois
+sites compartilham hostname, a configuração existente pode ser suficiente.
+Para preview em outro hostname, autorize esse hostname no widget. Nunca coloque
+secret key do CAPTCHA no frontend. Login por senha não usa URL de callback.
+
+Cadastro continua no Yourcipe nesta etapa. Não há recuperação de senha por
+email: os identificadores existentes são técnicos e não recebem mensagens.
+Não são necessárias senha do banco, service_role nem senha pessoal para construir
+ou publicar o login. Para aceitação real, o proprietário deve entrar com sua conta
+no site publicado e conferir nome, sessão após recarregar, erro com senha incorreta,
+logout e login de administrador. Essa validação não foi executada com conta real.

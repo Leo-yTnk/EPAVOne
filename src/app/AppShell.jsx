@@ -4,12 +4,12 @@ import { Button, Menu, NavItem, SelectionIndicator } from '../design-system/comp
 
 import { YOURCIPE_URL } from '../shared/config/catalog.js';
 
-const accountItems = [
+const resourceItems = [
   { label: 'Conta e recursos do Yourcipe ↗', href: YOURCIPE_URL },
   { label: 'Component Lab', href: '#/dev/components' }
 ];
 
-export function AppShell({ route, theme, onToggleTheme, children }) {
+export function AppShell({ route, theme, onToggleTheme, account, onOpenAccount, children }) {
   const tabsRef = useRef(null);
   const insightsRef = useRef(null);
   const insightsSection = route.segments[0] === 'home' ? '' : route.segments[0] || '';
@@ -52,7 +52,10 @@ export function AppShell({ route, theme, onToggleTheme, children }) {
           <Button variant="ghost" size="sm" onClick={onToggleTheme}>
             {theme === 'dark' ? '☀ Claro' : '◐ Escuro'}
           </Button>
-          <Menu label="Conta" items={accountItems} />
+          <Menu
+            label={account?.session ? 'Minha conta' : 'Conta'}
+            items={[{ label: account?.session ? 'Minha conta' : 'Entrar', onSelect: onOpenAccount }, ...resourceItems]}
+          />
         </div>
         {selectedProduct === 'insights' && (
           <nav ref={insightsRef} className="insights-tabs navigation-island" aria-label="Navegação do Insights">
