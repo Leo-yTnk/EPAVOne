@@ -1,36 +1,13 @@
-import { catalogConfig } from '../../../shared/config/catalog.js';
+import { supabaseClient } from '../../../shared/services/supabaseClient.js';
 
 const PRODUCT_FIELDS =
   'id,product_code,name,category_id,unit,price,image_url,swift_product_url,price_cents,regular_price_cents,promo_price_cents,promo_min_quantity,pricing_type,price_unit,price_status,price_last_success_at,category:categories!products_category_id_fkey(id,name)';
 const RECIPE_FIELDS =
   'id,name,category_id,prep_time,servings,difficulty,image_url,instructions,tips,extras,featured,category:categories!recipes_category_id_fkey(id,name)';
 
-// Anonymous REST reads use the existing Yourcipe RLS policies. No schema changes.
-export async function readCatalog(table, params, { signal } = {}) {
-  const controller = new AbortController();
-  const abort = () => controller.abort(signal?.reason);
-  if (signal?.aborted) abort();
-  signal?.addEventListener('abort', abort, { once: true });
-  const timer = setTimeout(() => controller.abort(), 15000);
-  try {
-    const response = await fetch(`${catalogConfig.url}/rest/v1/${table}?${new URLSearchParams(params)}`, {
-      headers: { apikey: catalogConfig.key, Prefer: 'count=exact' },
-      signal: controller.signal
-    });
-    if (!response.ok) throw new Error('Não foi possível consultar o catálogo. Tente novamente.');
-    const rows = await response.json();
-    if (!Array.isArray(rows)) throw new Error('O catálogo retornou uma resposta inválida.');
-    const totalText = response.headers.get('content-range')?.split('/')[1];
-    return { rows, total: totalText && totalText !== '*' ? Number(totalText) : null };
-  } catch (error) {
-    if (controller.signal.aborted && !signal?.aborted) {
-      throw new Error('A consulta demorou mais que o esperado. Tente novamente.');
-    }
-    throw error;
-  } finally {
-    clearTimeout(timer);
-    signal?.removeEventListener('abort', abort);
-  }
+// Public reads deliberately remain anonymous, including after account migration.
+export async function readCatalog(table, params, options) {
+  return supabaseClient.readRows(table, params, options);
 }
 
 async function readAll(table, params, options) {

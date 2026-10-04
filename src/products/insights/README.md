@@ -40,8 +40,15 @@ respostas antigas. O catálogo de receitas é carregado na Home e na página Rec
 
 Configuração opcional no build:
 
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_PUBLISHABLE_KEY` (somente chave pública para navegador)
 - `VITE_CATALOG_URL`
 - `VITE_CATALOG_PUBLISHABLE_KEY` (somente chave pública para navegador)
+
+As variáveis `VITE_CATALOG_*` continuam como alternativas compatíveis; as
+equivalentes `VITE_SUPABASE_*` têm precedência. O transporte PostgREST e a
+configuração ficam em `src/shared`, mantendo filtros e paginação no repositório.
+Veja o [plano e inventário da migração](../../../docs/yourcipe-migration.md).
 
 Os valores padrão apontam para o projeto já usado pelo Yourcipe. Não forneça
 chaves administrativas ou service_role ao frontend.
