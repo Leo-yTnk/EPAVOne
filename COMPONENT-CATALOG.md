@@ -118,9 +118,7 @@ O checker bloqueia uso direto de `ds-card` fora de `Card.jsx`. A costura usa `Ca
 
 ## Component Lab
 
-```
-#/dev/components
-```
+Referência de desenvolvimento: `src/dev/component-lab/ComponentLab.jsx`. Não possui rota na aplicação.
 
 
 ## Layout e movimento leves

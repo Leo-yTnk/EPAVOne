@@ -70,7 +70,7 @@ const tableRows=[
   {id:3,produto:'Salmão',categoria:'Pescados',qtd:4,receita:'R$ 236',status:'Regular',tone:'default'}
 ];
 
-export function ComponentLabPage(){
+export function ComponentLab(){
   const [slider,setSlider]=useState(68);
   const [category,setCategory]=useState('suinos');
   const [seller,setSeller]=useState('todos');

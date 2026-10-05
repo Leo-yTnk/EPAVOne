@@ -3,6 +3,7 @@ import {
   Alert,
   Badge,
   Button,
+  Card,
   EmptyState,
   ErrorState,
   Icon,
@@ -51,7 +52,11 @@ export function EntityManager({ type, scope = 'personal', onShare, onSubmit }) {
     }
   }
   return (
-    <section className="creation-fields" aria-label={`${scope === 'site' ? 'Catálogo' : 'Biblioteca'}: ${meta.label}`}>
+    <Card
+      as="section"
+      className="creation-fields creation-library"
+      aria-label={`${scope === 'site' ? 'Catálogo' : 'Biblioteca'}: ${meta.label}`}
+    >
       <div className="creation-toolbar">
         <Input
           label={`Buscar ${meta.label.toLowerCase()}`}
@@ -80,6 +85,9 @@ export function EntityManager({ type, scope = 'personal', onShare, onSubmit }) {
         <EmptyState title="Nenhum item encontrado" description="Crie um item ou ajuste sua busca." />
       ) : (
         <>
+          <p className="insights-muted" role="status">
+            {items.length} {items.length === 1 ? 'item' : 'itens'} na biblioteca{query ? ' para esta busca' : ''}.
+          </p>
           <div className="creation-list">
             {items.slice((current - 1) * 20, current * 20).map((item) => (
               <article className="creation-row" key={item.id}>
@@ -114,6 +122,6 @@ export function EntityManager({ type, scope = 'personal', onShare, onSubmit }) {
       )}
       {editor && <EntityEditor type={type} scope={scope} item={editor.item} onClose={() => setEditor(null)} onSaved={saved} />}
       {deleting && <DeleteDialog type={type} item={deleting} onClose={() => setDeleting(null)} onSaved={saved} />}
-    </section>
+    </Card>
   );
 }

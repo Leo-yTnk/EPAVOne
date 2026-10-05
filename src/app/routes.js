@@ -2,16 +2,15 @@ export const PRODUCT_META = {
   home: { label: 'One', product: 'one', href: '#/' },
   insights: { label: 'Insights', product: 'insights', href: '#/insights' },
   planner: { label: 'Planner', product: 'one', href: '#/planner' },
-  writer: { label: 'Writer', product: 'writer', href: '#/writer' }
+  writer: { label: 'Writer', product: 'writer', href: '#/writer' },
+  settings: { label: 'Configurações', product: 'one', href: '#/settings' }
 };
 
 export function parseHash(hash = window.location.hash) {
   const raw = hash.startsWith('#/') ? hash.slice(2) : '';
   const segments = raw.split('/').filter(Boolean);
 
-  if (segments[0] === 'dev') {
-    return { product: 'dev', segments: segments.slice(1), raw };
-  }
+  if (segments[0] === 'settings') return { product: 'settings', segments: [], raw };
 
   const product = Object.hasOwn(PRODUCT_META, segments[0]) ? segments[0] : 'home';
   return { product, segments: product === 'home' ? [] : segments.slice(1), raw };
