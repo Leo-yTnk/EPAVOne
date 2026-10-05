@@ -732,3 +732,63 @@
     aspect-ratio: 1;
   }
 }
+
+/* Image cards stay flush; text and actions share the same column geometry. */
+.insights-grid {
+  gap: var(--space-5);
+}
+.insights-grid > .insights-product {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: var(--space-3);
+  align-self: stretch;
+}
+.insights-grid .insights-image.ds-card {
+  width: 100%;
+  padding: 0;
+}
+.insights-grid .insights-product-copy,
+.insights-grid .insights-recipe-copy {
+  gap: var(--space-2);
+  padding-inline: var(--space-1);
+  min-width: 0;
+}
+.insights-grid .insights-product-copy > .ds-btn,
+.insights-grid .insights-recipe-copy > .ds-btn {
+  align-self: start;
+  width: auto;
+  max-width: 100%;
+  margin-top: auto;
+}
+html[data-density='compact'] .insights-grid {
+  gap: var(--space-3);
+}
+html[data-density='compact'] .insights-grid > .insights-product {
+  gap: var(--space-2);
+}
+html[data-density='compact'] .creation-library,
+html[data-density='compact'] .settings-section {
+  --container-padding: var(--space-4);
+}
+html[data-density='compact'] .creation-row {
+  padding-block: var(--space-2);
+}
+@media (max-width: 48rem) {
+  .insights-grid > .insights-product {
+    grid-template-columns: 6rem minmax(0, 1fr);
+    grid-template-rows: auto;
+    align-items: start;
+  }
+  .insights-grid .insights-product-copy,
+  .insights-grid .insights-recipe-copy {
+    padding: 0;
+  }
+  .insights-grid .insights-image.ds-card {
+    aspect-ratio: 1;
+  }
+}
+@media (max-width: 24rem) {
+  .insights-grid > .insights-product {
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+  }
+}

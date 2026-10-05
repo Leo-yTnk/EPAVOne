@@ -9,13 +9,18 @@ import { HomePage } from '../products/home/HomePage.jsx';
 import { InsightsRoutes } from '../products/insights/InsightsRoutes.jsx';
 import { PlannerRoutes } from '../products/planner/PlannerRoutes.jsx';
 import { WriterRoutes } from '../products/writer/WriterRoutes.jsx';
-import { ComponentLabPage } from '../dev/component-lab/ComponentLabPage.jsx';
+import { SettingsPage } from './settings/SettingsPage.jsx';
+import { applyPreferences, readPreferences } from './settings/preferences.js';
 
 export function App() {
   const route = useHashRoute();
   const account = useAccount();
   const [accountOpen, setAccountOpen] = useState(false);
   const [theme, setTheme] = useState(getInitialTheme);
+  const [preferences, setPreferences] = useState(readPreferences);
+  useEffect(() => {
+    applyPreferences(preferences);
+  }, [preferences]);
   const routeKey = [route.product, ...route.segments].join('/');
 
   useEffect(() => {
@@ -23,7 +28,7 @@ export function App() {
   }, [theme]);
 
   useLayoutEffect(() => {
-    document.documentElement.dataset.product = productTheme(route.product === 'dev' ? 'home' : route.product);
+    document.documentElement.dataset.product = productTheme(route.product === 'settings' ? 'home' : route.product);
     document.documentElement.dataset.page = route.product;
   }, [route.product]);
 
@@ -45,10 +50,27 @@ export function App() {
   if (route.product === 'insights') page = <InsightsRoutes route={route} account={account} onOpenAccount={() => setAccountOpen(true)} />;
   if (route.product === 'planner') page = <PlannerRoutes route={route} />;
   if (route.product === 'writer') page = null;
-  if (route.product === 'dev' && route.segments[0] === 'components') page = <ComponentLabPage />;
+  if (route.product === 'settings')
+    page = (
+      <SettingsPage
+        theme={theme}
+        onToggleTheme={toggleTheme}
+        preferences={preferences}
+        onPreferencesChange={setPreferences}
+        account={account}
+        onOpenAccount={() => setAccountOpen(true)}
+      />
+    );
 
   return (
-    <AppShell route={route} theme={theme} onToggleTheme={toggleTheme} account={account} onOpenAccount={() => setAccountOpen(true)}>
+    <AppShell
+      preferences={preferences}
+      route={route}
+      theme={theme}
+      onToggleTheme={toggleTheme}
+      account={account}
+      onOpenAccount={() => setAccountOpen(true)}
+    >
       <div key={routeKey} className="route-frame">
         {page}
       </div>

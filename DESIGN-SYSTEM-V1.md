@@ -334,7 +334,7 @@ A RC só vira 1.0 quando o piloto real do EPAVInsights provar:
 
 ## 12. Component Lab
 
-`#/dev/components` usa valores fictícios e os componentes reais do design system.
+`src/dev/component-lab/ComponentLab.jsx` usa valores fictícios e os componentes reais do design system. É uma referência de desenvolvimento sem rota ou importação no aplicativo.
 
 Ele serve para validar:
 - visual;

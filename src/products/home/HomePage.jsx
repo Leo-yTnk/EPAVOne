@@ -49,7 +49,7 @@ export function HomePage() {
             <br />
             <em>Tudo no mesmo lugar.</em>
           </Heading>
-          <Text>Encontre uma ideia para o cliente, prepare o pedido e siga com o atendimento. Seus apps estão sempre nas abas acima.</Text>
+          <Text>Encontre uma ideia para o cliente, prepare o pedido e siga com o atendimento. Seus apps estão sempre disponíveis na navegação.</Text>
         </div>
         <div className="one-welcome-actions">
           <Button as="a" href="#/writer">

@@ -54,7 +54,7 @@ As rotas continuam em hash para suportar hospedagem estática:
 #/insights/clientes/123/historico
 #/planner
 #/writer
-#/dev/components
+#/settings
 ```
 
 ## Regras importantes
@@ -78,7 +78,7 @@ A fonte canônica do DS está em:
 - `DESIGN-SYSTEM-V1.md`
 - `COMPONENT-CATALOG.md`
 
-O laboratório de componentes fica em **`#/dev/components`**.
+O laboratório de componentes fica em `src/dev/component-lab/ComponentLab.jsx`, como referência de desenvolvimento sem rota ou importação na aplicação.
 
 ## Documentação
 

@@ -1,6 +1,6 @@
 import { cx } from '../../shared/utils/cx.js';
 
-export function Tabs({ items, value, onChange, label = 'Abas', className = '', id }) {
+export function Tabs({ items, value, onChange, label = 'Abas', className = '', id, orientation = 'horizontal' }) {
   function onKeyDown(event) {
     const enabled = items.filter((item) => !item.disabled);
     if (!enabled.length) return;
@@ -8,19 +8,28 @@ export function Tabs({ items, value, onChange, label = 'Abas', className = '', i
       0,
       enabled.findIndex((item) => item.value === value)
     );
-    if (!['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(event.key)) return;
+    const forward = orientation === 'vertical' ? 'ArrowDown' : 'ArrowRight';
+    const backward = orientation === 'vertical' ? 'ArrowUp' : 'ArrowLeft';
+    if (![forward, backward, 'Home', 'End'].includes(event.key)) return;
     event.preventDefault();
     const next =
       event.key === 'Home'
         ? enabled[0]
         : event.key === 'End'
           ? enabled.at(-1)
-          : enabled[(index + (event.key === 'ArrowRight' ? 1 : -1) + enabled.length) % enabled.length];
+          : enabled[(index + (event.key === forward ? 1 : -1) + enabled.length) % enabled.length];
     onChange?.(next.value);
     event.currentTarget.querySelectorAll('[role="tab"]')[items.indexOf(next)]?.focus();
   }
   return (
-    <div id={id} className={cx('ds-tabs', className)} role="tablist" aria-label={label} onKeyDown={onKeyDown}>
+    <div
+      id={id}
+      className={cx('ds-tabs', className)}
+      role="tablist"
+      aria-orientation={orientation}
+      aria-label={label}
+      onKeyDown={onKeyDown}
+    >
       {items.map((item) => (
         <button
           key={item.value}

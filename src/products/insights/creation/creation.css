@@ -170,3 +170,134 @@
   padding: var(--space-3);
   border-top: 1px solid var(--border-subtle);
 }
+
+/* The library navigation and the active workspace have separate hierarchies. */
+.creation-workspace {
+  display: grid;
+  grid-template-columns: 13.5rem minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: start;
+}
+.creation-workspace-nav {
+  position: sticky;
+  top: 8rem;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  border-bottom: 0;
+  border-right: 1px solid var(--border-subtle);
+  padding: 0 var(--space-4) 0 0;
+  gap: var(--space-2);
+}
+.creation-workspace-nav .ds-nav-item {
+  justify-content: flex-start;
+  white-space: normal;
+}
+.creation-workspace-content {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+.creation-workspace-heading {
+  padding-top: 0;
+}
+.creation-library {
+  --container-padding: var(--space-5);
+  box-shadow: none;
+}
+.creation-library .creation-toolbar > .ds-field {
+  min-width: min(100%, 12rem);
+}
+.creation-row:first-child {
+  border-radius: var(--nested-radius) var(--nested-radius) 0 0;
+}
+.creation-row:last-child {
+  border-bottom: 0;
+  border-radius: 0 0 var(--nested-radius) var(--nested-radius);
+}
+.creation-row > .ds-menu {
+  justify-self: end;
+}
+.creation-row > :last-child {
+  min-width: 0;
+}
+.creation-welcome {
+  display: grid;
+  gap: var(--space-4);
+  max-width: 48rem;
+  margin-inline: auto;
+  box-shadow: none;
+}
+.creation-welcome > .ds-btn {
+  justify-self: start;
+}
+.creation-editor-section {
+  min-width: 0;
+  display: grid;
+  gap: var(--space-4);
+}
+.creation-editor-section legend {
+  padding-inline: var(--space-2);
+  font-weight: 650;
+  font-size: 0.875rem;
+  color: var(--text-brand);
+}
+.creation-fields .creation-editor-section {
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+}
+.creation-editor-section .ds-field {
+  min-width: 0;
+}
+.creation-actions {
+  gap: var(--space-2);
+  padding-block: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+}
+@media (max-width: 64rem) {
+  .creation-workspace {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  .creation-workspace-nav {
+    position: static;
+    flex-direction: row;
+    overflow-x: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 0 0 var(--space-3);
+  }
+  .creation-workspace-nav .ds-nav-item {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+}
+@media (max-width: 48rem) {
+  .creation-library {
+    --container-padding: var(--space-4);
+  }
+  .creation-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .creation-fields .creation-editor-section {
+    padding: var(--space-3);
+  }
+  .creation-library .creation-toolbar > .ds-btn {
+    width: 100%;
+  }
+}
+.navigation-vertical .creation-workspace {
+  grid-template-columns: 1fr;
+}
+.navigation-vertical .creation-workspace-nav {
+  position: static;
+  flex-direction: row;
+  overflow-x: auto;
+  border-right: 0;
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 0 0 var(--space-3);
+}
+.navigation-vertical .creation-workspace-nav .ds-nav-item {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
