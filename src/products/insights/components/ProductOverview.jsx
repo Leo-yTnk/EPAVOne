@@ -21,7 +21,9 @@ export function ProductOverview({ product, onOpenRecipe }) {
               Consultar na Swift ↗
             </Button>
           )}
-          <p className="insights-muted">Consulte a disponibilidade e os preços no formulário da semana antes de preencher o pedido.</p>
+          <p className="insights-muted insights-product-note">
+            Consulte a disponibilidade e os preços no formulário da semana antes de preencher o pedido.
+          </p>
         </div>
       </div>
       <section className="insights-detail-section" aria-labelledby="related-recipes-title">

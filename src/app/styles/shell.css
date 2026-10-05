@@ -66,10 +66,11 @@
 }
 .app-tabs .ds-tab {
   flex: 0 0 auto;
-  padding: var(--space-3) var(--space-4);
+  padding: var(--space-2) var(--space-3);
   border-radius: var(--radius-md);
+  font-size: 0.8125rem;
   white-space: nowrap;
-  min-height: 2.75rem;
+  min-height: var(--control-sm);
 }
 .app-tabs .ds-tab.is-active {
   background: var(--surface-selected);
@@ -90,7 +91,7 @@
 }
 .workspace-account {
   flex: 0 0 auto;
-  min-height: 2.75rem;
+  min-height: var(--control-sm);
 }
 .insights-tabs {
   --container-radius: var(--radius-lg);
@@ -248,7 +249,7 @@ html[data-reduced-motion='true'] *::after {
     width: 100%;
   }
   .insights-tabs .ds-nav-item {
-    flex: 1;
+    flex: 0 0 auto;
     justify-content: center;
   }
   .app-main {
@@ -266,4 +267,13 @@ html[data-reduced-motion='true'] *::after {
 }
 html[data-density='compact'] .ds-card:not(.insights-image) {
   --container-padding: var(--space-4);
+}
+
+/* Touch targets grow without enlarging the navigation type. */
+@media (pointer: coarse) {
+  .site-header .ds-tab,
+  .site-header .ds-nav-item,
+  .workspace-account {
+    min-height: var(--control-md);
+  }
 }

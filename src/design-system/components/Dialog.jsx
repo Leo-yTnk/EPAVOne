@@ -5,7 +5,7 @@ import { useModalLayer } from '../behaviors/useModalLayer.js';
 import { IconButton } from './IconButton.jsx';
 import { Portal } from './Portal.jsx';
 
-export function Dialog({ open, title, children, actions, onClose, size = 'md', stitched = true }) {
+export function Dialog({ open, title, children, actions, onClose, size = 'md', stitched = true, className = '' }) {
   const dialogRef = useRef(null);
   const titleId = useId();
   useModalLayer(dialogRef, open, onClose);
@@ -16,7 +16,7 @@ export function Dialog({ open, title, children, actions, onClose, size = 'md', s
       <div className="ds-dialog-overlay" onMouseDown={(event) => event.target === event.currentTarget && onClose?.()}>
         <section
           ref={dialogRef}
-          className={`ds-dialog${stitched ? ' ds-stitched-card' : ''}${size === 'lg' ? ' is-large' : ''}`}
+          className={`ds-dialog${stitched ? ' ds-stitched-card' : ''}${size === 'lg' ? ' is-large' : ''} ${className}`}
           role="dialog"
           aria-modal="true"
           aria-labelledby={titleId}
