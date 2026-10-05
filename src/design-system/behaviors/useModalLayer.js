@@ -12,6 +12,8 @@ export function useModalLayer(ref, open, onClose) {
     ref.current?.focus();
 
     function onKeyDown(event){
+      // Anchored layers handle Escape first, including through portals.
+      if(event.defaultPrevented) return;
       if(event.key==='Escape'){
         event.preventDefault();
         onClose?.();

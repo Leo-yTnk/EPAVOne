@@ -66,7 +66,7 @@ export function SectionsManager() {
       ) : (
         <div className="creation-list">
           {rows.map((section, i) => (
-            <article className="creation-row" key={section.id}>
+            <article className="creation-row creation-section-row" key={section.id}>
               <Icon name="category" />
               <div>
                 <h3>{section.name}</h3>

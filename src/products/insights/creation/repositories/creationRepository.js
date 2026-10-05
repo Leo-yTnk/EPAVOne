@@ -53,8 +53,11 @@ export async function fetchAllPages(buildQuery, operation, pageSize = ADMIN_PAGE
     }
     const page = data || [];
     rows = rows.concat(page);
-    if (page.length < pageSize) break;
-    offset += pageSize;
+    // Supabase may cap responses below the requested size. Advance by rows
+    // actually received and stop only on an empty page. Never return a partial
+    // catalog as success: editors use these rows to replace section membership.
+    if (!page.length) break;
+    offset += page.length;
   }
   return { data: rows };
 }
@@ -577,24 +580,20 @@ export async function fetchProductSectionsBulk(productIds) {
   return unwrap(await supabase.rpc('list_public_product_sections', { p_product_ids: productIds }), 'fetchProductSectionsBulk');
 }
 
-export async function fetchPublicCatalogStructure() {
+async function fetchCatalogStructure(publicOnly) {
+  const operation = publicOnly ? 'fetchPublicCatalogStructure' : 'fetchAdminCatalogStructure';
+  const read = (table, fields, order, activeOnly = false) =>
+    fetchAllPages((from, to) => {
+      let query = supabase.from(table).select(fields);
+      if (activeOnly) query = query.eq('active', true);
+      for (const column of order) query = query.order(column);
+      return query.range(from, to);
+    }, `${operation}:${table}`);
   const [pages, sections, recipes, products] = await Promise.all([
-    unwrap(
-      await supabase.from('catalog_pages').select('id, key, name, sort_order, active').eq('active', true).order('sort_order'),
-      'fetchPublicCatalogStructure:pages'
-    ),
-    unwrap(
-      await supabase.from('catalog_sections').select('id, page_id, name, slug, sort_order, active').eq('active', true).order('sort_order'),
-      'fetchPublicCatalogStructure:sections'
-    ),
-    unwrap(
-      await supabase.from('catalog_section_recipes').select('section_id, recipe_id, sort_order').order('sort_order'),
-      'fetchPublicCatalogStructure:recipes'
-    ),
-    unwrap(
-      await supabase.from('catalog_section_products').select('section_id, product_id, sort_order').order('sort_order'),
-      'fetchPublicCatalogStructure:products'
-    )
+    read('catalog_pages', 'id, key, name, sort_order, active', ['sort_order', 'id'], publicOnly),
+    read('catalog_sections', 'id, page_id, name, slug, sort_order, active', ['sort_order', 'id'], publicOnly),
+    read('catalog_section_recipes', 'section_id, recipe_id, sort_order', ['sort_order', 'section_id', 'recipe_id']),
+    read('catalog_section_products', 'section_id, product_id, sort_order', ['sort_order', 'section_id', 'product_id'])
   ]);
   const error = pages.error || sections.error || recipes.error || products.error;
   return error
@@ -605,6 +604,10 @@ export async function fetchPublicCatalogStructure() {
       };
 }
 
+export async function fetchPublicCatalogStructure() {
+  return fetchCatalogStructure(true);
+}
+
 export async function fetchAdminCategories() {
   return fetchAllPages(
     (from, to) => supabase.from('categories').select(CATEGORY_SELECT).eq('scope', 'site').order('sort_order').order('name').range(from, to),
@@ -612,31 +615,7 @@ export async function fetchAdminCategories() {
   );
 }
 export async function fetchAdminCatalogStructure() {
-  const [pages, sections, recipes, products] = await Promise.all([
-    unwrap(
-      await supabase.from('catalog_pages').select('id, key, name, sort_order, active').order('sort_order'),
-      'fetchAdminCatalogStructure:pages'
-    ),
-    unwrap(
-      await supabase.from('catalog_sections').select('id, page_id, name, slug, sort_order, active').order('sort_order'),
-      'fetchAdminCatalogStructure:sections'
-    ),
-    unwrap(
-      await supabase.from('catalog_section_recipes').select('section_id, recipe_id, sort_order').order('sort_order'),
-      'fetchAdminCatalogStructure:recipes'
-    ),
-    unwrap(
-      await supabase.from('catalog_section_products').select('section_id, product_id, sort_order').order('sort_order'),
-      'fetchAdminCatalogStructure:products'
-    )
-  ]);
-  const error = pages.error || sections.error || recipes.error || products.error;
-  return error
-    ? { data: null, error }
-    : {
-        data: { pages: pages.data || [], sections: sections.data || [], recipes: recipes.data || [], products: products.data || [] },
-        error: null
-      };
+  return fetchCatalogStructure(false);
 }
 
 export async function assignCatalogSectionItem(sectionId, itemId) {

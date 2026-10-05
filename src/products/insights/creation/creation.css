@@ -60,6 +60,11 @@
   gap: var(--space-2);
   min-width: 0;
 }
+.creation-row > .creation-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
 .creation-row .ds-badge {
   justify-self: start;
 }
@@ -109,6 +114,10 @@
   }
   .creation-actions > .ds-btn {
     flex: 1;
+  }
+  .creation-section-row > .creation-toolbar {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
   }
 }
 

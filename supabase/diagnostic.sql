@@ -10,6 +10,10 @@ report as (
  select 'tabela'::text as tipo,e.name as objeto,jsonb_build_object('existe',c.oid is not null,'tipo',c.relkind,'rls',c.relrowsecurity,'force_rls',c.relforcerowsecurity) as diagnostico
  from expected_tables e left join pg_namespace n on n.nspname='public' left join pg_class c on c.relnamespace=n.oid and c.relname=e.name
  union all
+ select 'view_options',c.relname,jsonb_build_object('options',c.reloptions,'security_invoker',coalesce('security_invoker=true'=any(c.reloptions),false))
+ from pg_class c join pg_namespace n on n.oid=c.relnamespace join expected_tables e on e.name=c.relname
+ where n.nspname='public' and c.relkind='v'
+ union all
  select 'colunas',c.table_name,jsonb_agg(jsonb_build_object('nome',c.column_name,'tipo',c.data_type,'udt',c.udt_name,'nullable',c.is_nullable) order by c.ordinal_position)
  from information_schema.columns c join expected_tables e on e.name=c.table_name where c.table_schema='public' group by c.table_name
  union all
