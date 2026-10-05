@@ -139,3 +139,4 @@
     border-top: 1px solid var(--border-subtle);
   }
 }
+@media(max-width:48rem){.insights-discovery{gap:var(--space-4)}.insights-discovery-hero{padding-bottom:var(--space-4);gap:var(--space-4)}.insights-discovery-copy{gap:var(--space-3)}.insights-discovery-copy .insights-home-title{font-size:1.875rem}.insights-discovery .insights-spotlight{grid-template-columns:5.5rem minmax(0,1fr);gap:var(--space-3)}.insights-discovery .insights-spotlight>.insights-image{aspect-ratio:1}.insights-discovery .insights-spotlight>div:last-of-type{grid-template-columns:1fr}.insights-discovery .insights-spotlight h2{font-size:1.125rem}.insights-discovery .insights-spotlight .ds-btn{justify-self:start}.insights-discovery-body{gap:var(--space-4)}}

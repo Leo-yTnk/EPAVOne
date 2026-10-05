@@ -1,11 +1,11 @@
 import './home.css';
-import { Badge, Button, Card, Heading, Text } from '../../design-system/components/index.js';
+import { Badge, Button, Card, Heading, Text, Icon } from '../../design-system/components/index.js';
 
 const apps = [
   {
     href: '#/insights',
     theme: 'insights',
-    glyph: '↗',
+    glyph: 'insights',
     name: 'Insights',
     task: 'O que sugerir ao cliente?',
     summary: 'Explore receitas e produtos Swift para montar uma sugestão que combine com a ocasião.',
@@ -18,7 +18,7 @@ const apps = [
   {
     href: '#/writer',
     theme: 'writer',
-    glyph: '✎',
+    glyph: 'writer',
     name: 'Writer',
     task: 'Vamos preparar o pedido?',
     summary: 'Carregue o formulário da semana, escolha os produtos e confira cada etapa antes de exportar.',
@@ -28,7 +28,7 @@ const apps = [
   {
     href: '#/planner',
     theme: 'one',
-    glyph: '▦',
+    glyph: 'planner',
     name: 'Planner',
     task: 'Organize sua próxima semana.',
     summary: 'O espaço para planejar atendimentos, acompanhar metas e priorizar clientes está em construção.',
@@ -72,7 +72,7 @@ export function HomePage() {
             <Card key={app.name} className="product-card" data-product={app.theme}>
               <div className="product-card-top">
                 <span className="product-glyph" aria-hidden="true">
-                  {app.glyph}
+                  <Icon name={app.glyph} />
                 </span>
                 <span className="ds-overline">EPAV{app.name}</span>
                 {app.upcoming && <Badge>Em desenvolvimento</Badge>}
