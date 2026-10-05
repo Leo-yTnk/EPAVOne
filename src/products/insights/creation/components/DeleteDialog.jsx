@@ -1,25 +1,30 @@
 import { useState } from 'preact/hooks';
 import { Alert, Button, Checkbox, Dialog, ErrorState, Spinner } from '../../../../design-system/components/index.js';
 import { creationService } from '../services/creationService.js';
+import { deletionContext, deleteResolution } from '../services/deletionService.js';
+import { DeleteReferences } from './DeleteReferences.jsx';
 import { useCreationResource } from '../hooks/useCreationResource.js';
 export function DeleteDialog({ type, item, onClose, onSaved }) {
-  const resource = useCreationResource(() => creationService.impact(type, item.id), item.id);
+  const resource = useCreationResource(() => deletionContext(type, item), item.id);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [revokeShares, setRevoke] = useState(false);
   const [cancelPendingRequests, setCancel] = useState(false);
-  const impact = resource.data || {};
-  const references =
-    Number(impact.total_ingredient_rows || 0) +
-    Number(impact.required_ref_count || 0) +
-    Number(impact.optional_ref_count || 0) +
-    Number(impact.foreign_personal_ref_count || 0);
+  const [choices, setChoices] = useState({});
+  const impact = resource.data?.impact || {};
+  const groups = resource.data?.groups || {};
+  const unresolved = Object.entries(groups).some(([group, rows]) => rows.some((row, i) => !choices[`${group}:${i}`]));
+  const blocked = Number(impact.foreign_personal_ref_count || impact.foreign_personal_recipe_count || 0) > 0;
   async function remove() {
     if (busy) return;
     setBusy(true);
     setError('');
     try {
-      await creationService.remove(type, item.id, type === 'recipes' ? { revokeShares, cancelPendingRequests } : {});
+      await creationService.remove(
+        type,
+        item.id,
+        type === 'recipes' ? { revokeShares, cancelPendingRequests } : deleteResolution(type, groups, choices)
+      );
       onSaved();
     } catch (failure) {
       setError(failure.message);
@@ -37,7 +42,7 @@ export function DeleteDialog({ type, item, onClose, onSaved }) {
           <Button variant="secondary" disabled={busy} onClick={onClose}>
             Cancelar
           </Button>
-          <Button loading={busy} disabled={resource.loading || Boolean(resource.error) || references > 0} onClick={remove}>
+          <Button loading={busy} disabled={resource.loading || Boolean(resource.error) || blocked || unresolved} onClick={remove}>
             Confirmar exclusão
           </Button>
         </>
@@ -50,11 +55,20 @@ export function DeleteDialog({ type, item, onClose, onSaved }) {
       ) : (
         <div className="creation-fields">
           <p>A exclusão é permanente. O servidor confere novamente as referências antes de concluir.</p>
-          {references > 0 && (
+          {blocked && (
             <Alert tone="warning" title="Este item ainda está em uso">
-              Edite os produtos ou receitas que usam este item para substituir ou remover a referência antes de excluir. Você também pode
-              desativar o item.
+              Há referências pessoais de outras contas. Desative o item ou peça que os autores removam os vínculos antes de excluir.
             </Alert>
+          )}
+          {type !== 'recipes' && (
+            <DeleteReferences
+              type={type}
+              item={item}
+              data={resource.data}
+              choices={choices}
+              onChange={setChoices}
+              disabled={busy || blocked}
+            />
           )}
           {type === 'recipes' && (
             <>

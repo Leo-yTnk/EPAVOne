@@ -1,10 +1,11 @@
-import { Breadcrumb, Button, PageHeader } from '../../design-system/components/index.js';
+import { lazy, Suspense } from 'preact/compat';
+import { Breadcrumb, Button, PageHeader, Spinner } from '../../design-system/components/index.js';
 import { YOURCIPE_URL } from '../../shared/config/catalog.js';
 import { ProductCatalogPage } from './components/ProductCatalogPage.jsx';
 import { RecipesPage } from './components/RecipesPage.jsx';
 import { InsightsHomePage } from './components/InsightsHomePage.jsx';
 import './insights.css';
-import { CreationPage } from './creation/CreationPage.jsx';
+const CreationPage = lazy(() => import('./creation/CreationPage.jsx').then((module) => ({ default: module.CreationPage })));
 
 const sections = {
   receitas: {
@@ -20,7 +21,11 @@ export function InsightsRoutes({ route, account, onOpenAccount }) {
   const section = route.segments[0] || 'home';
   const info = sections[section];
   if (section === 'criacao')
-    return <CreationPage key={account?.session?.user?.id || 'guest'} route={route} account={account} onOpenAccount={onOpenAccount} />;
+    return (
+      <Suspense fallback={<Spinner />}>
+        <CreationPage key={account?.session?.user?.id || 'guest'} route={route} account={account} onOpenAccount={onOpenAccount} />
+      </Suspense>
+    );
   const home = section === 'home';
   return (
     <section className="product-page">

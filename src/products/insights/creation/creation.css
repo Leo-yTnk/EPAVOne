@@ -111,3 +111,18 @@
     flex: 1;
   }
 }
+
+.creation-row h3,
+.creation-row p,
+.creation-history dd {
+  overflow-wrap: anywhere;
+}
+.creation-history dd {
+  margin-inline-start: var(--space-3);
+}
+.creation-history dt {
+  font-weight: 600;
+}
+.creation-history ul {
+  padding-inline-start: var(--space-4);
+}

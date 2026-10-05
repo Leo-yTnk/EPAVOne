@@ -7,11 +7,25 @@ export function EntityFields({ type, scope, item, values, vocabulary, change, di
   const categoryOptions = vocabulary.categories
     .filter((c) => c.type === categoryType && (c.active || c.id === values.categoryId))
     .map((c) => ({ value: c.id, label: c.name }));
-  const sections = vocabulary.categories.filter(
-    (c) =>
-      (type === 'products' ? c.type === 'secao_produto' : ['secao', 'secao_home', 'secao_receita'].includes(c.type)) &&
-      (c.active || values.sections.includes(c.id))
-  );
+  const sections =
+    scope === 'site'
+      ? (vocabulary.structure?.sections || [])
+          .filter((section) => {
+            const page = vocabulary.structure.pages.find((p) => p.id === section.page_id);
+            return (
+              (type === 'products' ? page?.key === 'products' : ['home', 'recipes'].includes(page?.key)) &&
+              (section.active || values.sections.includes(section.id))
+            );
+          })
+          .map((section) => ({
+            ...section,
+            name: `${vocabulary.structure.pages.find((p) => p.id === section.page_id)?.name} · ${section.name}`
+          }))
+      : vocabulary.categories.filter(
+          (c) =>
+            (type === 'products' ? c.type === 'secao_produto' : ['secao', 'secao_home', 'secao_receita'].includes(c.type)) &&
+            (c.active || values.sections.includes(c.id))
+        );
   return (
     <>
       <Input label="Nome" maxLength={120} required value={values.name} onInput={input('name')} disabled={disabled} />
@@ -19,7 +33,7 @@ export function EntityFields({ type, scope, item, values, vocabulary, change, di
         <Select
           label="Tipo de categoria"
           value={values.type}
-          options={categoryTypes}
+          options={scope === 'site' ? categoryTypes.filter((x) => ['receita', 'proteina'].includes(x.value)) : categoryTypes}
           onChange={(type) => change({ type })}
           disabled={disabled || Boolean(item?.id)}
         />

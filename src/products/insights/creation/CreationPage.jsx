@@ -5,6 +5,7 @@ import { SharedLibrary } from './components/SharedLibrary.jsx';
 import { RequestsPage } from './components/RequestsPage.jsx';
 import { ShareDialog } from './components/ShareDialog.jsx';
 import { SubmitDialog } from './components/SubmitDialog.jsx';
+import { AdminPage } from './admin/AdminPage.jsx';
 import './creation.css';
 const sections = [
   { value: 'receitas', label: 'Minhas receitas', type: 'recipes' },
@@ -37,7 +38,14 @@ export function CreationPage({ route, account, onOpenAccount }) {
         {account.error && <Button onClick={account.retryProfile}>Tentar novamente</Button>}
       </Alert>
     );
-  const section = sections.find((x) => x.value === route.segments[1]) || sections[0];
+  if (route.segments[1] === 'admin' && account.profile.role !== 'admin')
+    return (
+      <Alert tone="danger" title="Acesso restrito">
+        Esta área exige uma conta administradora.
+      </Alert>
+    );
+  const available = account.profile.role === 'admin' ? [...sections, { value: 'admin', label: 'Administração' }] : sections;
+  const section = available.find((x) => x.value === route.segments[1]) || sections[0];
   return (
     <section className="creation-fields" key={account.session.user.id}>
       <PageHeader
@@ -48,7 +56,7 @@ export function CreationPage({ route, account, onOpenAccount }) {
       <Select
         label="Área de criação"
         value={section.value}
-        options={sections}
+        options={available}
         onChange={(value) => {
           window.location.hash = `#/insights/criacao/${value}`;
         }}
@@ -60,6 +68,8 @@ export function CreationPage({ route, account, onOpenAccount }) {
           onShare={setSharing}
           onSubmit={(type, item) => setSubmission({ type, item })}
         />
+      ) : section.value === 'admin' ? (
+        <AdminPage profile={account.profile} />
       ) : section.value === 'compartilhadas' ? (
         <SharedLibrary />
       ) : (
