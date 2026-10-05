@@ -3,7 +3,7 @@ import { useAnchoredLayer } from '../behaviors/useAnchoredLayer.js';
 import { Button } from './Button.jsx';
 import { Portal } from './Portal.jsx';
 
-export function Menu({ label, items, variant='ghost', size='sm' }) {
+export function Menu({ label, triggerLabel=label, items, variant='ghost', size='sm' }) {
   const id=useId();
   const triggerRef=useRef(null);
   const layerRef=useRef(null);
@@ -54,7 +54,7 @@ export function Menu({ label, items, variant='ghost', size='sm' }) {
   }
 
   return <>
-    <Button ref={triggerRef} variant={variant} size={size} aria-haspopup="menu" aria-expanded={open} aria-controls={open?id:undefined} onClick={()=>setOpen(current=>!current)}>{label}</Button>
+    <Button ref={triggerRef} variant={variant} size={size} aria-label={label} aria-haspopup="menu" aria-expanded={open} aria-controls={open?id:undefined} onClick={()=>setOpen(current=>!current)}>{triggerLabel}</Button>
     {open && <Portal><div
       ref={layerRef}
       id={id}

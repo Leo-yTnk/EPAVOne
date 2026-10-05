@@ -60,6 +60,11 @@
   gap: var(--space-2);
   min-width: 0;
 }
+.creation-row > .creation-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
 .creation-row .ds-badge {
   justify-self: start;
 }
@@ -110,4 +115,23 @@
   .creation-actions > .ds-btn {
     flex: 1;
   }
+  .creation-section-row > .creation-toolbar {
+    grid-column: 1 / -1;
+    justify-content: flex-start;
+  }
+}
+
+.creation-row h3,
+.creation-row p,
+.creation-history dd {
+  overflow-wrap: anywhere;
+}
+.creation-history dd {
+  margin-inline-start: var(--space-3);
+}
+.creation-history dt {
+  font-weight: 600;
+}
+.creation-history ul {
+  padding-inline-start: var(--space-4);
 }

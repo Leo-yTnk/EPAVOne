@@ -38,9 +38,17 @@ export function createCreationService(api = repository, db = client, getUser = s
         scope === 'site'
           ? await result(api.fetchAdminProducts())
           : [...(await result(api.fetchMyProducts(user.id))), ...(await result(api.fetchPublicProducts()))];
-      return { categories, products };
+      const structure = scope === 'site' ? await result(api.fetchAdminCatalogStructure()) : null;
+      return { categories, products, structure };
     },
     async detail(type, item) {
+      if (item.scope === 'site' && ['recipes', 'products'].includes(type)) {
+        const structure = await result(api.fetchAdminCatalogStructure());
+        const sections = structure[type]
+          .filter((x) => x[type === 'recipes' ? 'recipe_id' : 'product_id'] === item.id)
+          .map((x) => ({ category_id: x.section_id }));
+        return type === 'recipes' ? { ...(await result(api.fetchRecipeDetail(item.id))), sections } : { sections };
+      }
       if (type === 'recipes') return result(api.fetchRecipeDetail(item.id));
       if (type === 'products') return { sections: await result(api.fetchProductSections(item.id)) };
       return {};

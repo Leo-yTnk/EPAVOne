@@ -47,9 +47,13 @@ begin
   insert into public.recipe_ingredients(recipe_id,product_id,quantity,sort_order)
     select v_id,(x.value->>'product_id')::uuid,(x.value->>'quantity')::numeric,(x.ordinality-1)::integer
     from jsonb_array_elements(p_ingredients) with ordinality x;
-  delete from public.recipe_categories where recipe_id=v_id;
-  insert into public.recipe_categories(recipe_id,category_id,sort_order)
-    select v_id,x.id,(x.ordinality-1)::integer from unnest(coalesce(p_sections,'{}')) with ordinality x(id,ordinality);
+  if p_scope='site' then
+    perform public.admin_replace_creation_sections('recipes',v_id,p_sections);
+  else
+    delete from public.recipe_categories where recipe_id=v_id;
+    insert into public.recipe_categories(recipe_id,category_id,sort_order)
+      select v_id,x.id,(x.ordinality-1)::integer from unnest(coalesce(p_sections,'{}')) with ordinality x(id,ordinality);
+  end if;
   select * into v_recipe from public.recipes where id=v_id;
   return to_jsonb(v_recipe);
 end $$;
@@ -71,7 +75,8 @@ begin
   end if;
   if p_scope='site' then
     -- Reuse the existing Swift-aware atomic writer; it independently verifies admin.
-    select * into v_product from public.save_site_product_atomic(p_id,p_fields,p_sections);
+    select * into v_product from public.save_site_product_atomic(p_id,p_fields,'{}');
+    perform public.admin_replace_creation_sections('products',v_product.id,p_sections);
     return to_jsonb(v_product);
   end if;
   if p_id is null then

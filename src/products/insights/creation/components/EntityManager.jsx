@@ -93,6 +93,7 @@ export function EntityManager({ type, scope = 'personal', onShare, onSubmit }) {
                 </div>
                 <Menu
                   label={`Ações de ${item.name}`}
+                  triggerLabel="Ações"
                   items={[
                     { label: 'Editar', onSelect: () => setEditor({ item }) },
                     ...(type !== 'recipes'
