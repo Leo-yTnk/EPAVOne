@@ -135,3 +135,38 @@
 .creation-history ul {
   padding-inline-start: var(--space-4);
 }
+
+.creation-workspace-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.creation-workspace-nav .ds-btn {
+  text-decoration: none;
+}
+.creation-workspace-heading {
+  display: grid;
+  gap: var(--space-2);
+  padding-top: var(--space-2);
+}
+.creation-workspace-heading h2 {
+  font: 400 1.5rem/var(--leading-heading) var(--font-display);
+}
+.creation-fields > .ds-field:has(button[aria-label^='Área de criação']) {
+  max-width: 24rem;
+}
+.creation-list {
+  border-top: 1px solid var(--border-subtle);
+}
+.creation-row:nth-child(even) {
+  background: var(--surface-secondary);
+}
+.creation-row {
+  padding-inline: var(--space-3);
+}
+.creation-history {
+  padding: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+}

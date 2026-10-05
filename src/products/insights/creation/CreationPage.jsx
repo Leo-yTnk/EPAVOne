@@ -53,6 +53,32 @@ export function CreationPage({ route, account, onOpenAccount }) {
         title="Modo de criação"
         description="Crie e organize sua biblioteca. Seus conteúdos pessoais continuam vinculados à sua conta."
       />
+      <nav className="creation-workspace-nav" aria-label="Biblioteca e criação">
+        {available.map((item) => (
+          <Button
+            key={item.value}
+            as="a"
+            href={`#/insights/criacao/${item.value}`}
+            variant={item.value === section.value ? 'secondary' : 'ghost'}
+            size="sm"
+            aria-current={item.value === section.value ? 'page' : undefined}
+          >
+            {item.label}
+          </Button>
+        ))}
+      </nav>
+      <div className="creation-workspace-heading">
+        <h2>{section.label}</h2>
+        <p className="insights-muted">
+          {section.type
+            ? 'Organize seus conteúdos, edite os detalhes e acompanhe suas publicações.'
+            : section.value === 'admin'
+              ? 'Gerencie o catálogo público, suas seções e a manutenção dos preços.'
+              : section.value === 'compartilhadas'
+                ? 'Encontre as receitas recebidas e gerencie o acesso à sua biblioteca.'
+                : 'Acompanhe o retorno das suas solicitações de publicação.'}
+        </p>
+      </div>
       <Select
         label="Área de criação"
         value={section.value}

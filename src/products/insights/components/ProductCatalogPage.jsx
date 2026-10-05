@@ -1,3 +1,5 @@
+import { CatalogSections } from './CatalogSections.jsx';
+import { catalogGroups, orderedCatalogItems } from '../models/sections.js';
 import { useMemo, useState } from 'preact/hooks';
 import {
   Button,
@@ -17,12 +19,21 @@ import { ProductCard } from './ProductCard.jsx';
 import { ProductDetails } from './ProductDetails.jsx';
 
 const load = (_id, options) => catalogService.loadCatalog(options);
-export function ProductCatalogPage({ initialCategory = '' }) {
+export function ProductCatalogPage({ initialCategory = '', initialSection = '' }) {
   const resource = useCatalogResource(load, 'public');
-  const [filters, setFilters] = useState({ query: '', category: initialCategory, promotion: false });
+  const structure = useCatalogResource(catalogService.structure, 'public');
+  const [filters, setFilters] = useState({ query: '', category: initialCategory, promotion: false, section: initialSection });
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState(null);
-  const filtered = useMemo(() => filterProducts(resource.data?.products || [], filters), [resource.data, filters]);
+  const candidates = useMemo(() => filterProducts(resource.data?.products || [], filters), [resource.data, filters]);
+  const sectionOptions = (structure.data?.sections || []).filter((section) =>
+    (structure.data?.products || []).some((link) => link.section_id === section.id)
+  );
+  const memberIds = new Set(
+    (structure.data?.products || []).filter((link) => link.section_id === filters.section).map((link) => link.product_id)
+  );
+  const filtered = filters.section && structure.data ? candidates.filter((item) => memberIds.has(item.id)) : candidates;
+  const ordered = orderedCatalogItems(filtered, structure.data, 'products', 'products');
   const pageCount = Math.max(1, Math.ceil(filtered.length / CATALOG_PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
   function update(patch) {
@@ -30,7 +41,7 @@ export function ProductCatalogPage({ initialCategory = '' }) {
     setPage(1);
   }
   function reset() {
-    update({ query: '', category: '', promotion: false });
+    update({ query: '', category: '', promotion: false, section: '' });
   }
   if (resource.loading)
     return (
@@ -55,7 +66,16 @@ export function ProductCatalogPage({ initialCategory = '' }) {
           value={filters.query}
           onInput={(event) => update({ query: event.currentTarget.value })}
         />
-        <FilterDisclosure count={Number(Boolean(filters.category)) + Number(filters.promotion)}>
+        <FilterDisclosure count={Number(Boolean(filters.section)) + Number(Boolean(filters.category)) + Number(filters.promotion)}>
+          {sectionOptions.length > 0 && (
+            <Select
+              label="Seção do catálogo"
+              value={filters.section}
+              options={[{ value: '', label: 'Todas as seções' }, ...sectionOptions.map((item) => ({ value: item.id, label: item.name }))]}
+              onChange={(section) => update({ section })}
+              searchable
+            />
+          )}
           <Select label="Categoria" value={filters.category} options={options} onChange={(category) => update({ category })} searchable />
           <Checkbox
             aria-label="Com preço por quantidade"
@@ -66,11 +86,18 @@ export function ProductCatalogPage({ initialCategory = '' }) {
           </Checkbox>
         </FilterDisclosure>
       </div>
+      {structure.error && (
+        <ErrorState
+          title="Seções indisponíveis"
+          description="O catálogo continua disponível. Tente carregar sua organização novamente."
+          onAction={structure.retry}
+        />
+      )}
       <div className="insights-results">
         <p className="insights-muted" role="status">
           {filtered.length} {filtered.length === 1 ? 'produto encontrado' : 'produtos encontrados'}
         </p>
-        {filtered.length > 0 && (filters.query || filters.category || filters.promotion) && (
+        {filtered.length > 0 && (filters.query || filters.section || filters.category || filters.promotion) && (
           <Button variant="ghost" size="sm" onClick={reset}>
             Limpar filtros
           </Button>
@@ -86,11 +113,15 @@ export function ProductCatalogPage({ initialCategory = '' }) {
           onAction={reset}
         />
       ) : (
-        <div className="insights-grid">
-          {filtered.slice((currentPage - 1) * CATALOG_PAGE_SIZE, currentPage * CATALOG_PAGE_SIZE).map((product) => (
-            <ProductCard key={product.id} product={product} onOpen={setSelected} />
-          ))}
-        </div>
+        <CatalogSections
+          groups={catalogGroups(
+            ordered.slice((currentPage - 1) * CATALOG_PAGE_SIZE, currentPage * CATALOG_PAGE_SIZE),
+            structure.data,
+            'products',
+            'products'
+          )}
+          renderItem={(item) => <ProductCard key={item.id} product={item} onOpen={setSelected} />}
+        />
       )}
       {pageCount > 1 && <Pagination page={currentPage} pageCount={pageCount} onChange={setPage} label="Páginas do catálogo" />}
       {selected && <ProductDetails key={selected.id} product={selected} onClose={() => setSelected(null)} />}

@@ -1,6 +1,7 @@
 import { catalogRepository } from '../repositories/catalogRepository.js';
 
 export const catalogService = {
+  structure: (_id, options) => catalogRepository.structure(options),
   async loadCatalog(options) {
     const [products, categories] = await Promise.all([catalogRepository.products(options), catalogRepository.categories(options)]);
     return { products, categories };
