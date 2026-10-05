@@ -48,7 +48,7 @@ describe('Insights pages and contextual navigation', () => {
       within(nav)
         .getAllByRole('link')
         .map((item) => item.textContent)
-    ).toEqual(['Home', 'Receitas', 'Produtos']);
+    ).toEqual(['Home', 'Receitas', 'Produtos', 'Criação']);
     expect(within(nav).getByRole('link', { name: 'Produtos' }).getAttribute('aria-current')).toBe('page');
     rerender(
       <AppShell route={route(['receitas'])} theme="light" onToggleTheme={vi.fn()}>

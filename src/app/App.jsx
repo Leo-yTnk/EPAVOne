@@ -42,7 +42,7 @@ export function App() {
   }
 
   let page = <HomePage />;
-  if (route.product === 'insights') page = <InsightsRoutes route={route} />;
+  if (route.product === 'insights') page = <InsightsRoutes route={route} account={account} onOpenAccount={() => setAccountOpen(true)} />;
   if (route.product === 'planner') page = <PlannerRoutes route={route} />;
   if (route.product === 'writer') page = null;
   if (route.product === 'dev' && route.segments[0] === 'components') page = <ComponentLabPage />;

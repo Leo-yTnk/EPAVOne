@@ -50,7 +50,7 @@ export function createAccountService(client) {
 }
 
 // Same SDK storage key as Yourcipe, under the same GitHub Pages origin.
-const client = createClient(supabaseConfig.url, supabaseConfig.key, {
+export const authenticatedClient = createClient(supabaseConfig.url, supabaseConfig.key, {
   auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false },
   global: {
     fetch: (url, options) =>
@@ -60,4 +60,4 @@ const client = createClient(supabaseConfig.url, supabaseConfig.key, {
       })
   }
 });
-export const accountService = createAccountService(client);
+export const accountService = createAccountService(authenticatedClient);

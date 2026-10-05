@@ -1,0 +1,113 @@
+.creation-fields {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+.creation-fields fieldset {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+}
+.creation-toolbar {
+  display: flex;
+  align-items: end;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+.creation-toolbar > .ds-field {
+  flex: 1;
+  min-width: 12rem;
+}
+.creation-actions {
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  position: sticky;
+  bottom: 0;
+  background: var(--surface-primary);
+  padding-block: var(--space-2);
+  z-index: 1;
+}
+.creation-columns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+.creation-ingredient {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 7rem auto;
+  gap: var(--space-2);
+  align-items: end;
+}
+.creation-list {
+  display: grid;
+}
+.creation-row {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-3);
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.creation-row h3 {
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+.creation-row > div {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.creation-row .ds-badge {
+  justify-self: start;
+}
+.creation-row > .ds-btn {
+  max-width: 12rem;
+}
+.creation-code {
+  overflow-wrap: anywhere;
+  font-size: 1rem;
+  user-select: all;
+}
+.creation-history {
+  max-height: 24rem;
+  overflow: auto;
+}
+.creation-history pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 0.75rem;
+}
+@media (max-width: 48rem) {
+  .creation-fields {
+    gap: var(--space-3);
+  }
+  .creation-columns {
+    grid-template-columns: 1fr;
+  }
+  .creation-row {
+    gap: var(--space-2);
+    padding-block: var(--space-3);
+  }
+  .creation-row > .ds-icon {
+    display: none;
+  }
+  .creation-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .creation-row > .ds-btn {
+    max-width: 8rem;
+    font-size: 0.75rem;
+  }
+  .creation-ingredient {
+    grid-template-columns: minmax(0, 1fr) 3rem;
+  }
+  .creation-ingredient > .ds-field:first-child {
+    grid-column: 1/-1;
+  }
+  .creation-actions > .ds-btn {
+    flex: 1;
+  }
+}
