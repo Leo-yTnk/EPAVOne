@@ -1,12 +1,21 @@
+import { useState } from 'preact/hooks';
 import { Alert, Button, Icon, PageHeader, Select, Spinner } from '../../../design-system/components/index.js';
 import { EntityManager } from './components/EntityManager.jsx';
+import { SharedLibrary } from './components/SharedLibrary.jsx';
+import { RequestsPage } from './components/RequestsPage.jsx';
+import { ShareDialog } from './components/ShareDialog.jsx';
+import { SubmitDialog } from './components/SubmitDialog.jsx';
 import './creation.css';
 const sections = [
   { value: 'receitas', label: 'Minhas receitas', type: 'recipes' },
   { value: 'produtos', label: 'Meus produtos', type: 'products' },
-  { value: 'categorias', label: 'Minhas categorias', type: 'categories' }
+  { value: 'categorias', label: 'Minhas categorias', type: 'categories' },
+  { value: 'compartilhadas', label: 'Receitas compartilhadas' },
+  { value: 'solicitacoes', label: 'Minhas solicitações' }
 ];
 export function CreationPage({ route, account, onOpenAccount }) {
+  const [sharing, setSharing] = useState(null);
+  const [submission, setSubmission] = useState(null);
   if (account?.initializing) return <Spinner />;
   if (!account?.session)
     return (
@@ -44,7 +53,20 @@ export function CreationPage({ route, account, onOpenAccount }) {
           window.location.hash = `#/insights/criacao/${value}`;
         }}
       />
-      <EntityManager key={section.type} type={section.type} />
+      {section.type ? (
+        <EntityManager
+          key={section.type}
+          type={section.type}
+          onShare={setSharing}
+          onSubmit={(type, item) => setSubmission({ type, item })}
+        />
+      ) : section.value === 'compartilhadas' ? (
+        <SharedLibrary />
+      ) : (
+        <RequestsPage />
+      )}
+      {sharing && <ShareDialog recipe={sharing} onClose={() => setSharing(null)} />}
+      {submission && <SubmitDialog {...submission} onClose={() => setSubmission(null)} />}
     </section>
   );
 }
