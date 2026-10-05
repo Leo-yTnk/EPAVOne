@@ -25,5 +25,6 @@ export function routeHash(product, segments = []) {
 export const INSIGHTS_NAV = [
   { label: 'Home', href: '#/insights', section: '' },
   { label: 'Receitas', href: '#/insights/receitas', section: 'receitas' },
-  { label: 'Produtos', href: '#/insights/produtos', section: 'produtos' }
+  { label: 'Produtos', href: '#/insights/produtos', section: 'produtos' },
+  { label: 'Criação', href: '#/insights/criacao/receitas', section: 'criacao' }
 ];

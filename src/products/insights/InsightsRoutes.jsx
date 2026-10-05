@@ -4,6 +4,7 @@ import { ProductCatalogPage } from './components/ProductCatalogPage.jsx';
 import { RecipesPage } from './components/RecipesPage.jsx';
 import { InsightsHomePage } from './components/InsightsHomePage.jsx';
 import './insights.css';
+import { CreationPage } from './creation/CreationPage.jsx';
 
 const sections = {
   receitas: {
@@ -15,9 +16,11 @@ const sections = {
     description: 'Consulte o catálogo Swift, compare preços e encontre receitas relacionadas.'
   }
 };
-export function InsightsRoutes({ route }) {
+export function InsightsRoutes({ route, account, onOpenAccount }) {
   const section = route.segments[0] || 'home';
   const info = sections[section];
+  if (section === 'criacao')
+    return <CreationPage key={account?.session?.user?.id || 'guest'} route={route} account={account} onOpenAccount={onOpenAccount} />;
   const home = section === 'home';
   return (
     <section className="product-page">
