@@ -28,7 +28,7 @@ export function InsightsRoutes({ route, account, onOpenAccount }) {
     );
   const home = section === 'home';
   return (
-    <section className="product-page">
+    <section className="product-page insights-page">
       <Breadcrumb
         items={[
           { label: 'EPAVOne', href: '#/' },
