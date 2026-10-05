@@ -412,3 +412,4 @@
 .writer-stage[data-direction='backward'] {
   --writer-step-distance: calc(var(--motion-distance-md) * -1);
 }
+@media(max-width:48rem){.writer-upload{padding:var(--space-4)}.writer-step-buttons{display:flex;gap:var(--space-2)}.writer-step-buttons>.ds-btn{flex:1}.writer-workspace,.writer-products-stage{gap:var(--space-4)}.writer-checkout-actions{padding-bottom:var(--space-2)}.writer-stage{scroll-margin-top:7rem}.writer-cart-row{gap:var(--space-2)}}

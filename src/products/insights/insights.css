@@ -572,3 +572,22 @@
     min-height: 0;
   }
 }
+.insights-filters{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+@media(max-width:48rem){
+ .insights-filters{grid-template-columns:minmax(0,1fr) auto;gap:var(--space-3);align-items:end}
+ .insights-filters>:last-child{grid-column:auto}
+ .insights-filters:has(.ds-filter-disclosure[data-open="true"]){grid-template-columns:1fr}
+ .insights-filters:has(.ds-filter-disclosure[data-open="true"]) .ds-filter-fields{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+ .insights-grid{gap:var(--space-4)}
+ .insights-product{display:grid;grid-template-columns:5.5rem minmax(0,1fr);gap:var(--space-3);align-items:start}
+ .insights-product>.insights-image{aspect-ratio:1}
+ .insights-grid:has(.insights-product){grid-template-columns:1fr}
+ .insights-grid .insights-product-name{min-height:0;font-size:.9375rem}
+ .insights-grid .insights-product-copy>.ds-btn{width:auto;align-self:start;margin-top:0}
+ .insights-product-copy .ds-badge{font-size:.625rem}
+ .insights-product-copy{gap:var(--space-1)}
+ .insights-detail-content{gap:var(--space-3)}
+ .insights-product-overview,.insights-recipe{grid-template-columns:1fr}
+ .insights-home-title{font-size:1.875rem}
+}
+@media(max-width:23rem){.insights-filters:has(.ds-filter-disclosure[data-open="true"]) .ds-filter-fields{grid-template-columns:1fr}}

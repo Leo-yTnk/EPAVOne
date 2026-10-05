@@ -1,3 +1,4 @@
+import { Icon } from './Icon.jsx';
 import { CardStitch } from './CardStitch.jsx';
 import { useId, useRef } from 'preact/hooks';
 import { useModalLayer } from '../behaviors/useModalLayer.js';
@@ -26,7 +27,7 @@ export function Dialog({ open, title, children, actions, onClose, size = 'md', s
               {title}
             </h2>
             <IconButton label="Fechar" onClick={onClose}>
-              ×
+              <Icon name="close" />
             </IconButton>
           </div>
           <div className="ds-dialog-content">{children}</div>

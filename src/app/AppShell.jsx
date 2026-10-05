@@ -1,13 +1,12 @@
 import { useEffect, useRef } from 'preact/hooks';
 import { INSIGHTS_NAV, PRODUCT_META, routeHash } from './routes.js';
-import { Button, Menu, NavItem, SelectionIndicator, Tabs } from '../design-system/components/index.js';
+import { Button, Menu, NavItem, SelectionIndicator, Tabs, Icon } from '../design-system/components/index.js';
 import { YOURCIPE_URL } from '../shared/config/catalog.js';
 
 const resourceItems = [
   { label: 'Conta e recursos do Yourcipe ↗', href: YOURCIPE_URL },
   { label: 'Component Lab', href: '#/dev/components' }
 ];
-const appGlyphs = { home: 'e.', insights: '↗', planner: '▦', writer: '✎' };
 
 export function AppShell({ route, theme, onToggleTheme, account, onOpenAccount, children }) {
   const tabsRef = useRef(null);
@@ -39,8 +38,14 @@ export function AppShell({ route, theme, onToggleTheme, account, onOpenAccount, 
           </a>
           <span className="workspace-label">Seu espaço de trabalho</span>
           <div className="header-actions">
-            <Button variant="ghost" size="sm" onClick={onToggleTheme}>
-              {theme === 'dark' ? '☀ Claro' : '◐ Escuro'}
+            <Button
+              variant="ghost"
+              size="sm"
+              aria-label={theme === 'dark' ? 'Ativar tema claro' : 'Ativar tema escuro'}
+              onClick={onToggleTheme}
+            >
+              <Icon name={theme === 'dark' ? 'sun' : 'moon'} />
+              <span className="theme-label"> {theme === 'dark' ? 'Claro' : 'Escuro'}</span>
             </Button>
             <Menu
               label={account?.session ? 'Minha conta' : 'Conta'}
@@ -61,7 +66,7 @@ export function AppShell({ route, theme, onToggleTheme, account, onOpenAccount, 
               label: (
                 <span className="app-tab-label" data-product={item.product}>
                   <span className="app-tab-glyph" aria-hidden="true">
-                    {appGlyphs[key]}
+                    <Icon name={key} />
                   </span>
                   {item.label}
                 </span>

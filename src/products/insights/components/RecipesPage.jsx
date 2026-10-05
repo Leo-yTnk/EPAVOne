@@ -1,5 +1,15 @@
 import { useMemo, useState } from 'preact/hooks';
-import { Button, Checkbox, EmptyState, ErrorState, Input, Pagination, Select, Spinner } from '../../../design-system/components/index.js';
+import {
+  Button,
+  Checkbox,
+  FilterDisclosure,
+  EmptyState,
+  ErrorState,
+  Input,
+  Pagination,
+  Select,
+  Spinner
+} from '../../../design-system/components/index.js';
 import { catalogService } from '../services/catalogService.js';
 import { useCatalogResource } from '../hooks/useCatalogResource.js';
 import { filterRecipes } from '../models/recipes.js';
@@ -45,16 +55,22 @@ export function RecipesPage() {
           value={filters.query}
           onInput={(event) => update({ query: event.currentTarget.value })}
         />
-        <Select
-          label="Categoria de receita"
-          options={[{ value: '', label: 'Todas as categorias' }, ...categories.map((item) => ({ value: item.id, label: item.name }))]}
-          value={filters.category}
-          onChange={(category) => update({ category })}
-          searchable
-        />
-        <Checkbox aria-label="Até 30 minutos" checked={filters.quick} onChange={(event) => update({ quick: event.currentTarget.checked })}>
-          Até 30 minutos
-        </Checkbox>
+        <FilterDisclosure count={Number(Boolean(filters.category)) + Number(filters.quick)}>
+          <Select
+            label="Categoria de receita"
+            options={[{ value: '', label: 'Todas as categorias' }, ...categories.map((item) => ({ value: item.id, label: item.name }))]}
+            value={filters.category}
+            onChange={(category) => update({ category })}
+            searchable
+          />
+          <Checkbox
+            aria-label="Até 30 minutos"
+            checked={filters.quick}
+            onChange={(event) => update({ quick: event.currentTarget.checked })}
+          >
+            Até 30 minutos
+          </Checkbox>
+        </FilterDisclosure>
       </div>
       <div className="insights-results">
         <p className="insights-muted" role="status">

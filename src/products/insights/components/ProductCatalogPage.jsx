@@ -1,5 +1,15 @@
 import { useMemo, useState } from 'preact/hooks';
-import { Button, Checkbox, EmptyState, ErrorState, Input, Pagination, Select, Spinner } from '../../../design-system/components/index.js';
+import {
+  Button,
+  Checkbox,
+  FilterDisclosure,
+  EmptyState,
+  ErrorState,
+  Input,
+  Pagination,
+  Select,
+  Spinner
+} from '../../../design-system/components/index.js';
 import { catalogService } from '../services/catalogService.js';
 import { useCatalogResource } from '../hooks/useCatalogResource.js';
 import { CATALOG_PAGE_SIZE, filterProducts } from '../models/catalog.js';
@@ -45,14 +55,16 @@ export function ProductCatalogPage({ initialCategory = '' }) {
           value={filters.query}
           onInput={(event) => update({ query: event.currentTarget.value })}
         />
-        <Select label="Categoria" value={filters.category} options={options} onChange={(category) => update({ category })} searchable />
-        <Checkbox
-          aria-label="Com preço por quantidade"
-          checked={filters.promotion}
-          onChange={(event) => update({ promotion: event.currentTarget.checked })}
-        >
-          Com preço por quantidade
-        </Checkbox>
+        <FilterDisclosure count={Number(Boolean(filters.category)) + Number(filters.promotion)}>
+          <Select label="Categoria" value={filters.category} options={options} onChange={(category) => update({ category })} searchable />
+          <Checkbox
+            aria-label="Com preço por quantidade"
+            checked={filters.promotion}
+            onChange={(event) => update({ promotion: event.currentTarget.checked })}
+          >
+            Com preço por quantidade
+          </Checkbox>
+        </FilterDisclosure>
       </div>
       <div className="insights-results">
         <p className="insights-muted" role="status">

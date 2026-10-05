@@ -256,3 +256,22 @@
     animation: none;
   }
 }
+@media(max-width:48rem){
+ .app-shell{width:calc(100% - 2*var(--space-3));padding-bottom:calc(5rem + env(safe-area-inset-bottom))}
+ .header-toolbar{padding-block:var(--space-2)}
+ .workspace-context{min-height:2.75rem;padding-block:var(--space-1);justify-content:space-between}
+ .workspace-context-name,.workspace-context-description{display:none}
+ .insights-tabs{width:100%;justify-content:space-between}
+ .insights-tabs .ds-nav-item{flex:1;justify-content:center;min-height:2.75rem;padding-inline:var(--space-2)}
+ .workspace-apps{position:fixed;bottom:0;left:0;right:0;padding:var(--space-1) var(--space-2) calc(var(--space-1) + env(safe-area-inset-bottom));background:var(--surface-primary);border-top:1px solid var(--border-subtle);z-index:var(--z-sticky)}
+ .app-tabs{border:0;gap:var(--space-1);overflow:visible}
+ .app-tabs .ds-tab{padding:var(--space-2);border:0;border-radius:var(--radius-md);min-height:3.25rem}
+ .app-tabs .ds-tab.is-active{background:var(--surface-selected)}
+ .app-tabs .ds-tab::after{display:none}
+ .app-tab-label{flex-direction:column;gap:var(--space-1);font-size:.75rem}
+ .app-tab-glyph{display:grid;background:transparent;width:1.25rem;height:1.25rem;color:var(--text-brand)}
+ .app-main{padding-block:var(--space-4)}
+ .product-page{gap:var(--space-4)}
+ .theme-label{display:none}
+ .site-footer{padding-block:var(--space-4);font-size:.6875rem}
+}

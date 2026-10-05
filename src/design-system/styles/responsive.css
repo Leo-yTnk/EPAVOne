@@ -1,0 +1,19 @@
+.ds-icon{display:inline-block;vertical-align:-.12em;flex-shrink:0}
+.ds-filter-fields{display:flex;align-items:end;gap:var(--space-4)}
+.ds-filter-fields>*{min-width:0;flex:1}
+.ds-filter-toggle{display:none}
+.ds-filter-disclosure{min-width:0}
+@media(max-width:48rem){
+ .ds-page-header{gap:var(--space-3)}
+ .ds-dialog,.ds-dialog.is-large{width:calc(100vw - var(--space-4));max-height:calc(100dvh - var(--space-4));padding:var(--space-4);--card-radius:var(--radius-xl)}
+ .ds-dialog-content{overscroll-behavior:contain;margin-block:var(--space-3)}
+ .ds-dialog-actions>.ds-btn{flex:1}
+ .ds-drawer{width:min(28rem,100vw);padding:var(--space-4)}
+ .ds-filter-toggle{display:inline-flex;width:100%}
+ .ds-filter-fields{display:none;margin-top:var(--space-3)}
+ .ds-filter-disclosure[data-open="true"] .ds-filter-fields{display:grid;grid-template-columns:1fr;gap:var(--space-3)}
+ .ds-filter-fields .ds-checkbox{min-height:2.75rem}
+ .ds-input,.ds-textarea{font-size:1rem}
+ .ds-btn,.ds-select-trigger,.ds-icon-button{min-height:2.75rem}
+ .ds-toast-region{bottom:calc(5rem + env(safe-area-inset-bottom))}
+}
