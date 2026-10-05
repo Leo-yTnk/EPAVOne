@@ -1,3 +1,5 @@
+import { CatalogSections } from './CatalogSections.jsx';
+import { catalogGroups, orderedCatalogItems } from '../models/sections.js';
 import { useMemo, useState } from 'preact/hooks';
 import {
   Button,
@@ -17,16 +19,25 @@ import { CATALOG_PAGE_SIZE } from '../models/catalog.js';
 import { RecipeCard } from './RecipeCard.jsx';
 import { RecipeDialog } from './RecipeDialog.jsx';
 
-export function RecipesPage() {
+export function RecipesPage({ initialSection = '' }) {
   const resource = useCatalogResource(catalogService.recipes, 'published');
-  const [filters, setFilters] = useState({ query: '', category: '', quick: false });
+  const structure = useCatalogResource(catalogService.structure, 'public');
+  const [filters, setFilters] = useState({ query: '', category: '', quick: false, section: initialSection });
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState(null);
   const recipes = resource.data || [];
-  const filtered = useMemo(() => filterRecipes(recipes, filters), [resource.data, filters]);
+  const candidates = useMemo(() => filterRecipes(recipes, filters), [resource.data, filters]);
   const categories = [
     ...new Map(recipes.filter((recipe) => recipe.category).map((recipe) => [recipe.category.id, recipe.category])).values()
   ].sort((a, b) => a.name.localeCompare(b.name, 'pt-BR'));
+  const sectionOptions = (structure.data?.sections || []).filter((section) =>
+    (structure.data?.recipes || []).some((link) => link.section_id === section.id)
+  );
+  const memberIds = new Set(
+    (structure.data?.recipes || []).filter((link) => link.section_id === filters.section).map((link) => link.recipe_id)
+  );
+  const filtered = filters.section && structure.data ? candidates.filter((item) => memberIds.has(item.id)) : candidates;
+  const ordered = orderedCatalogItems(filtered, structure.data, 'recipes', 'recipes');
   const pageCount = Math.max(1, Math.ceil(filtered.length / CATALOG_PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
   function update(patch) {
@@ -34,7 +45,7 @@ export function RecipesPage() {
     setPage(1);
   }
   function reset() {
-    update({ query: '', category: '', quick: false });
+    update({ query: '', category: '', quick: false, section: '' });
   }
   if (resource.loading)
     return (
@@ -55,7 +66,16 @@ export function RecipesPage() {
           value={filters.query}
           onInput={(event) => update({ query: event.currentTarget.value })}
         />
-        <FilterDisclosure count={Number(Boolean(filters.category)) + Number(filters.quick)}>
+        <FilterDisclosure count={Number(Boolean(filters.section)) + Number(Boolean(filters.category)) + Number(filters.quick)}>
+          {sectionOptions.length > 0 && (
+            <Select
+              label="Seção do catálogo"
+              value={filters.section}
+              options={[{ value: '', label: 'Todas as seções' }, ...sectionOptions.map((item) => ({ value: item.id, label: item.name }))]}
+              onChange={(section) => update({ section })}
+              searchable
+            />
+          )}
           <Select
             label="Categoria de receita"
             options={[{ value: '', label: 'Todas as categorias' }, ...categories.map((item) => ({ value: item.id, label: item.name }))]}
@@ -72,11 +92,18 @@ export function RecipesPage() {
           </Checkbox>
         </FilterDisclosure>
       </div>
+      {structure.error && (
+        <ErrorState
+          title="Seções indisponíveis"
+          description="O catálogo continua disponível. Tente carregar sua organização novamente."
+          onAction={structure.retry}
+        />
+      )}
       <div className="insights-results">
         <p className="insights-muted" role="status">
           {filtered.length} {filtered.length === 1 ? 'receita encontrada' : 'receitas encontradas'}
         </p>
-        {filtered.length > 0 && (filters.query || filters.category || filters.quick) && (
+        {filtered.length > 0 && (filters.query || filters.section || filters.category || filters.quick) && (
           <Button variant="ghost" size="sm" onClick={reset}>
             Limpar filtros
           </Button>
@@ -92,11 +119,15 @@ export function RecipesPage() {
           onAction={reset}
         />
       ) : (
-        <div className="insights-grid">
-          {filtered.slice((currentPage - 1) * CATALOG_PAGE_SIZE, currentPage * CATALOG_PAGE_SIZE).map((recipe) => (
-            <RecipeCard key={recipe.id} recipe={recipe} onOpen={setSelected} />
-          ))}
-        </div>
+        <CatalogSections
+          groups={catalogGroups(
+            ordered.slice((currentPage - 1) * CATALOG_PAGE_SIZE, currentPage * CATALOG_PAGE_SIZE),
+            structure.data,
+            'recipes',
+            'recipes'
+          )}
+          renderItem={(item) => <RecipeCard key={item.id} recipe={item} onOpen={setSelected} />}
+        />
       )}
       {pageCount > 1 && <Pagination page={currentPage} pageCount={pageCount} onChange={setPage} label="Páginas de receitas" />}
       {selected && <RecipeDialog key={selected.id} recipe={selected} onClose={() => setSelected(null)} />}

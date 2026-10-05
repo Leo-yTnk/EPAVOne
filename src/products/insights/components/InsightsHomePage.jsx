@@ -1,3 +1,6 @@
+import { CatalogSections } from './CatalogSections.jsx';
+import { catalogGroups } from '../models/sections.js';
+import { ProductCard } from './ProductCard.jsx';
 import { useState } from 'preact/hooks';
 import { Badge, Button, EmptyState, ErrorState, Heading, Spinner, Text } from '../../../design-system/components/index.js';
 import { catalogService } from '../services/catalogService.js';
@@ -13,12 +16,28 @@ import '../home.css';
 
 export function InsightsHomePage() {
   const resource = useCatalogResource(catalogService.loadHome, 'home');
+  const structure = useCatalogResource(catalogService.structure, 'public');
   const [recipe, setRecipe] = useState(null);
   const [product, setProduct] = useState(null);
   const { products = [], recipes = [], categories = [] } = resource.data || {};
-  const suggestions = recipeSuggestions(recipes);
+  const suggestions = recipeSuggestions(recipes, 5);
+  const homeGroups = new Map();
+  for (const kind of ['recipes', 'products']) {
+    for (const group of catalogGroups(kind === 'recipes' ? recipes : products, structure.data, 'home', kind)) {
+      if (group.id === 'other') continue;
+      const previous = homeGroups.get(group.id);
+      homeGroups.set(group.id, {
+        ...group,
+        items: [...(previous?.items || []), ...group.items.map((item) => ({ ...item, catalogKind: kind }))]
+      });
+    }
+  }
+  const configuredHome = [...homeGroups.values()].sort((a, b) => {
+    const sections = structure.data?.sections || [];
+    return sections.findIndex((item) => item.id === a.id) - sections.findIndex((item) => item.id === b.id);
+  });
   const spotlight = suggestions[0];
-  const opportunities = products.filter((item) => productPricing(item).promo).slice(0, 2);
+  const opportunities = products.filter((item) => productPricing(item).promo).slice(0, 4);
   const ready = !resource.loading && !resource.error && resource.data;
 
   return (
@@ -75,6 +94,43 @@ export function InsightsHomePage() {
       {ready && (
         <>
           {!spotlight && <EmptyState title="Novas ideias em breve" description="As receitas publicadas aparecerão aqui." />}
+          <div className="insights-home-overview" aria-label="Explore o Insights">
+            <div>
+              <strong>{recipes.length}</strong>
+              <span>receitas para inspirar</span>
+            </div>
+            <div>
+              <strong>{products.length}</strong>
+              <span>produtos para consultar</span>
+            </div>
+            <div>
+              <strong>{categories.length}</strong>
+              <span>categorias para explorar</span>
+            </div>
+            <Button as="a" href="#/insights/criacao" variant="secondary" size="sm">
+              Sua biblioteca e criação →
+            </Button>
+          </div>
+          {structure.error && (
+            <ErrorState title="Seções indisponíveis" description="As sugestões continuam disponíveis." onAction={structure.retry} />
+          )}
+          {configuredHome.length > 0 && (
+            <CatalogSections
+              groups={configuredHome.map((group) => ({
+                ...group,
+                total: group.items.length,
+                items: group.items.slice(0, 3),
+                href: `#/insights/${group.items[0]?.catalogKind === 'products' ? 'produtos' : 'receitas'}/secao/${group.id}`
+              }))}
+              renderItem={(item) =>
+                item.catalogKind === 'recipes' ? (
+                  <RecipeCard key={`recipe-${item.id}`} recipe={item} onOpen={setRecipe} />
+                ) : (
+                  <ProductCard key={`product-${item.id}`} product={item} onOpen={setProduct} />
+                )
+              }
+            />
+          )}
           <div className="insights-discovery-body">
             <div className="insights-home-main">
               {suggestions.length > 1 && (
@@ -88,7 +144,7 @@ export function InsightsHomePage() {
                     </Button>
                   </div>
                   <div className="insights-home-recipes">
-                    {suggestions.slice(1, 3).map((item) => (
+                    {suggestions.slice(1, 5).map((item) => (
                       <RecipeCard key={item.id} recipe={item} onOpen={setRecipe} />
                     ))}
                   </div>

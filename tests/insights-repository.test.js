@@ -8,6 +8,28 @@ afterEach(() => {
   vi.useRealTimers();
 });
 describe('catalog repository and prices', () => {
+  it('paginates public section links anonymously and rejects incomplete structure reads', async () => {
+    const transport = vi.fn(async (url) => {
+      const parsed = new URL(url);
+      const offset = Number(parsed.searchParams.get('offset'));
+      if (parsed.pathname.endsWith('/catalog_section_recipes'))
+        return response([{ section_id: 's', recipe_id: String(offset), sort_order: offset }], `${offset}-${offset}/3`);
+      return response([], '*/0');
+    });
+    vi.stubGlobal('fetch', transport);
+    const structure = await catalogRepository.structure();
+    expect(structure.recipes).toHaveLength(3);
+    for (const [url, request] of transport.mock.calls) {
+      const parsed = new URL(url);
+      expect(request.headers).not.toHaveProperty('Authorization');
+      if (/catalog_(pages|sections)$/.test(parsed.pathname)) expect(parsed.searchParams.get('active')).toBe('eq.true');
+    }
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url) => (new URL(url).pathname.endsWith('/catalog_sections') ? { ok: false, status: 403 } : response([], '*/0')))
+    );
+    await expect(catalogRepository.structure()).rejects.toThrow();
+  });
   it('continues through server-capped pages and applies public-only filters with FK hints', async () => {
     const transport = vi
       .fn()

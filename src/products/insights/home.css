@@ -139,4 +139,121 @@
     border-top: 1px solid var(--border-subtle);
   }
 }
-@media(max-width:48rem){.insights-discovery{gap:var(--space-4)}.insights-discovery-hero{padding-bottom:var(--space-4);gap:var(--space-4)}.insights-discovery-copy{gap:var(--space-3)}.insights-discovery-copy .insights-home-title{font-size:1.875rem}.insights-discovery .insights-spotlight{grid-template-columns:5.5rem minmax(0,1fr);gap:var(--space-3)}.insights-discovery .insights-spotlight>.insights-image{aspect-ratio:1}.insights-discovery .insights-spotlight>div:last-of-type{grid-template-columns:1fr}.insights-discovery .insights-spotlight h2{font-size:1.125rem}.insights-discovery .insights-spotlight .ds-btn{justify-self:start}.insights-discovery-body{gap:var(--space-4)}}
+@media (max-width: 48rem) {
+  .insights-discovery {
+    gap: var(--space-4);
+  }
+  .insights-discovery-hero {
+    padding-bottom: var(--space-4);
+    gap: var(--space-4);
+  }
+  .insights-discovery-copy {
+    gap: var(--space-3);
+  }
+  .insights-discovery-copy .insights-home-title {
+    font-size: 1.875rem;
+  }
+  .insights-discovery .insights-spotlight {
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: var(--space-3);
+  }
+  .insights-discovery .insights-spotlight > .insights-image {
+    aspect-ratio: 1;
+  }
+  .insights-discovery .insights-spotlight > div:last-of-type {
+    grid-template-columns: 1fr;
+  }
+  .insights-discovery .insights-spotlight h2 {
+    font-size: 1.125rem;
+  }
+  .insights-discovery .insights-spotlight .ds-btn {
+    justify-self: start;
+  }
+  .insights-discovery-body {
+    gap: var(--space-4);
+  }
+}
+
+.insights-home-overview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-5);
+  align-items: center;
+  padding-block: var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.insights-home-overview > div {
+  display: grid;
+  gap: var(--space-1);
+  padding-right: var(--space-5);
+  border-right: 1px solid var(--border-subtle);
+}
+.insights-home-overview strong {
+  font: 400 1.75rem/1 var(--font-display);
+  color: var(--text-brand);
+}
+.insights-home-overview span {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+.insights-home-overview .ds-btn {
+  margin-left: auto;
+}
+.insights-discovery-hero {
+  gap: var(--space-5);
+  padding-bottom: var(--space-4);
+}
+.insights-discovery-copy {
+  gap: var(--space-3);
+}
+.insights-discovery-copy .insights-home-title {
+  font-size: clamp(1.875rem, 2.8vw, 2.5rem);
+}
+.insights-discovery .insights-spotlight > .insights-image {
+  max-height: 15rem;
+}
+.insights-discovery-body {
+  grid-template-columns: minmax(0, 1fr) minmax(13rem, 0.35fr);
+  gap: var(--space-5);
+}
+.insights-discovery .insights-home-recipes .insights-recipe-card {
+  display: grid;
+  grid-template-columns: 6rem minmax(0, 1fr);
+  gap: var(--space-3);
+  align-items: start;
+}
+.insights-discovery .insights-home-recipes .insights-image {
+  aspect-ratio: 1;
+}
+.insights-discovery .insights-home-recipes .insights-product-name {
+  font-size: 0.9375rem;
+}
+.insights-discovery .insights-home-recipes .ds-badge {
+  font-size: 0.6875rem;
+}
+.insights-discovery .insights-home-recipes .ds-btn {
+  margin-top: var(--space-1);
+}
+.insights-home-section + .insights-home-section {
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+}
+@media (max-width: 64rem) {
+  .insights-discovery .insights-home-recipes {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 48rem) {
+  .insights-discovery-body {
+    grid-template-columns: 1fr;
+  }
+  .insights-home-overview {
+    gap: var(--space-3);
+  }
+  .insights-home-overview > div {
+    padding-right: var(--space-3);
+  }
+  .insights-home-overview .ds-btn {
+    margin-left: 0;
+  }
+}

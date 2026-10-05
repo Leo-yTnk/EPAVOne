@@ -40,9 +40,13 @@ export function InsightsRoutes({ route, account, onOpenAccount }) {
       {home ? (
         <InsightsHomePage />
       ) : section === 'receitas' ? (
-        <RecipesPage />
+        <RecipesPage key={route.segments.join('/')} initialSection={route.segments[1] === 'secao' ? route.segments[2] || '' : ''} />
       ) : section === 'produtos' ? (
-        <ProductCatalogPage initialCategory={route.segments[1] === 'categoria' ? route.segments[2] || '' : ''} />
+        <ProductCatalogPage
+          key={route.segments.join('/')}
+          initialSection={route.segments[1] === 'secao' ? route.segments[2] || '' : ''}
+          initialCategory={route.segments[1] === 'categoria' ? route.segments[2] || '' : ''}
+        />
       ) : (
         <PageHeader
           eyebrow="EPAVInsights"

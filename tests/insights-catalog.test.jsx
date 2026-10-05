@@ -5,6 +5,7 @@ import { catalogService } from '../src/products/insights/services/catalogService
 
 vi.mock('../src/products/insights/services/catalogService.js', () => ({
   catalogService: {
+    structure: vi.fn().mockResolvedValue({ pages: [], sections: [], recipes: [], products: [] }),
     loadCatalog: vi.fn(),
     relatedRecipes: vi.fn(),
     recipeIngredients: vi.fn()

@@ -7,6 +7,7 @@ import { filterRecipes, recipeSuggestions } from '../src/products/insights/model
 
 vi.mock('../src/products/insights/services/catalogService.js', () => ({
   catalogService: {
+    structure: vi.fn().mockResolvedValue({ pages: [], sections: [], recipes: [], products: [] }),
     recipes: vi.fn(),
     loadHome: vi.fn(),
     loadCatalog: vi.fn(),
@@ -134,6 +135,23 @@ describe('Insights pages and contextual navigation', () => {
     await screen.findByText('Novas ideias em breve');
     expect(screen.getByRole('link', { name: 'Consultar produtos' })).toBeTruthy();
     expect(screen.queryByRole('heading', { name: 'Preços por quantidade' })).toBeNull();
+  });
+
+  it('opens the complete Home section and keeps its section filter usable with search', async () => {
+    catalogService.structure.mockResolvedValueOnce({
+      pages: [{ id: 'home', key: 'home' }],
+      sections: [{ id: 'quick', page_id: 'home', name: 'Rápidas e Práticas', sort_order: 1 }],
+      recipes: [{ section_id: 'quick', recipe_id: '24', sort_order: 1 }],
+      products: []
+    });
+    render(<InsightsRoutes route={route(['receitas', 'secao', 'quick'])} />);
+    await screen.findByRole('button', { name: 'Seção do catálogo Rápidas e Práticas' });
+    expect(screen.getByText('1 receita encontrada')).toBeTruthy();
+    expect(screen.getAllByRole('article')).toHaveLength(1);
+    fireEvent.input(screen.getByLabelText('Buscar receita'), { target: { value: 'file' } });
+    expect(screen.getByText('1 receita encontrada')).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Limpar filtros' }));
+    expect(screen.getByText('25 receitas encontradas')).toBeTruthy();
   });
 
   it('suggests featured recipes first without mutating the catalog and excludes unknown durations from quick filters', () => {

@@ -20,6 +20,27 @@ async function readAll(table, params, options) {
 }
 
 export const catalogRepository = {
+  async structure(options) {
+    const [pages, sections, recipes, products] = await Promise.all([
+      readAll('catalog_pages', { select: 'id,key,name,sort_order,active', active: 'eq.true', order: 'sort_order.asc,id.asc' }, options),
+      readAll(
+        'catalog_sections',
+        { select: 'id,page_id,name,slug,sort_order,active', active: 'eq.true', order: 'sort_order.asc,id.asc' },
+        options
+      ),
+      readAll(
+        'catalog_section_recipes',
+        { select: 'section_id,recipe_id,sort_order', order: 'sort_order.asc,section_id.asc,recipe_id.asc' },
+        options
+      ),
+      readAll(
+        'catalog_section_products',
+        { select: 'section_id,product_id,sort_order', order: 'sort_order.asc,section_id.asc,product_id.asc' },
+        options
+      )
+    ]);
+    return { pages, sections, recipes, products };
+  },
   products: (options) =>
     readAll(
       'products',
