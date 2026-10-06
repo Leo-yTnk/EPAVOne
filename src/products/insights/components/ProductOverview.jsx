@@ -11,7 +11,7 @@ export function ProductOverview({ product, onOpenRecipe }) {
   return (
     <section className="insights-detail" aria-label={product.name}>
       <div className="insights-product-overview">
-        <CatalogImage url={product.image_url} name={product.name} />
+        <CatalogImage stitched={false} url={product.image_url} name={product.name} />
         <div className="insights-product-summary">
           <Badge>{product.category?.name || 'Outros produtos'}</Badge>
           {product.product_code && <p className="insights-muted">Código {product.product_code}</p>}
@@ -40,7 +40,7 @@ export function ProductOverview({ product, onOpenRecipe }) {
           <div className="insights-related">
             {recipes.data.map((item) => (
               <article key={item.id} className="insights-related-recipe">
-                <CatalogImage url={item.image_url} name={item.name} />
+                <CatalogImage stitched={false} url={item.image_url} name={item.name} />
                 <div>
                   <h4>{item.name}</h4>
                   <p className="insights-muted">

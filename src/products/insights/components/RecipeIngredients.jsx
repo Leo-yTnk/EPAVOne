@@ -1,24 +1,36 @@
-import { Button } from '../../../design-system/components/index.js';
+import { Button, Card } from '../../../design-system/components/index.js';
 import { CatalogImage } from './CatalogImage.jsx';
 
 export function RecipeIngredients({ ingredients, onOpenProduct }) {
   return (
     <ul className="insights-ingredient-list" aria-label="Produtos da receita">
       {ingredients.map((item) => (
-        <li key={item.id} className="insights-ingredient">
-          <CatalogImage url={item.product?.image_url} name={item.product?.name || 'Ingrediente indisponível'} />
-          <div>
+        <Card as="li" key={item.id} className="insights-ingredient" data-dialog-origin>
+          <CatalogImage
+            compactFallback
+            stitched={false}
+            url={item.product?.image_url}
+            name={item.product?.name || 'Ingrediente indisponível'}
+          />
+          <div className="insights-ingredient-copy">
             <strong>{item.product?.name || 'Ingrediente indisponível'}</strong>
-            <span className="insights-muted">
-              {item.quantity} {item.product?.unit}
-            </span>
-            {item.product?.id && onOpenProduct && (
-              <Button variant="ghost" size="sm" onClick={() => onOpenProduct(item.product)} aria-label={`Ver produto ${item.product.name}`}>
-                Ver produto →
-              </Button>
-            )}
+            <div className="insights-ingredient-footer">
+              <span className="insights-muted">
+                {item.quantity} {item.product?.unit}
+              </span>
+              {item.product?.id && onOpenProduct && (
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  onClick={() => onOpenProduct(item.product)}
+                  aria-label={`Ver produto ${item.product.name}`}
+                >
+                  Ver produto →
+                </Button>
+              )}
+            </div>
           </div>
-        </li>
+        </Card>
       ))}
     </ul>
   );

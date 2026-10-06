@@ -1,3 +1,4 @@
+import { useDialogExpansion } from '../behaviors/useDialogExpansion.js';
 import { Icon } from './Icon.jsx';
 import { CardStitch } from './CardStitch.jsx';
 import { useId, useRef } from 'preact/hooks';
@@ -5,9 +6,23 @@ import { useModalLayer } from '../behaviors/useModalLayer.js';
 import { IconButton } from './IconButton.jsx';
 import { Portal } from './Portal.jsx';
 
-export function Dialog({ open, title, children, actions, onClose, size = 'md', stitched = true, className = '' }) {
+export function Dialog({
+  open,
+  title,
+  titleId: contentTitleId,
+  titleInContent = false,
+  children,
+  actions,
+  onClose,
+  size = 'md',
+  stitched = true,
+  expandFromTrigger = false,
+  className = ''
+}) {
   const dialogRef = useRef(null);
-  const titleId = useId();
+  const generatedTitleId = useId();
+  const titleId = contentTitleId || generatedTitleId;
+  useDialogExpansion(dialogRef, open, expandFromTrigger);
   useModalLayer(dialogRef, open, onClose);
   if (!open) return null;
 
@@ -23,9 +38,11 @@ export function Dialog({ open, title, children, actions, onClose, size = 'md', s
           tabIndex="-1"
         >
           <div className="ds-dialog-head">
-            <h2 id={titleId} className="ds-dialog-title">
-              {title}
-            </h2>
+            {!titleInContent && (
+              <h2 id={titleId} className="ds-dialog-title">
+                {title}
+              </h2>
+            )}
             <IconButton label="Fechar" onClick={onClose}>
               <Icon name="close" />
             </IconButton>

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'preact/hooks';
+import { useId, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { Button, Dialog } from '../../../design-system/components/index.js';
 import { ProductOverview } from './ProductOverview.jsx';
 import { RecipeDetails } from './RecipeDetails.jsx';
@@ -7,6 +7,7 @@ export function InsightsDetailDialog({ initial, onClose }) {
   const [history, setHistory] = useState([initial]);
   const contentRef = useRef(null);
   const firstRender = useRef(true);
+  const recipeTitleId = useId();
   const current = history[history.length - 1];
   const previous = history[history.length - 2];
   useLayoutEffect(() => {
@@ -20,7 +21,16 @@ export function InsightsDetailDialog({ initial, onClose }) {
   }, [current]);
   const open = (kind, item) => setHistory((items) => [...items, { kind, item }]);
   return (
-    <Dialog open title={current.item.name} onClose={onClose} size="lg" className="insights-detail-dialog">
+    <Dialog
+      open
+      expandFromTrigger
+      titleInContent={current.kind === 'recipe'}
+      titleId={current.kind === 'recipe' ? recipeTitleId : undefined}
+      title={current.item.name}
+      onClose={onClose}
+      size="lg"
+      className={`insights-detail-dialog${current.kind === 'recipe' ? ' is-recipe-detail' : ''}`}
+    >
       <div ref={contentRef} tabIndex="-1" className="insights-detail-content">
         {previous && (
           <Button variant="ghost" size="sm" className="insights-detail-back" onClick={() => setHistory((items) => items.slice(0, -1))}>
@@ -30,7 +40,12 @@ export function InsightsDetailDialog({ initial, onClose }) {
         {current.kind === 'product' ? (
           <ProductOverview key={`product-${current.item.id}`} product={current.item} onOpenRecipe={(item) => open('recipe', item)} />
         ) : (
-          <RecipeDetails key={`recipe-${current.item.id}`} recipe={current.item} onOpenProduct={(item) => open('product', item)} />
+          <RecipeDetails
+            key={`recipe-${current.item.id}`}
+            titleId={recipeTitleId}
+            recipe={current.item}
+            onOpenProduct={(item) => open('product', item)}
+          />
         )}
       </div>
     </Dialog>

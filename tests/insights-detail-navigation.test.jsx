@@ -25,6 +25,7 @@ describe('Connected Insights details', () => {
     render(<RecipeDialog recipe={recipe} onClose={vi.fn()} />);
     const dialog = screen.getByRole('dialog');
     expect(dialog.querySelector(':scope > .ds-stitch')).toBeTruthy();
+    expect(dialog.querySelector('.insights-recipe-panel > .ds-stitch')).toBeNull();
     fireEvent.click(await within(dialog).findByRole('button', { name: 'Ver produto Frango Swift' }));
     expect(screen.getAllByRole('dialog')).toHaveLength(1);
     expect(within(dialog).getByRole('heading', { name: 'Frango Swift' })).toBeTruthy();

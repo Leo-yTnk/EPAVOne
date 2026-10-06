@@ -1,11 +1,11 @@
 import { CardStitch } from './CardStitch.jsx';
 import { cx } from '../../shared/utils/cx.js';
 
-export function Card({ as: Component = 'article', className = '', children, stitchContrast = false, ...props }) {
+export function Card({ as: Component = 'article', className = '', children, stitched = true, stitchContrast = false, ...props }) {
   return (
-    <Component className={cx('ds-card', 'ds-stitched-card', className)} {...props}>
+    <Component className={cx('ds-card', stitched && 'ds-stitched-card', className)} {...props}>
       {children}
-      <CardStitch contrast={stitchContrast} />
+      {stitched && <CardStitch contrast={stitchContrast} />}
     </Component>
   );
 }

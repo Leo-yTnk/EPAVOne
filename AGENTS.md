@@ -16,6 +16,7 @@
 - Never recreate Button, Input, Select, Card, Alert, Tabs, Dialog, Drawer, Toast or other DS components with classes inside a page.
 - Never use a native `<select>`; use `Select`.
 - Every card surface must use `<Card>`; Card is stitched by default.
+- Explicit product exception: Insights detail dialogs and individual product Cards retain stitching. Internal recipe fact/section Cards and detail images use `stitched={false}` with quiet, slightly darker surfaces. Catalog cards retain the default treatment.
 - A visually enabled action must have behavior or feedback.
 - Do not render a removable/retry/create action without its callback.
 

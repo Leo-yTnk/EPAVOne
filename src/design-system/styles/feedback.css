@@ -69,3 +69,5 @@
 }
 
 .ds-alert>div,.ds-toast-content{min-width:0;overflow-wrap:anywhere}
+
+.ds-dialog.ds-dialog-expanding{animation:none;transform-origin:top left}
