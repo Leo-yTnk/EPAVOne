@@ -44,14 +44,16 @@ export function WriterRoutes({ active = true }) {
     setBusy(true);
     setError('');
     setSuccess('');
-    setTemplate(null);
-    setOrder(emptyOrder());
-    setStep(0);
     setExportError('');
     try {
-      setTemplate(await importTemplate(file));
+      const nextTemplate = await importTemplate(file);
+      setTemplate(nextTemplate);
+      setOrder(emptyOrder());
+      setStep(0);
     } catch (failure) {
-      setError(failure.message);
+      setError(
+        `${failure.message} ${template ? 'Seu formulário e pedido anteriores foram preservados.' : 'Escolha um arquivo .xlsx válido para tentar novamente.'}`
+      );
     } finally {
       setBusy(false);
     }
@@ -150,7 +152,7 @@ export function WriterRoutes({ active = true }) {
           </div>
           {exportError && (
             <Alert tone="danger" title="Não foi possível gerar o pedido">
-              {exportError}
+              {exportError} Seu pedido continua nesta sessão. Tente baixar novamente.
             </Alert>
           )}
           <CheckoutActions step={step} errors={step < 3 ? stageErrors[step] : []} busy={busy} onNavigate={navigate} />

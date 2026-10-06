@@ -75,3 +75,15 @@ it('uses vertical arrows and switches to horizontal tabs on small screens', () =
   expect(screen.getByRole('tabpanel', { name: 'Configurações' })).toBeTruthy();
   expect(screen.queryByText('Component Lab')).toBeNull();
 });
+
+it('reports unavailable preference storage while preserving the applied session settings', () => {
+  const spy = vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+    throw new Error('blocked');
+  });
+  try {
+    expect(applyPreferences({ ...DEFAULT_PREFERENCES, density: 'compact' })).toBe(false);
+    expect(document.documentElement.dataset.density).toBe('compact');
+  } finally {
+    spy.mockRestore();
+  }
+});

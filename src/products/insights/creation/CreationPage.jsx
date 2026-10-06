@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { Alert, Button, Card, Icon, NavItem, PageHeader, Spinner } from '../../../design-system/components/index.js';
+import { Alert, Button, Icon, NavItem, PageHeader, Spinner } from '../../../design-system/components/index.js';
 import { EntityManager } from './components/EntityManager.jsx';
 import { SharedLibrary } from './components/SharedLibrary.jsx';
 import { RequestsPage } from './components/RequestsPage.jsx';
@@ -20,7 +20,7 @@ export function CreationPage({ route, account, onOpenAccount }) {
   if (account?.initializing) return <Spinner />;
   if (!account?.session)
     return (
-      <Card className="creation-welcome">
+      <section className="creation-welcome">
         <PageHeader
           eyebrow="EPAVInsights"
           title="Seu espaço de criação"
@@ -29,7 +29,7 @@ export function CreationPage({ route, account, onOpenAccount }) {
         <Button onClick={onOpenAccount}>
           <Icon name="user" /> Entrar para criar
         </Button>
-      </Card>
+      </section>
     );
   if (!account.profile)
     return (

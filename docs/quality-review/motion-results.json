@@ -1,0 +1,36 @@
+{
+  "route": {
+    "animation": "ds-route-fallback-in",
+    "duration": "0.22s",
+    "transition": "all",
+    "transitionDuration": "0s",
+    "opacity": "1",
+    "filter": "none",
+    "backdropFilter": "none"
+  },
+  "button": {
+    "animation": "none",
+    "duration": "0s",
+    "transition": "background-color, border-color, color, transform, box-shadow, opacity",
+    "transitionDuration": "0.22s, 0.22s, 0.22s, 0.15s, 0.22s, 0.15s",
+    "opacity": "1",
+    "filter": "none",
+    "backdropFilter": "none"
+  },
+  "indicator": {
+    "animation": "none",
+    "duration": "0s",
+    "transition": "transform, width, height, background-color",
+    "transitionDuration": "0.22s, 0.22s, 0.22s, 0.22s",
+    "opacity": "1",
+    "filter": "none",
+    "backdropFilter": "none"
+  },
+  "layer": {
+    "animation": "ds-layer-in-bottom",
+    "duration": "0.22s",
+    "origin": "215.5px 0px",
+    "filter": "none",
+    "backdropFilter": "none"
+  }
+}

@@ -1,0 +1,642 @@
+[
+  {
+    "width": 320,
+    "theme": "light",
+    "route": "#/",
+    "overflow": 0,
+    "headerWidth": 320,
+    "headerX": 0
+  },
+  {
+    "width": 320,
+    "theme": "light",
+    "route": "#/insights",
+    "overflow": 0,
+    "headerWidth": 320,
+    "headerX": 0
+  },
+  {
+    "width": 320,
+    "theme": "light",
+    "route": "#/insights/receitas",
+    "overflow": 0,
+    "headerWidth": 320,
+    "headerX": 0
+  },
+  {
+    "width": 320,
+    "theme": "light",
+    "route": "#/insights/produtos",
+    "overflow": 0,
+    "headerWidth": 320,
+    "headerX": 0
+  },
+  {
+    "width": 320,
+    "theme": "light",
+    "route": "#/insights/criacao",
+    "overflow": 0,
+    "headerWidth": 320,
+    "headerX": 0
+  },
+  {
+    "width": 320,
+    "theme": "light",
+    "route": "#/planner",
+    "overflow": 0,
+    "headerWidth": 320,
+    "headerX": 0
+  },
+  {
+    "width": 320,
+    "theme": "light",
+    "route": "#/writer",
+    "overflow": 0,
+    "headerWidth": 320,
+    "headerX": 0
+  },
+  {
+    "width": 320,
+    "theme": "light",
+    "route": "#/settings",
+    "overflow": 0,
+    "headerWidth": 320,
+    "headerX": 0
+  },
+  {
+    "width": 320,
+    "theme": "dark",
+    "route": "#/",
+    "overflow": 0,
+    "headerWidth": 320,
+    "headerX": 0
+  },
+  {
+    "width": 320,
+    "theme": "dark",
+    "route": "#/insights",
+    "overflow": 0,
+    "headerWidth": 320,
+    "headerX": 0
+  },
+  {
+    "width": 320,
+    "theme": "dark",
+    "route": "#/insights/receitas",
+    "overflow": 0,
+    "headerWidth": 320,
+    "headerX": 0
+  },
+  {
+    "width": 320,
+    "theme": "dark",
+    "route": "#/insights/produtos",
+    "overflow": 0,
+    "headerWidth": 320,
+    "headerX": 0
+  },
+  {
+    "width": 320,
+    "theme": "dark",
+    "route": "#/insights/criacao",
+    "overflow": 0,
+    "headerWidth": 320,
+    "headerX": 0
+  },
+  {
+    "width": 320,
+    "theme": "dark",
+    "route": "#/planner",
+    "overflow": 0,
+    "headerWidth": 320,
+    "headerX": 0
+  },
+  {
+    "width": 320,
+    "theme": "dark",
+    "route": "#/writer",
+    "overflow": 0,
+    "headerWidth": 320,
+    "headerX": 0
+  },
+  {
+    "width": 320,
+    "theme": "dark",
+    "route": "#/settings",
+    "overflow": 0,
+    "headerWidth": 320,
+    "headerX": 0
+  },
+  {
+    "width": 390,
+    "theme": "light",
+    "route": "#/",
+    "overflow": 0,
+    "headerWidth": 390,
+    "headerX": 0
+  },
+  {
+    "width": 390,
+    "theme": "light",
+    "route": "#/insights",
+    "overflow": 0,
+    "headerWidth": 390,
+    "headerX": 0
+  },
+  {
+    "width": 390,
+    "theme": "light",
+    "route": "#/insights/receitas",
+    "overflow": 0,
+    "headerWidth": 390,
+    "headerX": 0
+  },
+  {
+    "width": 390,
+    "theme": "light",
+    "route": "#/insights/produtos",
+    "overflow": 0,
+    "headerWidth": 390,
+    "headerX": 0
+  },
+  {
+    "width": 390,
+    "theme": "light",
+    "route": "#/insights/criacao",
+    "overflow": 0,
+    "headerWidth": 390,
+    "headerX": 0
+  },
+  {
+    "width": 390,
+    "theme": "light",
+    "route": "#/planner",
+    "overflow": 0,
+    "headerWidth": 390,
+    "headerX": 0
+  },
+  {
+    "width": 390,
+    "theme": "light",
+    "route": "#/writer",
+    "overflow": 0,
+    "headerWidth": 390,
+    "headerX": 0
+  },
+  {
+    "width": 390,
+    "theme": "light",
+    "route": "#/settings",
+    "overflow": 0,
+    "headerWidth": 390,
+    "headerX": 0
+  },
+  {
+    "width": 390,
+    "theme": "dark",
+    "route": "#/",
+    "overflow": 0,
+    "headerWidth": 390,
+    "headerX": 0
+  },
+  {
+    "width": 390,
+    "theme": "dark",
+    "route": "#/insights",
+    "overflow": 0,
+    "headerWidth": 390,
+    "headerX": 0
+  },
+  {
+    "width": 390,
+    "theme": "dark",
+    "route": "#/insights/receitas",
+    "overflow": 0,
+    "headerWidth": 390,
+    "headerX": 0
+  },
+  {
+    "width": 390,
+    "theme": "dark",
+    "route": "#/insights/produtos",
+    "overflow": 0,
+    "headerWidth": 390,
+    "headerX": 0
+  },
+  {
+    "width": 390,
+    "theme": "dark",
+    "route": "#/insights/criacao",
+    "overflow": 0,
+    "headerWidth": 390,
+    "headerX": 0
+  },
+  {
+    "width": 390,
+    "theme": "dark",
+    "route": "#/planner",
+    "overflow": 0,
+    "headerWidth": 390,
+    "headerX": 0
+  },
+  {
+    "width": 390,
+    "theme": "dark",
+    "route": "#/writer",
+    "overflow": 0,
+    "headerWidth": 390,
+    "headerX": 0
+  },
+  {
+    "width": 390,
+    "theme": "dark",
+    "route": "#/settings",
+    "overflow": 0,
+    "headerWidth": 390,
+    "headerX": 0
+  },
+  {
+    "width": 768,
+    "theme": "light",
+    "route": "#/",
+    "overflow": 0,
+    "headerWidth": 768,
+    "headerX": 0
+  },
+  {
+    "width": 768,
+    "theme": "light",
+    "route": "#/insights",
+    "overflow": 0,
+    "headerWidth": 768,
+    "headerX": 0
+  },
+  {
+    "width": 768,
+    "theme": "light",
+    "route": "#/insights/receitas",
+    "overflow": 0,
+    "headerWidth": 768,
+    "headerX": 0
+  },
+  {
+    "width": 768,
+    "theme": "light",
+    "route": "#/insights/produtos",
+    "overflow": 0,
+    "headerWidth": 768,
+    "headerX": 0
+  },
+  {
+    "width": 768,
+    "theme": "light",
+    "route": "#/insights/criacao",
+    "overflow": 0,
+    "headerWidth": 768,
+    "headerX": 0
+  },
+  {
+    "width": 768,
+    "theme": "light",
+    "route": "#/planner",
+    "overflow": 0,
+    "headerWidth": 768,
+    "headerX": 0
+  },
+  {
+    "width": 768,
+    "theme": "light",
+    "route": "#/writer",
+    "overflow": 0,
+    "headerWidth": 768,
+    "headerX": 0
+  },
+  {
+    "width": 768,
+    "theme": "light",
+    "route": "#/settings",
+    "overflow": 0,
+    "headerWidth": 768,
+    "headerX": 0
+  },
+  {
+    "width": 768,
+    "theme": "dark",
+    "route": "#/",
+    "overflow": 0,
+    "headerWidth": 768,
+    "headerX": 0
+  },
+  {
+    "width": 768,
+    "theme": "dark",
+    "route": "#/insights",
+    "overflow": 0,
+    "headerWidth": 768,
+    "headerX": 0
+  },
+  {
+    "width": 768,
+    "theme": "dark",
+    "route": "#/insights/receitas",
+    "overflow": 0,
+    "headerWidth": 768,
+    "headerX": 0
+  },
+  {
+    "width": 768,
+    "theme": "dark",
+    "route": "#/insights/produtos",
+    "overflow": 0,
+    "headerWidth": 768,
+    "headerX": 0
+  },
+  {
+    "width": 768,
+    "theme": "dark",
+    "route": "#/insights/criacao",
+    "overflow": 0,
+    "headerWidth": 768,
+    "headerX": 0
+  },
+  {
+    "width": 768,
+    "theme": "dark",
+    "route": "#/planner",
+    "overflow": 0,
+    "headerWidth": 768,
+    "headerX": 0
+  },
+  {
+    "width": 768,
+    "theme": "dark",
+    "route": "#/writer",
+    "overflow": 0,
+    "headerWidth": 768,
+    "headerX": 0
+  },
+  {
+    "width": 768,
+    "theme": "dark",
+    "route": "#/settings",
+    "overflow": 0,
+    "headerWidth": 768,
+    "headerX": 0
+  },
+  {
+    "width": 1024,
+    "theme": "light",
+    "route": "#/",
+    "overflow": 0,
+    "headerWidth": 1024,
+    "headerX": 0
+  },
+  {
+    "width": 1024,
+    "theme": "light",
+    "route": "#/insights",
+    "overflow": 0,
+    "headerWidth": 1024,
+    "headerX": 0
+  },
+  {
+    "width": 1024,
+    "theme": "light",
+    "route": "#/insights/receitas",
+    "overflow": 0,
+    "headerWidth": 1024,
+    "headerX": 0
+  },
+  {
+    "width": 1024,
+    "theme": "light",
+    "route": "#/insights/produtos",
+    "overflow": 0,
+    "headerWidth": 1024,
+    "headerX": 0
+  },
+  {
+    "width": 1024,
+    "theme": "light",
+    "route": "#/insights/criacao",
+    "overflow": 0,
+    "headerWidth": 1024,
+    "headerX": 0
+  },
+  {
+    "width": 1024,
+    "theme": "light",
+    "route": "#/planner",
+    "overflow": 0,
+    "headerWidth": 1024,
+    "headerX": 0
+  },
+  {
+    "width": 1024,
+    "theme": "light",
+    "route": "#/writer",
+    "overflow": 0,
+    "headerWidth": 1024,
+    "headerX": 0
+  },
+  {
+    "width": 1024,
+    "theme": "light",
+    "route": "#/settings",
+    "overflow": 0,
+    "headerWidth": 1024,
+    "headerX": 0
+  },
+  {
+    "width": 1024,
+    "theme": "dark",
+    "route": "#/",
+    "overflow": 0,
+    "headerWidth": 1024,
+    "headerX": 0
+  },
+  {
+    "width": 1024,
+    "theme": "dark",
+    "route": "#/insights",
+    "overflow": 0,
+    "headerWidth": 1024,
+    "headerX": 0
+  },
+  {
+    "width": 1024,
+    "theme": "dark",
+    "route": "#/insights/receitas",
+    "overflow": 0,
+    "headerWidth": 1024,
+    "headerX": 0
+  },
+  {
+    "width": 1024,
+    "theme": "dark",
+    "route": "#/insights/produtos",
+    "overflow": 0,
+    "headerWidth": 1024,
+    "headerX": 0
+  },
+  {
+    "width": 1024,
+    "theme": "dark",
+    "route": "#/insights/criacao",
+    "overflow": 0,
+    "headerWidth": 1024,
+    "headerX": 0
+  },
+  {
+    "width": 1024,
+    "theme": "dark",
+    "route": "#/planner",
+    "overflow": 0,
+    "headerWidth": 1024,
+    "headerX": 0
+  },
+  {
+    "width": 1024,
+    "theme": "dark",
+    "route": "#/writer",
+    "overflow": 0,
+    "headerWidth": 1024,
+    "headerX": 0
+  },
+  {
+    "width": 1024,
+    "theme": "dark",
+    "route": "#/settings",
+    "overflow": 0,
+    "headerWidth": 1024,
+    "headerX": 0
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "route": "#/",
+    "overflow": 0,
+    "headerWidth": 1440,
+    "headerX": 0
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "route": "#/insights",
+    "overflow": 0,
+    "headerWidth": 1440,
+    "headerX": 0
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "route": "#/insights/receitas",
+    "overflow": 0,
+    "headerWidth": 1440,
+    "headerX": 0
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "route": "#/insights/produtos",
+    "overflow": 0,
+    "headerWidth": 1440,
+    "headerX": 0
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "route": "#/insights/criacao",
+    "overflow": 0,
+    "headerWidth": 1440,
+    "headerX": 0
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "route": "#/planner",
+    "overflow": 0,
+    "headerWidth": 1440,
+    "headerX": 0
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "route": "#/writer",
+    "overflow": 0,
+    "headerWidth": 1440,
+    "headerX": 0
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "route": "#/settings",
+    "overflow": 0,
+    "headerWidth": 1440,
+    "headerX": 0
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "route": "#/",
+    "overflow": 0,
+    "headerWidth": 1440,
+    "headerX": 0
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "route": "#/insights",
+    "overflow": 0,
+    "headerWidth": 1440,
+    "headerX": 0
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "route": "#/insights/receitas",
+    "overflow": 0,
+    "headerWidth": 1440,
+    "headerX": 0
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "route": "#/insights/produtos",
+    "overflow": 0,
+    "headerWidth": 1440,
+    "headerX": 0
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "route": "#/insights/criacao",
+    "overflow": 0,
+    "headerWidth": 1440,
+    "headerX": 0
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "route": "#/planner",
+    "overflow": 0,
+    "headerWidth": 1440,
+    "headerX": 0
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "route": "#/writer",
+    "overflow": 0,
+    "headerWidth": 1440,
+    "headerX": 0
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "route": "#/settings",
+    "overflow": 0,
+    "headerWidth": 1440,
+    "headerX": 0
+  }
+]

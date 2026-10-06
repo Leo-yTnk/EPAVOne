@@ -1,3 +1,4 @@
+import { CatalogLoading } from './CatalogLoading.jsx';
 import { CatalogSections } from './CatalogSections.jsx';
 import { catalogGroups, orderedCatalogItems } from '../models/sections.js';
 import { useMemo, useState } from 'preact/hooks';
@@ -9,8 +10,7 @@ import {
   ErrorState,
   Input,
   Pagination,
-  Select,
-  Spinner
+  Select
 } from '../../../design-system/components/index.js';
 import { catalogService } from '../services/catalogService.js';
 import { useCatalogResource } from '../hooks/useCatalogResource.js';
@@ -47,12 +47,7 @@ export function RecipesPage({ initialSection = '' }) {
   function reset() {
     update({ query: '', category: '', quick: false, section: '' });
   }
-  if (resource.loading)
-    return (
-      <p className="insights-loading" role="status">
-        <Spinner /> Carregando receitas…
-      </p>
-    );
+  if (resource.loading) return <CatalogLoading label="Carregando receitas…" />;
   if (resource.error)
     return <ErrorState title="Não foi possível carregar as receitas" description={resource.error} onAction={resource.retry} />;
   return (

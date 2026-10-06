@@ -11,7 +11,8 @@ body {
 }
 
 .app-shell {
-  width: min(100% - 2 * var(--space-5), 90rem);
+  --shell-gutter: var(--space-5);
+  width: 100%;
   min-height: 100vh;
   margin-inline: auto;
   display: flex;
@@ -59,7 +60,7 @@ body {
   width: 2rem;
   height: 2rem;
   border-radius: var(--radius-md);
-  background: var(--brand-700);
+  background: var(--brand-500);
   color: #fff;
   font: 400 1.5rem/1 var(--font-display);
 }
@@ -90,12 +91,6 @@ body {
   border-color: var(--border-subtle);
   border-bottom-color: var(--surface-primary);
   color: var(--text-primary);
-}
-.app-tabs .ds-tab::after {
-  left: var(--space-3);
-  right: var(--space-3);
-  bottom: 0;
-  background: var(--text-brand);
 }
 .app-tab-label {
   display: flex;
@@ -166,6 +161,10 @@ body {
   width: 100%;
   background: var(--header-pages-bg);
 }
+.navigation-horizontal .workspace-bar,
+.navigation-horizontal .insights-tabs {
+  padding-inline: max(var(--shell-gutter), calc((100% - 90rem) / 2));
+}
 .navigation-horizontal .workspace-bar {
   background: var(--header-apps-bg);
   border-bottom: 1px solid var(--border-subtle);
@@ -192,11 +191,13 @@ body {
 .navigation-vertical .app-tabs .ds-tab {
   border-radius: var(--radius-md);
 }
-.navigation-vertical .app-tabs .ds-tab::after {
-  display: none;
-}
 .navigation-vertical .insights-tab.is-active {
   color: var(--text-inverse);
+}
+.navigation-horizontal .app-main,
+.navigation-horizontal .site-footer {
+  width: min(100% - 2 * var(--shell-gutter), 90rem);
+  margin-inline: auto;
 }
 .app-main {
   flex: 1;
@@ -218,7 +219,6 @@ body {
   justify-content: space-between;
   gap: var(--space-3);
   padding: var(--space-4) 0;
-  border-top: 1px solid var(--border-subtle);
   color: var(--text-secondary);
   font-size: 0.75rem;
   line-height: var(--leading-control);
@@ -227,16 +227,17 @@ body {
   display: grid;
   gap: var(--space-5);
 }
-.placeholder-card {
+.planner-preview {
   display: grid;
+  justify-items: start;
   gap: var(--space-4);
-  max-width: 48rem;
+  max-width: 44rem;
 }
-.placeholder-card p {
+.planner-preview p {
   color: var(--text-secondary);
-  line-height: var(--leading-body);
 }
 .navigation-vertical {
+  width: min(100% - 2 * var(--shell-gutter), 90rem);
   display: grid;
   grid-template-columns: 13rem minmax(0, 1fr);
   grid-template-rows: 1fr auto;
@@ -312,7 +313,7 @@ html[data-reduced-motion='true'] *::after {
 }
 @media (max-width: 48rem) {
   .app-shell {
-    width: calc(100% - 2 * var(--space-3));
+    --shell-gutter: var(--space-3);
   }
   .app-tabs .ds-tab {
     padding-inline: var(--space-2);

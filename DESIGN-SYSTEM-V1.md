@@ -14,12 +14,14 @@
 
 ### Família visual
 
-- **EPAVOne:** azul;
-- **EPAVPlanner:** roxo;
-- **EPAVInsights:** laranja;
-- **EPAVWriter:** turquesa.
+- **EPAVOne:** azul `#4F6FD8`;
+- **EPAVPlanner:** roxo `#7657D6`;
+- **EPAVInsights:** laranja `#D96B32`;
+- **EPAVWriter:** turquesa `#219B94`.
 
-A base é **Warm Paper**, com fundos quentes e contraste confortável.
+A base é **Warm Paper**, com fundos quentes e contraste confortável. A cor do produto destaca seleção, ações e pequenos indicadores. Os tons `700` dos botões preservam o contraste com texto branco; grandes superfícies permanecem neutras.
+
+Composição precede componentes: use tipografia, espaçamento e relações espaciais para hierarquia. Sobre o canvas quadriculado, evite separadores por linhas; agrupe unidades independentes em Cards stitched. Card representa uma unidade independente e sempre mantém a costura. A Home explica o fluxo Insights → Planner → Writer; preferências usam uma lista estruturada de Cards, preservando a relação entre descrição e controles. O header horizontal ocupa toda a largura, enquanto o conteúdo mantém margens e largura máxima compartilhadas. Fontes oficiais com licença OFL são servidas pelo próprio projeto para preservar a tipografia sem depender do Google Fonts em tempo de execução.
 
 ### Tipografia
 
@@ -28,6 +30,7 @@ A base é **Warm Paper**, com fundos quentes e contraste confortável.
 - **Inter:** corpo, labels, controles e dados.
 
 Line-height é deliberadamente compacta:
+
 - display: aproximadamente `0.98`;
 - headings: aproximadamente `1.08–1.14`;
 - corpo: aproximadamente `1.42`;
@@ -45,10 +48,7 @@ Line-height é deliberadamente compacta:
 O contrato recomendado é:
 
 ```css
---nested-radius: max(
-  var(--radius-sm),
-  calc(var(--container-radius) - var(--container-padding))
-);
+--nested-radius: max(var(--radius-sm), calc(var(--container-radius) - var(--container-padding)));
 ```
 
 Esse padrão é obrigatório principalmente em ilhas de navegação e seus controles internos.
@@ -72,6 +72,7 @@ Esse padrão é obrigatório principalmente em ilhas de navegação e seus contr
 ### Radius
 
 O sistema diferencia:
+
 - radius de controles;
 - radius de containers;
 - radius de cards;
@@ -133,6 +134,7 @@ Filtros de blur e backdrop-filter são proibidos por custo de renderização. Us
 Rotas usam deslocamento CSS curto sem zerar a opacidade. O cabeçalho permanece montado; o indicador ativo se move entre posições. A troca de tema atualiza as superfícies existentes.
 
 A página:
+
 - atualiza o conteúdo sem dissolver a página inteira;
 - entra com deslocamento de até 6 px, sem alterar a opacidade;
 - mantém o header visualmente estável;
@@ -143,6 +145,7 @@ A página:
 Existe uma camada compartilhada de portal.
 
 Devem usar portal:
+
 - Select;
 - Menu;
 - Tooltip;
@@ -151,6 +154,7 @@ Devem usar portal:
 - Toast.
 
 Isso evita clipping por:
+
 - `overflow: hidden`;
 - `overflow: clip`;
 - transforms;
@@ -163,6 +167,7 @@ Existe **um único Select visual** no design system.
 Não existe Select nativo público.
 
 O menu:
+
 - é renderizado em portal;
 - usa posicionamento fixo calculado a partir do trigger;
 - escolhe abrir acima ou abaixo conforme espaço;
@@ -193,6 +198,7 @@ O menu:
 ### Modal feedback
 
 Dialog e Drawer:
+
 - usam portal;
 - usam focus trap;
 - fecham com Escape;
@@ -203,6 +209,7 @@ Dialog e Drawer:
 ### Toast
 
 Toast:
+
 - usa região `aria-live`;
 - erro usa role `alert`;
 - outros estados usam `status`;
@@ -300,6 +307,7 @@ MetricCard, DataTable e ChartContainer compõem Card.
 ## 10. Regras de arquitetura visual
 
 Páginas não podem:
+
 - criar Button/Input/Select/Card/Alert/Dialog/Tabs etc. por classes CSS;
 - usar Select nativo;
 - criar overlays fora do portal system;
@@ -337,6 +345,7 @@ A RC só vira 1.0 quando o piloto real do EPAVInsights provar:
 `src/dev/component-lab/ComponentLab.jsx` usa valores fictícios e os componentes reais do design system. É uma referência de desenvolvimento sem rota ou importação no aplicativo.
 
 Ele serve para validar:
+
 - visual;
 - estados;
 - motion;

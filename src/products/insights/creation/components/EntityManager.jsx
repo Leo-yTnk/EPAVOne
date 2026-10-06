@@ -3,7 +3,6 @@ import {
   Alert,
   Badge,
   Button,
-  Card,
   EmptyState,
   ErrorState,
   Icon,
@@ -52,11 +51,7 @@ export function EntityManager({ type, scope = 'personal', onShare, onSubmit }) {
     }
   }
   return (
-    <Card
-      as="section"
-      className="creation-fields creation-library"
-      aria-label={`${scope === 'site' ? 'Catálogo' : 'Biblioteca'}: ${meta.label}`}
-    >
+    <section className="creation-fields creation-library" aria-label={`${scope === 'site' ? 'Catálogo' : 'Biblioteca'}: ${meta.label}`}>
       <div className="creation-toolbar">
         <Input
           label={`Buscar ${meta.label.toLowerCase()}`}
@@ -122,6 +117,6 @@ export function EntityManager({ type, scope = 'personal', onShare, onSubmit }) {
       )}
       {editor && <EntityEditor type={type} scope={scope} item={editor.item} onClose={() => setEditor(null)} onSaved={saved} />}
       {deleting && <DeleteDialog type={type} item={deleting} onClose={() => setDeleting(null)} onSaved={saved} />}
-    </Card>
+    </section>
   );
 }

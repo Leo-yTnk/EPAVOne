@@ -18,8 +18,11 @@ export function App() {
   const [accountOpen, setAccountOpen] = useState(false);
   const [theme, setTheme] = useState(getInitialTheme);
   const [preferences, setPreferences] = useState(readPreferences);
+  const [preferencesStatus, setPreferencesStatus] = useState('Salvo neste navegador');
   useEffect(() => {
-    applyPreferences(preferences);
+    setPreferencesStatus(
+      applyPreferences(preferences) ? 'Salvo neste navegador' : 'Não foi possível salvar. Suas preferências estão aplicadas nesta sessão.'
+    );
   }, [preferences]);
   const routeKey = [route.product, ...route.segments].join('/');
 
@@ -56,7 +59,11 @@ export function App() {
         theme={theme}
         onToggleTheme={toggleTheme}
         preferences={preferences}
-        onPreferencesChange={setPreferences}
+        saveStatus={preferencesStatus}
+        onPreferencesChange={(next) => {
+          setPreferencesStatus('Salvando…');
+          setPreferences(next);
+        }}
         account={account}
         onOpenAccount={() => setAccountOpen(true)}
       />

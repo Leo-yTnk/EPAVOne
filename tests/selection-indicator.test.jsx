@@ -1,6 +1,7 @@
 import { useRef } from 'preact/hooks';
 import { act, render } from '@testing-library/preact';
 import { describe, expect, it, vi } from 'vitest';
+import { Tabs } from '../src/design-system/components/Tabs.jsx';
 import { SelectionIndicator } from '../src/design-system/components/SelectionIndicator.jsx';
 
 function Navigation({ value }) {
@@ -19,6 +20,18 @@ function Navigation({ value }) {
 }
 
 describe('Continuous selection highlight', () => {
+  it('keeps one indicator mounted as DS tabs change selection', () => {
+    const items = [
+      { value: 'one', label: 'One' },
+      { value: 'writer', label: 'Writer' }
+    ];
+    const { container, rerender } = render(<Tabs items={items} value="one" />);
+    const indicator = container.querySelector('.ds-selection-indicator');
+    expect(indicator.dataset.ready).toBe('true');
+    rerender(<Tabs items={items} value="writer" />);
+    expect(container.querySelector('.ds-selection-indicator')).toBe(indicator);
+    expect(container.querySelector('[aria-selected="true"]').textContent).toBe('Writer');
+  });
   it('moves the same highlight between selected objects and adapts to resize without remounting', () => {
     let secondLeft = 120;
     const rect = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function () {

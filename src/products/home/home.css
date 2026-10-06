@@ -8,7 +8,6 @@
   align-items: center;
   gap: var(--space-6);
   padding: var(--space-4) 0 var(--space-6);
-  border-bottom: 1px solid var(--border-subtle);
 }
 .one-welcome > div:first-child {
   max-width: 46rem;
@@ -52,23 +51,37 @@
 .one-section-heading p {
   color: var(--text-secondary);
 }
-.product-grid {
+/* Each app is a distinct step in the shared workflow. */
+.product-flow {
+  list-style: none;
+  margin: 0;
+  padding: 0;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: var(--space-5);
-}
-.product-card {
-  display: flex;
-  flex-direction: column;
   gap: var(--space-4);
+}
+.product-flow-step {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+  gap: var(--space-5);
   min-width: 0;
-  background: var(--surface-primary);
+}
+.product-step-number {
+  font: 400 2.5rem/1 var(--font-display);
+  color: var(--text-brand);
+}
+.product-step-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--space-3) var(--space-6);
+  align-items: center;
+  min-width: 0;
 }
 .product-card-top {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--space-3);
+  grid-column: 1/-1;
 }
 .product-card-top .ds-overline {
   color: var(--text-brand);
@@ -76,34 +89,32 @@
 .product-glyph {
   display: grid;
   place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border-radius: var(--radius-md);
-  background: var(--brand-100);
-  color: var(--brand-900);
-  font: 700 var(--heading-4)/1 var(--font-heading);
+  color: var(--text-brand);
 }
-.product-card p {
-  flex: 1;
+.product-step-content h3 {
+  grid-column: 1;
+}
+.product-step-content p {
+  grid-column: 1;
   color: var(--text-secondary);
+  max-width: 44rem;
 }
-.product-card > .ds-btn {
-  align-self: start;
+.product-step-content > .ds-btn {
+  grid-column: 2;
+  grid-row: 2/4;
+  justify-self: end;
 }
 .product-shortcuts {
+  grid-column: 1/-1;
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-1);
-  border-top: 1px solid var(--border-subtle);
-  padding-top: var(--space-2);
 }
 .one-week-note {
   display: grid;
   grid-template-columns: minmax(12rem, 1fr) minmax(0, 2fr) auto;
   align-items: center;
   gap: var(--space-5);
-  padding-block: var(--space-5);
-  border-top: 1px solid var(--border-subtle);
 }
 .one-week-note p {
   color: var(--text-secondary);
@@ -117,28 +128,42 @@
     display: flex;
     flex-wrap: wrap;
   }
-  .product-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-  .product-card:last-child {
-    grid-column: 1/-1;
-  }
   .one-week-note {
     grid-template-columns: 1fr;
   }
 }
-@media (max-width: 37.5rem) {
-  .product-grid {
-    grid-template-columns: 1fr;
-  }
+@media (max-width: 48rem) {
   .one-home {
-    gap: var(--space-6);
+    gap: var(--space-5);
   }
   .one-welcome {
+    gap: var(--space-4);
     padding-top: 0;
+    padding-bottom: var(--space-4);
+  }
+  .one-welcome h1 {
+    font-size: 2rem;
   }
   .one-section-heading {
     display: grid;
   }
+  .product-flow-step {
+    grid-template-columns: 2rem minmax(0, 1fr);
+    gap: var(--space-3);
+  }
+  .product-step-number {
+    font-size: 1.5rem;
+  }
+  .product-step-content {
+    grid-template-columns: 1fr;
+    gap: var(--space-3);
+  }
+  .product-step-content > .ds-btn {
+    grid-column: 1;
+    grid-row: auto;
+    justify-self: start;
+  }
+  .one-week-note {
+    gap: var(--space-3);
+  }
 }
-@media(max-width:48rem){.one-home{gap:var(--space-5)}.one-welcome{gap:var(--space-4);padding-bottom:var(--space-4)}.one-welcome h1{font-size:2rem}.one-welcome-actions{gap:var(--space-2)}.product-grid{gap:var(--space-3)}.product-card{gap:var(--space-3);padding:var(--space-4)}.one-week-note{gap:var(--space-3);padding-block:var(--space-3)}}

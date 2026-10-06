@@ -1,3 +1,4 @@
+import { CatalogLoading } from './CatalogLoading.jsx';
 import { CatalogSections } from './CatalogSections.jsx';
 import { catalogGroups, orderedCatalogItems } from '../models/sections.js';
 import { useMemo, useState } from 'preact/hooks';
@@ -9,8 +10,7 @@ import {
   ErrorState,
   Input,
   Pagination,
-  Select,
-  Spinner
+  Select
 } from '../../../design-system/components/index.js';
 import { catalogService } from '../services/catalogService.js';
 import { useCatalogResource } from '../hooks/useCatalogResource.js';
@@ -43,12 +43,7 @@ export function ProductCatalogPage({ initialCategory = '', initialSection = '' }
   function reset() {
     update({ query: '', category: '', promotion: false, section: '' });
   }
-  if (resource.loading)
-    return (
-      <div className="insights-loading" role="status">
-        <Spinner /> Carregando o catálogo Swift…
-      </div>
-    );
+  if (resource.loading) return <CatalogLoading label="Carregando o catálogo Swift…" />;
   if (resource.error)
     return <ErrorState title="Não foi possível carregar os produtos" description={resource.error} onAction={resource.retry} />;
   const options = [

@@ -3,7 +3,15 @@ import { DEFAULT_PREFERENCES } from './preferences.js';
 import { YOURCIPE_URL } from '../../shared/config/catalog.js';
 import './settings.css';
 
-export function SettingsPage({ theme, onToggleTheme, preferences, onPreferencesChange, account, onOpenAccount }) {
+export function SettingsPage({
+  theme,
+  onToggleTheme,
+  preferences,
+  onPreferencesChange,
+  account,
+  onOpenAccount,
+  saveStatus = 'Salvo neste navegador'
+}) {
   const update = (patch) => onPreferencesChange({ ...preferences, ...patch });
   return (
     <section className="settings-page">
@@ -12,8 +20,11 @@ export function SettingsPage({ theme, onToggleTheme, preferences, onPreferencesC
         title="Configurações"
         description="Ajuste seu espaço de trabalho. As preferências são salvas neste navegador."
       />
-      <div className="settings-grid">
-        <Card className="settings-section">
+      <p className="settings-save-status" role="status">
+        {saveStatus}
+      </p>
+      <div className="settings-list">
+        <Card as="section" className="settings-section">
           <Heading as="h2" level={4}>
             Aparência
           </Heading>
@@ -37,7 +48,7 @@ export function SettingsPage({ theme, onToggleTheme, preferences, onPreferencesC
             onChange={(density) => update({ density })}
           />
         </Card>
-        <Card className="settings-section">
+        <Card as="section" className="settings-section">
           <Heading as="h2" level={4}>
             Navegação
           </Heading>
@@ -51,14 +62,8 @@ export function SettingsPage({ theme, onToggleTheme, preferences, onPreferencesC
             ]}
             onChange={(navigation) => update({ navigation })}
           />
-          <div className={`settings-navigation-preview is-${preferences.navigation}`} aria-hidden="true">
-            <span>e.</span>
-            <span>One</span>
-            <span>Insights</span>
-            <span>Writer</span>
-          </div>
         </Card>
-        <Card className="settings-section">
+        <Card as="section" className="settings-section">
           <Heading as="h2" level={4}>
             Acessibilidade
           </Heading>
@@ -67,19 +72,21 @@ export function SettingsPage({ theme, onToggleTheme, preferences, onPreferencesC
             Reduzir animações
           </Switch>
         </Card>
-        <Card className="settings-section">
+        <Card as="section" className="settings-section">
           <Heading as="h2" level={4}>
             Conta e biblioteca
           </Heading>
           <Text size="sm">
             {account?.session ? account.session.user.email : 'Entre para gerenciar sua biblioteca pessoal e os conteúdos compartilhados.'}
           </Text>
-          <Button variant="secondary" onClick={onOpenAccount}>
-            {account?.session ? 'Gerenciar minha conta' : 'Entrar na conta'}
-          </Button>
-          <Button as="a" href={YOURCIPE_URL} variant="ghost">
-            Abrir recursos do Yourcipe ↗
-          </Button>
+          <div className="settings-actions">
+            <Button variant="secondary" onClick={onOpenAccount}>
+              {account?.session ? 'Gerenciar minha conta' : 'Entrar na conta'}
+            </Button>
+            <Button as="a" href={YOURCIPE_URL} variant="ghost">
+              Abrir recursos do Yourcipe ↗
+            </Button>
+          </div>
         </Card>
       </div>
       <div className="settings-reset">

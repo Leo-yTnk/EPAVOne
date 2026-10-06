@@ -1,7 +1,7 @@
 export const PRODUCT_META = {
   home: { label: 'One', product: 'one', href: '#/' },
   insights: { label: 'Insights', product: 'insights', href: '#/insights' },
-  planner: { label: 'Planner', product: 'one', href: '#/planner' },
+  planner: { label: 'Planner', product: 'planner', href: '#/planner' },
   writer: { label: 'Writer', product: 'writer', href: '#/writer' },
   settings: { label: 'Configurações', product: 'one', href: '#/settings' }
 };

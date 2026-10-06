@@ -1,0 +1,194 @@
+[
+  {
+    "width": 390,
+    "theme": "light",
+    "route": "#/",
+    "violations": []
+  },
+  {
+    "width": 390,
+    "theme": "light",
+    "route": "#/insights",
+    "violations": []
+  },
+  {
+    "width": 390,
+    "theme": "light",
+    "route": "#/insights/receitas",
+    "violations": []
+  },
+  {
+    "width": 390,
+    "theme": "light",
+    "route": "#/insights/produtos",
+    "violations": []
+  },
+  {
+    "width": 390,
+    "theme": "light",
+    "route": "#/insights/criacao",
+    "violations": []
+  },
+  {
+    "width": 390,
+    "theme": "light",
+    "route": "#/planner",
+    "violations": []
+  },
+  {
+    "width": 390,
+    "theme": "light",
+    "route": "#/writer",
+    "violations": []
+  },
+  {
+    "width": 390,
+    "theme": "light",
+    "route": "#/settings",
+    "violations": []
+  },
+  {
+    "width": 390,
+    "theme": "dark",
+    "route": "#/",
+    "violations": []
+  },
+  {
+    "width": 390,
+    "theme": "dark",
+    "route": "#/insights",
+    "violations": []
+  },
+  {
+    "width": 390,
+    "theme": "dark",
+    "route": "#/insights/receitas",
+    "violations": []
+  },
+  {
+    "width": 390,
+    "theme": "dark",
+    "route": "#/insights/produtos",
+    "violations": []
+  },
+  {
+    "width": 390,
+    "theme": "dark",
+    "route": "#/insights/criacao",
+    "violations": []
+  },
+  {
+    "width": 390,
+    "theme": "dark",
+    "route": "#/planner",
+    "violations": []
+  },
+  {
+    "width": 390,
+    "theme": "dark",
+    "route": "#/writer",
+    "violations": []
+  },
+  {
+    "width": 390,
+    "theme": "dark",
+    "route": "#/settings",
+    "violations": []
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "route": "#/",
+    "violations": []
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "route": "#/insights",
+    "violations": []
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "route": "#/insights/receitas",
+    "violations": []
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "route": "#/insights/produtos",
+    "violations": []
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "route": "#/insights/criacao",
+    "violations": []
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "route": "#/planner",
+    "violations": []
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "route": "#/writer",
+    "violations": []
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "route": "#/settings",
+    "violations": []
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "route": "#/",
+    "violations": []
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "route": "#/insights",
+    "violations": []
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "route": "#/insights/receitas",
+    "violations": []
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "route": "#/insights/produtos",
+    "violations": []
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "route": "#/insights/criacao",
+    "violations": []
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "route": "#/planner",
+    "violations": []
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "route": "#/writer",
+    "violations": []
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "route": "#/settings",
+    "violations": []
+  }
+]

@@ -4,7 +4,7 @@ export function SelectionIndicator({ containerRef, value }) {
   const [geometry, setGeometry] = useState(null);
   useLayoutEffect(() => {
     const container = containerRef.current;
-    const selected = container?.querySelector('[aria-current]');
+    const selected = container?.querySelector('[aria-current], [aria-selected="true"]');
     if (!container || !selected) return;
     const update = () => {
       const outer = container.getBoundingClientRect();

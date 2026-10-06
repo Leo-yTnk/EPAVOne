@@ -17,7 +17,8 @@ export function applyPreferences(preferences) {
   document.documentElement.dataset.reducedMotion = String(preferences.reducedMotion);
   try {
     localStorage.setItem(KEY, JSON.stringify(preferences));
+    return true;
   } catch {
-    /* Private storage may be unavailable. */
+    return false;
   }
 }
