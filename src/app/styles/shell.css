@@ -1,3 +1,15 @@
+/* Shared canvas keeps the same quiet grid across every route and product. */
+body {
+  --page-grid-line: color-mix(in srgb, var(--text-primary) 5%, transparent);
+  background-image:
+    linear-gradient(to right, var(--page-grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--page-grid-line) 1px, transparent 1px);
+  background-size: 2rem 2rem;
+}
+[data-theme='dark'] body {
+  --page-grid-line: color-mix(in srgb, var(--text-primary) 4%, transparent);
+}
+
 .app-shell {
   width: min(100% - 2 * var(--space-5), 90rem);
   min-height: 100vh;
