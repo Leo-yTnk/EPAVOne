@@ -3,7 +3,7 @@ import { CatalogImage } from './CatalogImage.jsx';
 
 export function RecipeCard({ recipe, onOpen, compact = false }) {
   return (
-    <article className={`insights-product insights-recipe-card${compact ? ' is-compact' : ''}`}>
+    <article data-dialog-origin className={`insights-product insights-recipe-card${compact ? ' is-compact' : ''}`}>
       <CatalogImage url={recipe.image_url} name={recipe.name} />
       <div className="insights-recipe-copy">
         {!compact && <Badge>{recipe.category?.name || 'Receita Swift'}</Badge>}

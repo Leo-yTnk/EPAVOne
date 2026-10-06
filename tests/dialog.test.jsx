@@ -19,6 +19,15 @@ describe('Dialog', () => {
     fireEvent.keyDown(document, { key: 'Escape' });
     expect(onClose).toHaveBeenCalledTimes(1);
   });
+  it('labels a dialog with a single heading placed inside its content', () => {
+    render(
+      <Dialog open title="Receita" titleInContent titleId="recipe-title">
+        <h2 id="recipe-title">Receita</h2>
+      </Dialog>
+    );
+    expect(screen.getByRole('dialog', { name: 'Receita' })).toBeTruthy();
+    expect(screen.getAllByRole('heading', { name: 'Receita' })).toHaveLength(1);
+  });
   it('closes a portaled select on Escape before closing the containing dialog', () => {
     const onClose = vi.fn();
     render(

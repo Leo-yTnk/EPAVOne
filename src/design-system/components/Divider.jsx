@@ -1,1 +1,3 @@
-export function Divider(props) { return <hr className="ds-divider" {...props}/>; }
+export function Divider({ className = '', ...props }) {
+  return <hr {...props} className={`ds-divider ${className}`} />;
+}

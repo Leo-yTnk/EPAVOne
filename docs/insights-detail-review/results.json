@@ -1,0 +1,343 @@
+{
+  "results": [
+    {
+      "width": 296,
+      "theme": "light",
+      "stitches": 2,
+      "outerStitch": true,
+      "productStitch": true,
+      "sectionStitches": 0,
+      "layout": {
+        "image": {
+          "left": 46,
+          "top": 149.078125,
+          "right": 274
+        },
+        "title": {
+          "left": 46,
+          "top": 42,
+          "bottom": 124.078125
+        }
+      },
+      "overflow": false,
+      "expansion": true,
+      "facts": [
+        {
+          "width": 108,
+          "scroll": 108
+        },
+        {
+          "width": 108,
+          "scroll": 108
+        },
+        {
+          "width": 228,
+          "scroll": 228
+        }
+      ],
+      "lines": false,
+      "product": {
+        "stitches": 1,
+        "expansion": true,
+        "overflow": false
+      }
+    },
+    {
+      "width": 296,
+      "theme": "dark",
+      "stitches": 2,
+      "outerStitch": true,
+      "productStitch": true,
+      "sectionStitches": 0,
+      "layout": {
+        "image": {
+          "left": 46,
+          "top": 149.078125,
+          "right": 274
+        },
+        "title": {
+          "left": 46,
+          "top": 42,
+          "bottom": 124.078125
+        }
+      },
+      "overflow": false,
+      "expansion": true,
+      "facts": [
+        {
+          "width": 108,
+          "scroll": 108
+        },
+        {
+          "width": 108,
+          "scroll": 108
+        },
+        {
+          "width": 228,
+          "scroll": 228
+        }
+      ],
+      "lines": false,
+      "product": {
+        "stitches": 1,
+        "expansion": true,
+        "overflow": false
+      }
+    },
+    {
+      "width": 366,
+      "theme": "light",
+      "stitches": 2,
+      "outerStitch": true,
+      "productStitch": true,
+      "sectionStitches": 0,
+      "layout": {
+        "image": {
+          "left": 46,
+          "top": 121.71875,
+          "right": 344
+        },
+        "title": {
+          "left": 46,
+          "top": 42,
+          "bottom": 96.71875
+        }
+      },
+      "overflow": false,
+      "expansion": true,
+      "facts": [
+        {
+          "width": 91,
+          "scroll": 91
+        },
+        {
+          "width": 91,
+          "scroll": 91
+        },
+        {
+          "width": 91,
+          "scroll": 91
+        }
+      ],
+      "lines": false,
+      "product": {
+        "stitches": 1,
+        "expansion": true,
+        "overflow": false
+      }
+    },
+    {
+      "width": 366,
+      "theme": "dark",
+      "stitches": 2,
+      "outerStitch": true,
+      "productStitch": true,
+      "sectionStitches": 0,
+      "layout": {
+        "image": {
+          "left": 46,
+          "top": 121.71875,
+          "right": 344
+        },
+        "title": {
+          "left": 46,
+          "top": 42,
+          "bottom": 96.71875
+        }
+      },
+      "overflow": false,
+      "expansion": true,
+      "facts": [
+        {
+          "width": 91,
+          "scroll": 91
+        },
+        {
+          "width": 91,
+          "scroll": 91
+        },
+        {
+          "width": 91,
+          "scroll": 91
+        }
+      ],
+      "lines": false,
+      "product": {
+        "stitches": 1,
+        "expansion": true,
+        "overflow": false
+      }
+    },
+    {
+      "width": 736,
+      "theme": "light",
+      "stitches": 2,
+      "outerStitch": true,
+      "productStitch": true,
+      "sectionStitches": 0,
+      "layout": {
+        "image": {
+          "left": 54,
+          "top": 270.421875,
+          "right": 311.59375
+        },
+        "title": {
+          "left": 327.59375,
+          "top": 277.125,
+          "bottom": 331.84375
+        }
+      },
+      "overflow": false,
+      "expansion": true,
+      "facts": [
+        {
+          "width": 121,
+          "scroll": 121
+        },
+        {
+          "width": 121,
+          "scroll": 121
+        },
+        {
+          "width": 121,
+          "scroll": 121
+        }
+      ],
+      "lines": false,
+      "product": {
+        "stitches": 1,
+        "expansion": true,
+        "overflow": false
+      }
+    },
+    {
+      "width": 736,
+      "theme": "dark",
+      "stitches": 2,
+      "outerStitch": true,
+      "productStitch": true,
+      "sectionStitches": 0,
+      "layout": {
+        "image": {
+          "left": 54,
+          "top": 270.421875,
+          "right": 311.59375
+        },
+        "title": {
+          "left": 327.59375,
+          "top": 277.125,
+          "bottom": 331.84375
+        }
+      },
+      "overflow": false,
+      "expansion": true,
+      "facts": [
+        {
+          "width": 121,
+          "scroll": 121
+        },
+        {
+          "width": 121,
+          "scroll": 121
+        },
+        {
+          "width": 121,
+          "scroll": 121
+        }
+      ],
+      "lines": false,
+      "product": {
+        "stitches": 1,
+        "expansion": true,
+        "overflow": false
+      }
+    },
+    {
+      "width": 928,
+      "theme": "light",
+      "stitches": 2,
+      "outerStitch": true,
+      "productStitch": true,
+      "sectionStitches": 0,
+      "layout": {
+        "image": {
+          "left": 310,
+          "top": 252.359375,
+          "right": 631.59375
+        },
+        "title": {
+          "left": 647.59375,
+          "top": 263.390625,
+          "bottom": 345.453125
+        }
+      },
+      "overflow": false,
+      "expansion": true,
+      "facts": [
+        {
+          "width": 153,
+          "scroll": 153
+        },
+        {
+          "width": 153,
+          "scroll": 153
+        },
+        {
+          "width": 153,
+          "scroll": 153
+        }
+      ],
+      "lines": false,
+      "product": {
+        "stitches": 1,
+        "expansion": true,
+        "overflow": false
+      }
+    },
+    {
+      "width": 928,
+      "theme": "dark",
+      "stitches": 2,
+      "outerStitch": true,
+      "productStitch": true,
+      "sectionStitches": 0,
+      "layout": {
+        "image": {
+          "left": 310,
+          "top": 252.359375,
+          "right": 631.59375
+        },
+        "title": {
+          "left": 647.59375,
+          "top": 263.390625,
+          "bottom": 345.453125
+        }
+      },
+      "overflow": false,
+      "expansion": true,
+      "facts": [
+        {
+          "width": 153,
+          "scroll": 153
+        },
+        {
+          "width": 153,
+          "scroll": 153
+        },
+        {
+          "width": 153,
+          "scroll": 153
+        }
+      ],
+      "lines": false,
+      "product": {
+        "stitches": 1,
+        "expansion": true,
+        "overflow": false
+      }
+    }
+  ],
+  "reducedMotion": true,
+  "errors": [],
+  "fixture": "Controlled catalog data; no live database writes."
+}

@@ -61,7 +61,7 @@ export function InsightsHomePage() {
         </div>
         {resource.loading && <CatalogLoading spotlight label="Preparando suas sugestões…" />}
         {ready && spotlight && (
-          <Card as="section" className="insights-spotlight" aria-label="Uma ideia para começar">
+          <Card as="section" data-dialog-origin className="insights-spotlight" aria-label="Uma ideia para começar">
             <CatalogImage url={spotlight.image_url} name={spotlight.name} />
             <div>
               <Badge>Uma ideia para começar</Badge>
@@ -154,7 +154,7 @@ export function InsightsHomePage() {
                   </div>
                   <div className="insights-home-opportunities">
                     {opportunities.map((item) => (
-                      <article key={item.id} className="insights-opportunity">
+                      <article data-dialog-origin key={item.id} className="insights-opportunity">
                         <CatalogImage url={item.image_url} name={item.name} />
                         <div>
                           <Heading as="h3" level={5}>

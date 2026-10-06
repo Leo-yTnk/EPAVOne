@@ -4,7 +4,7 @@ import { ProductPrice } from './ProductPrice.jsx';
 
 export function ProductCard({ product, onOpen }) {
   return (
-    <article className="insights-product">
+    <article data-dialog-origin className="insights-product">
       <CatalogImage url={product.image_url} name={product.name} />
       <div className="insights-product-copy">
         <Badge>{product.category?.name || 'Outros produtos'}</Badge>

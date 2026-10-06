@@ -1,4 +1,6 @@
 import {
+  faClock,
+  faGauge,
   faHouse,
   faLightbulb,
   faCalendarDays,
@@ -28,6 +30,8 @@ import {
   faEllipsis
 } from '@fortawesome/free-solid-svg-icons';
 const icons = {
+  clock: faClock,
+  difficulty: faGauge,
   home: faHouse,
   insights: faLightbulb,
   planner: faCalendarDays,
