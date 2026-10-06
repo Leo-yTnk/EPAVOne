@@ -24,7 +24,7 @@ describe('Creation editor', () => {
     render(<EntityEditor type="categories" scope="personal" onClose={close} onSaved={vi.fn()} />);
     fireEvent.input(await screen.findByLabelText('Nome'), { target: { value: 'Minha categoria' } });
     fireEvent.click(screen.getByRole('button', { name: 'Salvar' }));
-    await screen.findByText('Sem conexão');
+    await screen.findByText(/Sem conexão/);
     expect(screen.getByLabelText('Nome').value).toBe('Minha categoria');
     fireEvent.keyDown(document, { key: 'Escape' });
     await screen.findByText('Descartar alterações?');

@@ -1,8 +1,9 @@
+import { CatalogLoading } from './CatalogLoading.jsx';
 import { CatalogSections } from './CatalogSections.jsx';
 import { catalogGroups } from '../models/sections.js';
 import { ProductCard } from './ProductCard.jsx';
 import { useState } from 'preact/hooks';
-import { Badge, Button, EmptyState, ErrorState, Heading, Spinner, Text } from '../../../design-system/components/index.js';
+import { Badge, Button, Card, EmptyState, ErrorState, Heading, Text } from '../../../design-system/components/index.js';
 import { catalogService } from '../services/catalogService.js';
 import { useCatalogResource } from '../hooks/useCatalogResource.js';
 import { productPricing } from '../models/catalog.js';
@@ -57,14 +58,10 @@ export function InsightsHomePage() {
               Consultar produtos
             </Button>
           </div>
-          {ready && (
-            <p className="insights-home-counts">
-              {products.length} produtos · {recipes.length} receitas publicadas
-            </p>
-          )}
         </div>
+        {resource.loading && <CatalogLoading spotlight label="Preparando suas sugestões…" />}
         {ready && spotlight && (
-          <section className="insights-spotlight" aria-label="Uma ideia para começar">
+          <Card as="section" className="insights-spotlight" aria-label="Uma ideia para começar">
             <CatalogImage url={spotlight.image_url} name={spotlight.name} />
             <div>
               <Badge>Uma ideia para começar</Badge>
@@ -80,21 +77,16 @@ export function InsightsHomePage() {
                 Conhecer a receita
               </Button>
             </div>
-          </section>
+          </Card>
         )}
       </section>
-      {resource.loading && (
-        <p role="status" className="insights-loading">
-          <Spinner /> Preparando suas sugestões…
-        </p>
-      )}
       {resource.error && (
         <ErrorState title="Não foi possível carregar as sugestões" description={resource.error} onAction={resource.retry} />
       )}
       {ready && (
         <>
           {!spotlight && <EmptyState title="Novas ideias em breve" description="As receitas publicadas aparecerão aqui." />}
-          <div className="insights-home-overview" aria-label="Explore o Insights">
+          <Card as="section" className="insights-home-overview" aria-label="Explore o Insights">
             <div>
               <strong>{recipes.length}</strong>
               <span>receitas para inspirar</span>
@@ -110,7 +102,7 @@ export function InsightsHomePage() {
             <Button as="a" href="#/insights/criacao" variant="secondary" size="sm">
               Sua biblioteca e criação →
             </Button>
-          </div>
+          </Card>
           {structure.error && (
             <ErrorState title="Seções indisponíveis" description="As sugestões continuam disponíveis." onAction={structure.retry} />
           )}
@@ -181,7 +173,7 @@ export function InsightsHomePage() {
             </div>
             <aside className="insights-home-aside" aria-label="Atalhos para o atendimento">
               {categories.length > 0 && (
-                <section className="insights-home-section" aria-labelledby="insights-category-title">
+                <Card as="section" className="insights-home-section" aria-labelledby="insights-category-title">
                   <Heading as="h2" id="insights-category-title" level={4}>
                     Explore por categoria
                   </Heading>
@@ -192,9 +184,9 @@ export function InsightsHomePage() {
                       </Button>
                     ))}
                   </div>
-                </section>
+                </Card>
               )}
-              <section className="insights-home-section insights-conversation" aria-labelledby="insights-conversation-title">
+              <Card as="section" className="insights-home-section insights-conversation" aria-labelledby="insights-conversation-title">
                 <Heading as="h2" id="insights-conversation-title" level={4}>
                   Comece pela ocasião.
                 </Heading>
@@ -205,7 +197,7 @@ export function InsightsHomePage() {
                 <Button as="a" href="#/writer" variant="ghost" size="sm">
                   Montar o pedido no Writer →
                 </Button>
-              </section>
+              </Card>
             </aside>
           </div>
         </>

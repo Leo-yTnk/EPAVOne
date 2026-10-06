@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/preact';
-import { describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { WriterRoutes } from '../src/products/writer/WriterRoutes.jsx';
 import { App } from '../src/app/App.jsx';
 import { ProductCatalog } from '../src/products/writer/components/ProductCatalog.jsx';
@@ -12,12 +12,43 @@ vi.mock('../src/products/writer/models/order.js', async (importOriginal) => ({
   ...(await importOriginal()),
   saoPauloDay: () => '2026-09-30'
 }));
+beforeEach(() => importTemplate.mockReset());
 describe('Writer interactions', () => {
   it('requires a weekly upload before displaying the catalog or export action', () => {
     render(<WriterRoutes />);
     expect(screen.getByLabelText(/Carregar pedido semanal · obrigatório/)).toBeTruthy();
     expect(screen.queryByLabelText('Buscar produto')).toBeNull();
     expect(screen.queryByText('Validar e baixar pedido')).toBeNull();
+  });
+  it('preserves the current customer and validated template when a replacement file fails', async () => {
+    const actual = await vi.importActual('../src/products/writer/services/templateService.js');
+    const template = await actual.importTemplate(await writerTemplate(), '2026-09-30');
+    let rejectReplacement;
+    importTemplate.mockResolvedValueOnce(template).mockImplementationOnce(
+      () =>
+        new Promise((resolve, reject) => {
+          rejectReplacement = reject;
+        })
+    );
+    render(<WriterRoutes />);
+    fireEvent.input(screen.getByLabelText(/Carregar pedido semanal/), { target: { files: [new File(['x'], 'pedido.xlsx')] } });
+    await screen.findByRole('region', { name: 'Etapa 1: Cliente' });
+    for (const [label, value] of [
+      [/Sala · obrigatória/, '8ºD'],
+      [/Aluno · obrigatório/, 'Aluno'],
+      [/Cliente · obrigatório/, 'Cliente']
+    ]) {
+      fireEvent.click(screen.getByRole('button', { name: label }));
+      fireEvent.click(screen.getByRole('option', { name: value }));
+    }
+    fireEvent.input(screen.getByLabelText(/CPF do cliente/), { target: { value: '01234567890' } });
+    fireEvent.input(screen.getByLabelText(/Trocar formulário/), { target: { files: [new File(['broken'], 'outro.xlsx')] } });
+    await screen.findByText('Verificando período, menus e fórmulas…');
+    expect(screen.getByLabelText(/CPF do cliente/).value).toBe('01234567890');
+    rejectReplacement(new Error('Arquivo inválido.'));
+    await screen.findByText(/Seu formulário e pedido anteriores foram preservados/);
+    expect(screen.getByLabelText(/CPF do cliente/).value).toBe('01234567890');
+    expect(screen.getByText('Formulário da semana validado')).toBeTruthy();
   });
   it('filters accent-insensitively and adds the exact menu product', async () => {
     const add = vi.fn();

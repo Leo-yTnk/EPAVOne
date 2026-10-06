@@ -64,7 +64,7 @@ function EditorForm({ type, scope, item, data, onClose, onSaved }) {
       <form className="creation-fields" onSubmit={save}>
         {error && (
           <Alert tone="danger" title="Não foi possível salvar">
-            {error}
+            {error} Suas alterações continuam neste formulário. Tente salvar novamente.
           </Alert>
         )}
         <EntityFields
@@ -92,7 +92,7 @@ function EditorForm({ type, scope, item, data, onClose, onSaved }) {
             Cancelar
           </Button>
           <Button type="submit" loading={busy}>
-            <Icon name="save" /> Salvar
+            <Icon name="save" /> {busy ? 'Salvando…' : 'Salvar'}
           </Button>
         </div>
       </form>

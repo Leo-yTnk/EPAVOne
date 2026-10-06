@@ -1,6 +1,9 @@
+import { useRef } from 'preact/hooks';
+import { SelectionIndicator } from './SelectionIndicator.jsx';
 import { cx } from '../../shared/utils/cx.js';
 
 export function Tabs({ items, value, onChange, label = 'Abas', className = '', id, orientation = 'horizontal' }) {
+  const containerRef = useRef(null);
   function onKeyDown(event) {
     const enabled = items.filter((item) => !item.disabled);
     if (!enabled.length) return;
@@ -23,6 +26,7 @@ export function Tabs({ items, value, onChange, label = 'Abas', className = '', i
   }
   return (
     <div
+      ref={containerRef}
       id={id}
       className={cx('ds-tabs', className)}
       role="tablist"
@@ -30,6 +34,7 @@ export function Tabs({ items, value, onChange, label = 'Abas', className = '', i
       aria-label={label}
       onKeyDown={onKeyDown}
     >
+      <SelectionIndicator containerRef={containerRef} value={value} />
       {items.map((item) => (
         <button
           key={item.value}
