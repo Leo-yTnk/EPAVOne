@@ -28,15 +28,15 @@
 .workspace-bar {
   display: flex;
   align-items: center;
-  gap: var(--space-4);
+  gap: var(--space-3);
   min-width: 0;
-  padding-block: var(--space-2);
+  padding-block: var(--space-1);
 }
 .brand {
   display: inline-flex;
   align-items: center;
   gap: var(--space-2);
-  font: 700 1.125rem/1 var(--font-heading);
+  font: 700 1rem/1 var(--font-heading);
   letter-spacing: -0.04em;
   text-decoration: none;
   white-space: nowrap;
@@ -47,7 +47,7 @@
   width: 2rem;
   height: 2rem;
   border-radius: var(--radius-md);
-  background: var(--ref-color-one-700);
+  background: var(--brand-700);
   color: #fff;
   font: 400 1.5rem/1 var(--font-display);
 }
@@ -59,25 +59,31 @@
   min-width: 0;
 }
 .app-tabs {
-  gap: var(--space-1);
+  gap: 0;
   overflow-x: auto;
   scrollbar-width: thin;
   border: 0;
 }
 .app-tabs .ds-tab {
   flex: 0 0 auto;
-  padding: var(--space-2) var(--space-3);
-  border-radius: var(--radius-md);
+  padding: 0 var(--space-3);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
   font-size: 0.8125rem;
   white-space: nowrap;
   min-height: var(--control-sm);
 }
 .app-tabs .ds-tab.is-active {
-  background: var(--surface-selected);
-  color: var(--text-brand);
+  background: var(--surface-primary);
+  border-color: var(--border-subtle);
+  border-bottom-color: var(--surface-primary);
+  color: var(--text-primary);
 }
 .app-tabs .ds-tab::after {
-  display: none;
+  left: var(--space-3);
+  right: var(--space-3);
+  bottom: 0;
+  background: var(--text-brand);
 }
 .app-tab-label {
   display: flex;
@@ -85,26 +91,41 @@
   gap: var(--space-2);
 }
 .app-tab-glyph {
+  display: none;
+  color: var(--text-secondary);
+}
+/* Utility controls stay quiet alongside the app tabs. Their names remain accessible. */
+.navigation-horizontal [data-app='settings'] .app-tab-glyph {
   display: grid;
   place-items: center;
-  color: var(--text-brand);
+}
+.navigation-horizontal [data-app='settings'] .app-tab-name,
+.navigation-horizontal .workspace-account-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 .workspace-account {
   flex: 0 0 auto;
   min-height: var(--control-sm);
+  color: var(--text-secondary);
 }
 .insights-tabs {
-  --container-radius: var(--radius-lg);
-  --container-padding: var(--space-1);
+  --container-radius: var(--radius-sm);
+  --container-padding: 0;
   position: relative;
   isolation: isolate;
   display: flex;
-  gap: var(--space-1);
+  gap: var(--space-2);
   padding: var(--container-padding);
   width: fit-content;
   max-width: 100%;
   overflow-x: auto;
-  margin-bottom: var(--space-2);
+  margin-bottom: 0;
 }
 .product-tab {
   position: relative;
@@ -114,6 +135,55 @@
 }
 .insights-tab.is-active {
   background: transparent;
+  color: var(--text-brand);
+}
+.navigation-horizontal .site-header {
+  --header-apps-bg: #eae9e7;
+  --header-pages-bg: #f2f1ef;
+  background: var(--header-pages-bg);
+}
+[data-theme='dark'] .navigation-horizontal .site-header {
+  --header-apps-bg: #2a2827;
+  --header-pages-bg: #22201f;
+}
+.navigation-horizontal .app-tabs .ds-tab.is-active {
+  background: var(--header-pages-bg);
+  border-bottom-color: var(--header-pages-bg);
+}
+.navigation-horizontal .insights-tabs {
+  width: 100%;
+  background: var(--header-pages-bg);
+}
+.navigation-horizontal .workspace-bar {
+  background: var(--header-apps-bg);
+  border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 0;
+}
+.navigation-horizontal .insights-tab {
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  font-weight: 550;
+}
+.navigation-horizontal .insights-tab:hover {
+  transform: none;
+}
+.navigation-horizontal .insights-tab.is-active {
+  font-weight: 650;
+}
+.navigation-horizontal .insights-tabs .ds-selection-indicator {
+  top: auto;
+  bottom: 0;
+  height: 2px;
+  border-radius: var(--radius-full);
+  transform: translateX(var(--selection-x, 0px));
+  background: var(--text-brand);
+}
+.navigation-vertical .app-tabs .ds-tab {
+  border-radius: var(--radius-md);
+}
+.navigation-vertical .app-tabs .ds-tab::after {
+  display: none;
+}
+.navigation-vertical .insights-tab.is-active {
   color: var(--text-inverse);
 }
 .app-main {
