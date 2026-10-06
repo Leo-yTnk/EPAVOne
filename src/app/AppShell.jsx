@@ -51,11 +51,11 @@ export function AppShell({ route, preferences, account, onOpenAccount, children 
                 id: `app-tab-${key}`,
                 panelId: 'workspace-panel',
                 label: (
-                  <span className="app-tab-label" data-product={item.product}>
+                  <span className="app-tab-label" data-product={item.product} data-app={key}>
                     <span className="app-tab-glyph" aria-hidden="true">
                       <Icon name={key} />
                     </span>
-                    {item.label}
+                    <span className="app-tab-name">{item.label}</span>
                   </span>
                 )
               }))}
