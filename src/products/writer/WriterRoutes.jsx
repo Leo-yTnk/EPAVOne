@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'preact/hooks';
-import { Alert, PageHeader } from '../../design-system/components/index.js';
+import { Alert, PageHeader, Spinner } from '../../design-system/components/index.js';
+import { sessionTemplate, restoreTemplateFile } from './services/sessionTemplate.js';
 import { saoPauloDay, validateOrder, validateCustomer, validateProducts, validateDelivery } from './models/order.js';
 import { importTemplate } from './services/templateService.js';
 import { downloadExport, exportOrder } from './services/exportService.js';
@@ -19,6 +20,28 @@ export function WriterRoutes({ active = true }) {
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState('forward');
   const [exportError, setExportError] = useState('');
+  const [restoring, setRestoring] = useState(true);
+  const [storageWarning, setStorageWarning] = useState('');
+  useEffect(() => {
+    let current = true;
+    sessionTemplate
+      .load()
+      .then(async (attachment) => {
+        if (!attachment) return;
+        const restored = await importTemplate(restoreTemplateFile(attachment));
+        if (current) setTemplate(restored);
+      })
+      .catch((failure) => {
+        if (current)
+          setStorageWarning(`Não foi possível restaurar o Excel desta sessão. ${failure.message || 'Carregue o arquivo novamente.'}`);
+      })
+      .finally(() => {
+        if (current) setRestoring(false);
+      });
+    return () => {
+      current = false;
+    };
+  }, []);
   useEffect(() => {
     if (active && template && !document.activeElement?.closest('[role="tablist"]')) {
       const current = document.getElementById('writer-current-step');
@@ -50,10 +73,40 @@ export function WriterRoutes({ active = true }) {
       setTemplate(nextTemplate);
       setOrder(emptyOrder());
       setStep(0);
+      try {
+        await sessionTemplate.save(file);
+        setStorageWarning('');
+      } catch {
+        try {
+          await sessionTemplate.remove();
+        } catch {
+          /* Keep current in-memory workbook available. */
+        }
+        setStorageWarning(
+          'O Excel está disponível enquanto esta página estiver aberta. O navegador não permitiu preservá-lo ao recarregar.'
+        );
+      }
     } catch (failure) {
       setError(
         `${failure.message} ${template ? 'Seu formulário e pedido anteriores foram preservados.' : 'Escolha um arquivo .xlsx válido para tentar novamente.'}`
       );
+    } finally {
+      setBusy(false);
+    }
+  }
+  async function removeTemplate() {
+    setBusy(true);
+    setError('');
+    try {
+      await sessionTemplate.remove();
+      setTemplate(null);
+      setOrder(emptyOrder());
+      setStep(0);
+      setSuccess('');
+      setExportError('');
+      setStorageWarning('');
+    } catch {
+      setError('Não foi possível remover o arquivo salvo. Tente novamente; seu pedido foi preservado.');
     } finally {
       setBusy(false);
     }
@@ -109,16 +162,25 @@ export function WriterRoutes({ active = true }) {
     <section className="product-page writer-page">
       <PageHeader
         eyebrow="EPAVWriter"
-        title="Seu atendimento vira um pedido completo."
-        description="Escolha os produtos, confira os dados e gere o formulário da semana com as fórmulas preservadas."
+        title="Do atendimento ao pedido."
+        description="Cliente, produtos, entrega e conferência. Um passo de cada vez, com as fórmulas do Excel preservadas."
       />
-      <WeeklyUpload template={template} busy={busy} error={error} onUpload={upload} />
+      {restoring ? (
+        <Spinner label="Restaurando Excel da sessão" />
+      ) : (
+        <WeeklyUpload template={template} busy={busy} error={error} onUpload={upload} onRemove={removeTemplate} />
+      )}
+      {storageWarning && (
+        <Alert tone="warning" title="Excel nesta sessão">
+          {storageWarning}
+        </Alert>
+      )}
       {expired && (
         <Alert tone="danger" title="Formulário vencido">
           Carregue o pedido da semana atual para continuar. A exportação está bloqueada.
         </Alert>
       )}
-      {template && !expired && (
+      {template && !expired && !restoring && (
         <>
           {template.warnings.map((warning) => (
             <Alert key={warning} tone="warning" title="Atenção ao modelo recebido">
@@ -126,6 +188,17 @@ export function WriterRoutes({ active = true }) {
             </Alert>
           ))}
           <CheckoutProgress step={step} canVisit={canVisit} busy={busy} onNavigate={navigate} />
+          <div className="writer-order-context" aria-label="Resumo do pedido em andamento">
+            <span>
+              <strong>{order.client || 'Novo pedido'}</strong>
+              {order.room ? ` · ${order.room}` : ' · Comece pelos dados do cliente'}
+            </span>
+            <span>
+              {order.lines.length} {order.lines.length === 1 ? 'produto' : 'produtos'} ·{' '}
+              {order.lines.reduce((total, line) => total + Number(line.quantity), 0)}{' '}
+              {order.lines.reduce((total, line) => total + Number(line.quantity), 0) === 1 ? 'unidade' : 'unidades'}
+            </span>
+          </div>
           <div
             key={step}
             id="writer-current-step"

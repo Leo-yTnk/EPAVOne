@@ -5,10 +5,19 @@ import { lines, validateEditor } from '../models/editor.js';
 export async function result(promise) {
   const { data, error } = await promise;
   if (error) {
-    const message =
-      error.code === 'PGRST202'
-        ? 'Uma função necessária ainda não está instalada. Execute o diagnóstico do banco indicado na documentação de criação.'
-        : error.message || 'Não foi possível concluir a operação.';
+    const message = error.message?.includes('version_conflict')
+      ? 'Este conteúdo foi alterado em outra sessão. Copie suas alterações e reabra o editor para carregar a versão atual.'
+      : error.code === '42501'
+        ? 'Sua conta não tem permissão para esta operação. Confira a sessão e o acesso ao conteúdo.'
+        : error.code === '23503'
+          ? 'Uma categoria ou produto usado neste conteúdo deixou de estar disponível. Reabra o editor para atualizar as opções.'
+          : error.code === '23505'
+            ? 'Já existe um conteúdo com esses dados. Confira o nome e os vínculos antes de salvar.'
+            : error.code === 'PGRST116'
+              ? 'O conteúdo não está mais disponível para esta conta. Feche o editor e atualize a biblioteca.'
+              : error.code === 'PGRST202'
+                ? 'Uma função necessária ainda não está instalada. Execute o diagnóstico do banco indicado na documentação de criação.'
+                : error.message || 'Não foi possível concluir a operação.';
     throw Object.assign(new Error(message), { code: error.code });
   }
   return data;
@@ -33,25 +42,29 @@ export function createCreationService(api = repository, db = client, getUser = s
     },
     async vocabulary(scope) {
       const user = await getUser();
-      const categories = await result(scope === 'site' ? api.fetchAdminCategories() : api.fetchCreationCategories());
-      const products =
-        scope === 'site'
-          ? await result(api.fetchAdminProducts())
-          : [...(await result(api.fetchMyProducts(user.id))), ...(await result(api.fetchPublicProducts()))];
-      const structure = scope === 'site' ? await result(api.fetchAdminCatalogStructure()) : null;
+      const [categories, personalProducts, publicProducts, structure] = await Promise.all([
+        result(scope === 'site' ? api.fetchAdminCategories() : api.fetchCreationCategories()),
+        result(scope === 'site' ? api.fetchAdminProducts() : api.fetchMyProducts(user.id)),
+        scope === 'site' ? [] : result(api.fetchPublicProducts()),
+        scope === 'site' ? result(api.fetchAdminCatalogStructure()) : null
+      ]);
+      const products = [...personalProducts, ...publicProducts];
       return { categories, products, structure };
     },
     async detail(type, item) {
+      // Products and categories need a fresh row too: list data can be stale
+      // after another session edits the item, including its version or price source.
+      if (type !== 'recipes') item = await result(api.fetchCreationItem(type, item.id));
       if (item.scope === 'site' && ['recipes', 'products'].includes(type)) {
         const structure = await result(api.fetchAdminCatalogStructure());
         const sections = structure[type]
           .filter((x) => x[type === 'recipes' ? 'recipe_id' : 'product_id'] === item.id)
           .map((x) => ({ category_id: x.section_id }));
-        return type === 'recipes' ? { ...(await result(api.fetchRecipeDetail(item.id))), sections } : { sections };
+        return type === 'recipes' ? { ...(await result(api.fetchRecipeDetail(item.id))), sections } : { item, sections };
       }
       if (type === 'recipes') return result(api.fetchRecipeDetail(item.id));
-      if (type === 'products') return { sections: await result(api.fetchProductSections(item.id)) };
-      return {};
+      if (type === 'products') return { item, sections: await result(api.fetchProductSections(item.id)) };
+      return { item };
     },
     async save(type, scope, item, values) {
       const problem = validateEditor(type, values);

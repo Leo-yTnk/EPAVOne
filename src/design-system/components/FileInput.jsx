@@ -1,8 +1,9 @@
-import { useId, useRef } from 'preact/hooks';
+import { useControlId } from '../behaviors/useControlId.js';
+import { useRef } from 'preact/hooks';
 import { Button } from './Button.jsx';
 
 export function FileInput({ label, helper, filename, accept, disabled = false, loading = false, onFile }) {
-  const id = useId();
+  const id = useControlId();
   const input = useRef(null);
   return (
     <div className="ds-field ds-file-field">

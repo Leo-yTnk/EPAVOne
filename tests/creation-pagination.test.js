@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 const { client } = vi.hoisted(() => ({ client: { from: vi.fn() } }));
 vi.mock('../src/shared/services/accountService.js', () => ({ authenticatedClient: client }));
 import {
+  fetchAllPages,
   fetchAdminCatalogStructure,
   fetchPublicCatalogStructure
 } from '../src/products/insights/creation/repositories/creationRepository.js';
@@ -67,5 +68,14 @@ describe('Complete catalog section membership', () => {
     } finally {
       log.mockRestore();
     }
+  });
+  it('rejects malformed lists instead of presenting a partial or empty library', async () => {
+    const query = vi
+      .fn()
+      .mockResolvedValueOnce({ data: [{ id: 'a' }] })
+      .mockResolvedValueOnce({ data: { id: 'b' } });
+    const response = await fetchAllPages(query, 'library');
+    expect(response.data).toBeUndefined();
+    expect(response.error.code).toBe('INVALID_RESPONSE');
   });
 });

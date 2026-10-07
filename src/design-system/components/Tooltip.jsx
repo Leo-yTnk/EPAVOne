@@ -1,10 +1,11 @@
+import { useControlId } from '../behaviors/useControlId.js';
 import { cloneElement } from 'preact';
-import { useId, useRef, useState } from 'preact/hooks';
+import { useRef, useState } from 'preact/hooks';
 import { useAnchoredLayer } from '../behaviors/useAnchoredLayer.js';
 import { Portal } from './Portal.jsx';
 
 export function Tooltip({ label, children }) {
-  const id=useId();
+  const id=useControlId();
   const triggerRef=useRef(null);
   const layerRef=useRef(null);
   const [open,setOpen]=useState(false);

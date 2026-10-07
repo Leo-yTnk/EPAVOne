@@ -1,10 +1,11 @@
-import { useEffect, useId, useLayoutEffect, useRef, useState } from 'preact/hooks';
+import { useControlId } from '../behaviors/useControlId.js';
+import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { useAnchoredLayer } from '../behaviors/useAnchoredLayer.js';
 import { Button } from './Button.jsx';
 import { Portal } from './Portal.jsx';
 
 export function Menu({ label, triggerLabel=label, items, variant='ghost', size='sm' }) {
-  const id=useId();
+  const id=useControlId();
   const triggerRef=useRef(null);
   const layerRef=useRef(null);
   const itemRefs=useRef([]);

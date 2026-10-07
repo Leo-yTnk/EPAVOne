@@ -39,8 +39,9 @@ export function OrderCart({ template, lines, onChange, onRemove, errors = [], bu
           <strong>{money.format(total)}</strong>
         </div>
         <p className="writer-muted">
-          {lines.length} produtos distintos · {files || 0} {files === 1 ? 'arquivo Excel' : 'arquivos Excel'}. Até 12 produtos por arquivo.
-          Frete conforme o formulário, separado deste subtotal.
+          {lines.length} {lines.length === 1 ? 'produto distinto' : 'produtos distintos'} · {files || 0}{' '}
+          {files === 1 ? 'arquivo Excel' : 'arquivos Excel'}. Até 12 produtos por arquivo. Frete conforme o formulário, separado deste
+          subtotal.
         </p>
         {files > 1 && (
           <Alert title="Pedido dividido automaticamente">

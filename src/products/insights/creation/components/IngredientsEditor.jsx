@@ -3,7 +3,6 @@ export function IngredientsEditor({ values, products, onChange, disabled }) {
   const update = (index, patch) => onChange(values.map((value, i) => (i === index ? { ...value, ...patch } : value)));
   return (
     <section className="creation-fields" aria-label="Ingredientes da receita">
-      <h3 className="ds-heading-h5">Ingredientes</h3>
       {values.map((value, index) => (
         <div key={index} className="creation-ingredient">
           <Select

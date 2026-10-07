@@ -1,7 +1,8 @@
+import { useControlId } from '../behaviors/useControlId.js';
 import { useDialogExpansion } from '../behaviors/useDialogExpansion.js';
 import { Icon } from './Icon.jsx';
 import { CardStitch } from './CardStitch.jsx';
-import { useId, useRef } from 'preact/hooks';
+import { useRef } from 'preact/hooks';
 import { useModalLayer } from '../behaviors/useModalLayer.js';
 import { IconButton } from './IconButton.jsx';
 import { Portal } from './Portal.jsx';
@@ -20,7 +21,7 @@ export function Dialog({
   className = ''
 }) {
   const dialogRef = useRef(null);
-  const generatedTitleId = useId();
+  const generatedTitleId = useControlId();
   const titleId = contentTitleId || generatedTitleId;
   useDialogExpansion(dialogRef, open, expandFromTrigger);
   useModalLayer(dialogRef, open, onClose);

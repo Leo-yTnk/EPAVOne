@@ -4,19 +4,29 @@ import { WriterRoutes } from '../src/products/writer/WriterRoutes.jsx';
 import { App } from '../src/app/App.jsx';
 import { ProductCatalog } from '../src/products/writer/components/ProductCatalog.jsx';
 import { writerTemplate } from './helpers/writerTemplate.js';
+import { sessionTemplate } from '../src/products/writer/services/sessionTemplate.js';
 import { importTemplate } from '../src/products/writer/services/templateService.js';
 vi.mock('../src/products/writer/services/swiftImagesService.js', () => ({ findSwiftImage: vi.fn().mockResolvedValue(null) }));
+vi.mock('../src/products/writer/services/sessionTemplate.js', () => ({
+  sessionTemplate: { load: vi.fn(), save: vi.fn(), remove: vi.fn() },
+  restoreTemplateFile: (attachment) => new File([attachment.bytes], attachment.name)
+}));
 vi.mock('../src/products/writer/services/templateService.js', () => ({ importTemplate: vi.fn() }));
 vi.mock('../src/app/account/useAccount.js', () => ({ useAccount: () => ({ session: null }) }));
 vi.mock('../src/products/writer/models/order.js', async (importOriginal) => ({
   ...(await importOriginal()),
   saoPauloDay: () => '2026-09-30'
 }));
-beforeEach(() => importTemplate.mockReset());
+beforeEach(() => {
+  importTemplate.mockReset();
+  sessionTemplate.load.mockReset().mockResolvedValue(null);
+  sessionTemplate.save.mockReset().mockResolvedValue();
+  sessionTemplate.remove.mockReset().mockResolvedValue();
+});
 describe('Writer interactions', () => {
-  it('requires a weekly upload before displaying the catalog or export action', () => {
+  it('requires a weekly upload before displaying the catalog or export action', async () => {
     render(<WriterRoutes />);
-    expect(screen.getByLabelText(/Carregar pedido semanal · obrigatório/)).toBeTruthy();
+    expect(await screen.findByLabelText(/Carregar pedido semanal · obrigatório/)).toBeTruthy();
     expect(screen.queryByLabelText('Buscar produto')).toBeNull();
     expect(screen.queryByText('Validar e baixar pedido')).toBeNull();
   });
@@ -31,7 +41,7 @@ describe('Writer interactions', () => {
         })
     );
     render(<WriterRoutes />);
-    fireEvent.input(screen.getByLabelText(/Carregar pedido semanal/), { target: { files: [new File(['x'], 'pedido.xlsx')] } });
+    fireEvent.input(await screen.findByLabelText(/Carregar pedido semanal/), { target: { files: [new File(['x'], 'pedido.xlsx')] } });
     await screen.findByRole('region', { name: 'Etapa 1: Cliente' });
     for (const [label, value] of [
       [/Sala · obrigatória/, '8ºD'],
@@ -78,7 +88,7 @@ describe('Writer interactions', () => {
     window.location.hash = '#/writer';
     vi.spyOn(window, 'scrollTo').mockImplementation(() => {});
     render(<App />);
-    fireEvent.input(screen.getByLabelText(/Carregar pedido semanal/), { target: { files: [new File(['x'], 'pedido.xlsx')] } });
+    fireEvent.input(await screen.findByLabelText(/Carregar pedido semanal/), { target: { files: [new File(['x'], 'pedido.xlsx')] } });
     await screen.findByRole('region', { name: 'Etapa 1: Cliente' });
     expect(screen.queryByLabelText('Buscar produto')).toBeNull();
     expect(screen.getByRole('button', { name: 'Continuar para produtos' }).disabled).toBe(true);
@@ -123,5 +133,36 @@ describe('Writer interactions', () => {
     fireEvent.input(screen.getByLabelText(/CPF do cliente/), { target: { value: '01234567890' } });
     fireEvent.click(screen.getByRole('button', { name: 'Continuar para produtos' }));
     expect(screen.getByLabelText(/^Quantidade de/).value).toBe('1');
+  });
+  it('restores the selected workbook on remount and removes it only after explicit confirmation', async () => {
+    const actual = await vi.importActual('../src/products/writer/services/templateService.js');
+    const template = await actual.importTemplate(await writerTemplate(), '2026-09-30');
+    sessionTemplate.load.mockResolvedValue({ bytes: new Uint8Array([1]), name: 'pedido.xlsx' });
+    importTemplate.mockResolvedValue(template);
+    const view = render(<WriterRoutes />);
+    await screen.findByRole('region', { name: 'Etapa 1: Cliente' });
+    view.unmount();
+    render(<WriterRoutes />);
+    await screen.findByRole('region', { name: 'Etapa 1: Cliente' });
+    expect(sessionTemplate.load).toHaveBeenCalledTimes(2);
+    fireEvent.click(screen.getByRole('button', { name: 'Remover Excel' }));
+    expect(sessionTemplate.remove).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: 'Manter Excel' }));
+    expect(screen.queryByText('Remover o Excel desta sessão?')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Remover Excel' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Remover Excel e pedido' }));
+    await screen.findByLabelText(/Carregar pedido semanal/);
+    expect(sessionTemplate.remove).toHaveBeenCalledOnce();
+    expect(screen.queryByRole('region', { name: 'Etapa 1: Cliente' })).toBeNull();
+  });
+  it('keeps the usable workbook and explains when storage is unavailable', async () => {
+    const actual = await vi.importActual('../src/products/writer/services/templateService.js');
+    const template = await actual.importTemplate(await writerTemplate(), '2026-09-30');
+    importTemplate.mockResolvedValue(template);
+    sessionTemplate.save.mockRejectedValue(new Error('Quota'));
+    render(<WriterRoutes />);
+    fireEvent.input(await screen.findByLabelText(/Carregar pedido semanal/), { target: { files: [new File(['x'], 'pedido.xlsx')] } });
+    await screen.findByText(/O navegador não permitiu preservá-lo/);
+    expect(screen.getByRole('region', { name: 'Etapa 1: Cliente' })).toBeTruthy();
   });
 });

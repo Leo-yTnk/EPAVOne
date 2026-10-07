@@ -1,11 +1,12 @@
-import { useEffect, useId, useRef, useState } from 'preact/hooks';
+import { useControlId } from '../behaviors/useControlId.js';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import { useAnchoredLayer } from '../behaviors/useAnchoredLayer.js';
 import { Option } from './Option.jsx';
 import { Portal } from './Portal.jsx';
 import { Input } from './Input.jsx';
 
 export function Select({ label, options: allOptions, value, onChange, disabled = false, helper, searchable = false }) {
-  const autoId = useId();
+  const autoId = useControlId();
   const labelId = autoId + '-label';
   const valueId = autoId + '-value';
   const menuId = autoId + '-menu';

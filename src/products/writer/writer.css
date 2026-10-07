@@ -431,3 +431,125 @@
     gap: var(--space-2);
   }
 }
+
+/* Keep the attached workbook secondary to the current task. */
+.writer-upload.is-attached {
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+}
+.writer-attachment-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  align-items: center;
+  flex-wrap: wrap;
+}
+.writer-attachment-actions > span {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.writer-upload h2 {
+  font: 400 1.5rem/var(--leading-heading) var(--font-display);
+  margin-block: var(--space-2);
+}
+.writer-upload p {
+  margin: 0;
+}
+.writer-upload .ds-file-name {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.writer-upload > * {
+  min-width: 0;
+}
+.writer-progress .ds-btn {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--space-3);
+  text-align: left;
+  padding: var(--space-4);
+}
+.writer-step-number {
+  display: flex;
+  color: inherit;
+}
+.writer-step-label {
+  display: grid;
+  gap: var(--space-1);
+}
+.writer-step-label small {
+  font-size: 0.75rem;
+  font-weight: 400;
+  opacity: 0.8;
+}
+.writer-order-context {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+}
+.writer-order-context strong {
+  color: var(--text-primary);
+}
+.writer-order-context > span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.writer-details {
+  gap: var(--space-4);
+}
+.writer-details > h2 {
+  font: 400 clamp(1.5rem, 2.5vw, 1.875rem)/var(--leading-heading) var(--font-display);
+}
+.writer-derived {
+}
+.writer-cart-summary.ds-card {
+  position: sticky;
+  top: 8rem;
+}
+@media (max-width: 40rem) {
+  .writer-upload.is-attached {
+    padding: var(--space-4);
+  }
+  .writer-progress .ds-btn {
+    padding: var(--space-3);
+    gap: var(--space-2);
+  }
+  .writer-step-label small {
+    display: none;
+  }
+  .writer-attachment-actions > .ds-btn {
+    width: 100%;
+  }
+}
+
+.writer-progress .ds-btn > span {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+.writer-page > .ds-page-header h1 {
+  font: 400 clamp(1.875rem, 3vw, 2.5rem)/var(--leading-heading) var(--font-display);
+}
+@media (max-width: 40rem) {
+  .writer-progress .ds-btn > span {
+    gap: var(--space-2);
+  }
+}
+
+@media (max-width: 64rem) {
+  .writer-cart-summary.ds-card {
+    position: relative;
+    top: auto;
+  }
+}
+
+.writer-page > .ds-page-header {
+  padding-bottom: var(--space-2);
+}

@@ -1,9 +1,10 @@
-import { useId, useState } from 'preact/hooks';
+import { useControlId } from '../behaviors/useControlId.js';
+import { useState } from 'preact/hooks';
 import { Button } from './Button.jsx';
 import { Icon } from './Icon.jsx';
 export function FilterDisclosure({ count = 0, children }) {
   const [open, setOpen] = useState(false);
-  const id = useId();
+  const id = useControlId();
   return (
     <div className="ds-filter-disclosure" data-open={open}>
       <Button
