@@ -58,7 +58,7 @@ export function App() {
   if (route.product === 'planner')
     page = (
       <Suspense fallback={<Spinner label="Carregando Planner" />}>
-        <PlannerRoutes route={route} />
+        <PlannerRoutes key={account.session?.user?.id || 'guest'} route={route} account={account} />
       </Suspense>
     );
   if (route.product === 'writer') page = null;

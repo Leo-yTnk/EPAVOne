@@ -9,8 +9,7 @@ As páginas do Insights têm funções diferentes:
 - `#/insights/produtos`: catálogo de produtos com preços e receitas relacionadas.
 - `#/insights/produtos/categoria/<id>`: catálogo com a categoria da Home selecionada.
 
-Usuários e dados continuam no mesmo projeto Supabase;
-esta etapa não altera tabelas, políticas, usuários nem funções de preço.
+Usuários e dados continuam no projeto Supabase EPAV existente; o código operacional pertence ao EPAVOne.
 
 ## Recursos
 
@@ -31,7 +30,7 @@ esta etapa não altera tabelas, políticas, usuários nem funções de preço.
 As relações usam os mesmos nomes de FK do Yourcipe. As leituras de produtos
 restringem `scope=site` e `active=true`; as de receitas restringem
 `scope=site` e `status=published`. As políticas RLS existentes continuam
-sendo a autoridade. Não há operações de escrita ou sessão autenticada.
+sendo a autoridade. Conta e criação usam a sessão autenticada, repositórios e escritores transacionais próprios.
 
 O repositório lê todas as páginas, avançando pelo número efetivamente retornado
 pelo servidor para evitar truncamento. O transporte limita cada requisição a
@@ -58,9 +57,7 @@ chaves administrativas ou service_role ao frontend.
 As ilhas do header ficam agrupadas à esquerda. Somente no Insights aparece
 uma ilha adicional com Home, Receitas e Produtos, com indicador da página atual.
 A barra principal usa quatro colunas nas telas menores, mantendo Início,
-Insights, Planner e Writer acessíveis. Conta e recursos ainda não migrados
-continuam disponíveis pelo link para o Yourcipe. Login, personalização,
-e administração ficam para etapas seguintes.
+Insights, Planner e Writer acessíveis. Conta, biblioteca, criação e administração estão no EPAVOne; não há links de runtime para o antigo.
 
 ## Verificação
 

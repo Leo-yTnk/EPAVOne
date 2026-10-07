@@ -1,11 +1,14 @@
 import { useRef, useState } from 'preact/hooks';
 import { Alert, Button, Dialog, Input } from '../../design-system/components/index.js';
 import { accountService } from '../../shared/services/accountService.js';
-import { YOURCIPE_URL } from '../../shared/config/catalog.js';
 import { Turnstile } from './Turnstile.jsx';
 import './account.css';
 
 export function AccountDialog({ account, onClose }) {
+  const [signup, setSignup] = useState(false);
+  const [displayName, setDisplayName] = useState('');
+  const [confirmation, setConfirmation] = useState('');
+  const [result, setResult] = useState(null);
   const [credential, setCredential] = useState('');
   const [password, setPassword] = useState('');
   const [token, setToken] = useState('');
@@ -33,17 +36,38 @@ export function AccountDialog({ account, onClose }) {
   function submit(event) {
     event.preventDefault();
     if (!token) return;
-    run(() => accountService.signIn(credential, password, token));
+    run(async () => {
+      if (signup) setResult(await accountService.signUp(displayName, password, confirmation, token));
+      else await accountService.signIn(credential, password, token);
+    });
   }
   return (
-    <Dialog open title={account.session ? 'Sua conta' : 'Entrar no EPAVOne'} onClose={onClose}>
+    <Dialog
+      open
+      title={result ? 'Sua credencial' : account.session ? 'Sua conta' : signup ? 'Criar conta no EPAVOne' : 'Entrar no EPAVOne'}
+      onClose={onClose}
+    >
       <div className="account-content">
         {error && (
           <Alert tone="danger" title="Não foi possível concluir">
             {error}
           </Alert>
         )}
-        {account.initializing ? (
+        {result ? (
+          <>
+            <Alert tone="success" title="Conta criada">
+              <p>Guarde sua credencial e senha para acessar sua conta.</p>
+              <strong>{result.credential}</strong>
+            </Alert>
+            {!result.session && (
+              <Alert tone="warning" title="Ativação pendente">
+                O serviço não iniciou uma sessão. O administrador precisa revisar a confirmação de email técnico no Supabase; não há caixa
+                de email para esta credencial.
+              </Alert>
+            )}
+            <Button onClick={onClose}>Guardei minha credencial</Button>
+          </>
+        ) : account.initializing ? (
           <p role="status">Verificando sua sessão…</p>
         ) : account.session ? (
           <>
@@ -63,39 +87,73 @@ export function AccountDialog({ account, onClose }) {
             <Button loading={busy} onClick={() => run(() => accountService.signOut())}>
               Sair desta sessão
             </Button>
-            <Button as="a" variant="ghost" href={YOURCIPE_URL}>
-              Abrir recursos do Yourcipe ↗
-            </Button>
           </>
         ) : (
           <form className="account-content" onSubmit={submit}>
-            <p>Use a mesma credencial e senha do Yourcipe.</p>
-            <Input
-              id="account-credential"
-              label="Credencial"
-              placeholder="YCP-XXXX-XXXX"
-              autoComplete="username"
-              required
-              value={credential}
-              disabled={busy}
-              onInput={(event) => setCredential(event.currentTarget.value)}
-            />
+            <p>{signup ? 'Crie sua conta para organizar a biblioteca e o planejamento.' : 'Use sua credencial YCP e senha.'}</p>
+            {signup && (
+              <Input
+                label="Nome"
+                value={displayName}
+                required
+                maxLength={80}
+                disabled={busy}
+                autoComplete="name"
+                onInput={(event) => setDisplayName(event.currentTarget.value)}
+              />
+            )}
+            {!signup && (
+              <>
+                <Input
+                  id="account-credential"
+                  label="Credencial"
+                  placeholder="YCP-XXXX-XXXX"
+                  autoComplete="username"
+                  required
+                  value={credential}
+                  disabled={busy}
+                  onInput={(event) => setCredential(event.currentTarget.value)}
+                />
+              </>
+            )}
             <Input
               id="account-password"
               label="Senha"
               type="password"
-              autoComplete="current-password"
+              autoComplete={signup ? 'new-password' : 'current-password'}
               required
               value={password}
               disabled={busy}
               onInput={(event) => setPassword(event.currentTarget.value)}
             />
+            {signup && (
+              <Input
+                label="Confirmar senha"
+                type="password"
+                autoComplete="new-password"
+                value={confirmation}
+                required
+                disabled={busy}
+                onInput={(event) => setConfirmation(event.currentTarget.value)}
+              />
+            )}
             <Turnstile attempt={attempt} onToken={setToken} />
             <Button type="submit" loading={busy} disabled={!token}>
-              Entrar
+              {signup ? 'Criar conta' : 'Entrar'}
             </Button>
-            <Button as="a" variant="ghost" href={YOURCIPE_URL}>
-              Ainda não tem credencial? Cadastre-se no Yourcipe ↗
+            <Button
+              variant="ghost"
+              disabled={busy}
+              onClick={() => {
+                setSignup(!signup);
+                setPassword('');
+                setConfirmation('');
+                setToken('');
+                setError('');
+                setAttempt((value) => value + 1);
+              }}
+            >
+              {signup ? 'Já tenho credencial' : 'Criar uma conta'}
             </Button>
           </form>
         )}

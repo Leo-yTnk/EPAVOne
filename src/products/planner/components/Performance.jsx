@@ -1,12 +1,28 @@
 import { Card, DataTable, Heading } from '../../../design-system/components/index.js';
-import { dateLabel, money, performance } from '../models/planner.js';
+import { dateLabel, money, performance, shiftDay } from '../models/planner.js';
 export function Performance({ state, week }) {
   const metrics = performance(state, week);
   const rows = [...state.weeks]
     .sort((a, b) => b.id.localeCompare(a.id))
     .map((item) => ({ id: item.id, week: dateLabel(item.id), goal: item.goal, ...performance(state, item) }));
+  const history = (state.sales || []).filter((sale) => sale.sale_date >= week.id && sale.sale_date <= shiftDay(week.id, 6));
+  const total = history.reduce((sum, sale) => sum + Math.round(Number(sale.value) * 100), 0);
+  const units = history.reduce((sum, sale) => sum + sale.ipc, 0);
   return (
     <>
+      {state.sales && (
+        <Card className="planner-flow-card">
+          <Heading level={3}>Vendas confirmadas no banco · semana selecionada</Heading>
+          <p>
+            {history.length} vendas · {money(total)} · Ticket médio {history.length ? money(Math.round(total / history.length)) : '—'} · IPC{' '}
+            {history.length ? (units / history.length).toFixed(1) : '—'}
+          </p>
+          <p className="planner-muted">
+            Inclui registros históricos e compras confirmadas no Planner, uma única vez por venda. O histórico antigo não informa clientes;
+            não permite calcular positivação. Exportar no Writer não registra venda.
+          </p>
+        </Card>
+      )}
       <Card className="planner-flow-card">
         <Heading level={3}>O que suas conversas produziram</Heading>
         <dl className="planner-metrics">

@@ -1,8 +1,9 @@
 import { useState } from 'preact/hooks';
-import { Alert, Button, Checkbox, ErrorState, FileInput, Select, Spinner } from '../../../../design-system/components/index.js';
+import { Alert, Button, Checkbox, ErrorState, FileInput, Link, Select, Spinner } from '../../../../design-system/components/index.js';
 import { adminService } from '../services/adminService.js';
 import { useCreationResource } from '../hooks/useCreationResource.js';
 import { readCatalogFile, downloadImportTemplate } from './workbookService.js';
+import { prepareSwiftBundle } from './swiftBundleService.js';
 import { parseCatalogWorkbook } from './importParser.js';
 const groups = [
   ['categories', 'Categorias'],
@@ -19,6 +20,7 @@ const options = [
 ];
 export function ImportPanel() {
   const resource = useCreationResource(adminService.context, 'import');
+  const [officialBundle, setOfficialBundle] = useState(false);
   const [filename, setFilename] = useState('');
   const [payload, setPayload] = useState(null);
   const [busy, setBusy] = useState(false);
@@ -34,6 +36,7 @@ export function ImportPanel() {
     setConfirmed(false);
     setMessage('');
     setFilename(file.name);
+    setOfficialBundle(false);
     try {
       setPayload(parseCatalogWorkbook(await readCatalogFile(file), resource.data));
     } catch (failure) {
@@ -60,6 +63,7 @@ export function ImportPanel() {
         );
       setMessage(`Importação concluída: ${total.added} adicionado(s), ${total.replaced} atualizado(s), ${total.removed} removido(s).`);
       setPayload(null);
+      setOfficialBundle(false);
       resource.reload();
     } catch (failure) {
       setError(failure.message);
@@ -77,8 +81,8 @@ export function ImportPanel() {
   return (
     <section className="creation-fields">
       <p>
-        Importe o mesmo formato do Yourcipe: seis abas com categorias, produtos, receitas, seções e seus vínculos. Revise a prévia antes de
-        confirmar.
+        Importe o formato do catálogo EPAVOne: seis abas com categorias, produtos, receitas, seções e seus vínculos. Revise a prévia antes
+        de confirmar.
       </p>
       <Button variant="secondary" onClick={template}>
         Baixar modelo Excel
@@ -97,8 +101,47 @@ export function ImportPanel() {
           helper="Até 10 MB e 5.000 linhas. Remova fórmulas antes de importar."
         />
       )}
+      {!resource.loading && !resource.error && (
+        <Button
+          variant="secondary"
+          disabled={busy}
+          onClick={() => {
+            const bundle = prepareSwiftBundle(resource.data);
+            setOfficialBundle(true);
+            setFilename('Produtos oficiais Swift · 07/10/2026');
+            setModes(Object.fromEntries(groups.map(([key]) => [key, 'add'])));
+            setConfirmed(false);
+            setError('');
+            if (!bundle.products.length) {
+              setPayload(null);
+              setMessage('Todos os produtos deste lote já existem no catálogo.');
+            } else {
+              setPayload(bundle);
+              setMessage(
+                `${bundle.products.length} produtos novos para revisar; ${bundle.skipped} já existentes ignorados. Imagens oficiais, preços pendentes de sincronização.`
+              );
+            }
+          }}
+        >
+          Preparar produtos oficiais Swift
+        </Button>
+      )}
       {payload && (
         <>
+          <ul className="creation-import-preview">
+            {payload.products.map((product) => (
+              <li key={product.swift_product_url || product.name}>
+                <strong>{product.name}</strong> · {product.category}{' '}
+                <Link href={product.swift_product_url} target="_blank" rel="noopener noreferrer">
+                  Página Swift
+                </Link>{' '}
+                ·{' '}
+                <Link href={product.image_url} target="_blank" rel="noopener noreferrer">
+                  Ver imagem
+                </Link>
+              </li>
+            ))}
+          </ul>
           <div className="creation-columns">
             {groups.map(([key, label]) => (
               <Select
@@ -106,7 +149,7 @@ export function ImportPanel() {
                 label={`${label}: ${payload[key].length} linha(s)`}
                 value={modes[key]}
                 options={options}
-                disabled={busy}
+                disabled={busy || officialBundle}
                 onChange={(value) => {
                   setConfirmed(false);
                   setModes((current) => ({ ...current, [key]: value }));
@@ -125,9 +168,13 @@ export function ImportPanel() {
             </Alert>
           ) : (
             <>
-              <Alert tone="warning" title="Revise o alcance da importação">
-                Substituir conjunto pode desativar itens ou remover vínculos existentes na entidade e página correspondente. A operação é
-                transacional; o servidor valida o arquivo completo.
+              <Alert
+                tone={officialBundle ? 'info' : 'warning'}
+                title={officialBundle ? 'Adicionar novos produtos' : 'Revise o alcance da importação'}
+              >
+                {officialBundle
+                  ? 'Este lote adiciona somente novos produtos, sem substituir ou remover conteúdo. Confira as imagens e páginas oficiais; os preços serão confirmados pela sincronização Swift.'
+                  : 'Substituir conjunto pode desativar itens ou remover vínculos existentes na entidade e página correspondente. A operação é transacional; o servidor valida o arquivo completo.'}
               </Alert>
               <Checkbox checked={confirmed} onChange={(e) => setConfirmed(e.currentTarget.checked)} disabled={busy}>
                 Revisei as quantidades e os modos de cada grupo.
@@ -145,7 +192,10 @@ export function ImportPanel() {
         </Alert>
       )}
       {message && (
-        <Alert tone="success" title="Catálogo atualizado">
+        <Alert
+          tone={payload ? 'info' : 'success'}
+          title={payload ? 'Prévia pronta para revisão' : officialBundle ? 'Catálogo conferido' : 'Catálogo atualizado'}
+        >
           {message}
         </Alert>
       )}

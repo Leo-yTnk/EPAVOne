@@ -1,0 +1,48 @@
+[
+  {
+    "view": "signup",
+    "width": 1440,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "planner SQL-contract fixture",
+    "width": 1440,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "admin additive import fixture",
+    "width": 1440,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "signup",
+    "width": 390,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "planner SQL-contract fixture",
+    "width": 390,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "admin additive import fixture",
+    "width": 390,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "Published Pages",
+    "blocked": "page.goto: net::ERR_EMPTY_RESPONSE at https://leo-ytnk.github.io/EPAVOne/#/insights/produtos"
+  }
+]

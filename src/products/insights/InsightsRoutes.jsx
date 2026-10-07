@@ -1,6 +1,5 @@
 import { lazy, Suspense } from 'preact/compat';
 import { Breadcrumb, Button, PageHeader, Spinner } from '../../design-system/components/index.js';
-import { YOURCIPE_URL } from '../../shared/config/catalog.js';
 import { ProductCatalogPage } from './components/ProductCatalogPage.jsx';
 import { RecipesPage } from './components/RecipesPage.jsx';
 import { InsightsHomePage } from './components/InsightsHomePage.jsx';
@@ -33,7 +32,7 @@ export function InsightsRoutes({ route, account, onOpenAccount }) {
         items={[
           { label: 'EPAVOne', href: '#/' },
           { label: 'Insights', href: home ? undefined : '#/insights' },
-          ...(!home ? [{ label: info ? section[0].toUpperCase() + section.slice(1) : 'Continuar no Yourcipe' }] : [])
+          ...(!home ? [{ label: info ? section[0].toUpperCase() + section.slice(1) : 'Página não encontrada' }] : [])
         ]}
       />
       {info && <PageHeader eyebrow="EPAVInsights" title={info.title} description={info.description} />}
@@ -61,11 +60,11 @@ export function InsightsRoutes({ route, account, onOpenAccount }) {
       ) : (
         <PageHeader
           eyebrow="EPAVInsights"
-          title="Seu Yourcipe continua disponível"
-          description="Acesse sua conta e os recursos ainda não migrados no Yourcipe."
+          title="Página não encontrada"
+          description="Volte ao catálogo do EPAVInsights."
           actions={
-            <Button as="a" href={YOURCIPE_URL} target="_blank" rel="noopener noreferrer" variant="secondary">
-              Abrir Yourcipe ↗
+            <Button as="a" href="#/insights" target="_blank" rel="noopener noreferrer" variant="secondary">
+              Abrir Insights
             </Button>
           }
         />
