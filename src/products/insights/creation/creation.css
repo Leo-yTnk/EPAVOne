@@ -301,3 +301,62 @@
   flex: 0 0 auto;
   white-space: nowrap;
 }
+
+.creation-introduction {
+  display: grid;
+  gap: var(--space-4);
+  padding: var(--space-6);
+  box-shadow: none;
+}
+.creation-introduction > .ds-overline {
+  color: var(--text-brand);
+}
+.creation-introduction > h2 {
+  font: 400 clamp(1.5rem, 2.5vw, 2rem)/var(--leading-heading) var(--font-display);
+}
+.creation-introduction-features {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+.creation-introduction-features > div {
+  display: grid;
+  gap: var(--space-2);
+  align-content: start;
+}
+.creation-introduction-features .ds-icon {
+  color: var(--text-brand);
+}
+.creation-introduction-features h3 {
+  font-size: 0.9375rem;
+}
+.creation-introduction-features p {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+.creation-list {
+  gap: var(--space-3);
+}
+.creation-row.ds-card {
+  padding: var(--space-4);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-xl);
+  box-shadow: none;
+}
+.creation-workspace-nav {
+  border: 0;
+}
+.creation-workspace-nav .ds-nav-item {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+@media (max-width: 40rem) {
+  .creation-introduction {
+    padding: var(--space-4);
+  }
+  .creation-introduction-features {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+}

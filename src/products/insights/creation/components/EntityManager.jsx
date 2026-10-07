@@ -2,6 +2,7 @@ import { useMemo, useState } from 'preact/hooks';
 import {
   Alert,
   Badge,
+  Card,
   Button,
   EmptyState,
   ErrorState,
@@ -85,7 +86,7 @@ export function EntityManager({ type, scope = 'personal', onShare, onSubmit }) {
           </p>
           <div className="creation-list">
             {items.slice((current - 1) * 20, current * 20).map((item) => (
-              <article className="creation-row" key={item.id}>
+              <Card className="creation-row" key={item.id}>
                 <Icon name={meta.icon} />
                 <div>
                   <h3>{item.name}</h3>
@@ -109,7 +110,7 @@ export function EntityManager({ type, scope = 'personal', onShare, onSubmit }) {
                     { label: 'Excluir', onSelect: () => setDeleting(item) }
                   ]}
                 />
-              </article>
+              </Card>
             ))}
           </div>
           {items.length > 20 && <Pagination page={current} pageCount={Math.ceil(items.length / 20)} onChange={setPage} />}

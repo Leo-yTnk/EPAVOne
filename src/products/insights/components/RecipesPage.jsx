@@ -1,3 +1,4 @@
+import { CatalogChoices } from './CatalogChoices.jsx';
 import { CatalogLoading } from './CatalogLoading.jsx';
 import { CatalogSections } from './CatalogSections.jsx';
 import { catalogGroups, orderedCatalogItems } from '../models/sections.js';
@@ -52,6 +53,27 @@ export function RecipesPage({ initialSection = '' }) {
     return <ErrorState title="Não foi possível carregar as receitas" description={resource.error} onAction={resource.retry} />;
   return (
     <section className="insights-catalog" aria-label="Catálogo de receitas">
+      {recipes.length > 0 && (
+        <CatalogChoices
+          title="Quanto tempo seu cliente tem?"
+          icon="clock"
+          description="Escolha um ponto de partida e refine pela busca."
+          choices={[
+            {
+              label: 'Todas as receitas',
+              count: recipes.length,
+              active: !filters.quick && !filters.category,
+              onSelect: () => update({ quick: false, category: '' })
+            },
+            {
+              label: 'Preparo até 30 min',
+              count: filterRecipes(recipes, { quick: true }).length,
+              active: filters.quick,
+              onSelect: () => update({ quick: true })
+            }
+          ]}
+        />
+      )}
       <div className="insights-filters">
         <Input
           id="insights-recipe-search"

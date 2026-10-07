@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { Alert, Button, Icon, NavItem, PageHeader, Spinner } from '../../../design-system/components/index.js';
+import { Alert, Button, Card, Icon, NavItem, PageHeader, Spinner } from '../../../design-system/components/index.js';
 import { EntityManager } from './components/EntityManager.jsx';
 import { SharedLibrary } from './components/SharedLibrary.jsx';
 import { RequestsPage } from './components/RequestsPage.jsx';
@@ -26,6 +26,27 @@ export function CreationPage({ route, account, onOpenAccount }) {
           title="Seu espaço de criação"
           description="Entre com a credencial do Yourcipe para acessar suas receitas, produtos e categorias."
         />
+        <Card as="section" className="creation-introduction" aria-label="O que você pode criar">
+          <span className="ds-overline">Uma biblioteca com o seu jeito de vender</span>
+          <h2>Suas ideias, prontas para o atendimento.</h2>
+          <div className="creation-introduction-features">
+            <div>
+              <Icon name="recipe" />
+              <h3>Crie</h3>
+              <p>Guarde receitas, produtos e categorias na sua biblioteca pessoal.</p>
+            </div>
+            <div>
+              <Icon name="share" />
+              <h3>Compartilhe</h3>
+              <p>Troque receitas com outros vendedores usando um código.</p>
+            </div>
+            <div>
+              <Icon name="check" />
+              <h3>Publique</h3>
+              <p>Solicite a avaliação do seu conteúdo para o catálogo público.</p>
+            </div>
+          </div>
+        </Card>
         <Button onClick={onOpenAccount}>
           <Icon name="user" /> Entrar para criar
         </Button>
@@ -62,6 +83,21 @@ export function CreationPage({ route, account, onOpenAccount }) {
               active={item.value === section.value}
               aria-current={item.value === section.value ? 'page' : undefined}
             >
+              <Icon
+                name={
+                  item.type === 'recipes'
+                    ? 'recipe'
+                    : item.type === 'products'
+                      ? 'product'
+                      : item.type === 'categories'
+                        ? 'category'
+                        : item.value === 'compartilhadas'
+                          ? 'share'
+                          : item.value === 'admin'
+                            ? 'settings'
+                            : 'check'
+                }
+              />{' '}
               {item.label}
             </NavItem>
           ))}

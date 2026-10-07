@@ -1,3 +1,4 @@
+import { CatalogChoices } from './CatalogChoices.jsx';
 import { CatalogLoading } from './CatalogLoading.jsx';
 import { CatalogSections } from './CatalogSections.jsx';
 import { catalogGroups, orderedCatalogItems } from '../models/sections.js';
@@ -14,7 +15,7 @@ import {
 } from '../../../design-system/components/index.js';
 import { catalogService } from '../services/catalogService.js';
 import { useCatalogResource } from '../hooks/useCatalogResource.js';
-import { CATALOG_PAGE_SIZE, filterProducts } from '../models/catalog.js';
+import { CATALOG_PAGE_SIZE, filterProducts, productPricing } from '../models/catalog.js';
 import { ProductCard } from './ProductCard.jsx';
 import { ProductDetails } from './ProductDetails.jsx';
 
@@ -52,6 +53,40 @@ export function ProductCatalogPage({ initialCategory = '', initialSection = '' }
   ];
   return (
     <section className="insights-catalog" aria-label="Catálogo de produtos Swift">
+      {resource.data.products.length > 0 && (
+        <CatalogChoices
+          title="Encontre uma oportunidade"
+          icon="product"
+          description="Consulte o preço por quantidade ou explore uma categoria."
+          choices={[
+            {
+              label: 'Todos os produtos',
+              count: resource.data.products.length,
+              active: !filters.category && !filters.promotion,
+              onSelect: () => update({ category: '', promotion: false })
+            },
+            ...(resource.data.products.some((item) => productPricing(item).promo)
+              ? [
+                  {
+                    label: 'Preço por quantidade',
+                    count: resource.data.products.filter((item) => productPricing(item).promo).length,
+                    active: filters.promotion,
+                    onSelect: () => update({ promotion: !filters.promotion })
+                  }
+                ]
+              : []),
+            ...resource.data.categories
+              .filter((category) => resource.data.products.some((item) => item.category_id === category.id))
+              .slice(0, 5)
+              .map((category) => ({
+                label: category.name,
+                count: resource.data.products.filter((item) => item.category_id === category.id).length,
+                active: filters.category === category.id,
+                onSelect: () => update({ category: filters.category === category.id ? '' : category.id })
+              }))
+          ]}
+        />
+      )}
       <div className="insights-filters">
         <Input
           id="insights-search"

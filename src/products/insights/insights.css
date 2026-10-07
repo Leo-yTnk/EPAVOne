@@ -457,7 +457,7 @@
 .insights-spotlight > .insights-image {
   aspect-ratio: 4/3;
 }
-.insights-spotlight > div:last-of-type {
+.insights-spotlight > .insights-spotlight-summary {
   display: grid;
   gap: var(--space-3);
   justify-items: start;
@@ -804,5 +804,71 @@ html[data-density='compact'] .creation-row {
   .insights-ingredient.ds-card {
     grid-template-columns: 3rem minmax(0, 1fr);
     gap: var(--space-2);
+  }
+}
+
+/* Guided entry points share the existing filter state; the catalog stays primary. */
+.insights-choices {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-5);
+  box-shadow: none;
+}
+.insights-choices-heading {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+.insights-choices-heading > .ds-icon {
+  color: var(--text-brand);
+  flex-shrink: 0;
+}
+.insights-choices-heading h2 {
+  font: 650 1rem/var(--leading-heading-small) var(--font-sans);
+}
+.insights-choices-heading p {
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  margin-top: var(--space-1);
+}
+.insights-choice-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+.insights-choice-buttons .ds-btn > span {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+.insights-choice-count {
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.75;
+}
+.insights-catalog .insights-filters {
+  padding-bottom: 0;
+}
+.insights-product-overview.ds-card {
+  padding: var(--space-4);
+  gap: var(--space-4);
+  align-items: center;
+}
+.insights-product-overview .insights-product-note {
+  border-top: 0;
+  padding: var(--space-2) 0 0;
+  font-size: 0.8125rem;
+}
+.insights-related-recipe.ds-card {
+  padding: var(--space-3);
+  background: var(--insights-detail-nested-surface);
+  --card-radius: max(var(--radius-sm), calc(var(--radius-xl) - var(--space-4)));
+}
+@media (max-width: 40rem) {
+  .insights-choices {
+    padding: var(--space-4);
+  }
+  .insights-product-overview.ds-card {
+    padding: var(--space-3);
   }
 }
