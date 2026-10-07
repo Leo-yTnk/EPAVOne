@@ -236,10 +236,10 @@
   display: grid;
   gap: var(--space-4);
 }
-.creation-editor-section legend {
-  padding-inline: var(--space-2);
-  font-weight: 650;
-  font-size: 0.875rem;
+.creation-section-title {
+  margin: 0;
+  grid-column: 1 / -1;
+  font: 400 clamp(1.25rem, 2vw, 1.5rem) / var(--leading-heading) var(--font-display);
   color: var(--text-brand);
 }
 .creation-fields .creation-editor-section {
@@ -340,7 +340,8 @@
 .creation-row.ds-card {
   padding: var(--space-4);
   border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-xl);
+  --card-radius: var(--radius-xl);
+  border-radius: var(--card-radius);
   box-shadow: none;
 }
 .creation-workspace-nav {
@@ -378,7 +379,8 @@
   border: 1px solid var(--border-subtle);
   padding: var(--space-5);
   background: var(--surface-secondary);
-  border-radius: var(--radius-lg);
+  --card-radius: var(--radius-lg);
+  border-radius: var(--card-radius);
 }
 .creation-fields fieldset.ds-card {
   min-width: 0;
@@ -460,4 +462,18 @@
 
 .creation-actions {
   z-index: 3;
+}
+
+.creation-section-heading {
+  display: grid;
+  grid-column: 1 / -1;
+  gap: var(--space-2);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border-subtle);
+}
+.creation-section-heading p {
+  margin: 0;
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  line-height: var(--leading-body-compact);
 }
