@@ -20,6 +20,7 @@ import { DeleteDialog } from './DeleteDialog.jsx';
 export function EntityManager({ type, scope = 'personal', onShare, onSubmit }) {
   const resource = useCreationResource(() => creationService.load(type, scope), `${type}:${scope}`);
   const [query, setQuery] = useState('');
+  const [filter, setFilter] = useState('all');
   const [page, setPage] = useState(1);
   const [editor, setEditor] = useState(null);
   const [deleting, setDeleting] = useState(null);
@@ -27,8 +28,13 @@ export function EntityManager({ type, scope = 'personal', onShare, onSubmit }) {
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
   const items = useMemo(
-    () => (resource.data || []).filter((item) => item.name.toLocaleLowerCase('pt-BR').includes(query.toLocaleLowerCase('pt-BR'))),
-    [resource.data, query]
+    () =>
+      (resource.data || []).filter(
+        (item) =>
+          item.name.toLocaleLowerCase('pt-BR').includes(query.trim().toLocaleLowerCase('pt-BR')) &&
+          (filter === 'all' || (type === 'recipes' ? item.status === filter : (item.active ? 'active' : 'inactive') === filter))
+      ),
+    [resource.data, query, filter, type]
   );
   const current = Math.min(page, Math.max(1, Math.ceil(items.length / 20)));
   const meta = entities[type];
@@ -67,6 +73,41 @@ export function EntityManager({ type, scope = 'personal', onShare, onSubmit }) {
           <Icon name="plus" /> Criar {meta.singular}
         </Button>
       </div>
+      {!resource.loading && !resource.error && (
+        <div className="creation-library-overview">
+          <div>
+            <span className="ds-overline">{scope === 'site' ? 'Catálogo público' : 'Sua biblioteca'}</span>
+            <p>
+              <strong>{resource.data?.length || 0}</strong> {resource.data?.length === 1 ? meta.singular : meta.label.toLowerCase()} ·{' '}
+              {scope === 'personal' ? 'Você decide o que compartilhar.' : 'Conteúdo disponível para publicação.'}
+            </p>
+          </div>
+          <div className="creation-library-filters" role="group" aria-label="Filtrar biblioteca">
+            {(type === 'recipes'
+              ? ['all', ...new Set((resource.data || []).map((item) => item.status).filter(Boolean))]
+              : ['all', 'active', 'inactive']
+            ).map((value) => (
+              <Button
+                key={value}
+                variant={filter === value ? 'secondary' : 'ghost'}
+                aria-pressed={filter === value}
+                onClick={() => {
+                  setFilter(value);
+                  setPage(1);
+                }}
+              >
+                {value === 'all'
+                  ? 'Todos'
+                  : value === 'active'
+                    ? 'Ativos'
+                    : value === 'inactive'
+                      ? 'Inativos'
+                      : statusLabels[value] || value}
+              </Button>
+            ))}
+          </div>
+        </div>
+      )}
       {message && <p role="status">{message}</p>}
       {error && (
         <Alert tone="danger" title="Não foi possível concluir">
@@ -78,7 +119,21 @@ export function EntityManager({ type, scope = 'personal', onShare, onSubmit }) {
       ) : resource.error ? (
         <ErrorState description={resource.error} onAction={resource.reload} />
       ) : !items.length ? (
-        <EmptyState title="Nenhum item encontrado" description="Crie um item ou ajuste sua busca." />
+        <EmptyState
+          title={query || filter !== 'all' ? 'Nenhum resultado para estes filtros' : `Sua primeira ${meta.singular} começa aqui`}
+          description={
+            query || filter !== 'all'
+              ? 'Ajuste a busca ou volte a mostrar todos os itens.'
+              : 'Crie, salve na sua biblioteca e compartilhe quando estiver pronto.'
+          }
+          actionLabel={query || filter !== 'all' ? 'Limpar filtros' : `Criar ${meta.singular}`}
+          onAction={() => {
+            if (query || filter !== 'all') {
+              setQuery('');
+              setFilter('all');
+            } else setEditor({ item: null });
+          }}
+        />
       ) : (
         <>
           <p className="insights-muted" role="status">
@@ -95,21 +150,28 @@ export function EntityManager({ type, scope = 'personal', onShare, onSubmit }) {
                   </p>
                   <Badge>{statusLabels[item.status] || (item.active ? 'Ativo' : 'Inativo')}</Badge>
                 </div>
-                <Menu
-                  label={`Ações de ${item.name}`}
-                  triggerLabel="Ações"
-                  items={[
-                    { label: 'Editar', onSelect: () => setEditor({ item }) },
-                    ...(type !== 'recipes'
-                      ? [{ label: item.active ? 'Desativar' : 'Ativar', disabled: busy, onSelect: () => toggle(item) }]
-                      : []),
-                    ...(scope === 'personal' && type === 'recipes' && onShare
-                      ? [{ label: 'Compartilhar', onSelect: () => onShare(item) }]
-                      : []),
-                    ...(scope === 'personal' && onSubmit ? [{ label: 'Solicitar publicação', onSelect: () => onSubmit(type, item) }] : []),
-                    { label: 'Excluir', onSelect: () => setDeleting(item) }
-                  ]}
-                />
+                <div className="creation-row-actions">
+                  <Button variant="secondary" aria-label={`Editar ${item.name}`} onClick={() => setEditor({ item })}>
+                    <Icon name="writer" /> Editar
+                  </Button>
+                  <Menu
+                    label={`Ações de ${item.name}`}
+                    triggerLabel="Ações"
+                    items={[
+                      { label: 'Editar', onSelect: () => setEditor({ item }) },
+                      ...(type !== 'recipes'
+                        ? [{ label: item.active ? 'Desativar' : 'Ativar', disabled: busy, onSelect: () => toggle(item) }]
+                        : []),
+                      ...(scope === 'personal' && type === 'recipes' && onShare
+                        ? [{ label: 'Compartilhar', onSelect: () => onShare(item) }]
+                        : []),
+                      ...(scope === 'personal' && onSubmit
+                        ? [{ label: 'Solicitar publicação', onSelect: () => onSubmit(type, item) }]
+                        : []),
+                      { label: 'Excluir', onSelect: () => setDeleting(item) }
+                    ]}
+                  />
+                </div>
               </Card>
             ))}
           </div>

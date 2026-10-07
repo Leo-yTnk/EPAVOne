@@ -51,7 +51,10 @@ export async function fetchAllPages(buildQuery, operation, pageSize = ADMIN_PAGE
       logSupabaseError(operation, error);
       return { error: { code: error.code, message: error.message, details: error.details, hint: error.hint, operation } };
     }
-    const page = data || [];
+    if (!Array.isArray(data)) {
+      return { error: { code: 'INVALID_RESPONSE', message: 'O banco retornou uma lista inválida. Tente carregar novamente.', operation } };
+    }
+    const page = data;
     rows = rows.concat(page);
     // Supabase may cap responses below the requested size. Advance by rows
     // actually received and stop only on an empty page. Never return a partial
@@ -64,13 +67,21 @@ export async function fetchAllPages(buildQuery, operation, pageSize = ADMIN_PAGE
 
 export async function fetchMyCategories(userId, type) {
   return fetchAllPages((from, to) => {
-    let q = supabase.from('categories').select(CATEGORY_SELECT).eq('owner_id', userId).eq('scope', 'personal').order('name');
+    let q = supabase.from('categories').select(CATEGORY_SELECT).eq('owner_id', userId).eq('scope', 'personal').order('name').order('id');
     if (type) q = q.eq('type', type);
     return q.range(from, to);
   }, 'fetchMyCategories');
 }
 export async function fetchCreationCategories() {
-  return unwrap(await supabase.rpc('list_creation_categories'), 'fetchCreationCategories');
+  return fetchAllPages(
+    (from, to) => supabase.rpc('list_creation_categories').order('scope').order('name').order('id').range(from, to),
+    'fetchCreationCategories'
+  );
+}
+export async function fetchCreationItem(type, id) {
+  const columns = { products: PRODUCT_WITH_CATEGORY_SELECT, categories: CATEGORY_SELECT }[type];
+  if (!columns) throw new Error('Tipo de conteúdo inválido.');
+  return unwrap(await supabase.from(type).select(columns).eq('id', id).single(), 'fetchCreationItem');
 }
 export async function createCategory(ownerId, { type, name }) {
   return unwrap(
@@ -137,6 +148,7 @@ export async function fetchMyProducts(userId) {
         .eq('owner_id', userId)
         .eq('scope', 'personal')
         .order('name')
+        .order('id')
         .range(from, to),
     'fetchMyProducts'
   );
@@ -189,6 +201,7 @@ export async function fetchMyRecipes(userId) {
         .eq('owner_id', userId)
         .eq('scope', 'personal')
         .order('name')
+        .order('id')
         .range(from, to),
     'fetchMyRecipes'
   );
@@ -203,6 +216,7 @@ export async function fetchSharedLibrary(userId) {
         .eq('grantee_id', userId)
         .is('revoked_at', null)
         .order('granted_at', { ascending: false })
+        .order('id')
         .range(from, to),
     'fetchSharedLibrary'
   );
@@ -536,14 +550,28 @@ export async function deleteSale(id) {
 
 export async function fetchPublicCategories() {
   return unwrap(
-    await supabase.from('categories').select(CATEGORY_SELECT).eq('scope', 'site').eq('active', true).order('sort_order').order('name'),
+    await supabase
+      .from('categories')
+      .select(CATEGORY_SELECT)
+      .eq('scope', 'site')
+      .eq('active', true)
+      .order('sort_order')
+      .order('name')
+      .order('id'),
     'fetchPublicCategories'
   );
 }
 export async function fetchPublicProducts() {
   return fetchAllPages(
     (from, to) =>
-      supabase.from('products').select(PRODUCT_WITH_CATEGORY_SELECT).eq('scope', 'site').eq('active', true).order('name').range(from, to),
+      supabase
+        .from('products')
+        .select(PRODUCT_WITH_CATEGORY_SELECT)
+        .eq('scope', 'site')
+        .eq('active', true)
+        .order('name')
+        .order('id')
+        .range(from, to),
     'fetchPublicProducts'
   );
 }
@@ -556,6 +584,7 @@ export async function fetchPublicRecipes() {
         .eq('scope', 'site')
         .eq('status', 'published')
         .order('name')
+        .order('id')
         .range(from, to),
     'fetchPublicRecipes'
   );
@@ -610,7 +639,8 @@ export async function fetchPublicCatalogStructure() {
 
 export async function fetchAdminCategories() {
   return fetchAllPages(
-    (from, to) => supabase.from('categories').select(CATEGORY_SELECT).eq('scope', 'site').order('sort_order').order('name').range(from, to),
+    (from, to) =>
+      supabase.from('categories').select(CATEGORY_SELECT).eq('scope', 'site').order('sort_order').order('name').order('id').range(from, to),
     'fetchAdminCategories'
   );
 }
@@ -634,13 +664,20 @@ export async function adminReorderCatalogSections(pageKey, sections) {
 export async function fetchAdminProducts() {
   return fetchAllPages(
     (from, to) =>
-      supabase.from('products_with_price_freshness').select(ADMIN_PRODUCT_SELECT).eq('scope', 'site').order('name').range(from, to),
+      supabase
+        .from('products_with_price_freshness')
+        .select(ADMIN_PRODUCT_SELECT)
+        .eq('scope', 'site')
+        .order('name')
+        .order('id')
+        .range(from, to),
     'fetchAdminProducts'
   );
 }
 export async function fetchAdminRecipes() {
   return fetchAllPages(
-    (from, to) => supabase.from('recipes').select(RECIPE_WITH_CATEGORY_SELECT).eq('scope', 'site').order('name').range(from, to),
+    (from, to) =>
+      supabase.from('recipes').select(RECIPE_WITH_CATEGORY_SELECT).eq('scope', 'site').order('name').order('id').range(from, to),
     'fetchAdminRecipes'
   );
 }
@@ -831,13 +868,15 @@ export async function fetchMyChangeRequests(userId) {
         .select(REQUEST_SELECT)
         .eq('requester_id', userId)
         .order('created_at', { ascending: false })
+        .order('id')
         .range(from, to),
     'fetchMyChangeRequests'
   );
 }
 export async function fetchAllChangeRequests() {
   return fetchAllPages(
-    (from, to) => supabase.from('change_requests').select(REQUEST_SELECT).order('created_at', { ascending: false }).range(from, to),
+    (from, to) =>
+      supabase.from('change_requests').select(REQUEST_SELECT).order('created_at', { ascending: false }).order('id').range(from, to),
     'fetchAllChangeRequests'
   );
 }

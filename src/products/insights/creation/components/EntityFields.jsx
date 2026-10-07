@@ -1,4 +1,4 @@
-import { Checkbox, Input, Select, Textarea } from '../../../../design-system/components/index.js';
+import { Card, Checkbox, Input, Select, Textarea } from '../../../../design-system/components/index.js';
 import { categoryTypes } from '../models/editor.js';
 import { IngredientsEditor } from './IngredientsEditor.jsx';
 export function EntityFields({ type, scope, item, values, vocabulary, change, disabled }) {
@@ -28,7 +28,7 @@ export function EntityFields({ type, scope, item, values, vocabulary, change, di
         );
   return (
     <>
-      <fieldset className="creation-fields creation-editor-section">
+      <Card as="fieldset" className="creation-fields creation-editor-section creation-identification">
         <legend>Identificação</legend>
         <Input label="Nome" maxLength={120} required value={values.name} onInput={input('name')} disabled={disabled} />
         {type === 'categories' ? (
@@ -59,9 +59,9 @@ export function EntityFields({ type, scope, item, values, vocabulary, change, di
             />
           </>
         )}
-      </fieldset>
+      </Card>
       {type === 'products' && (
-        <fieldset className="creation-fields creation-editor-section">
+        <Card as="fieldset" className="creation-fields creation-editor-section">
           <legend>Preço e unidade</legend>
           <div className="creation-columns">
             <Input
@@ -92,13 +92,13 @@ export function EntityFields({ type, scope, item, values, vocabulary, change, di
               />
             )}
           </div>
-        </fieldset>
+        </Card>
       )}
       {type === 'recipes' && (
         <>
-          <fieldset className="creation-fields creation-editor-section">
+          <Card as="fieldset" className="creation-fields creation-editor-section">
             <legend>Preparo e rendimento</legend>
-            <div className="creation-columns">
+            <div className="creation-columns creation-recipe-facts">
               <Input
                 label="Preparo (minutos)"
                 type="number"
@@ -125,15 +125,18 @@ export function EntityFields({ type, scope, item, values, vocabulary, change, di
                 disabled={disabled}
               />
             </div>
-          </fieldset>
-          <fieldset className="creation-fields creation-editor-section">
-            <legend>Ingredientes e etapas</legend>
+          </Card>
+          <Card as="fieldset" className="creation-fields creation-editor-section">
+            <legend>Ingredientes</legend>
             <IngredientsEditor
               values={values.ingredients}
               products={vocabulary.products}
               onChange={(ingredients) => change({ ingredients })}
               disabled={disabled}
             />
+          </Card>
+          <Card as="fieldset" className="creation-fields creation-editor-section">
+            <legend>Etapas e dicas</legend>
             <Textarea
               label="Modo de preparo — uma etapa por linha"
               value={values.instructions}
@@ -149,9 +152,9 @@ export function EntityFields({ type, scope, item, values, vocabulary, change, di
               disabled={disabled}
             />
             <Textarea label="Dicas — uma por linha" value={values.tips} rows={3} onInput={input('tips')} disabled={disabled} />
-          </fieldset>
+          </Card>
           {scope === 'site' && (
-            <fieldset className="creation-fields creation-editor-section">
+            <Card as="fieldset" className="creation-fields creation-editor-section">
               <legend>Publicação</legend>
               <Select
                 label="Publicação"
@@ -167,12 +170,12 @@ export function EntityFields({ type, scope, item, values, vocabulary, change, di
               <Checkbox checked={values.featured} onChange={(e) => change({ featured: e.currentTarget.checked })} disabled={disabled}>
                 Destacar receita
               </Checkbox>
-            </fieldset>
+            </Card>
           )}
         </>
       )}
       {type !== 'categories' && sections.length > 0 && (
-        <fieldset className="creation-fields">
+        <Card as="fieldset" className="creation-fields">
           <legend>Seções</legend>
           {sections.map((section) => (
             <Checkbox
@@ -188,7 +191,7 @@ export function EntityFields({ type, scope, item, values, vocabulary, change, di
               {section.name}
             </Checkbox>
           ))}
-        </fieldset>
+        </Card>
       )}
       {type !== 'recipes' && scope === 'site' && (
         <Checkbox checked={values.active} onChange={(e) => change({ active: e.currentTarget.checked })} disabled={disabled}>

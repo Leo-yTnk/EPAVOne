@@ -360,3 +360,104 @@
     gap: var(--space-4);
   }
 }
+
+.creation-editor-intro {
+  display: grid;
+  gap: var(--space-2);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+.creation-editor-intro p {
+  margin: 0;
+}
+.creation-save-status {
+  color: var(--text-brand);
+  font-size: 0.75rem;
+}
+.creation-fields .creation-editor-section.ds-card {
+  border: 1px solid var(--border-subtle);
+  padding: var(--space-5);
+  background: var(--surface-secondary);
+  border-radius: var(--radius-lg);
+}
+.creation-fields fieldset.ds-card {
+  min-width: 0;
+}
+.creation-actions {
+  border: 0;
+  align-items: center;
+}
+.creation-actions > span {
+  margin-right: auto;
+  font-size: 0.75rem;
+}
+.creation-library-overview {
+  display: grid;
+  gap: var(--space-3);
+}
+.creation-library-overview p {
+  font-size: 0.875rem;
+  margin-block: var(--space-2) 0;
+  color: var(--text-secondary);
+}
+.creation-library-overview strong {
+  color: var(--text-primary);
+}
+.creation-library-filters {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+.creation-row-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.creation-list {
+  border: 0;
+}
+.creation-row h3 {
+  font-size: 1.0625rem;
+}
+@media (max-width: 48rem) {
+  .creation-fields .creation-editor-section.ds-card {
+    padding: var(--space-4);
+  }
+  .creation-row.ds-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .creation-row-actions {
+    justify-content: flex-end;
+  }
+  .creation-actions > span {
+    flex-basis: 100%;
+  }
+}
+
+.creation-row > .creation-row-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+.creation-fields .creation-identification {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.creation-identification > .ds-field:nth-child(2) {
+  grid-column: 1 / -1;
+}
+.creation-recipe-facts {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.creation-editor-section.ds-card {
+  box-shadow: none;
+}
+@media (max-width: 48rem) {
+  .creation-fields .creation-identification,
+  .creation-recipe-facts {
+    grid-template-columns: 1fr;
+  }
+}
+
+.creation-actions {
+  z-index: 3;
+}

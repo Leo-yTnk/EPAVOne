@@ -22,7 +22,7 @@ export function EntityEditor({ type, scope, item, onClose, onSaved }) {
 }
 
 function EditorForm({ type, scope, item, data, onClose, onSaved }) {
-  const [values, setValues] = useState(() => editorValues(data.detail.recipe || item || {}, data.detail));
+  const [values, setValues] = useState(() => editorValues(data.detail.recipe || data.detail.item || item || {}, data.detail));
   const [busy, setBusy] = useState(false);
   const pending = useRef(false);
   const [error, setError] = useState('');
@@ -50,7 +50,7 @@ function EditorForm({ type, scope, item, data, onClose, onSaved }) {
     setBusy(true);
     setError('');
     try {
-      await creationService.save(type, scope, data.detail.recipe || item, values);
+      await creationService.save(type, scope, data.detail.recipe || data.detail.item || item, values);
       onSaved();
     } catch (failure) {
       setError(failure.message);
@@ -62,15 +62,26 @@ function EditorForm({ type, scope, item, data, onClose, onSaved }) {
   return (
     <Dialog open size="lg" title={`${item ? 'Editar' : 'Criar'} ${entities[type].singular}`} onClose={close}>
       <form className="creation-fields" onSubmit={save}>
+        <div className="creation-editor-intro">
+          <span className="ds-overline">{scope === 'site' ? 'Catálogo público' : 'Biblioteca pessoal'}</span>
+          <p>
+            {scope === 'site'
+              ? 'Organize os detalhes e confira a publicação antes de salvar.'
+              : 'Salve primeiro na sua biblioteca. Depois, compartilhe ou solicite a publicação.'}
+          </p>
+          <span className="creation-save-status" role="status">
+            {busy ? 'Salvando alterações…' : dirty ? 'Alterações ainda não salvas' : 'Nenhuma alteração pendente'}
+          </span>
+        </div>
         {error && (
           <Alert tone="danger" title="Não foi possível salvar">
-            {error} Suas alterações continuam neste formulário. Tente salvar novamente.
+            {error} Suas alterações continuam neste formulário.
           </Alert>
         )}
         <EntityFields
           type={type}
           scope={scope}
-          item={item}
+          item={data.detail.recipe || data.detail.item || item}
           values={values}
           vocabulary={data.vocabulary}
           disabled={busy}
@@ -88,6 +99,9 @@ function EditorForm({ type, scope, item, data, onClose, onSaved }) {
           </Alert>
         )}
         <div className="creation-actions">
+          <span className="insights-muted">
+            {scope === 'site' ? 'Salvar atualiza o catálogo.' : 'Visível somente para você até compartilhar.'}
+          </span>
           <Button type="button" variant="secondary" disabled={busy} onClick={() => (dirty ? setDiscard(true) : onClose())}>
             Cancelar
           </Button>

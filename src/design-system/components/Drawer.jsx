@@ -1,13 +1,14 @@
+import { useControlId } from '../behaviors/useControlId.js';
 import { Icon } from './Icon.jsx';
 import { CardStitch } from './CardStitch.jsx';
-import { useId, useRef } from 'preact/hooks';
+import { useRef } from 'preact/hooks';
 import { useModalLayer } from '../behaviors/useModalLayer.js';
 import { IconButton } from './IconButton.jsx';
 import { Portal } from './Portal.jsx';
 
 export function Drawer({ open, title, children, onClose }) {
   const ref = useRef(null);
-  const titleId = useId();
+  const titleId = useControlId();
   useModalLayer(ref, open, onClose);
   if (!open) return null;
 
