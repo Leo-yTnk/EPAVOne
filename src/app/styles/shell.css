@@ -121,7 +121,7 @@ body {
   min-height: var(--control-sm);
   color: var(--text-secondary);
 }
-.insights-tabs {
+.product-section-nav {
   --container-radius: var(--radius-sm);
   --container-padding: 0;
   position: relative;
@@ -140,7 +140,7 @@ body {
   font-size: 0.8125rem;
   white-space: nowrap;
 }
-.insights-tab.is-active {
+.section-tab.is-active {
   background: transparent;
   color: var(--text-brand);
 }
@@ -157,12 +157,12 @@ body {
   background: var(--header-pages-bg);
   border-bottom-color: var(--header-pages-bg);
 }
-.navigation-horizontal .insights-tabs {
+.navigation-horizontal .product-section-nav {
   width: 100%;
   background: var(--header-pages-bg);
 }
 .navigation-horizontal .workspace-bar,
-.navigation-horizontal .insights-tabs {
+.navigation-horizontal .product-section-nav {
   padding-inline: max(var(--shell-gutter), calc((100% - 90rem) / 2));
 }
 .navigation-horizontal .workspace-bar {
@@ -170,17 +170,17 @@ body {
   border-bottom: 1px solid var(--border-subtle);
   padding-bottom: 0;
 }
-.navigation-horizontal .insights-tab {
+.navigation-horizontal .section-tab {
   border-radius: var(--radius-sm) var(--radius-sm) 0 0;
   font-weight: 550;
 }
-.navigation-horizontal .insights-tab:hover {
+.navigation-horizontal .section-tab:hover {
   transform: none;
 }
-.navigation-horizontal .insights-tab.is-active {
+.navigation-horizontal .section-tab.is-active {
   font-weight: 650;
 }
-.navigation-horizontal .insights-tabs .ds-selection-indicator {
+.navigation-horizontal .product-section-nav .ds-selection-indicator {
   top: auto;
   bottom: 0;
   height: 2px;
@@ -191,7 +191,7 @@ body {
 .navigation-vertical .app-tabs .ds-tab {
   border-radius: var(--radius-md);
 }
-.navigation-vertical .insights-tab.is-active {
+.navigation-vertical .section-tab.is-active {
   color: var(--text-inverse);
 }
 .navigation-horizontal .app-main,
@@ -270,7 +270,7 @@ body {
 .navigation-vertical .workspace-account {
   justify-content: flex-start;
 }
-.navigation-vertical .insights-tabs {
+.navigation-vertical .product-section-nav {
   flex-direction: column;
   width: 100%;
   margin-top: var(--space-4);
@@ -328,10 +328,10 @@ html[data-reduced-motion='true'] *::after {
   .workspace-account {
     padding-inline: var(--space-2);
   }
-  .insights-tabs {
+  .product-section-nav {
     width: 100%;
   }
-  .insights-tabs .ds-nav-item {
+  .product-section-nav .ds-nav-item {
     flex: 0 0 auto;
     justify-content: center;
   }

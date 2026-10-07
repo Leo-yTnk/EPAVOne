@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/preact';
+import { fireEvent, render, screen, within } from '@testing-library/preact';
 import { describe, expect, it, vi } from 'vitest';
 import { AppShell } from '../src/app/AppShell.jsx';
 import { Tabs } from '../src/design-system/components/Tabs.jsx';
@@ -25,6 +25,23 @@ describe('App workspace tabs', () => {
     expect(window.location.hash).toBe('#/insights/receitas');
     fireEvent.click(screen.getByRole('tab', { name: 'Planner' }));
     expect(window.location.hash).toBe('#/planner');
+  });
+
+  it('uses the same shell navigation for Planner and Insights, including deep routes', () => {
+    const { rerender } = render(shell({ product: 'planner', segments: ['clientes', 'demo-1'] }));
+    const nav = screen.getByRole('navigation', { name: 'Navegação do Planner' });
+    expect(within(nav).getAllByRole('link')).toHaveLength(5);
+    expect(within(nav).getByRole('link', { name: 'Clientes' }).getAttribute('aria-current')).toBe('page');
+    expect(within(nav).getByRole('link', { name: 'Oportunidades' }).getAttribute('href')).toBe('#/planner/oportunidades');
+    rerender(shell({ product: 'planner', segments: ['atendimento', 'demo-1'] }));
+    expect(within(nav).getByRole('link', { name: 'Semana' }).getAttribute('aria-current')).toBe('page');
+    rerender(shell({ product: 'planner', segments: [] }));
+    expect(within(nav).getByRole('link', { name: 'Visão geral' }).getAttribute('aria-current')).toBe('page');
+    rerender(shell({ product: 'insights', segments: ['produtos'] }));
+    const insights = screen.getByRole('navigation', { name: 'Navegação do Insights' });
+    expect(insights).toBe(nav);
+    expect(insights.className).toBe('product-section-nav');
+    expect(within(insights).getByRole('link', { name: 'Produtos' }).getAttribute('aria-current')).toBe('page');
   });
 
   it('supports arrows, Home and End with roving focus and skips disabled tabs', () => {

@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useState } from 'preact/hooks';
+import { CommercialReturn } from './CommercialReturn.jsx';
 import { AppShell } from './AppShell.jsx';
 import { useAccount } from './account/useAccount.js';
 import { AccountDialog } from './account/AccountDialog.jsx';
@@ -7,10 +8,13 @@ import { applyTheme, getInitialTheme } from './theme.js';
 import { productTheme } from './productTheme.js';
 import { HomePage } from '../products/home/HomePage.jsx';
 import { InsightsRoutes } from '../products/insights/InsightsRoutes.jsx';
-import { PlannerRoutes } from '../products/planner/PlannerRoutes.jsx';
+import { lazy, Suspense } from 'preact/compat';
+import { Spinner } from '../design-system/components/index.js';
 import { WriterRoutes } from '../products/writer/WriterRoutes.jsx';
 import { SettingsPage } from './settings/SettingsPage.jsx';
 import { applyPreferences, readPreferences } from './settings/preferences.js';
+
+const PlannerRoutes = lazy(() => import('../products/planner/PlannerRoutes.jsx').then((module) => ({ default: module.PlannerRoutes })));
 
 export function App() {
   const route = useHashRoute();
@@ -51,7 +55,12 @@ export function App() {
 
   let page = <HomePage />;
   if (route.product === 'insights') page = <InsightsRoutes route={route} account={account} onOpenAccount={() => setAccountOpen(true)} />;
-  if (route.product === 'planner') page = <PlannerRoutes route={route} />;
+  if (route.product === 'planner')
+    page = (
+      <Suspense fallback={<Spinner label="Carregando Planner" />}>
+        <PlannerRoutes route={route} />
+      </Suspense>
+    );
   if (route.product === 'writer') page = null;
   if (route.product === 'settings')
     page = (
@@ -78,6 +87,7 @@ export function App() {
       account={account}
       onOpenAccount={() => setAccountOpen(true)}
     >
+      {['insights', 'writer'].includes(route.product) && <CommercialReturn />}
       <div key={routeKey} className="route-frame">
         {page}
       </div>

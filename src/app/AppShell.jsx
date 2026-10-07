@@ -1,14 +1,17 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
-import { INSIGHTS_NAV, PRODUCT_META, routeHash } from './routes.js';
+import { INSIGHTS_NAV, PLANNER_NAV, PRODUCT_META, routeHash } from './routes.js';
 import { Button, NavItem, SelectionIndicator, Tabs, Icon } from '../design-system/components/index.js';
 
 export function AppShell({ route, preferences, account, onOpenAccount, children }) {
   const tabsRef = useRef(null);
-  const insightsRef = useRef(null);
+  const sectionsRef = useRef(null);
   const lastRoutes = useRef({});
   const [wide, setWide] = useState(() => window.matchMedia?.('(min-width: 64rem)').matches ?? true);
   const vertical = preferences?.navigation === 'vertical' && wide;
-  const insightsSection = route.segments[0] === 'home' ? '' : route.segments[0] || '';
+  const sectionNav = route.product === 'insights' ? INSIGHTS_NAV : route.product === 'planner' ? PLANNER_NAV : null;
+  const section = route.segments[0] || '';
+  const selectedSection = route.product === 'planner' && section === 'atendimento' ? 'semana' : section === 'home' ? '' : section;
+  const activeSection = sectionNav?.some((item) => item.section === selectedSection) ? selectedSection : '';
   const selectedProduct = Object.hasOwn(PRODUCT_META, route.product) ? route.product : 'home';
   useEffect(() => {
     const media = window.matchMedia?.('(min-width: 64rem)');
@@ -72,11 +75,11 @@ export function AppShell({ route, preferences, account, onOpenAccount, children 
             <span className="workspace-account-label">Conta</span>
           </Button>
         </div>
-        {selectedProduct === 'insights' && (
-          <nav ref={insightsRef} className="insights-tabs" aria-label="Navegação do Insights">
-            <SelectionIndicator containerRef={insightsRef} value={insightsSection} />
-            {INSIGHTS_NAV.map((item) => (
-              <NavItem key={item.href} className="product-tab insights-tab" href={item.href} active={insightsSection === item.section}>
+        {sectionNav && (
+          <nav ref={sectionsRef} className="product-section-nav" aria-label={`Navegação do ${PRODUCT_META[selectedProduct].label}`}>
+            <SelectionIndicator containerRef={sectionsRef} value={activeSection} />
+            {sectionNav.map((item) => (
+              <NavItem key={item.href} className="product-tab section-tab" href={item.href} active={activeSection === item.section}>
                 {item.label}
               </NavItem>
             ))}

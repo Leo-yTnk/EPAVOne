@@ -1,0 +1,530 @@
+{
+  "results": [
+    {
+      "name": "overview-320-light",
+      "viewport": 320,
+      "clippedContent": 0,
+      "width": 320,
+      "cards": 4,
+      "unstiched": 0
+    },
+    {
+      "name": "semana-320-light",
+      "viewport": 320,
+      "clippedContent": 0,
+      "width": 320,
+      "cards": 8,
+      "unstiched": 0
+    },
+    {
+      "name": "clientes-320-light",
+      "viewport": 320,
+      "clippedContent": 0,
+      "width": 320,
+      "cards": 8,
+      "unstiched": 0
+    },
+    {
+      "name": "clientes-demo-5-320-light",
+      "viewport": 320,
+      "clippedContent": 0,
+      "width": 320,
+      "cards": 5,
+      "unstiched": 0
+    },
+    {
+      "name": "oportunidades-320-light",
+      "viewport": 320,
+      "clippedContent": 0,
+      "width": 320,
+      "cards": 4,
+      "unstiched": 0
+    },
+    {
+      "name": "desempenho-320-light",
+      "viewport": 320,
+      "clippedContent": 0,
+      "width": 320,
+      "cards": 3,
+      "unstiched": 0
+    },
+    {
+      "name": "atendimento-demo-1-320-light",
+      "viewport": 320,
+      "clippedContent": 0,
+      "width": 320,
+      "cards": 4,
+      "unstiched": 0
+    },
+    {
+      "name": "overview-320-dark",
+      "viewport": 320,
+      "clippedContent": 0,
+      "width": 320,
+      "cards": 4,
+      "unstiched": 0
+    },
+    {
+      "name": "semana-320-dark",
+      "viewport": 320,
+      "clippedContent": 0,
+      "width": 320,
+      "cards": 8,
+      "unstiched": 0
+    },
+    {
+      "name": "clientes-320-dark",
+      "viewport": 320,
+      "clippedContent": 0,
+      "width": 320,
+      "cards": 8,
+      "unstiched": 0
+    },
+    {
+      "name": "clientes-demo-5-320-dark",
+      "viewport": 320,
+      "clippedContent": 0,
+      "width": 320,
+      "cards": 5,
+      "unstiched": 0
+    },
+    {
+      "name": "oportunidades-320-dark",
+      "viewport": 320,
+      "clippedContent": 0,
+      "width": 320,
+      "cards": 4,
+      "unstiched": 0
+    },
+    {
+      "name": "desempenho-320-dark",
+      "viewport": 320,
+      "clippedContent": 0,
+      "width": 320,
+      "cards": 3,
+      "unstiched": 0
+    },
+    {
+      "name": "atendimento-demo-1-320-dark",
+      "viewport": 320,
+      "clippedContent": 0,
+      "width": 320,
+      "cards": 4,
+      "unstiched": 0
+    },
+    {
+      "name": "overview-390-light",
+      "viewport": 390,
+      "clippedContent": 0,
+      "width": 390,
+      "cards": 4,
+      "unstiched": 0
+    },
+    {
+      "name": "semana-390-light",
+      "viewport": 390,
+      "clippedContent": 0,
+      "width": 390,
+      "cards": 8,
+      "unstiched": 0
+    },
+    {
+      "name": "clientes-390-light",
+      "viewport": 390,
+      "clippedContent": 0,
+      "width": 390,
+      "cards": 8,
+      "unstiched": 0
+    },
+    {
+      "name": "clientes-demo-5-390-light",
+      "viewport": 390,
+      "clippedContent": 0,
+      "width": 390,
+      "cards": 5,
+      "unstiched": 0
+    },
+    {
+      "name": "oportunidades-390-light",
+      "viewport": 390,
+      "clippedContent": 0,
+      "width": 390,
+      "cards": 4,
+      "unstiched": 0
+    },
+    {
+      "name": "desempenho-390-light",
+      "viewport": 390,
+      "clippedContent": 0,
+      "width": 390,
+      "cards": 3,
+      "unstiched": 0
+    },
+    {
+      "name": "atendimento-demo-1-390-light",
+      "viewport": 390,
+      "clippedContent": 0,
+      "width": 390,
+      "cards": 4,
+      "unstiched": 0
+    },
+    {
+      "name": "overview-390-dark",
+      "viewport": 390,
+      "clippedContent": 0,
+      "width": 390,
+      "cards": 4,
+      "unstiched": 0,
+      "accessibility": []
+    },
+    {
+      "name": "semana-390-dark",
+      "viewport": 390,
+      "clippedContent": 0,
+      "width": 390,
+      "cards": 8,
+      "unstiched": 0,
+      "accessibility": []
+    },
+    {
+      "name": "clientes-390-dark",
+      "viewport": 390,
+      "clippedContent": 0,
+      "width": 390,
+      "cards": 8,
+      "unstiched": 0,
+      "accessibility": []
+    },
+    {
+      "name": "clientes-demo-5-390-dark",
+      "viewport": 390,
+      "clippedContent": 0,
+      "width": 390,
+      "cards": 5,
+      "unstiched": 0,
+      "accessibility": []
+    },
+    {
+      "name": "oportunidades-390-dark",
+      "viewport": 390,
+      "clippedContent": 0,
+      "width": 390,
+      "cards": 4,
+      "unstiched": 0,
+      "accessibility": []
+    },
+    {
+      "name": "desempenho-390-dark",
+      "viewport": 390,
+      "clippedContent": 0,
+      "width": 390,
+      "cards": 3,
+      "unstiched": 0,
+      "accessibility": []
+    },
+    {
+      "name": "atendimento-demo-1-390-dark",
+      "viewport": 390,
+      "clippedContent": 0,
+      "width": 390,
+      "cards": 4,
+      "unstiched": 0,
+      "accessibility": []
+    },
+    {
+      "name": "overview-768-light",
+      "viewport": 768,
+      "clippedContent": 0,
+      "width": 768,
+      "cards": 4,
+      "unstiched": 0
+    },
+    {
+      "name": "semana-768-light",
+      "viewport": 768,
+      "clippedContent": 0,
+      "width": 768,
+      "cards": 8,
+      "unstiched": 0
+    },
+    {
+      "name": "clientes-768-light",
+      "viewport": 768,
+      "clippedContent": 0,
+      "width": 768,
+      "cards": 8,
+      "unstiched": 0
+    },
+    {
+      "name": "clientes-demo-5-768-light",
+      "viewport": 768,
+      "clippedContent": 0,
+      "width": 768,
+      "cards": 5,
+      "unstiched": 0
+    },
+    {
+      "name": "oportunidades-768-light",
+      "viewport": 768,
+      "clippedContent": 0,
+      "width": 768,
+      "cards": 4,
+      "unstiched": 0
+    },
+    {
+      "name": "desempenho-768-light",
+      "viewport": 768,
+      "clippedContent": 0,
+      "width": 768,
+      "cards": 3,
+      "unstiched": 0
+    },
+    {
+      "name": "atendimento-demo-1-768-light",
+      "viewport": 768,
+      "clippedContent": 0,
+      "width": 768,
+      "cards": 4,
+      "unstiched": 0
+    },
+    {
+      "name": "overview-768-dark",
+      "viewport": 768,
+      "clippedContent": 0,
+      "width": 768,
+      "cards": 4,
+      "unstiched": 0
+    },
+    {
+      "name": "semana-768-dark",
+      "viewport": 768,
+      "clippedContent": 0,
+      "width": 768,
+      "cards": 8,
+      "unstiched": 0
+    },
+    {
+      "name": "clientes-768-dark",
+      "viewport": 768,
+      "clippedContent": 0,
+      "width": 768,
+      "cards": 8,
+      "unstiched": 0
+    },
+    {
+      "name": "clientes-demo-5-768-dark",
+      "viewport": 768,
+      "clippedContent": 0,
+      "width": 768,
+      "cards": 5,
+      "unstiched": 0
+    },
+    {
+      "name": "oportunidades-768-dark",
+      "viewport": 768,
+      "clippedContent": 0,
+      "width": 768,
+      "cards": 4,
+      "unstiched": 0
+    },
+    {
+      "name": "desempenho-768-dark",
+      "viewport": 768,
+      "clippedContent": 0,
+      "width": 768,
+      "cards": 3,
+      "unstiched": 0
+    },
+    {
+      "name": "atendimento-demo-1-768-dark",
+      "viewport": 768,
+      "clippedContent": 0,
+      "width": 768,
+      "cards": 4,
+      "unstiched": 0
+    },
+    {
+      "name": "overview-1440-light",
+      "viewport": 1440,
+      "clippedContent": 0,
+      "width": 1440,
+      "cards": 4,
+      "unstiched": 0,
+      "accessibility": []
+    },
+    {
+      "name": "semana-1440-light",
+      "viewport": 1440,
+      "clippedContent": 0,
+      "width": 1440,
+      "cards": 8,
+      "unstiched": 0,
+      "accessibility": []
+    },
+    {
+      "name": "clientes-1440-light",
+      "viewport": 1440,
+      "clippedContent": 0,
+      "width": 1440,
+      "cards": 8,
+      "unstiched": 0,
+      "accessibility": []
+    },
+    {
+      "name": "clientes-demo-5-1440-light",
+      "viewport": 1440,
+      "clippedContent": 0,
+      "width": 1440,
+      "cards": 5,
+      "unstiched": 0,
+      "accessibility": []
+    },
+    {
+      "name": "oportunidades-1440-light",
+      "viewport": 1440,
+      "clippedContent": 0,
+      "width": 1440,
+      "cards": 4,
+      "unstiched": 0,
+      "accessibility": []
+    },
+    {
+      "name": "desempenho-1440-light",
+      "viewport": 1440,
+      "clippedContent": 0,
+      "width": 1440,
+      "cards": 3,
+      "unstiched": 0,
+      "accessibility": []
+    },
+    {
+      "name": "atendimento-demo-1-1440-light",
+      "viewport": 1440,
+      "clippedContent": 0,
+      "width": 1440,
+      "cards": 4,
+      "unstiched": 0,
+      "accessibility": []
+    },
+    {
+      "name": "overview-1440-dark",
+      "viewport": 1440,
+      "clippedContent": 0,
+      "width": 1440,
+      "cards": 4,
+      "unstiched": 0
+    },
+    {
+      "name": "semana-1440-dark",
+      "viewport": 1440,
+      "clippedContent": 0,
+      "width": 1440,
+      "cards": 8,
+      "unstiched": 0
+    },
+    {
+      "name": "clientes-1440-dark",
+      "viewport": 1440,
+      "clippedContent": 0,
+      "width": 1440,
+      "cards": 8,
+      "unstiched": 0
+    },
+    {
+      "name": "clientes-demo-5-1440-dark",
+      "viewport": 1440,
+      "clippedContent": 0,
+      "width": 1440,
+      "cards": 5,
+      "unstiched": 0
+    },
+    {
+      "name": "oportunidades-1440-dark",
+      "viewport": 1440,
+      "clippedContent": 0,
+      "width": 1440,
+      "cards": 4,
+      "unstiched": 0
+    },
+    {
+      "name": "desempenho-1440-dark",
+      "viewport": 1440,
+      "clippedContent": 0,
+      "width": 1440,
+      "cards": 3,
+      "unstiched": 0
+    },
+    {
+      "name": "atendimento-demo-1-1440-dark",
+      "viewport": 1440,
+      "clippedContent": 0,
+      "width": 1440,
+      "cards": 4,
+      "unstiched": 0
+    },
+    {
+      "name": "empty-320",
+      "viewport": 320,
+      "clippedContent": 0,
+      "width": 320,
+      "cards": 0,
+      "unstiched": 0,
+      "accessibility": []
+    },
+    {
+      "name": "few-320",
+      "viewport": 320,
+      "clippedContent": 0,
+      "width": 320,
+      "cards": 2,
+      "unstiched": 0,
+      "accessibility": []
+    },
+    {
+      "name": "many-long-320",
+      "viewport": 320,
+      "clippedContent": 0,
+      "width": 320,
+      "cards": 8,
+      "unstiched": 0,
+      "accessibility": []
+    },
+    {
+      "name": "long-profile-320",
+      "viewport": 320,
+      "clippedContent": 0,
+      "width": 320,
+      "cards": 5,
+      "unstiched": 0,
+      "accessibility": []
+    },
+    {
+      "name": "many-queue-320",
+      "viewport": 320,
+      "clippedContent": 0,
+      "width": 320,
+      "cards": 21,
+      "unstiched": 0,
+      "accessibility": []
+    },
+    {
+      "name": "error-320",
+      "viewport": 320,
+      "clippedContent": 0,
+      "width": 320,
+      "cards": 0,
+      "unstiched": 0,
+      "accessibility": []
+    }
+  ],
+  "errors": [],
+  "interactions": {
+    "focusInside": true,
+    "focusReturned": true,
+    "persisted": "Perguntar sobre o almoço em família e confirmar restrições.",
+    "search": "frango",
+    "roundtrip": true,
+    "recorded": true,
+    "reducedMotion": "none"
+  }
+}

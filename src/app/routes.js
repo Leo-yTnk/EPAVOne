@@ -27,3 +27,11 @@ export const INSIGHTS_NAV = [
   { label: 'Produtos', href: '#/insights/produtos', section: 'produtos' },
   { label: 'Criação', href: '#/insights/criacao/receitas', section: 'criacao' }
 ];
+
+export const PLANNER_NAV = [
+  { label: 'Visão geral', href: '#/planner', section: '' },
+  { label: 'Semana', href: '#/planner/semana', section: 'semana' },
+  { label: 'Clientes', href: '#/planner/clientes', section: 'clientes' },
+  { label: 'Oportunidades', href: '#/planner/oportunidades', section: 'oportunidades' },
+  { label: 'Desempenho', href: '#/planner/desempenho', section: 'desempenho' }
+];
