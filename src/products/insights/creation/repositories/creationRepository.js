@@ -913,18 +913,17 @@ export async function adminImportPublicRecipes(mode, recipes) {
   return unwrap(await supabase.rpc('admin_import_public_recipes', { p_mode: mode, p_recipes: recipes }), 'adminImportPublicRecipes');
 }
 
-export async function adminImportPublicCatalog(modes, categories, products, recipes, sections, recipeSections, productSections) {
+export async function adminAddPublicCatalog(payload) {
   return unwrap(
-    await supabase.rpc('admin_import_public_catalog', {
-      p_modes: modes,
-      p_categories: categories,
-      p_products: products,
-      p_recipes: recipes,
-      p_sections: sections,
-      p_recipe_section_links: recipeSections,
-      p_product_section_links: productSections
+    await supabase.rpc('admin_add_public_catalog', {
+      p_categories: payload.categories,
+      p_products: payload.products,
+      p_recipes: payload.recipes,
+      p_sections: payload.sections,
+      p_recipe_section_links: payload.recipeSections,
+      p_product_section_links: payload.productSections
     }),
-    'adminImportPublicCatalog'
+    'adminAddPublicCatalog'
   );
 }
 
@@ -944,4 +943,29 @@ export async function adminReorderRecipeSections(sections) {
 }
 export async function adminReorderProductSections(sections) {
   return unwrap(await supabase.rpc('admin_reorder_product_sections', { p_sections: sections }), 'adminReorderProductSections');
+}
+
+export async function fetchSwiftObservations() {
+  return fetchAllPages(
+    (from, to) =>
+      supabase
+        .from('swift_catalog_observations')
+        .select('*,product:products(id,name,image_url,version)')
+        .order('checked_at', { ascending: false })
+        .order('product_id')
+        .range(from, to),
+    'fetchSwiftObservations'
+  );
+}
+export async function acceptSwiftMetadata(id, checkedAt, version, selected) {
+  return unwrap(
+    await supabase.rpc('admin_accept_swift_metadata', {
+      p_product_id: id,
+      p_checked_at: checkedAt,
+      p_version: version,
+      p_name: Boolean(selected.name),
+      p_image: Boolean(selected.image)
+    }),
+    'acceptSwiftMetadata'
+  );
 }

@@ -4,6 +4,7 @@ import { creationService } from '../services/creationService.js';
 import { useCreationResource } from '../hooks/useCreationResource.js';
 import { editorValues, entities } from '../models/editor.js';
 import { EntityFields } from './EntityFields.jsx';
+import { ContentPreview } from './ContentPreview.jsx';
 export function EntityEditor({ type, scope, item, onClose, onSaved }) {
   const resource = useCreationResource(
     async () => {
@@ -28,6 +29,7 @@ function EditorForm({ type, scope, item, data, onClose, onSaved }) {
   const [error, setError] = useState('');
   const [dirty, setDirty] = useState(false);
   const [discard, setDiscard] = useState(false);
+  const [preview, setPreview] = useState(false);
   const close = () => {
     if (!pending.current) {
       if (dirty) setDiscard(true);
@@ -90,6 +92,14 @@ function EditorForm({ type, scope, item, data, onClose, onSaved }) {
             setValues((current) => ({ ...current, ...patch }));
           }}
         />
+        {type !== 'categories' && (
+          <>
+            <Button type="button" variant="secondary" aria-expanded={preview} onClick={() => setPreview((value) => !value)}>
+              {preview ? 'Ocultar prévia' : 'Conferir prévia'}
+            </Button>
+            {preview && <ContentPreview type={type} values={values} vocabulary={data.vocabulary} />}
+          </>
+        )}
         {discard && (
           <Alert tone="warning" title="Descartar alterações?">
             <p>As alterações deste formulário ainda não foram salvas.</p>

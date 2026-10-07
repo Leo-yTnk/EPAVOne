@@ -45,12 +45,12 @@ export function parseCatalogWorkbook(wb, context = {}) {
     productSections = [];
   const categoryKeys = new Set(
     (context.categories || [])
-      .filter((x) => x.active !== false && ['receita', 'proteina'].includes(x.type))
+      .filter((x) => ['receita', 'proteina'].includes(x.type))
       .map((x) => `${x.type}:${normalizeImportSlug(x.name)}`)
   );
   const seenCat = new Set();
   cr.forEach((row, i) => {
-    const line = i + 2,
+    const line = row.__sourceLine || i + 2,
       type = normalizeImportText(get(row, ['tipo'])),
       name = String(get(row, ['nome'])).trim(),
       key = `${type}:${normalizeImportSlug(name)}`;
@@ -71,14 +71,18 @@ export function parseCatalogWorkbook(wb, context = {}) {
     seenSwiftUrls = new Set(),
     seenSwiftSkus = new Set();
   pr.forEach((row, i) => {
-    const line = i + 2,
+    const line = row.__sourceLine || i + 2,
       name = String(get(row, ['nome'])).trim(),
       key = normalizeImportText(name),
       existing = (context.products || []).find((x) => normalizeImportText(x.name) === key),
       category = String(get(row, ['categoria']) || existing?.category?.name || '').trim(),
       unit = normalizeImportText(get(row, ['unidade']) || existing?.unit),
       image = String(get(row, ['imagem']) || existing?.image_url || '').trim(),
-      swift = String(get(row, ['swift_url']) || existing?.swift_product_url || '').trim(),
+      swift = String(get(row, ['swift_url']) || existing?.swift_product_url || '')
+        .trim()
+        .replace(/^https:\/\/swift\.com\.br\//i, 'https://www.swift.com.br/')
+        .split(/[?#]/)[0]
+        .replace(/\/$/, ''),
       sku = String(get(row, ['swift_sku']) || existing?.swift_sku || '').trim();
     if (!name) errors.push(`Produtos, linha ${line}: campo nome ausente.`);
     if (seenProducts.has(key)) errors.push(`Produtos, linha ${line} ("${name}"): produto duplicado.`);
@@ -108,7 +112,7 @@ export function parseCatalogWorkbook(wb, context = {}) {
   const recipeNames = new Set((context.recipes || []).map((x) => normalizeImportText(x.name))),
     seenRecipes = new Set();
   rr.forEach((row, i) => {
-    const line = i + 2,
+    const line = row.__sourceLine || i + 2,
       name = String(get(row, ['nome'])).trim(),
       key = normalizeImportText(name),
       category = String(get(row, ['categoria'])).trim(),
@@ -138,13 +142,15 @@ export function parseCatalogWorkbook(wb, context = {}) {
     if (!Number.isInteger(servings) || servings < 1) errors.push(`Receitas, linha ${line} ("${name}"): porções inválidas.`);
     if (!DIFICULDADES.includes(difficulty)) errors.push(`Receitas, linha ${line} ("${name}"): dificuldade inválida.`);
     if (!instructions.length) errors.push(`Receitas, linha ${line} ("${name}"): modo de preparo ausente.`);
+    const recipeImage = String(get(row, ['imagem'])).trim();
+    if (recipeImage && !/^https?:\/\/\S+$/i.test(recipeImage)) errors.push(`Receitas, linha ${line}: URL de imagem inválida.`);
     recipes.push({
       name,
       category,
       prep_time: prep,
       servings,
       difficulty,
-      image_url: String(get(row, ['imagem'])).trim(),
+      image_url: recipeImage,
       featured: ['true', 'sim', '1'].includes(normalizeImportText(get(row, ['destaque']))),
       ingredients,
       sections: [],
@@ -164,7 +170,7 @@ export function parseCatalogWorkbook(wb, context = {}) {
   const declared = new Set(),
     validPages = new Set(['home', 'recipes', 'products']);
   sr.forEach((row, i) => {
-    const line = i + 2,
+    const line = row.__sourceLine || i + 2,
       page = normalizeImportText(get(row, ['pagina'])),
       name = String(get(row, ['secao', 'seção'])).trim(),
       slug = normalizeImportSlug(name),
@@ -183,7 +189,7 @@ export function parseCatalogWorkbook(wb, context = {}) {
   const validateLinks = (data, kind, out) => {
     const seen = new Set();
     data.forEach((row, i) => {
-      const line = i + 2,
+      const line = row.__sourceLine || i + 2,
         link = parseCatalogSectionLinkRow(row, kind, { get, normalizeText: normalizeImportText }, line),
         { page, section, sort_order: order } = link,
         item = link[kind === 'receita' ? 'recipe' : 'product'],
@@ -213,5 +219,29 @@ export function parseCatalogWorkbook(wb, context = {}) {
   validateLinks(psr, 'produto', productSections);
   if (!cr.length && !pr.length && !rr.length && !sr.length && !rsr.length && !psr.length) errors.push('Arquivo sem dados nas seis abas.');
 
-  return { categories, products, recipes, sections, recipeSections, productSections, errors, warnings };
+  const diagnostics = errors.map((message) => {
+    if (!message.includes('linha ')) return message;
+    const field = [
+      ['swift_sku', 'swift_sku'],
+      ['swift_url', 'swift_url'],
+      ['imagem', 'imagem'],
+      ['categoria', 'categoria'],
+      ['unidade', 'unidade'],
+      ['quantidade', 'ingredientes'],
+      ['produto inexistente', 'ingredientes'],
+      ['ingredientes', 'ingredientes'],
+      ['porções', 'porcoes'],
+      ['tempo', 'tempo'],
+      ['dificuldade', 'dificuldade'],
+      ['modo de preparo', 'modoPreparo'],
+      ['página', 'pagina'],
+      ['ordem', 'ordem'],
+      ['ativa', 'ativa'],
+      ['seção inexistente', 'secao'],
+      ['tipo', 'tipo'],
+      ['nome', 'nome']
+    ].find(([text]) => message.toLowerCase().includes(text))?.[1];
+    return field ? `${message} Coluna: ${field}.` : message;
+  });
+  return { categories, products, recipes, sections, recipeSections, productSections, errors: diagnostics, warnings };
 }

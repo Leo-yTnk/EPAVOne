@@ -8,7 +8,11 @@ const BLOCKED_PATHS = /^\/(?:busca|search|categoria|categorias|colecao|collectio
 
 export function canonicalizeSwiftUrl(input) {
   let url;
-  try { url = new URL(String(input || '').trim()); } catch { throw new Error('invalid_swift_url'); }
+  try {
+    url = new URL(String(input || '').trim());
+  } catch {
+    throw new Error('invalid_swift_url');
+  }
   if (url.protocol !== 'https:' || !ALLOWED_HOSTS.has(url.hostname.toLowerCase()) || BLOCKED_PATHS.test(url.pathname)) {
     throw new Error('invalid_swift_product_url');
   }
@@ -19,7 +23,9 @@ export function canonicalizeSwiftUrl(input) {
 
 export function parseBRLCents(value) {
   if (typeof value === 'number') return Number.isFinite(value) ? Math.round(value * 100) : null;
-  const text = String(value ?? '').replace(/R\$|BRL/gi, '').trim();
+  const text = String(value ?? '')
+    .replace(/R\$|BRL/gi, '')
+    .trim();
   const match = text.match(/\d{1,3}(?:[.\s]\d{3})*(?:,\d{1,2})|\d+(?:[.,]\d{1,2})?/);
   if (!match) return null;
   let normalized = match[0].replace(/\s/g, '');
@@ -47,46 +53,78 @@ function allJsonObjects(value, output = []) {
 
 function scripts(html, type) {
   const re = new RegExp(`<script[^>]*type=["']${type}["'][^>]*>([\\s\\S]*?)<\\/script>`, 'gi');
-  return [...html.matchAll(re)].map(m => m[1]);
+  return [...html.matchAll(re)].map((m) => m[1]);
 }
 
-const IDENTITY_STOPWORDS = new Set(['swift', 'carne', 'produto', 'congelado', 'congelada', 'resfriado', 'resfriada', 'para', 'com', 'sem', 'tipo']);
-const normalizeIdentity = value => String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+const IDENTITY_STOPWORDS = new Set([
+  'swift',
+  'carne',
+  'produto',
+  'congelado',
+  'congelada',
+  'resfriado',
+  'resfriada',
+  'para',
+  'com',
+  'sem',
+  'tipo'
+]);
+const normalizeIdentity = (value) =>
+  String(value || '')
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
 function assertProductIdentity({ expectedName, expectedSku, expectedProductId, name, sku, productId }) {
   if (expectedSku && !sku) throw new Error('product_sku_not_found');
   if (expectedSku && normalizeIdentity(expectedSku) !== normalizeIdentity(sku)) throw new Error('product_sku_mismatch');
   if (expectedProductId && !productId) throw new Error('product_id_not_found');
   if (expectedProductId && normalizeIdentity(expectedProductId) !== normalizeIdentity(productId)) throw new Error('product_id_mismatch');
   if (!expectedName || expectedSku || expectedProductId) return;
-  const expected = normalizeIdentity(expectedName).split(' ').filter(w => w.length > 2 && !IDENTITY_STOPWORDS.has(w));
+  const expected = normalizeIdentity(expectedName)
+    .split(' ')
+    .filter((w) => w.length > 2 && !IDENTITY_STOPWORDS.has(w));
   const actual = new Set(normalizeIdentity(name).split(' ').filter(Boolean));
   // Brand-only matches are explicitly forbidden. Without a stable identifier,
   // require most meaningful name tokens (and at least two when available).
-  const matched = expected.filter(w => actual.has(w));
+  const matched = expected.filter((w) => actual.has(w));
   const required = Math.min(expected.length, Math.max(1, Math.ceil(expected.length * 0.6), expected.length > 1 ? 2 : 1));
   if (!expected.length || matched.length < required) throw new Error('product_name_mismatch');
 }
 
 function selectOffer(offers, expectedSku) {
   const list = (Array.isArray(offers) ? offers : [offers]).filter(Boolean);
-  const available = list.filter(o => !o.availability || /InStock|LimitedAvailability/i.test(String(o.availability)));
+  const available = list.filter((o) => !o.availability || /InStock|LimitedAvailability/i.test(String(o.availability)));
   const pool = available.length ? available : list;
   if (expectedSku) {
-    const exact = pool.find(o => normalizeIdentity(o.sku || o.itemOffered?.sku || o.itemOffered?.productID) === normalizeIdentity(expectedSku));
+    const exact = pool.find(
+      (o) => normalizeIdentity(o.sku || o.itemOffered?.sku || o.itemOffered?.productID) === normalizeIdentity(expectedSku)
+    );
     if (exact) return exact;
   }
-  return pool.find(o => o.price != null || o.highPrice != null) || null;
+  return pool.find((o) => o.price != null || o.highPrice != null) || null;
 }
 
 export function parseSwiftProductPage(html, { expectedName, expectedSku, expectedProductId, canonicalUrl } = {}) {
   if (!html || html.length < 80) throw new Error('incomplete_product_page');
   const candidates = [];
   for (const raw of [...scripts(html, 'application/ld\\+json'), ...scripts(html, 'application/json')]) {
-    try { candidates.push(...allJsonObjects(JSON.parse(raw))); } catch { /* malformed unrelated script */ }
+    try {
+      candidates.push(...allJsonObjects(JSON.parse(raw)));
+    } catch {
+      /* malformed unrelated script */
+    }
   }
-  const product = candidates.find(o => String(o['@type'] || o.type || '').toLowerCase() === 'product' && (o.offers || o.price));
+  const product = candidates.find((o) => String(o['@type'] || o.type || '').toLowerCase() === 'product' && (o.offers || o.price));
   const visibleHtml = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, ' ').replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, ' ');
-  const pageText = visibleHtml.replace(/<[^>]+>/g, ' ').replace(/&(?:nbsp|#160);/gi, ' ').replace(/&amp;/gi, '&').replace(/&quot;/gi, '"').replace(/&#39;|&apos;/gi, "'").replace(/\s+/g, ' ');
+  const pageText = visibleHtml
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&(?:nbsp|#160);/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#39;|&apos;/gi, "'")
+    .replace(/\s+/g, ' ');
   const offer = product && selectOffer(product.offers || product, expectedSku);
   const name = product?.name || html.match(/<h1[^>]*>([^<]+)/i)?.[1]?.trim();
   const sku = product?.sku || product?.productID || null;
@@ -108,10 +146,44 @@ export function parseSwiftProductPage(html, { expectedName, expectedSku, expecte
     regular = visible && parseBRLCents(visible[1]);
   }
   if (!regular || regular < 50 || regular > 1_000_000) throw new Error('invalid_product_price');
-  if (promo && (promo < 1 || promo >= regular)) { promo = null; promoMinQuantity = null; }
-  return { name, swiftSku: sku ? String(sku) : null, swiftProductId: product?.productID ? String(product.productID) : null,
-    canonicalUrl, regularPriceCents: regular, priceCents: regular, promoPriceCents: promo,
-    promoMinQuantity, pricingType, priceUnit, currency: 'BRL' };
+  if (promo && (promo < 1 || promo >= regular)) {
+    promo = null;
+    promoMinQuantity = null;
+  }
+  const images = Array.isArray(product?.image) ? product.image : [product?.image];
+  const officialImage =
+    images
+      .map((value) => (typeof value === 'string' ? value : value?.url))
+      .find((value) => {
+        try {
+          const url = new URL(value);
+          return url.protocol === 'https:' && ['swiftbr.vteximg.com.br', 'swift.com.br', 'www.swift.com.br'].includes(url.hostname);
+        } catch {
+          return false;
+        }
+      }) || null;
+  const availability = /OutOfStock|SoldOut|Discontinued/i.test(String(offer?.availability))
+    ? 'unavailable'
+    : /InStock|LimitedAvailability/i.test(String(offer?.availability))
+      ? 'available'
+      : 'unknown';
+  const presentation = name.match(/\b\d+(?:[.,]\d+)?\s*(?:kg|g|ml|l)\b/i)?.[0] || null;
+  return {
+    name,
+    officialImageUrl: officialImage,
+    availability,
+    presentation,
+    swiftSku: sku ? String(sku) : null,
+    swiftProductId: product?.productID ? String(product.productID) : null,
+    canonicalUrl,
+    regularPriceCents: regular,
+    priceCents: regular,
+    promoPriceCents: promo,
+    promoMinQuantity,
+    pricingType,
+    priceUnit,
+    currency: 'BRL'
+  };
 }
 
 export function isFresh(lastSuccessAt, maxAgeMinutes, now = Date.now()) {
@@ -121,37 +193,54 @@ export function isFresh(lastSuccessAt, maxAgeMinutes, now = Date.now()) {
 
 export function effectivePriceCents(price, quantity = 1) {
   return price.promoPriceCents && price.promoMinQuantity && quantity >= price.promoMinQuantity
-    ? price.promoPriceCents : price.regularPriceCents;
+    ? price.promoPriceCents
+    : price.regularPriceCents;
 }
 
 export function isSuspiciousChange(previous, next, warningPercent) {
   if (!previous || !next) return false;
-  return Math.abs(next - previous) / previous * 100 > Number(warningPercent);
+  return (Math.abs(next - previous) / previous) * 100 > Number(warningPercent);
 }
 
 // Persistence policies are pure so success/failure semantics stay testable and
 // identical in the Edge Function. Spreadsheet imports never call these helpers.
 export function buildSwiftSuccessUpdate(product, parsed, { checkedAt, region = null, zip, sourceHash }) {
   if (!sourceHash) throw new Error('missing_source_hash');
-  const changed = product.regular_price_cents !== parsed.regularPriceCents
-    || product.promo_price_cents !== parsed.promoPriceCents
-    || product.pricing_type !== parsed.pricingType;
-  return { changed, update: {
-    swift_product_url: parsed.canonicalUrl, swift_product_id: parsed.swiftProductId, swift_sku: parsed.swiftSku,
-    price_cents: parsed.regularPriceCents, regular_price_cents: parsed.regularPriceCents,
-    promo_price_cents: parsed.promoPriceCents, promo_min_quantity: parsed.promoMinQuantity,
-    pricing_type: parsed.pricingType, price_unit: parsed.priceUnit, price_source: 'SWIFT',
-    price_status: 'CURRENT', price_error: null, price_last_checked_at: checkedAt,
-    price_last_success_at: checkedAt,
-    price_last_changed_at: changed || !product.price_last_changed_at ? checkedAt : product.price_last_changed_at,
-    price_region: region, price_reference_zip_code: zip, price_source_hash: sourceHash,
-    region, source_hash: sourceHash,
-  } };
+  const changed =
+    product.regular_price_cents !== parsed.regularPriceCents ||
+    product.promo_price_cents !== parsed.promoPriceCents ||
+    product.pricing_type !== parsed.pricingType;
+  return {
+    changed,
+    update: {
+      swift_product_url: parsed.canonicalUrl,
+      swift_product_id: parsed.swiftProductId,
+      swift_sku: parsed.swiftSku,
+      price_cents: parsed.regularPriceCents,
+      regular_price_cents: parsed.regularPriceCents,
+      promo_price_cents: parsed.promoPriceCents,
+      promo_min_quantity: parsed.promoMinQuantity,
+      pricing_type: parsed.pricingType,
+      price_unit: parsed.priceUnit,
+      price_source: 'SWIFT',
+      price_status: 'CURRENT',
+      price_error: null,
+      price_last_checked_at: checkedAt,
+      price_last_success_at: checkedAt,
+      price_last_changed_at: changed || !product.price_last_changed_at ? checkedAt : product.price_last_changed_at,
+      price_region: region,
+      price_reference_zip_code: zip,
+      price_source_hash: sourceHash,
+      region,
+      source_hash: sourceHash
+    }
+  };
 }
 
 export function buildSwiftFailureUpdate(product, message, checkedAt) {
   return {
     price_status: product.price_last_success_at ? 'STALE' : 'ERROR',
-    price_error: String(message).slice(0, 500), price_last_checked_at: checkedAt,
+    price_error: String(message).slice(0, 500),
+    price_last_checked_at: checkedAt
   };
 }

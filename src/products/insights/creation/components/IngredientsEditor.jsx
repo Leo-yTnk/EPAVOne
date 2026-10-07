@@ -24,6 +24,7 @@ export function IngredientsEditor({ values, products, onChange, disabled }) {
             value={value.quantity}
             onInput={(e) => update(index, { quantity: e.currentTarget.value })}
             required
+            helper={`Quantidade em ${products.find((product) => product.id === value.productId)?.unit || 'unidade do produto selecionado'}`}
             disabled={disabled}
           />
           <Button
