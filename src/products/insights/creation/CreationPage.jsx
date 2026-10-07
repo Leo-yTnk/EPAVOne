@@ -24,7 +24,7 @@ export function CreationPage({ route, account, onOpenAccount }) {
         <PageHeader
           eyebrow="EPAVInsights"
           title="Seu espaço de criação"
-          description="Entre com a credencial do Yourcipe para acessar suas receitas, produtos e categorias."
+          description="Entre com a credencial YCP para acessar suas receitas, produtos e categorias."
         />
         <Card as="section" className="creation-introduction" aria-label="O que você pode criar">
           <span className="ds-overline">Uma biblioteca com o seu jeito de vender</span>

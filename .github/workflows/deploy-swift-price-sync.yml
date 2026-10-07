@@ -1,0 +1,36 @@
+name: Deploy EPAVOne Swift price sync
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: swift-price-sync-production
+  cancel-in-progress: false
+jobs:
+  deploy:
+    if: vars.EPAVONE_BACKEND_DEPLOY_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require exclusive backend ownership
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: |
+          test -n "$SUPABASE_ACCESS_TOKEN" || { echo '::error::Configure production secret SUPABASE_ACCESS_TOKEN'; exit 1; }
+          case "$SUPABASE_ACCESS_TOKEN" in sb_publishable_*|sb_secret_*) echo '::error::Use an account personal access token'; exit 1;; esac
+      - uses: supabase/setup-cli@v1
+        with:
+          version: 2.39.2
+      - name: Deploy existing function only (no database migrations)
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+        run: supabase functions deploy swift-price-sync --project-ref ytvztfvypiwgnslisxep --no-verify-jwt
+      - name: Verify browser preflight
+        run: |
+          test "$(curl --silent --show-error --max-time 30 --output /tmp/preflight --write-out '%{http_code}' --request OPTIONS --header 'Origin: https://leo-ytnk.github.io' --header 'Access-Control-Request-Method: POST' --header 'Access-Control-Request-Headers: authorization,apikey,content-type' https://ytvztfvypiwgnslisxep.supabase.co/functions/v1/swift-price-sync)" = 200
+          grep -q '^ok$' /tmp/preflight
+      - name: Verify anonymous request rejection
+        run: |
+          test "$(curl --silent --show-error --max-time 30 --output /tmp/unauthorized --write-out '%{http_code}' --request POST --header 'Content-Type: application/json' --data '{}' https://ytvztfvypiwgnslisxep.supabase.co/functions/v1/swift-price-sync)" = 401
+          grep -q '"code":"unauthorized"' /tmp/unauthorized

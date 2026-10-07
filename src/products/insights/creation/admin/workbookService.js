@@ -99,7 +99,7 @@ export async function downloadImportTemplate() {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = 'modelo-yourcipe.xlsx';
+  link.download = 'modelo-epavone.xlsx';
   link.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
 }

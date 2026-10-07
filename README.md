@@ -10,7 +10,9 @@ O Writer conserva o formulário carregado, dados do cliente, carrinho e etapa en
 
 ## EPAVPlanner
 
-O Planner reúne Visão geral, Semana, Clientes, Oportunidades e Desempenho, com preparação e Modo Atendimento. A primeira versão usa dados demonstrativos salvos neste navegador; não altera a carteira ou vendas do banco. Sugestões respeitam as restrições cadastradas e abrem a busca do Insights com retorno ao contexto. O Writer associa o cliente explicitamente ao cadastro do Excel; exportar um formulário não registra compra.
+O Planner reúne Visão geral, Semana, Clientes, Oportunidades e Desempenho, com preparação e Modo Atendimento. Visitantes usam demonstração local. Contas autenticadas usam workspace próprio no Supabase (migration 041) e consultam o histórico real em `sales`. Compras confirmadas são registradas junto com o atendimento numa transação idempotente. Sugestões respeitam as restrições cadastradas e abrem a busca do Insights com retorno ao contexto. O Writer associa o cliente explicitamente ao cadastro do Excel; exportar um formulário não registra compra.
+
+Operação e encerramento: [ações privadas e aceitação](docs/migration-closeout.md).
 
 Fluxos, prioridade e limites: [especificação](docs/planner-spec.md), [modelo de dados](docs/planner-data-model.md) e [revisão com evidências](docs/planner-implementation-review.md).
 

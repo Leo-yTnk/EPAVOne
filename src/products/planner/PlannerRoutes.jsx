@@ -1,4 +1,4 @@
-import { useState } from 'preact/hooks';
+import { useMemo, useState } from 'preact/hooks';
 import { Alert, Button, ErrorState, Heading, PageHeader, Select, Skeleton } from '../../design-system/components/index.js';
 import { dateLabel, emptyWeek, shiftDay, weekStart, validDay } from './models/planner.js';
 import { usePlanner } from './hooks/usePlanner.js';
@@ -10,6 +10,8 @@ import { ClientEditor } from './components/ClientEditor.jsx';
 import { Opportunities } from './components/Opportunities.jsx';
 import { Performance } from './components/Performance.jsx';
 import { Attendance } from './components/Attendance.jsx';
+import { createRemotePlannerRepository } from './repositories/remotePlannerRepository.js';
+import { createPlannerService } from './services/plannerService.js';
 import './planner.css';
 const info = {
   '': ['Uma boa semana começa pelas pessoas.', 'Decida quem atender, prepare a conversa e acompanhe os próximos passos.'],
@@ -19,8 +21,12 @@ const info = {
   desempenho: ['Aprender com cada conversa.', 'Compare o que foi planejado com o que aconteceu para decidir a próxima semana.'],
   atendimento: ['Uma conversa de cada vez.', 'O essencial à mão: contexto, sugestões e o próximo passo.']
 };
-export function PlannerRoutes({ route = { segments: [] }, service }) {
-  const resource = usePlanner(service);
+export function PlannerRoutes({ route = { segments: [] }, service, account }) {
+  const chosenService = useMemo(
+    () => service || (account?.session ? createPlannerService(createRemotePlannerRepository()) : undefined),
+    [service, account?.session?.user?.id]
+  );
+  const resource = usePlanner(chosenService);
   const [weekId, setWeekId] = useState(() => {
     try {
       const stored = sessionStorage.getItem('epavone-planner-week');
@@ -68,8 +74,12 @@ export function PlannerRoutes({ route = { segments: [] }, service }) {
         }
       />
       <div className="planner-demo-note">
-        <strong>Modo demonstração</strong>
-        <span>Perfis e sugestões de exemplo. Suas alterações ficam neste navegador; não são dados reais da carteira.</span>
+        <strong>{account?.session ? 'Seu planejamento' : 'Modo demonstração'}</strong>
+        <span>
+          {account?.session
+            ? 'Carteira e atendimentos da sua conta. Confirme uma compra somente após conferir o pedido; essa ação registra a venda no banco.'
+            : 'Perfis e sugestões de exemplo. Entre para usar seu planejamento e histórico reais.'}
+        </span>
       </div>
       {resource.volatile && (
         <Alert tone="warning" title="Armazenamento indisponível">

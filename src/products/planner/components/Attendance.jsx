@@ -175,7 +175,7 @@ export function Attendance({ state, week, customerId, act, busy }) {
               onInput={(event) => setNote(event.currentTarget.value)}
             />
             <Button type="submit" loading={busy} disabled={!outcome}>
-              Salvar e próximo cliente
+              {outcome === 'bought' && state.sales ? 'Confirmar compra e registrar venda' : 'Salvar e próximo cliente'}
             </Button>
           </form>
         </Card>

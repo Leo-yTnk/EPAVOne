@@ -1,0 +1,197 @@
+[
+  {
+    "path": "supabase/014_product_images.sql",
+    "same": true,
+    "sha256": "e27274679000db85dd374935e322891096af4ac2f2fac3538f804f9d93d71fd9"
+  },
+  {
+    "path": "supabase/032_normalized_catalog_import.sql",
+    "same": true,
+    "sha256": "e1e044fd61a7d51f37aa4f52e59c65869fb84d40bd33300e6e3bbaec19f6b6e5"
+  },
+  {
+    "path": "supabase/021_catalog_visual_editor_preferences.sql",
+    "same": true,
+    "sha256": "d9058e5977d6129872b20444477ec42714569502b4b823673e891479772fa727"
+  },
+  {
+    "path": "supabase/024_swift_price_sync.sql",
+    "same": true,
+    "sha256": "ef9e4f4ec19dd370afbaf32c05f83083ece0605d117111c78665a4f9707a1b46"
+  },
+  {
+    "path": "supabase/018_collision_safe_import.sql",
+    "same": true,
+    "sha256": "933e6493d46a1bf7c2e1da180eb4b3f4d04adffd74b4d1cb2a2833a47ba45706"
+  },
+  {
+    "path": "supabase/004_catalog_schema.sql",
+    "same": true,
+    "sha256": "9ef3d934e53f43877e628706362bd4011a850e14594b7a9bfbca1ffad60f52f0"
+  },
+  {
+    "path": "supabase/022_catalog_input_constraints.sql",
+    "same": true,
+    "sha256": "d7e80e293001ad104d6b76a4967e319b575f371fcb2d84790c9bfa730e17ad89"
+  },
+  {
+    "path": "supabase/037_allow_cascaded_price_history_cleanup.sql",
+    "same": true,
+    "sha256": "4a46f8e1a1774788d39fd0f53202040a40d164703a2bb24f96380ea5c06b33d9"
+  },
+  {
+    "path": "supabase/016_full_catalog_import.sql",
+    "same": true,
+    "sha256": "d06feadda182bf93aa6f235f948dfd13bfba54b52f29fb88cdd1e338ca43765b"
+  },
+  {
+    "path": "supabase/019_native_section_name_equivalence.sql",
+    "same": true,
+    "sha256": "1936023acd9c1c4772a9a1115f25b7820de1e864fc6d2f076d6446f97e677b7b"
+  },
+  {
+    "path": "supabase/009_recipe_deletion.sql",
+    "same": true,
+    "sha256": "874be23ca12454635f27e5f122c4b9e45e923c634ce63f7abe5c8ab1387db59b"
+  },
+  {
+    "path": "supabase/015_product_sections.sql",
+    "same": true,
+    "sha256": "66a4c02347da7fadf455e6910cfb2057335521c673d479aef23acbf429c103a9"
+  },
+  {
+    "path": "supabase/036_repair_admin_catalog_cleanup.sql",
+    "same": true,
+    "sha256": "e5857b14c9c6cb4283a91b07339fb096bc6c36048034e0a28045b5b732ba9522"
+  },
+  {
+    "path": "supabase/020_native_recipe_section_resolution.sql",
+    "same": true,
+    "sha256": "1b7d8a44dc7ebb150dee4ef8da522c28208bfc95b0f0b1a9633649e65d50c337"
+  },
+  {
+    "path": "supabase/010_hard_delete_and_reference_resolution.sql",
+    "same": true,
+    "sha256": "ff0aff407eb5812bff789d5cdac987ca3a080d6b05dbfd79e4217475d2e9849f"
+  },
+  {
+    "path": "supabase/035_admin_inactive_catalog_cleanup.sql",
+    "same": true,
+    "sha256": "2d37a3cf73046e82c2e04b5525d99b55c01ee1b3853d15ecc73f560e215e4a15"
+  },
+  {
+    "path": "supabase/023_page_specific_sections.sql",
+    "same": true,
+    "sha256": "5af40433f5e14de32263d41e44116060a9cb7af45122e0fbf47228e36a0d14f6"
+  },
+  {
+    "path": "supabase/033_catalog_import_contract_v0100.sql",
+    "same": true,
+    "sha256": "504d422962a65049ec98af28799b22c7a8f4dfc045d4560cd3ca840f5ca9fd43"
+  },
+  {
+    "path": "supabase/011_cross_user_visibility.sql",
+    "same": true,
+    "sha256": "8cee17139f25b66f47dc9e3a1c387ba607484b6c70d950f56b36250a6f10fe89"
+  },
+  {
+    "path": "supabase/005_creation_mode_sharing.sql",
+    "same": true,
+    "sha256": "81c8fe3c10e9a727b30db3f2b04d5f9d7cd4ccaae32b3bf6ab8a2dcddea4f6f8"
+  },
+  {
+    "path": "supabase/017_native_import_sections.sql",
+    "same": true,
+    "sha256": "99d645429178b1a39481c8d04ca507f15e39d00ddeeb09bc4476c01acf7f1e91"
+  },
+  {
+    "path": "supabase/026_page_specific_import_sections.sql",
+    "same": true,
+    "sha256": "12f1d55ea7b97824c9ff35f7d600eda0574fcc6619e7c495ba9d6de2e116dca7"
+  },
+  {
+    "path": "supabase/034_public_catalog_read_without_admin_check.sql",
+    "same": true,
+    "sha256": "fcb1cb4719d7fc60356de668b14dba6f9f74bcce880a1c32c3075945f0b532f1"
+  },
+  {
+    "path": "supabase/029_swift_price_sync_leases.sql",
+    "same": true,
+    "sha256": "159dcdddcfff4a9a00d5412d147062153e25f435bfaf45dc6b01fc2add6e16d8"
+  },
+  {
+    "path": "supabase/027_fix_swift_source_price_status.sql",
+    "same": true,
+    "sha256": "79baf07180cd590b932752b7ea5dff58ca5097d2b1e7765964d93c716336868d"
+  },
+  {
+    "path": "supabase/025_unified_secure_catalog_import.sql",
+    "same": true,
+    "sha256": "5b38fb64e881b1f451f855a9b1493166ab36528b74008da959405bc21124d89e"
+  },
+  {
+    "path": "supabase/012_admin_import_and_home_order.sql",
+    "same": true,
+    "sha256": "eaea2e807999a7838d5c32474aa44157bcd6d3bc759a0c8c35f45ec0a2d72453"
+  },
+  {
+    "path": "supabase/007_change_requests.sql",
+    "same": true,
+    "sha256": "27d4c9c05fced6a8dbfeafddb44e0bb72a13cc4c1f7687ceb50571484fb62a23"
+  },
+  {
+    "path": "supabase/002_profiles_display_name_phase1.sql",
+    "same": true,
+    "sha256": "2f602563fdf8fb67929bc81fd17861d40b6932e794ab9c3418efa916d5a97256"
+  },
+  {
+    "path": "supabase/028_harden_swift_price_sync.sql",
+    "same": true,
+    "sha256": "810ee748ff28d0823e084caab4cdb1ee4e217c7dccff7c0ae59012ac2a515389"
+  },
+  {
+    "path": "supabase/006_admin_catalog_publishing.sql",
+    "same": true,
+    "sha256": "b05d4d09b6ea3347cefd9d0657b8cd750dad8c797725878c6a5c70302b97cd53"
+  },
+  {
+    "path": "supabase/003_profiles_display_name_phase2_not_null.sql",
+    "same": true,
+    "sha256": "a48dfa7b92aef407d74ea80f5c6489991ffb907063ba53c91b5de02d0018890b"
+  },
+  {
+    "path": "supabase/013_sales_data.sql",
+    "same": true,
+    "sha256": "d07a2c53c0e19dbf81d47059c7656c80b104a5e8dd98a9c117b800717192340f"
+  },
+  {
+    "path": "supabase/008_seed_default_catalog.sql",
+    "same": true,
+    "sha256": "06700c6ec56b2b6eb651c19f23b9288184e85165ade5c7ee750b65d0ff43d800"
+  },
+  {
+    "path": "supabase/030_admin_catalog_purge.sql",
+    "same": true,
+    "sha256": "fe7fa8c0329ebf17e31bfcd633352b3e154f75cd265ef660fb8b2b252f097175"
+  },
+  {
+    "path": "supabase/031_catalog_pages_and_sections.sql",
+    "same": true,
+    "sha256": "73c808686d8e65ed41d7b4490cb913e5ed1a9b7094487ed8b0cf68abc35df4bc"
+  },
+  {
+    "path": "supabase/functions/swift-price-sync/smoke.ts",
+    "same": true,
+    "sha256": "d06caf8e0952f5aa1070e07da55c88d310a4bdba5ae093eb8a4ef5e1531257c1"
+  },
+  {
+    "path": "supabase/functions/swift-price-sync/index.ts",
+    "same": true,
+    "sha256": "94d2fccfe458c13cb725b55dd12e87345c7f1f9fdd5c9c713032564e32b02c1c"
+  },
+  {
+    "path": "supabase/functions/_shared/swift-price-core.js",
+    "same": true,
+    "sha256": "c2f184210129e4e405652b76e082a59d40903a063e1147012af94bfc53988814"
+  }
+]
