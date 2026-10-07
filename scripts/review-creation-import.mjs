@@ -16,23 +16,31 @@ let browser;
 const results = [];
 try {
   await new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error('Vite startup timed out')), 30000);
+    server.stderr.on('data', (data) => console.warn(data.toString()));
+    server.on('exit', (code) => reject(new Error(`Vite exited: ${code}`)));
     server.stdout.on('data', (data) => {
-      if (data.toString().includes('Local:')) resolve();
+      if (data.toString().includes('Local:')) {
+        clearTimeout(timer);
+        resolve();
+      }
     });
     server.on('error', reject);
   });
   browser = await chromium.launch({
     executablePath: process.env.REVIEW_BROWSER,
     headless: true,
-    args: ['--no-sandbox', '--no-zygote', '--single-process', '--disable-gpu', '--use-gl=disabled', '--disable-software-rasterizer']
+    args: ['--no-sandbox']
   });
   for (const width of [1440, 390, 320])
     for (const theme of ['light', 'dark']) {
       const context = await browser.newContext({ viewport: { width, height: 950 }, colorScheme: theme });
+      console.warn(`Inspecting ${width}px / ${theme}`);
       const page = await context.newPage();
+      page.setDefaultTimeout(15000);
       const errors = [];
       page.on('pageerror', (error) => errors.push(error.message));
-      await page.route('**/supabase.co/**', (route) => route.abort());
+      await page.route('**.supabase.co/**', (route) => route.abort());
       await page.addInitScript((value) => localStorage.setItem('epavone-theme', value), theme);
       await page.goto('http://127.0.0.1:5176/EPAVOne/');
       await page.evaluate(async () => {
@@ -72,13 +80,11 @@ try {
         });
       });
       await page.getByRole('button', { name: 'Importar Excel do catálogo' }).click();
-      await page
-        .locator('input[type=file]')
-        .setInputFiles({
-          name: 'Swift-public-fixture.xlsx',
-          mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-          buffer: Buffer.from(await createSwiftWorkbookFixture())
-        });
+      await page.locator('input[type=file]').setInputFiles({
+        name: 'Swift-public-fixture.xlsx',
+        mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        buffer: Buffer.from(await createSwiftWorkbookFixture())
+      });
       await page.getByRole('tab', { name: 'Produtos (11)' }).waitFor();
       assert.equal(await page.getByRole('button', { name: 'Confirmar importação' }).isDisabled(), true);
       await page.evaluate(() => document.fonts.ready);
@@ -158,7 +164,7 @@ try {
         overflow: await page.evaluate(() => document.documentElement.scrollWidth > innerWidth),
         errors: [...errors]
       });
-      // Keep contexts alive until shutdown for single-process Chromium.
+      await context.close();
     }
   const live = await browser.newPage();
   try {
