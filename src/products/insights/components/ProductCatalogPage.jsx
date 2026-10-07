@@ -20,10 +20,10 @@ import { ProductCard } from './ProductCard.jsx';
 import { ProductDetails } from './ProductDetails.jsx';
 
 const load = (_id, options) => catalogService.loadCatalog(options);
-export function ProductCatalogPage({ initialCategory = '', initialSection = '' }) {
+export function ProductCatalogPage({ initialCategory = '', initialSection = '', initialQuery = '' }) {
   const resource = useCatalogResource(load, 'public');
   const structure = useCatalogResource(catalogService.structure, 'public');
-  const [filters, setFilters] = useState({ query: '', category: initialCategory, promotion: false, section: initialSection });
+  const [filters, setFilters] = useState({ query: initialQuery, category: initialCategory, promotion: false, section: initialSection });
   const [page, setPage] = useState(1);
   const [selected, setSelected] = useState(null);
   const candidates = useMemo(() => filterProducts(resource.data?.products || [], filters), [resource.data, filters]);

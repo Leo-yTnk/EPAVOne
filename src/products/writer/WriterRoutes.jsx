@@ -1,3 +1,6 @@
+import { usePlannerHandoff } from './services/usePlannerHandoff.js';
+import { TemplateFeedback } from './components/TemplateFeedback.jsx';
+import { PlannerHandoff } from './components/PlannerHandoff.jsx';
 import { useEffect, useState } from 'preact/hooks';
 import { Alert, PageHeader, Spinner } from '../../design-system/components/index.js';
 import { sessionTemplate, restoreTemplateFile } from './services/sessionTemplate.js';
@@ -11,6 +14,7 @@ import { CheckoutActions } from './components/CheckoutActions.jsx';
 import './writer.css';
 const emptyOrder = () => ({ room: '', student: '', client: '', phone: '', method: '', store: '', date: '', payment: '', lines: [] });
 export function WriterRoutes({ active = true }) {
+  const handoff = usePlannerHandoff();
   const [template, setTemplate] = useState(null);
   const [order, setOrder] = useState(emptyOrder);
   const [busy, setBusy] = useState(false);
@@ -72,6 +76,7 @@ export function WriterRoutes({ active = true }) {
       const nextTemplate = await importTemplate(file);
       setTemplate(nextTemplate);
       setOrder(emptyOrder());
+      handoff.reset();
       setStep(0);
       try {
         await sessionTemplate.save(file);
@@ -101,6 +106,7 @@ export function WriterRoutes({ active = true }) {
       await sessionTemplate.remove();
       setTemplate(null);
       setOrder(emptyOrder());
+      handoff.reset();
       setStep(0);
       setSuccess('');
       setExportError('');
@@ -112,6 +118,11 @@ export function WriterRoutes({ active = true }) {
     }
   }
   function change(fields) {
+    if (
+      (Object.hasOwn(fields, 'client') && fields.client !== order.client) ||
+      (Object.hasOwn(fields, 'room') && fields.room !== order.room)
+    )
+      handoff.reset();
     setSuccess('');
     setExportError('');
     setOrder((current) => ({ ...current, ...fields }));
@@ -135,6 +146,7 @@ export function WriterRoutes({ active = true }) {
     try {
       const output = await exportOrder(template, order);
       downloadExport(output);
+      handoff.exported();
       setSuccess(`${output.count} ${output.count === 1 ? 'formulário pronto' : 'formulários prontos'} para conferência no Excel.`);
     } catch (failure) {
       setExportError(failure.message);
@@ -170,23 +182,17 @@ export function WriterRoutes({ active = true }) {
       ) : (
         <WeeklyUpload template={template} busy={busy} error={error} onUpload={upload} onRemove={removeTemplate} />
       )}
-      {storageWarning && (
-        <Alert tone="warning" title="Excel nesta sessão">
-          {storageWarning}
-        </Alert>
+      {handoff.context && (
+        <PlannerHandoff
+          context={handoff.context}
+          template={template}
+          busy={busy}
+          onApply={(client) => handoff.apply(client, order, change, setStep)}
+        />
       )}
-      {expired && (
-        <Alert tone="danger" title="Formulário vencido">
-          Carregue o pedido da semana atual para continuar. A exportação está bloqueada.
-        </Alert>
-      )}
+      <TemplateFeedback template={restoring ? null : template} expired={expired} storageWarning={storageWarning} />
       {template && !expired && !restoring && (
         <>
-          {template.warnings.map((warning) => (
-            <Alert key={warning} tone="warning" title="Atenção ao modelo recebido">
-              {warning}
-            </Alert>
-          ))}
           <CheckoutProgress step={step} canVisit={canVisit} busy={busy} onNavigate={navigate} />
           <div className="writer-order-context" aria-label="Resumo do pedido em andamento">
             <span>

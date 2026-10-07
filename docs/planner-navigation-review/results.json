@@ -1,0 +1,109 @@
+{
+  "results": [
+    {
+      "width": 320,
+      "theme": "light",
+      "height": 36,
+      "top": 41,
+      "links": 5,
+      "className": "product-section-nav",
+      "viewport": 320,
+      "documentWidth": 320,
+      "active": "page",
+      "sameClass": true,
+      "sameHeight": true
+    },
+    {
+      "width": 320,
+      "theme": "dark",
+      "height": 36,
+      "top": 41,
+      "links": 5,
+      "className": "product-section-nav",
+      "viewport": 320,
+      "documentWidth": 320,
+      "active": "page",
+      "sameClass": true,
+      "sameHeight": true
+    },
+    {
+      "width": 390,
+      "theme": "light",
+      "height": 36,
+      "top": 41,
+      "links": 5,
+      "className": "product-section-nav",
+      "viewport": 390,
+      "documentWidth": 390,
+      "active": "page",
+      "sameClass": true,
+      "sameHeight": true
+    },
+    {
+      "width": 390,
+      "theme": "dark",
+      "height": 36,
+      "top": 41,
+      "links": 5,
+      "className": "product-section-nav",
+      "viewport": 390,
+      "documentWidth": 390,
+      "active": "page",
+      "sameClass": true,
+      "sameHeight": true
+    },
+    {
+      "width": 768,
+      "theme": "light",
+      "height": 36,
+      "top": 41,
+      "links": 5,
+      "className": "product-section-nav",
+      "viewport": 768,
+      "documentWidth": 768,
+      "active": "page",
+      "sameClass": true,
+      "sameHeight": true
+    },
+    {
+      "width": 768,
+      "theme": "dark",
+      "height": 36,
+      "top": 41,
+      "links": 5,
+      "className": "product-section-nav",
+      "viewport": 768,
+      "documentWidth": 768,
+      "active": "page",
+      "sameClass": true,
+      "sameHeight": true
+    },
+    {
+      "width": 1440,
+      "theme": "light",
+      "height": 36,
+      "top": 41,
+      "links": 5,
+      "className": "product-section-nav",
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "active": "page",
+      "sameClass": true,
+      "sameHeight": true
+    },
+    {
+      "width": 1440,
+      "theme": "dark",
+      "height": 36,
+      "top": 41,
+      "links": 5,
+      "className": "product-section-nav",
+      "viewport": 1440,
+      "documentWidth": 1440,
+      "active": "page",
+      "sameClass": true,
+      "sameHeight": true
+    }
+  ],
+  "errors": []
+}

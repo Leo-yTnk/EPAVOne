@@ -45,6 +45,17 @@ export function InsightsRoutes({ route, account, onOpenAccount }) {
         <ProductCatalogPage
           key={route.segments.join('/')}
           initialSection={route.segments[1] === 'secao' ? route.segments[2] || '' : ''}
+          initialQuery={
+            route.segments[1] === 'busca'
+              ? (() => {
+                  try {
+                    return decodeURIComponent(route.segments[2] || '');
+                  } catch {
+                    return '';
+                  }
+                })()
+              : ''
+          }
           initialCategory={route.segments[1] === 'categoria' ? route.segments[2] || '' : ''}
         />
       ) : (

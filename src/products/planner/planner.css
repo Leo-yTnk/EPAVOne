@@ -1,0 +1,340 @@
+.planner-page {
+  display: grid;
+  gap: var(--space-5);
+}
+.planner-page a {
+  color: var(--text-brand);
+  text-decoration: none;
+}
+.planner-page a:hover {
+  text-decoration: underline;
+}
+.planner-page .ds-btn-primary {
+  color: var(--button-content-default);
+}
+.planner-page :is(p, h2, h3, h4, h5, dd) {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.planner-page :is(.ds-display-small) {
+  color: var(--text-brand);
+}
+.planner-muted {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  line-height: var(--leading-body);
+}
+.planner-week-selector {
+  width: 18rem;
+  max-width: 100%;
+}
+.planner-demo-note {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+}
+.planner-demo-note strong {
+  color: var(--text-brand);
+  white-space: nowrap;
+}
+.planner-panel,
+.planner-flow-card,
+.planner-client,
+.planner-form {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+.planner-section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+}
+.planner-two-columns,
+.planner-client-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-5);
+  align-items: start;
+}
+.planner-hero,
+.planner-profile,
+.planner-week-summary {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  align-items: start;
+  gap: var(--space-6);
+}
+.planner-hero > div,
+.planner-profile > div,
+.planner-week-summary > div,
+.planner-hero-next {
+  display: grid;
+  gap: var(--space-4);
+}
+.planner-hero {
+  padding: var(--space-6);
+}
+.planner-hero-next {
+  align-content: start;
+}
+.planner-toolbar {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: var(--space-4);
+}
+.planner-priority {
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+}
+.planner-priority summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  width: fit-content;
+}
+.planner-priority summary:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
+.planner-priority ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+.planner-priority li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+.planner-priority strong {
+  color: var(--text-primary);
+}
+.planner-queue,
+.planner-simple-list,
+.planner-commitments,
+.planner-timeline {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--space-4);
+}
+.planner-queue-row {
+  display: flex;
+  gap: var(--space-4);
+  align-items: start;
+}
+.planner-position {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  color: var(--text-brand);
+  flex: 0 0 2rem;
+}
+.planner-queue-copy {
+  display: grid;
+  gap: var(--space-2);
+  flex: 1;
+  min-width: 0;
+}
+.planner-queue-controls {
+  display: grid;
+  gap: var(--space-3);
+  max-width: 26rem;
+}
+.planner-simple-list > li {
+  display: flex;
+  align-items: start;
+  gap: var(--space-3);
+}
+.planner-simple-list > li > div {
+  display: grid;
+  gap: var(--space-1);
+}
+.planner-simple-list a {
+  font-weight: 650;
+}
+.planner-facts,
+.planner-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin: 0;
+}
+.planner-facts dt,
+.planner-metrics dt {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-2);
+}
+.planner-facts dd,
+.planner-metrics dd {
+  margin: 0;
+  font-weight: 650;
+}
+.planner-metrics {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  row-gap: var(--space-6);
+  padding-block: var(--space-3);
+}
+.planner-metrics dd {
+  font: 700 var(--heading-3)/var(--leading-heading-small) var(--font-heading);
+}
+.planner-goal-form {
+  display: grid;
+  gap: var(--space-3);
+}
+.planner-offers,
+.planner-opportunity-list {
+  display: grid;
+  gap: var(--space-5);
+}
+.planner-offer {
+  display: flex;
+  gap: var(--space-4);
+  align-items: center;
+  justify-content: space-between;
+}
+.planner-offer > div {
+  display: grid;
+  gap: var(--space-2);
+  flex: 1;
+}
+.planner-offer > .ds-btn {
+  flex-shrink: 0;
+}
+.planner-timeline li {
+  display: grid;
+  grid-template-columns: 5rem minmax(0, 1fr);
+  gap: var(--space-4);
+}
+.planner-timeline time {
+  color: var(--text-brand);
+  font-size: 0.875rem;
+}
+.planner-timeline li > div {
+  display: grid;
+  gap: var(--space-2);
+}
+.planner-learnings {
+  margin: 0;
+  padding-left: var(--space-5);
+  display: grid;
+  gap: var(--space-3);
+}
+.planner-form fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.planner-form legend {
+  font-weight: 650;
+  font-size: 0.875rem;
+  margin-bottom: var(--space-3);
+}
+.planner-checks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3) var(--space-5);
+}
+.planner-notice {
+  color: var(--text-brand);
+  font-size: 0.875rem;
+}
+.planner-panel {
+  animation: planner-enter var(--duration-fast) var(--ease-enter);
+}
+@keyframes planner-enter {
+  from {
+    transform: translateY(var(--motion-distance-sm));
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@media (max-width: 64rem) {
+  .planner-queue-row {
+    flex-wrap: wrap;
+  }
+  .planner-queue-controls {
+    padding-left: 3rem;
+    max-width: 100%;
+    width: 100%;
+  }
+  .planner-offer {
+    flex-wrap: wrap;
+  }
+  .planner-offer > .ds-btn {
+    flex-shrink: 1;
+  }
+}
+@media (max-width: 40rem) {
+  .planner-two-columns,
+  .planner-client-grid,
+  .planner-hero,
+  .planner-profile,
+  .planner-week-summary,
+  .planner-toolbar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .planner-offer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .planner-offer > .ds-btn {
+    width: fit-content;
+  }
+  .planner-hero {
+    padding: var(--space-5);
+  }
+  .planner-demo-note {
+    flex-direction: column;
+    gap: var(--space-1);
+  }
+  .planner-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .planner-queue-controls {
+    padding-left: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .planner-panel {
+    animation: none;
+  }
+}
+[data-reduced-motion='true'] .planner-panel {
+  animation: none;
+}
+
+.planner-loading {
+  display: grid;
+  gap: var(--space-4);
+}
+.planner-loading-block {
+  min-height: 12rem;
+}
+
+.planner-profile > div,
+.planner-hero > div,
+.planner-offer > div {
+  min-width: 0;
+}
+.planner-page .ds-overline {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+.planner-page .ds-badge {
+  max-width: 100%;
+  width: fit-content;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}

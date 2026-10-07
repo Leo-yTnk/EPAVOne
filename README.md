@@ -4,9 +4,15 @@ Portal do EPAV para **EPAVInsights**, **EPAVPlanner** e **EPAVWriter**.
 
 ## Espaço de trabalho
 
-As abas **One**, **Insights**, **Planner** e **Writer** separam os apps da navegação entre páginas. O Insights mantém Home, Receitas e Produtos em uma segunda linha. Ao alternar apps, cada aba volta à última rota visitada durante a sessão.
+As abas **One**, **Insights**, **Planner** e **Writer** separam os apps da navegação entre páginas. Insights e Planner usam a mesma barra de navegação de páginas na segunda linha do header, com as áreas de cada produto. Ao alternar apps, cada aba volta à última rota visitada durante a sessão.
 
 O Writer conserva o formulário carregado, dados do cliente, carrinho e etapa enquanto o usuário consulta outro app. Essa continuidade é em memória: recarregar ou fechar a página inicia uma nova sessão. As abas suportam setas, Home e End; as rotas em hash continuam funcionando com links diretos e histórico do navegador.
+
+## EPAVPlanner
+
+O Planner reúne Visão geral, Semana, Clientes, Oportunidades e Desempenho, com preparação e Modo Atendimento. A primeira versão usa dados demonstrativos salvos neste navegador; não altera a carteira ou vendas do banco. Sugestões respeitam as restrições cadastradas e abrem a busca do Insights com retorno ao contexto. O Writer associa o cliente explicitamente ao cadastro do Excel; exportar um formulário não registra compra.
+
+Fluxos, prioridade e limites: [especificação](docs/planner-spec.md), [modelo de dados](docs/planner-data-model.md) e [revisão com evidências](docs/planner-implementation-review.md).
 
 ## Stack
 
