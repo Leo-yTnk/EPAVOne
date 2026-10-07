@@ -1,9 +1,10 @@
+import { SpotlightIngredients } from './SpotlightIngredients.jsx';
 import { CatalogLoading } from './CatalogLoading.jsx';
 import { CatalogSections } from './CatalogSections.jsx';
 import { catalogGroups } from '../models/sections.js';
 import { ProductCard } from './ProductCard.jsx';
 import { useState } from 'preact/hooks';
-import { Badge, Button, Card, EmptyState, ErrorState, Heading, Text } from '../../../design-system/components/index.js';
+import { Badge, Button, Card, EmptyState, ErrorState, Heading, Icon, Text } from '../../../design-system/components/index.js';
 import { catalogService } from '../services/catalogService.js';
 import { useCatalogResource } from '../hooks/useCatalogResource.js';
 import { productPricing } from '../models/catalog.js';
@@ -58,12 +59,44 @@ export function InsightsHomePage() {
               Consultar produtos
             </Button>
           </div>
+          {ready && (
+            <Card as="nav" className="insights-home-overview insights-workflow" aria-label="Seu caminho no atendimento">
+              {[
+                {
+                  icon: 'recipe',
+                  number: '01',
+                  title: 'Inspire',
+                  detail: `${recipes.length} receitas para sugerir`,
+                  href: '#/insights/receitas'
+                },
+                {
+                  icon: 'product',
+                  number: '02',
+                  title: 'Combine',
+                  detail: `${products.length} produtos para consultar`,
+                  href: '#/insights/produtos'
+                },
+                { icon: 'writer', number: '03', title: 'Prepare o pedido', detail: 'Confira o formulário da semana', href: '#/writer' }
+              ].map((step) => (
+                <Button key={step.number} as="a" href={step.href} variant="ghost" className="insights-workflow-step">
+                  <Icon name={step.icon} />
+                  <span>
+                    <span className="ds-overline">
+                      {step.number} · {step.title}
+                    </span>
+                    <span>{step.detail}</span>
+                  </span>
+                  <Icon name="next" />
+                </Button>
+              ))}
+            </Card>
+          )}
         </div>
         {resource.loading && <CatalogLoading spotlight label="Preparando suas sugestões…" />}
         {ready && spotlight && (
           <Card as="section" data-dialog-origin className="insights-spotlight" aria-label="Uma ideia para começar">
             <CatalogImage url={spotlight.image_url} name={spotlight.name} />
-            <div>
+            <div className="insights-spotlight-summary">
               <Badge>Uma ideia para começar</Badge>
               <Heading as="h2" level={3}>
                 {spotlight.name}
@@ -77,6 +110,7 @@ export function InsightsHomePage() {
                 Conhecer a receita
               </Button>
             </div>
+            <SpotlightIngredients recipe={spotlight} onOpenProduct={setProduct} />
           </Card>
         )}
       </section>
@@ -86,45 +120,29 @@ export function InsightsHomePage() {
       {ready && (
         <>
           {!spotlight && <EmptyState title="Novas ideias em breve" description="As receitas publicadas aparecerão aqui." />}
-          <Card as="section" className="insights-home-overview" aria-label="Explore o Insights">
-            <div>
-              <strong>{recipes.length}</strong>
-              <span>receitas para inspirar</span>
-            </div>
-            <div>
-              <strong>{products.length}</strong>
-              <span>produtos para consultar</span>
-            </div>
-            <div>
-              <strong>{categories.length}</strong>
-              <span>categorias para explorar</span>
-            </div>
-            <Button as="a" href="#/insights/criacao" variant="secondary" size="sm">
-              Sua biblioteca e criação →
-            </Button>
-          </Card>
           {structure.error && (
             <ErrorState title="Seções indisponíveis" description="As sugestões continuam disponíveis." onAction={structure.retry} />
           )}
-          {configuredHome.length > 0 && (
-            <CatalogSections
-              groups={configuredHome.map((group) => ({
-                ...group,
-                total: group.items.length,
-                items: group.items.slice(0, 3),
-                href: `#/insights/${group.items[0]?.catalogKind === 'products' ? 'produtos' : 'receitas'}/secao/${group.id}`
-              }))}
-              renderItem={(item) =>
-                item.catalogKind === 'recipes' ? (
-                  <RecipeCard key={`recipe-${item.id}`} recipe={item} onOpen={setRecipe} />
-                ) : (
-                  <ProductCard key={`product-${item.id}`} product={item} onOpen={setProduct} />
-                )
-              }
-            />
-          )}
           <div className="insights-discovery-body">
             <div className="insights-home-main">
+              {configuredHome.length > 0 && (
+                <CatalogSections
+                  groups={configuredHome.map((group) => ({
+                    ...group,
+                    total: group.items.length,
+                    items: group.items.slice(0, 3),
+                    href: `#/insights/${group.items[0]?.catalogKind === 'products' ? 'produtos' : 'receitas'}/secao/${group.id}`
+                  }))}
+                  renderItem={(item) =>
+                    item.catalogKind === 'recipes' ? (
+                      <RecipeCard key={`recipe-${item.id}`} recipe={item} onOpen={setRecipe} />
+                    ) : (
+                      <ProductCard key={`product-${item.id}`} product={item} onOpen={setProduct} />
+                    )
+                  }
+                />
+              )}
+
               {suggestions.length > 1 && (
                 <section className="insights-home-section" aria-labelledby="insights-inspiration-title">
                   <div className="insights-section-heading">

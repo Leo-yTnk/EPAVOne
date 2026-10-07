@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'preact/hooks';
-import { Badge, Button, EmptyState, ErrorState, Input, Pagination, Spinner } from '../../../../design-system/components/index.js';
+import { Badge, Card, Button, EmptyState, ErrorState, Input, Pagination, Spinner } from '../../../../design-system/components/index.js';
 import { collaborationService } from '../services/collaborationService.js';
 import { useCreationResource } from '../hooks/useCreationResource.js';
 import { statusLabels } from '../models/editor.js';
@@ -37,7 +37,7 @@ export function RequestsPage({ admin = false }) {
       ) : (
         <div className="creation-list">
           {rows.slice((current - 1) * 20, current * 20).map((request) => (
-            <article key={request.id} className="creation-row">
+            <Card key={request.id} className="creation-row">
               <Badge>{statusLabels[request.status] || request.status}</Badge>
               <div>
                 <h3>{request.source_code || request.request_code || 'Solicitação de publicação'}</h3>
@@ -46,7 +46,7 @@ export function RequestsPage({ admin = false }) {
               <Button variant="secondary" size="sm" onClick={() => setSelected(request)}>
                 Ver solicitação
               </Button>
-            </article>
+            </Card>
           ))}
         </div>
       )}

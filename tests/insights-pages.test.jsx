@@ -164,4 +164,46 @@ describe('Insights pages and contextual navigation', () => {
     expect(source.map((recipe) => recipe.id)).toEqual(['a', 'b', 'c']);
     expect(filterRecipes(source, { quick: true }).map((recipe) => recipe.id)).toEqual(['a']);
   });
+
+  it('uses the quick recipe choice with search and keeps the advanced checkbox synchronized', async () => {
+    render(<InsightsRoutes route={route(['receitas'])} />);
+    const quick = await screen.findByRole('button', { name: 'Preparo até 30 min 1' });
+    fireEvent.click(quick);
+    expect(quick.getAttribute('aria-pressed')).toBe('true');
+    expect(screen.getByLabelText('Até 30 minutos').checked).toBe(true);
+    expect(screen.getByText('1 receita encontrada')).toBeTruthy();
+    fireEvent.input(screen.getByLabelText('Buscar receita'), { target: { value: 'inexistente' } });
+    expect(screen.getByText('Nenhuma receita encontrada')).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Limpar filtros' }));
+    expect(quick.getAttribute('aria-pressed')).toBe('false');
+    expect(screen.getByText('25 receitas encontradas')).toBeTruthy();
+  });
+
+  it('combines product category choices, promotion and search without inventing availability', async () => {
+    catalogService.loadCatalog.mockResolvedValue({
+      categories,
+      products: [
+        { ...products[0], regular_price_cents: 2000, promo_price_cents: 1800, promo_min_quantity: 2 },
+        { id: 'p2', name: 'Carne Swift', category_id: 'bovinos', price: 30 }
+      ]
+    });
+    render(<InsightsRoutes route={route(['produtos'])} />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Aves 1' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Preço por quantidade 1' }));
+    expect(screen.getByText('1 produto encontrado')).toBeTruthy();
+    expect(screen.getByLabelText('Com preço por quantidade').checked).toBe(true);
+    fireEvent.input(screen.getByLabelText('Buscar produto'), { target: { value: 'carne' } });
+    expect(screen.getByText('Nenhum produto encontrado')).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Limpar filtros' }));
+    expect(screen.getByText('2 produtos encontrados')).toBeTruthy();
+  });
+
+  it('connects spotlight ingredient actions to the product dialog and preserves the Writer shortcut', async () => {
+    catalogService.recipeIngredients.mockResolvedValue([{ id: 'ingredient', quantity: 1, product: products[0] }]);
+    render(<InsightsRoutes route={route()} />);
+    fireEvent.click(await screen.findByRole('button', { name: 'Consultar Frango Swift' }));
+    expect(screen.getByRole('dialog', { name: 'Frango Swift' })).toBeTruthy();
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(screen.getByRole('link', { name: /Prepare o pedido/ }).getAttribute('href')).toBe('#/writer');
+  });
 });

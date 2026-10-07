@@ -1,4 +1,4 @@
-import { Badge, Button, EmptyState, ErrorState, Spinner } from '../../../design-system/components/index.js';
+import { Badge, Button, Card, Icon, EmptyState, ErrorState, Spinner } from '../../../design-system/components/index.js';
 import { catalogService } from '../services/catalogService.js';
 import { useCatalogResource } from '../hooks/useCatalogResource.js';
 import { swiftLink } from '../models/catalog.js';
@@ -10,7 +10,7 @@ export function ProductOverview({ product, onOpenRecipe }) {
   const link = swiftLink(product.swift_product_url);
   return (
     <section className="insights-detail" aria-label={product.name}>
-      <div className="insights-product-overview">
+      <Card stitched={false} as="div" className="insights-product-overview">
         <CatalogImage stitched={false} url={product.image_url} name={product.name} />
         <div className="insights-product-summary">
           <Badge>{product.category?.name || 'Outros produtos'}</Badge>
@@ -25,9 +25,12 @@ export function ProductOverview({ product, onOpenRecipe }) {
             Consulte a disponibilidade e os preços no formulário da semana antes de preencher o pedido.
           </p>
         </div>
-      </div>
-      <section className="insights-detail-section" aria-labelledby="related-recipes-title">
-        <h3 id="related-recipes-title">Receitas com este produto</h3>
+      </Card>
+      <Card stitched={false} as="section" className="insights-detail-section insights-recipe-panel" aria-labelledby="related-recipes-title">
+        <h3 id="related-recipes-title">
+          <Icon name="recipe" /> Receitas com este produto
+        </h3>
+        <p className="insights-muted">Transforme este ingrediente em uma sugestão de refeição.</p>
         {recipes.loading ? (
           <p role="status">
             <Spinner /> Carregando receitas…
@@ -39,7 +42,7 @@ export function ProductOverview({ product, onOpenRecipe }) {
         ) : (
           <div className="insights-related">
             {recipes.data.map((item) => (
-              <article key={item.id} className="insights-related-recipe">
+              <Card stitched={false} key={item.id} className="insights-related-recipe">
                 <CatalogImage stitched={false} url={item.image_url} name={item.name} />
                 <div>
                   <h4>{item.name}</h4>
@@ -50,11 +53,11 @@ export function ProductOverview({ product, onOpenRecipe }) {
                     Ver receita
                   </Button>
                 </div>
-              </article>
+              </Card>
             ))}
           </div>
         )}
-      </section>
+      </Card>
     </section>
   );
 }

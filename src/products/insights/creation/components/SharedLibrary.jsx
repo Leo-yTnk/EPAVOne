@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { Alert, Button, EmptyState, ErrorState, Icon, Input, Spinner } from '../../../../design-system/components/index.js';
+import { Alert, Button, Card, EmptyState, ErrorState, Icon, Input, Spinner } from '../../../../design-system/components/index.js';
 import { collaborationService } from '../services/collaborationService.js';
 import { useCreationResource } from '../hooks/useCreationResource.js';
 import { SharedRecipeDialog } from './SharedRecipeDialog.jsx';
@@ -52,7 +52,7 @@ export function SharedLibrary() {
       ) : (
         <div className="creation-list">
           {resource.data.map(({ recipe: item }) => (
-            <article className="creation-row" key={item.id}>
+            <Card className="creation-row" key={item.id}>
               <Icon name="recipe" />
               <div>
                 <h3>{item.name}</h3>
@@ -65,7 +65,7 @@ export function SharedLibrary() {
                   </Button>
                 </div>
               </div>
-            </article>
+            </Card>
           ))}
         </div>
       )}

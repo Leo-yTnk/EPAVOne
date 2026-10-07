@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import { render } from '@testing-library/preact';
 import { Card } from '../src/design-system/components/Card.jsx';
 
@@ -23,5 +23,34 @@ describe('Card', () => {
       </Card>
     );
     expect(container.firstElementChild.tagName).toBe('A');
+  });
+  it('resizes the stitch after asynchronous card growth and cleans up its observer', () => {
+    let notify;
+    const observe = vi.fn();
+    const disconnect = vi.fn();
+    vi.stubGlobal(
+      'ResizeObserver',
+      class {
+        constructor(callback) {
+          notify = callback;
+        }
+        observe = observe;
+        disconnect = disconnect;
+      }
+    );
+    try {
+      const { container, unmount } = render(<Card>conteúdo</Card>);
+      const svg = container.querySelector('.ds-stitch');
+      expect(observe).toHaveBeenCalledWith(svg);
+      notify([{ contentRect: { width: 300, height: 180 } }]);
+      expect(svg.style.getPropertyValue('--stitch-path-height')).toBe('178px');
+      notify([{ contentRect: { width: 300, height: 260 } }]);
+      expect(svg.style.getPropertyValue('--stitch-path-width')).toBe('298px');
+      expect(svg.style.getPropertyValue('--stitch-path-height')).toBe('258px');
+      unmount();
+      expect(disconnect).toHaveBeenCalledOnce();
+    } finally {
+      vi.unstubAllGlobals();
+    }
   });
 });

@@ -17,7 +17,7 @@
   color: var(--text-brand);
 }
 .insights-discovery-copy .insights-home-title {
-  font-size: clamp(1.875rem, 2.8vw, 2.5rem);
+  font: 400 clamp(1.875rem, 2.8vw, 2.5rem)/var(--leading-heading) var(--font-display);
   text-wrap: balance;
 }
 .insights-discovery-copy > p {
@@ -34,7 +34,7 @@
   aspect-ratio: 16/9;
   max-height: 15rem;
 }
-.insights-discovery .insights-spotlight > div:last-of-type {
+.insights-discovery .insights-spotlight > .insights-spotlight-summary {
   grid-template-columns: 1fr auto;
   gap: var(--space-2);
   align-items: center;
@@ -148,7 +148,7 @@
   .insights-discovery .insights-spotlight > .insights-image {
     aspect-ratio: 1;
   }
-  .insights-discovery .insights-spotlight > div:last-of-type {
+  .insights-discovery .insights-spotlight > .insights-spotlight-summary {
     grid-template-columns: 1fr;
   }
   .insights-discovery .insights-spotlight h2 {
@@ -176,5 +176,133 @@
 @media (max-width: 36rem) {
   .insights-discovery .insights-home-aside {
     grid-template-columns: 1fr;
+  }
+}
+
+.insights-discovery .insights-spotlight > .insights-spotlight-ingredients {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-2);
+  justify-items: stretch;
+}
+.insights-spotlight-ingredients > p {
+  display: flex;
+  gap: var(--space-2);
+  align-items: center;
+}
+.insights-spotlight-ingredients > div {
+  display: grid;
+  gap: var(--space-1);
+}
+.insights-spotlight-ingredients .ds-btn {
+  justify-self: stretch;
+  justify-content: start;
+  padding: var(--space-1);
+  text-align: left;
+  white-space: normal;
+}
+.insights-spotlight-product {
+  display: grid;
+  grid-template-columns: 2.25rem minmax(0, 1fr);
+  gap: var(--space-2);
+  align-items: center;
+}
+.insights-spotlight-ingredients .ds-btn > span {
+  display: inline-flex;
+  gap: var(--space-2);
+  align-items: center;
+  font-size: 0.8125rem;
+}
+.insights-spotlight-ingredients .ds-btn .ds-icon {
+  width: 0.75rem;
+  flex-shrink: 0;
+}
+.insights-spotlight-ingredients .insights-image {
+  aspect-ratio: 1;
+  width: 2.25rem;
+  --card-radius: var(--radius-sm);
+}
+.insights-spotlight-ingredients .ds-btn > span > span {
+  font-size: 0.8125rem;
+}
+.insights-workflow.insights-home-overview {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-1);
+  padding: var(--space-2);
+}
+.insights-workflow-step {
+  white-space: normal;
+  text-align: left;
+  padding: var(--space-3);
+  justify-content: start;
+}
+.insights-workflow-step > span {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: var(--space-3);
+  align-items: center;
+  width: 100%;
+}
+.insights-workflow-step > span > .ds-icon {
+  color: var(--text-brand);
+}
+.insights-workflow-step > span > .ds-icon:last-child {
+  width: 0.875rem;
+  color: var(--text-tertiary);
+}
+.insights-workflow-step > span > span {
+  display: grid;
+  gap: var(--space-1);
+}
+.insights-workflow-step .ds-overline {
+  color: var(--text-primary);
+  font-size: 0.75rem;
+}
+.insights-workflow-step > span > span > span:last-child {
+  font-size: 0.8125rem;
+  color: var(--text-secondary);
+}
+@media (max-width: 48rem) {
+  .insights-workflow.insights-home-overview {
+    grid-template-columns: 1fr;
+    gap: var(--space-1);
+  }
+  .insights-spotlight-ingredients {
+    grid-column: 1 / -1;
+  }
+  .insights-spotlight-ingredients > div {
+    grid-template-columns: 1fr;
+  }
+}
+
+.insights-discovery .insights-catalog-section .insights-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.insights-discovery .insights-catalog-section .insights-image {
+  aspect-ratio: 4/3;
+}
+.insights-discovery .insights-spotlight-ingredients > div {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+.insights-discovery .insights-spotlight-ingredients .ds-btn {
+  justify-self: stretch;
+}
+.insights-workflow .insights-workflow-step {
+  margin-left: 0;
+}
+@media (max-width: 48rem) {
+  .insights-discovery .insights-catalog-section .insights-grid {
+    grid-template-columns: 1fr;
+  }
+  .insights-discovery .insights-catalog-section .insights-product {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: var(--space-3);
+  }
+  .insights-discovery .insights-catalog-section .insights-image {
+    aspect-ratio: 1;
   }
 }
