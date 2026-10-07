@@ -28,8 +28,16 @@ export function EntityFields({ type, scope, item, values, vocabulary, change, di
         );
   return (
     <>
-      <Card as="fieldset" className="creation-fields creation-editor-section creation-identification">
-        <legend>Identificação</legend>
+      <Card
+        as="section"
+        role="group"
+        aria-label="Identificação"
+        className="creation-fields creation-editor-section creation-identification"
+      >
+        <div className="creation-section-heading">
+          <h3 className="creation-section-title">Identificação</h3>
+          <p>Dê um nome ao conteúdo e organize sua apresentação na biblioteca.</p>
+        </div>
         <Input label="Nome" maxLength={120} required value={values.name} onInput={input('name')} disabled={disabled} />
         {type === 'categories' ? (
           <Select
@@ -61,8 +69,11 @@ export function EntityFields({ type, scope, item, values, vocabulary, change, di
         )}
       </Card>
       {type === 'products' && (
-        <Card as="fieldset" className="creation-fields creation-editor-section">
-          <legend>Preço e unidade</legend>
+        <Card as="section" role="group" aria-label="Preço e unidade" className="creation-fields creation-editor-section">
+          <div className="creation-section-heading">
+            <h3 className="creation-section-title">Preço e unidade</h3>
+            <p>Informe o valor e a unidade usados para apresentar o produto.</p>
+          </div>
           <div className="creation-columns">
             <Input
               label="Preço (R$)"
@@ -96,8 +107,11 @@ export function EntityFields({ type, scope, item, values, vocabulary, change, di
       )}
       {type === 'recipes' && (
         <>
-          <Card as="fieldset" className="creation-fields creation-editor-section">
-            <legend>Preparo e rendimento</legend>
+          <Card as="section" role="group" aria-label="Preparo e rendimento" className="creation-fields creation-editor-section">
+            <div className="creation-section-heading">
+              <h3 className="creation-section-title">Preparo e rendimento</h3>
+              <p>Defina o tempo, as porções e a dificuldade da receita.</p>
+            </div>
             <div className="creation-columns creation-recipe-facts">
               <Input
                 label="Preparo (minutos)"
@@ -126,8 +140,11 @@ export function EntityFields({ type, scope, item, values, vocabulary, change, di
               />
             </div>
           </Card>
-          <Card as="fieldset" className="creation-fields creation-editor-section">
-            <legend>Ingredientes</legend>
+          <Card as="section" role="group" aria-label="Ingredientes" className="creation-fields creation-editor-section">
+            <div className="creation-section-heading">
+              <h3 className="creation-section-title">Ingredientes</h3>
+              <p>Escolha os produtos e a quantidade necessária de cada um.</p>
+            </div>
             <IngredientsEditor
               values={values.ingredients}
               products={vocabulary.products}
@@ -135,8 +152,11 @@ export function EntityFields({ type, scope, item, values, vocabulary, change, di
               disabled={disabled}
             />
           </Card>
-          <Card as="fieldset" className="creation-fields creation-editor-section">
-            <legend>Etapas e dicas</legend>
+          <Card as="section" role="group" aria-label="Etapas e dicas" className="creation-fields creation-editor-section">
+            <div className="creation-section-heading">
+              <h3 className="creation-section-title">Etapas e dicas</h3>
+              <p>Descreva o preparo em ordem e acrescente orientações úteis.</p>
+            </div>
             <Textarea
               label="Modo de preparo — uma etapa por linha"
               value={values.instructions}
@@ -154,8 +174,11 @@ export function EntityFields({ type, scope, item, values, vocabulary, change, di
             <Textarea label="Dicas — uma por linha" value={values.tips} rows={3} onInput={input('tips')} disabled={disabled} />
           </Card>
           {scope === 'site' && (
-            <Card as="fieldset" className="creation-fields creation-editor-section">
-              <legend>Publicação</legend>
+            <Card as="section" role="group" aria-label="Publicação" className="creation-fields creation-editor-section">
+              <div className="creation-section-heading">
+                <h3 className="creation-section-title">Publicação</h3>
+                <p>Escolha como a receita aparece no catálogo público.</p>
+              </div>
               <Select
                 label="Publicação"
                 value={values.status}
@@ -175,8 +198,11 @@ export function EntityFields({ type, scope, item, values, vocabulary, change, di
         </>
       )}
       {type !== 'categories' && sections.length > 0 && (
-        <Card as="fieldset" className="creation-fields">
-          <legend>Seções</legend>
+        <Card as="section" role="group" aria-label="Seções" className="creation-fields">
+          <div className="creation-section-heading">
+            <h3 className="creation-section-title">Seções</h3>
+            <p>Escolha em quais seções este conteúdo deve aparecer.</p>
+          </div>
           {sections.map((section) => (
             <Checkbox
               key={section.id}
