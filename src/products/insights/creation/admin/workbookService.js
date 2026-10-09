@@ -44,7 +44,10 @@ export async function readCatalogFile(file) {
     for (const row of localNodes(doc, 'row')) {
       const values = {};
       for (const cell of localNodes(row, 'c')) {
-        if (first(cell, 'f')) throw new Error('Remova fórmulas da planilha antes de importar.');
+        if (first(cell, 'f'))
+          throw new Error(
+            `${sheet.getAttribute('name')}, linha ${row.getAttribute('r')}, coluna ${cell.getAttribute('r')?.match(/^[A-Z]+/)?.[0]}: Remova fórmulas da planilha antes de importar.`
+          );
         const address = cell.getAttribute('r');
         const col = address?.match(/^[A-Z]+/)?.[0];
         if (col) values[col] = cells.get(address)?.value ?? '';
@@ -54,7 +57,10 @@ export async function readCatalogFile(file) {
         continue;
       }
       const record = Object.fromEntries(headers.map(([col, key]) => [String(key), values[col] ?? '']));
-      if (Object.values(record).some((value) => value !== '')) rows.push(record);
+      if (Object.values(record).some((value) => value !== '')) {
+        Object.defineProperty(record, '__sourceLine', { value: Number(row.getAttribute('r')), enumerable: false });
+        rows.push(record);
+      }
       if (rows.length > 5000) throw new Error('A planilha excede 5.000 linhas por aba.');
     }
     Sheets[sheet.getAttribute('name')] = rows;

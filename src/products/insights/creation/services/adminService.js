@@ -1,6 +1,7 @@
 import { authenticatedClient } from '../../../../shared/services/accountService.js';
 import * as api from '../repositories/creationRepository.js';
 import { result } from './creationService.js';
+import { reviewCatalogImport } from '../admin/importReview.js';
 export async function requireAdmin() {
   const {
     data: { session }
@@ -19,6 +20,15 @@ export const adminService = {
       result(api.fetchAdminCatalogStructure())
     ]);
     return { categories, products, recipes, structure };
+  },
+  async observations() {
+    await requireAdmin();
+    return result(api.fetchSwiftObservations());
+  },
+  async acceptMetadata(item, selected) {
+    await requireAdmin();
+    if (!selected?.name && !selected?.image) throw new Error('Selecione uma alteração para salvar.');
+    return result(api.acceptSwiftMetadata(item.product_id, item.checked_at, item.product.version, selected));
   },
   async structure() {
     await requireAdmin();
@@ -51,18 +61,10 @@ export const adminService = {
   },
   async importCatalog(modes, payload) {
     await requireAdmin();
-    if (payload.errors.length) throw new Error('Corrija os erros da planilha antes de importar.');
-    return result(
-      api.adminImportPublicCatalog(
-        modes,
-        payload.categories,
-        payload.products,
-        payload.recipes,
-        payload.sections,
-        payload.recipeSections,
-        payload.productSections
-      )
-    );
+    if (Object.values(modes).some((mode) => mode !== 'add')) throw new Error('Esta importação aceita somente Adicionar novos.');
+    const review = reviewCatalogImport(payload, await adminService.context());
+    if (review.errors.length) throw new Error(review.errors.join('\n'));
+    return result(api.adminAddPublicCatalog(payload));
   },
   async cleanup(mode, password) {
     await requireAdmin();

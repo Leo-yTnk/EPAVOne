@@ -1,10 +1,12 @@
 import { useState } from 'preact/hooks';
 import { Alert, Button, Checkbox, Input } from '../../../../design-system/components/index.js';
 import { adminService } from '../services/adminService.js';
+import { SwiftMetadataReview } from './SwiftMetadataReview.jsx';
 export function MaintenancePanel() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const [revision, setRevision] = useState(0);
   const [mode, setMode] = useState('');
   const [password, setPassword] = useState('');
   const [text, setText] = useState('');
@@ -15,7 +17,10 @@ export function MaintenancePanel() {
     setError('');
     try {
       const data = await adminService.sync();
-      setMessage(`Sincronização concluída: ${data.products_updated ?? data.products_checked ?? 0} produto(s) processado(s).`);
+      setMessage(
+        `Consulta concluída: ${data.products_updated || 0} atualizado(s), ${data.products_unchanged || 0} mantido(s), ${data.products_failed || 0} falha(s).`
+      );
+      setRevision((value) => value + 1);
     } catch (failure) {
       setError(failure.message);
     } finally {
@@ -54,6 +59,7 @@ export function MaintenancePanel() {
       <Button loading={busy} onClick={sync}>
         Atualizar preços públicos
       </Button>
+      <SwiftMetadataReview key={revision} />
       <h3>Manutenção permanente</h3>
       <p>Faça um backup do catálogo antes de excluir. Estas ações afetam o catálogo público, incluindo seus vínculos.</p>
       <div className="creation-toolbar">

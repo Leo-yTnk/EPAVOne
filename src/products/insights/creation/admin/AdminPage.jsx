@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { Alert, Select } from '../../../../design-system/components/index.js';
+import { Alert, Button, Select } from '../../../../design-system/components/index.js';
 import { EntityManager } from '../components/EntityManager.jsx';
 import { RequestsPage } from '../components/RequestsPage.jsx';
 import { SectionsManager } from './SectionsManager.jsx';
@@ -24,6 +24,14 @@ export function AdminPage({ profile }) {
     );
   return (
     <section className="creation-fields">
+      <div className="creation-toolbar">
+        <Button variant="secondary" onClick={() => setArea('import')}>
+          Importar Excel do catálogo
+        </Button>
+        <Button variant="ghost" onClick={() => setArea('maintenance')}>
+          Consultar preços Swift
+        </Button>
+      </div>
       <Select label="Área administrativa" value={area} options={areas} onChange={setArea} />
       {['recipes', 'products', 'categories'].includes(area) ? (
         <EntityManager key={area} type={area} scope="site" />

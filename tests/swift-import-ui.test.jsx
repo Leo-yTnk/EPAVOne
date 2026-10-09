@@ -12,12 +12,15 @@ it('prepares an additive official bundle, prevents replacement modes and require
   render(<ImportPanel />);
   const prepare = await screen.findByRole('button', { name: 'Preparar produtos oficiais Swift' });
   fireEvent.click(prepare);
-  expect(screen.getByText('Prévia pronta para revisão')).toBeTruthy();
+  expect(await screen.findByText('Prévia pronta para revisão')).toBeTruthy();
   expect(screen.queryByText('Catálogo atualizado')).toBeNull();
   const confirm = screen.getByRole('button', { name: 'Confirmar importação' });
   expect(confirm.disabled).toBe(true);
   expect(adminService.importCatalog).not.toHaveBeenCalled();
-  for (const select of screen.getAllByRole('button', { name: /Adicionar novos$/ })) expect(select.disabled).toBe(true);
+  expect(screen.queryByRole('button', { name: 'Adicionar e atualizar' })).toBeNull();
+  expect(screen.getAllByRole('tab')).toHaveLength(6);
+  fireEvent.click(screen.getByRole('tab', { name: 'Categorias (4)' }));
+  expect(screen.getByText('Sobremesas')).toBeTruthy();
   fireEvent.click(screen.getByRole('checkbox'));
   fireEvent.click(confirm);
   await waitFor(() => expect(adminService.importCatalog).toHaveBeenCalledTimes(1));

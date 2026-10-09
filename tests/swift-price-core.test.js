@@ -137,3 +137,15 @@ describe('Swift persistence policy', () => {
     expect(result).not.toHaveProperty('price_last_success_at');
   });
 });
+
+it('observes official image, presentation and site availability independently of EPAV', () => {
+  const html = `<html><script type="application/ld+json">${JSON.stringify({ '@type': 'Product', name: 'Frango Swift 1kg', image: ['https://evil.test/image', 'https://swiftbr.vteximg.com.br/arquivos/verified.jpg'], offers: { price: 20, priceCurrency: 'BRL', description: '/ Embalagem', availability: 'https://schema.org/OutOfStock' } })}</script><h1>Frango Swift 1kg</h1></html>`;
+  expect(parseSwiftProductPage(html)).toMatchObject({
+    availability: 'unavailable',
+    presentation: '1kg',
+    officialImageUrl: 'https://swiftbr.vteximg.com.br/arquivos/verified.jpg'
+  });
+});
+it('does not infer availability or editorial images when absent', () => {
+  expect(parseSwiftProductPage(page())).toMatchObject({ availability: 'unknown', officialImageUrl: null });
+});
