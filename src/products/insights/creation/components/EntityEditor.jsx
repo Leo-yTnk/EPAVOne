@@ -29,7 +29,7 @@ function EditorForm({ type, scope, item, data, onClose, onSaved }) {
   const [error, setError] = useState('');
   const [dirty, setDirty] = useState(false);
   const [discard, setDiscard] = useState(false);
-  const [preview, setPreview] = useState(false);
+  const [preview, setPreview] = useState(type !== 'categories');
   const close = () => {
     if (!pending.current) {
       if (dirty) setDiscard(true);
@@ -80,26 +80,30 @@ function EditorForm({ type, scope, item, data, onClose, onSaved }) {
             {error} Suas alterações continuam neste formulário.
           </Alert>
         )}
-        <EntityFields
-          type={type}
-          scope={scope}
-          item={data.detail.recipe || data.detail.item || item}
-          values={values}
-          vocabulary={data.vocabulary}
-          disabled={busy}
-          change={(patch) => {
-            setDirty(true);
-            setValues((current) => ({ ...current, ...patch }));
-          }}
-        />
-        {type !== 'categories' && (
-          <>
-            <Button type="button" variant="secondary" aria-expanded={preview} onClick={() => setPreview((value) => !value)}>
-              {preview ? 'Ocultar prévia' : 'Conferir prévia'}
-            </Button>
-            {preview && <ContentPreview type={type} values={values} vocabulary={data.vocabulary} />}
-          </>
-        )}
+        <div className={`creation-editor-layout${preview ? ' has-preview' : ''}`}>
+          <div className="creation-fields">
+            <EntityFields
+              type={type}
+              scope={scope}
+              item={data.detail.recipe || data.detail.item || item}
+              values={values}
+              vocabulary={data.vocabulary}
+              disabled={busy}
+              change={(patch) => {
+                setDirty(true);
+                setValues((current) => ({ ...current, ...patch }));
+              }}
+            />
+          </div>
+          {type !== 'categories' && (
+            <aside className="creation-editor-preview">
+              <Button type="button" variant="secondary" aria-expanded={preview} onClick={() => setPreview((value) => !value)}>
+                {preview ? 'Ocultar prévia' : 'Conferir prévia'}
+              </Button>
+              {preview && <ContentPreview type={type} values={values} vocabulary={data.vocabulary} />}
+            </aside>
+          )}
+        </div>
         {discard && (
           <Alert tone="warning" title="Descartar alterações?">
             <p>As alterações deste formulário ainda não foram salvas.</p>

@@ -43,7 +43,7 @@ beforeAll(async () => {
     insert into catalog_pages(key) values('home'),('recipes'),('products');
     grant usage on schema auth to authenticated;
     grant execute on function auth.uid(),is_admin() to authenticated;
-    grant select on categories,products,recipes,catalog_sections,catalog_section_products to authenticated;
+    grant select on categories,products,recipes,recipe_ingredients,catalog_sections,catalog_section_products to authenticated;
   `);
   const legacy = readFileSync(new URL('../supabase/012_admin_import_and_home_order.sql', import.meta.url), 'utf8');
   await db.exec(legacy);
@@ -53,6 +53,13 @@ beforeAll(async () => {
     `create function apply_swift_price_observation(uuid,jsonb) returns boolean language plpgsql as $$begin update public.products set price=($2->>'regular_price_cents')::numeric/100 where id=$1; return true; end$$;`
   );
   await db.exec(readFileSync(new URL('../supabase/043_epavone_swift_catalog_observations.sql', import.meta.url), 'utf8'));
+  await db.exec(`alter table categories add column version integer default 1;
+    alter table recipes add column version integer default 1;
+    create function bump_import_version() returns trigger language plpgsql as $$begin new.version:=old.version+1; return new; end$$;
+    create trigger bump_products before update on products for each row execute function bump_import_version();
+    create trigger bump_categories before update on categories for each row execute function bump_import_version();
+    create trigger bump_recipes before update on recipes for each row execute function bump_import_version();`);
+  await db.exec(readFileSync(new URL('../supabase/045_reviewed_catalog_duplicates.sql', import.meta.url), 'utf8'));
   await db.exec("set role authenticated; set request.uid='10000000-0000-0000-0000-000000000001'; set request.admin='true';");
 }, 30000);
 afterAll(async () => db?.close());
@@ -152,7 +159,11 @@ it('records availability and requested CEP without claiming regional confirmatio
   await expect(db.query('select admin_accept_swift_metadata($1,$2,$3,true,true)', [product.id, result.checked_at, 99])).rejects.toThrow(
     'version_conflict'
   );
-  await db.query('select admin_accept_swift_metadata($1,$2,$3,false,true)', [product.id, result.checked_at, product.version]);
+  await db.query('select admin_accept_swift_metadata($1,$2,$3,false,true)', [
+    product.id,
+    result.checked_at,
+    (await db.query('select version from products where id=$1', [product.id])).rows[0].version
+  ]);
   expect((await db.query('select name,image_url,active from products where id=$1', [product.id])).rows[0]).toEqual({
     name: product.name,
     image_url: observation.observed_image_url,
@@ -174,4 +185,102 @@ it('records availability and requested CEP without claiming regional confirmatio
   ).rejects.toThrow();
   expect((await db.query('select price from products where id=$1', [product.id])).rows[0]).toEqual(before);
   await db.exec('set role authenticated;');
+});
+
+const reviewed = (payload, choices) =>
+  db.query('select admin_import_reviewed_catalog($1,$2) as result', [
+    { categories: [], products: [], recipes: [], sections: [], recipeSections: [], productSections: [], ...payload },
+    choices
+  ]);
+it('uses imported product content only for explicit choices, preserving identity, prices and inactive state', async () => {
+  const before = (await db.query("select * from products where name='Picanha'")).rows[0];
+  const row = { ...item('Picanha'), image_url: 'https://example.com/imported.jpg', unit: 'kg' };
+  await reviewed({ products: [row] }, []);
+  expect((await db.query('select * from products where id=$1', [before.id])).rows[0]).toEqual(before);
+  const choice = { entity: 'products', index: 0, id: before.id, version: before.version };
+  const result = await reviewed({ products: [row] }, [choice]);
+  expect(result.rows[0].result.products).toMatchObject({ replaced: 1, ignored: 0 });
+  expect((await db.query('select * from products where id=$1', [before.id])).rows[0]).toMatchObject({
+    id: before.id,
+    image_url: row.image_url,
+    unit: 'kg',
+    price: before.price,
+    active: false,
+    swift_product_url: before.swift_product_url,
+    swift_sku: before.swift_sku
+  });
+  await expect(reviewed({ categories: [{ type: 'proteina', name: 'No rollback' }], products: [row] }, [choice])).rejects.toThrow(
+    'version_conflict'
+  );
+  expect((await db.query("select * from categories where name='No rollback'")).rows).toHaveLength(0);
+});
+it('replaces recipe details and ingredients with the same ID and publication state, with rollback on invalid references', async () => {
+  await db.exec(`reset role;
+    insert into categories(scope,type,name,slug,active) values('site','receita','Familia','familia',true);
+    insert into recipes(scope,status,name,category_id,prep_time,servings,difficulty,instructions)
+      select 'site','published','Almoco',id,10,1,'Fácil',array['Original'] from categories where name='Familia';
+    insert into recipe_ingredients select r.id,p.id,1,0 from recipes r,products p where r.name='Almoco' and p.name='Fraldinha';
+    set role authenticated;`);
+  const original = (await db.query("select * from recipes where name='Almoco'")).rows[0];
+  const row = {
+    name: 'Almoco',
+    category: 'Familia',
+    prep_time: 25,
+    servings: 2,
+    difficulty: 'Fácil',
+    instructions: ['Importado'],
+    ingredients: [{ product: 'Fraldinha', quantity: 2 }],
+    sections: []
+  };
+  const choice = { entity: 'recipes', index: 0, id: original.id, version: original.version };
+  await reviewed({ recipes: [row] }, [choice]);
+  expect((await db.query('select * from recipes where id=$1', [original.id])).rows[0]).toMatchObject({
+    id: original.id,
+    status: 'published',
+    prep_time: 25,
+    instructions: ['Importado']
+  });
+  expect((await db.query('select quantity from recipe_ingredients where recipe_id=$1', [original.id])).rows[0].quantity).toBe('2');
+  const updated = (await db.query('select version from recipes where id=$1', [original.id])).rows[0];
+  await expect(
+    reviewed({ products: [item('RollbackDuplicata')], recipes: [{ ...row, ingredients: [{ product: 'Missing', quantity: 1 }] }] }, [
+      { ...choice, version: updated.version }
+    ])
+  ).rejects.toThrow('active_product_not_found');
+  expect((await db.query("select * from products where name='RollbackDuplicata'")).rows).toHaveLength(0);
+  expect((await db.query('select quantity from recipe_ingredients where recipe_id=$1', [original.id])).rows[0].quantity).toBe('2');
+});
+it('rejects mismatched duplicate IDs and non-admin replacement calls', async () => {
+  await expect(
+    reviewed({ products: [item('Picanha')] }, [{ entity: 'products', index: 0, id: '00000000-0000-0000-0000-000000000001', version: 1 }])
+  ).rejects.toThrow('duplicate_identity_changed');
+  await db.exec("set request.admin='false';");
+  await expect(reviewed({}, [])).rejects.toThrow('not_authorized');
+  await db.exec('reset role;set role anon;');
+  await expect(reviewed({}, [])).rejects.toThrow('permission denied');
+  await db.exec("reset role;set role authenticated;set request.admin='true';");
+});
+it('applies reviewed category and section content while preserving IDs and checks section timestamps', async () => {
+  const category = (await db.query("select * from categories where slug='bovinos'")).rows[0];
+  const section = (await db.query("select * from catalog_sections where slug='churrasco'")).rows[0];
+  const payload = {
+    categories: [{ type: 'proteina', name: 'BOVINOS' }],
+    sections: [{ page: 'products', name: 'CHURRASCO', sort_order: 5, active: false }]
+  };
+  await reviewed(payload, [
+    { entity: 'categories', index: 0, id: category.id, version: category.version },
+    { entity: 'sections', index: 0, id: section.id, updated_at: section.updated_at }
+  ]);
+  expect((await db.query('select name,active from categories where id=$1', [category.id])).rows[0]).toEqual({
+    name: 'BOVINOS',
+    active: false
+  });
+  expect((await db.query('select name,sort_order,active from catalog_sections where id=$1', [section.id])).rows[0]).toEqual({
+    name: 'CHURRASCO',
+    sort_order: 5,
+    active: false
+  });
+  await expect(
+    reviewed({ sections: payload.sections }, [{ entity: 'sections', index: 0, id: section.id, updated_at: section.updated_at }])
+  ).rejects.toThrow('version_conflict');
 });

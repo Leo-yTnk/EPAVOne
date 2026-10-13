@@ -5,7 +5,7 @@ const slug = (value) =>
   normalizeImportText(value)
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
-export function prepareSwiftBundle(context) {
+export function prepareSwiftBundle(context, { includeExisting = false } = {}) {
   const products = swiftOfficialProducts.map((row) => {
     const category = (context.categories || []).find((item) => item.type === 'proteina' && slug(item.name) === slug(row.categoria));
     return { ...row, categoria: category?.name || row.categoria };
@@ -23,7 +23,7 @@ export function prepareSwiftBundle(context) {
   };
   const payload = parseCatalogWorkbook({ SheetNames: Object.keys(sheets), Sheets: sheets }, context);
   const review = reviewCatalogImport(payload, context);
-  const retained = review.groups.products.filter((item) => item.status !== 'ignored').map((item) => item.row);
+  const retained = review.groups.products.filter((item) => includeExisting || item.status !== 'ignored').map((item) => item.row);
   return {
     ...payload,
     products: retained,

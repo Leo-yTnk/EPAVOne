@@ -29,3 +29,42 @@ it('prepares an additive official bundle, prevents replacement modes and require
   expect(payload.products).toHaveLength(11);
   await screen.findByText('Catálogo atualizado');
 });
+it('compares duplicates, preserves originals by default and resets confirmation when selecting imported content', async () => {
+  adminService.importCatalog.mockClear();
+  const { swiftOfficialProducts } = await import('../src/products/insights/creation/admin/swiftOfficialProducts.js');
+  const row = swiftOfficialProducts[0];
+  adminService.context.mockResolvedValue({
+    categories: [],
+    products: [
+      {
+        id: 'existing',
+        name: row.nome,
+        swift_product_url: row.swift_url,
+        unit: 'un',
+        image_url: 'https://example.com/original.jpg',
+        version: 7,
+        active: true
+      }
+    ],
+    recipes: [],
+    structure: { pages: [], sections: [] }
+  });
+  render(<ImportPanel />);
+  fireEvent.click(await screen.findByRole('button', { name: 'Preparar produtos oficiais Swift' }));
+  const label = `Duplicata de ${row.nome}: manter qual conteúdo?`;
+  const choice = await screen.findByRole('button', { name: new RegExp(label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')) });
+  expect(choice.textContent).toContain('Manter original');
+  fireEvent.click(screen.getByRole('button', { name: 'Comparar original e importado' }));
+  expect(screen.getByText('Original')).toBeTruthy();
+  expect(screen.getByText('Importado')).toBeTruthy();
+  fireEvent.click(screen.getByRole('checkbox'));
+  const confirm = screen.getByRole('button', { name: 'Confirmar importação' });
+  expect(confirm.disabled).toBe(false);
+  fireEvent.click(choice);
+  fireEvent.click(await screen.findByRole('option', { name: 'Usar conteúdo importado' }));
+  expect(confirm.disabled).toBe(true);
+  fireEvent.click(screen.getByRole('checkbox'));
+  fireEvent.click(confirm);
+  await waitFor(() => expect(adminService.importCatalog).toHaveBeenCalledTimes(1));
+  expect(adminService.importCatalog.mock.calls[0][2]).toEqual([{ entity: 'products', index: 0, id: 'existing', version: 7 }]);
+});

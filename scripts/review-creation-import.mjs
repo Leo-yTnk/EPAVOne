@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import { swiftOfficialProducts } from '../src/products/insights/creation/admin/swiftOfficialProducts.js';
 import { createSwiftWorkbookFixture } from '../tests/fixtures/swiftWorkbook.js';
 import assert from 'node:assert/strict';
 import { spawn } from 'node:child_process';
@@ -41,6 +42,12 @@ try {
       const errors = [];
       page.on('pageerror', (error) => errors.push(error.message));
       await page.route('**.supabase.co/**', (route) => route.abort());
+      if (process.env.REVIEW_IMAGE_DIR) {
+        for (const [index, product] of swiftOfficialProducts.entries()) {
+          const path = `${process.env.REVIEW_IMAGE_DIR}/${index}.jpg`;
+          if (fs.existsSync(path)) await page.route(product.imagem, (route) => route.fulfill({ path, contentType: 'image/jpeg' }));
+        }
+      }
       await page.addInitScript((value) => localStorage.setItem('epavone-theme', value), theme);
       await page.goto('http://127.0.0.1:5176/EPAVOne/');
       await page.evaluate(async () => {
@@ -88,11 +95,13 @@ try {
       await page.getByRole('tab', { name: 'Produtos (11)' }).waitFor();
       assert.equal(await page.getByRole('button', { name: 'Confirmar importação' }).isDisabled(), true);
       await page.evaluate(() => document.fonts.ready);
+      await page.mouse.move(width - 1, 1);
+      await page.waitForTimeout(250);
       await page.screenshot({ path: `${output}/import-${width}-${theme}.png`, fullPage: true });
       await page.getByRole('tab', { name: 'Categorias (4)' }).click();
       await page.getByRole('tab', { name: 'Receitas (0)' }).click();
       await page.getByText('Nenhuma linha nesta aba. Nenhum registro será removido.').waitFor();
-      await page.getByRole('checkbox').check();
+      await page.getByRole('checkbox').check({ force: true });
       await page.getByRole('button', { name: 'Confirmar importação' }).click();
       await page.getByText('Importação concluída: 11 adicionado(s), 0 ignorado(s). Nenhum registro existente foi alterado.').waitFor();
       assert.equal((await page.evaluate(() => window.reviewImport)).count, 11);
@@ -116,9 +125,11 @@ try {
       await page
         .getByLabel('Modo de preparo — uma etapa por linha')
         .fill('Separe os ingredientes.\nAsse até cozinhar.\nSirva com os acompanhamentos.');
-      await page.getByRole('button', { name: 'Conferir prévia' }).click();
+      await page.getByRole('button', { name: 'Ocultar prévia' }).waitFor();
       await page.getByRole('region', { name: 'Prévia do conteúdo' }).waitFor();
       await page.getByRole('region', { name: 'Prévia do conteúdo' }).scrollIntoViewIfNeeded();
+      await page.mouse.move(width - 1, 1);
+      await page.waitForTimeout(250);
       await page.screenshot({ path: `${output}/editor-${width}-${theme}.png`, fullPage: true });
       await page.getByRole('button', { name: 'Cancelar', exact: true }).click();
       await page.getByText('As alterações deste formulário ainda não foram salvas.').waitFor();
@@ -152,13 +163,152 @@ try {
       });
       await page.getByText('Filé de frango', { exact: true }).waitFor();
       assert.equal(await page.getByRole('button', { name: 'Salvar alterações selecionadas' }).count(), 0);
+      await page.mouse.move(width - 1, 1);
+      await page.waitForTimeout(250);
       await page.screenshot({ path: `${output}/swift-review-${width}-${theme}.png`, fullPage: true });
-      await page.getByRole('checkbox', { name: 'Usar a imagem oficial consultada' }).check();
+      await page.getByRole('checkbox', { name: 'Usar a imagem oficial consultada' }).check({ force: true });
       await page.getByRole('button', { name: 'Salvar alterações selecionadas' }).click();
       await page.getByText('Alterações revisadas e salvas.').waitFor();
       assert.deepEqual(await page.evaluate(() => window.reviewMetadata), { image: true });
       results.push({
         view: 'Swift selective editorial review fixture',
+        width,
+        theme,
+        overflow: await page.evaluate(() => document.documentElement.scrollWidth > innerWidth),
+        errors: [...errors]
+      });
+      await page.evaluate(async (official) => {
+        const { creationService } = await import('/EPAVOne/src/products/insights/creation/services/creationService.js');
+        const { collaborationService } = await import('/EPAVOne/src/products/insights/creation/services/collaborationService.js');
+        const { adminService } = await import('/EPAVOne/src/products/insights/creation/services/adminService.js');
+        const products = official.slice(0, 6).map((item, i) => ({
+          id: `p${i}`,
+          name: item.nome,
+          image_url: item.imagem,
+          active: true,
+          product_code: `PRD${i}`,
+          category: { name: item.categoria }
+        }));
+        const recipes = [
+          {
+            id: 'r1',
+            name: 'Sobremesa para compartilhar — exemplo de revisão',
+            image_url: official[0].imagem,
+            status: 'draft',
+            recipe_code: 'REC01',
+            category: { name: 'Família' }
+          }
+        ];
+        creationService.load = async (type) =>
+          type === 'products'
+            ? products
+            : type === 'recipes'
+              ? recipes
+              : [{ id: 'c', name: 'Refeições em família', type: 'receita', active: true, category_code: 'CAT01' }];
+        collaborationService.shared = async () => recipes.map((recipe) => ({ recipe }));
+        collaborationService.requests = async () => [
+          { id: 'req', source_code: 'REC01', status: 'changes_requested', requester_display_name_snapshot: 'Vendedor de exemplo' }
+        ];
+        adminService.structure = async () => ({
+          pages: [{ id: 'home', key: 'home' }],
+          sections: [{ id: 's', page_id: 'home', name: 'Ideias para a semana', active: true, sort_order: 0 }]
+        });
+        adminService.sync = async () => ({ pending: true, run_id: 19 });
+        adminService.observations = async () => [];
+      }, swiftOfficialProducts);
+      for (const section of ['receitas', 'produtos', 'categorias', 'compartilhadas', 'solicitacoes', 'admin']) {
+        await page.evaluate(
+          async (section) =>
+            window.reviewMount('CreationPage', {
+              route: { segments: ['criacao', section] },
+              account: { session: { user: { id: 'visual-fixture' } }, profile: { role: 'admin' } }
+            }),
+          section
+        );
+        await page.locator('.ds-spinner').waitFor({ state: 'hidden' });
+        await page.evaluate(() => document.fonts.ready);
+        await page.mouse.move(width - 1, 1);
+        await page.waitForTimeout(250);
+        await page.screenshot({ path: `${output}/workspace-${section}-${width}-${theme}.png`, fullPage: true });
+        results.push({
+          view: `workspace ${section} fixture`,
+          width,
+          theme,
+          overflow: await page.evaluate(() => document.documentElement.scrollWidth > innerWidth),
+          errors: [...errors]
+        });
+      }
+      await page.getByRole('button', { name: 'Consultar preços Swift' }).click();
+      await page.getByRole('button', { name: 'Atualizar preços públicos' }).click();
+      await page.getByText('Sincronização em andamento').waitFor();
+      await page.mouse.move(width - 1, 1);
+      await page.waitForTimeout(250);
+      await page.screenshot({ path: `${output}/sync-pending-${width}-${theme}.png`, fullPage: true });
+      results.push({
+        view: 'pending sync fixture',
+        width,
+        theme,
+        overflow: await page.evaluate(() => document.documentElement.scrollWidth > innerWidth),
+        errors: [...errors]
+      });
+      await page.evaluate(async (official) => {
+        const { adminService } = await import('/EPAVOne/src/products/insights/creation/services/adminService.js');
+        const existing = {
+          id: 'original',
+          version: 3,
+          name: official[0].nome,
+          unit: 'un',
+          image_url: official[0].imagem,
+          swift_product_url: official[0].swift_url,
+          active: true,
+          product_code: 'PRD01'
+        };
+        const context = {
+          categories: [],
+          products: [existing, { ...existing, id: 'duplicate', product_code: 'PRD02' }],
+          recipes: [],
+          structure: { pages: [], sections: [] }
+        };
+        adminService.context = async () => context;
+        window.reviewDuplicateContext = context;
+        adminService.importCatalog = async (modes, payload, choices) => {
+          window.reviewDuplicateChoices = choices;
+          return { products: { added: 10, replaced: choices.length } };
+        };
+      }, swiftOfficialProducts);
+      await page.getByRole('button', { name: 'Verificar duplicatas', exact: true }).click();
+      await page.getByRole('button', { name: 'Verificar catálogo' }).click();
+      await page.getByText('1 grupo(s) de possíveis duplicatas.').waitFor();
+      await page.mouse.move(width - 1, 1);
+      await page.waitForTimeout(250);
+      await page.screenshot({ path: `${output}/duplicates-${width}-${theme}.png`, fullPage: true });
+      results.push({
+        view: 'catalog duplicate check fixture',
+        width,
+        theme,
+        overflow: await page.evaluate(() => document.documentElement.scrollWidth > innerWidth),
+        errors: [...errors]
+      });
+      await page.evaluate(() => window.reviewDuplicateContext.products.pop());
+      await page.getByRole('button', { name: 'Importar Excel do catálogo' }).click();
+      await page.getByRole('button', { name: 'Preparar produtos oficiais Swift' }).click();
+      await page.getByRole('button', { name: 'Comparar original e importado' }).click();
+      await page.getByRole('checkbox').check({ force: true });
+      const duplicateSelect = page.getByRole('button', { name: /Duplicata de Petit Gateau/ });
+      await duplicateSelect.click();
+      await page.getByRole('option', { name: 'Usar conteúdo importado' }).click();
+      assert.equal(await page.getByRole('button', { name: 'Confirmar importação' }).isDisabled(), true);
+      await page.mouse.move(width - 1, 1);
+      await page.waitForTimeout(250);
+      await page.screenshot({ path: `${output}/duplicate-choice-${width}-${theme}.png`, fullPage: true });
+      await page.getByRole('checkbox').check({ force: true });
+      await page.getByRole('button', { name: 'Confirmar importação' }).click();
+      await page.getByText(/Importação concluída: 10 adicionado/).waitFor();
+      assert.deepEqual(await page.evaluate(() => window.reviewDuplicateChoices), [
+        { entity: 'products', index: 0, id: 'original', version: 3 }
+      ]);
+      results.push({
+        view: 'reviewed duplicate replacement fixture',
         width,
         theme,
         overflow: await page.evaluate(() => document.documentElement.scrollWidth > innerWidth),

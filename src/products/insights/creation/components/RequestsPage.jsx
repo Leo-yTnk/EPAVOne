@@ -19,15 +19,25 @@ export function RequestsPage({ admin = false }) {
   const current = Math.min(page, Math.max(1, Math.ceil(rows.length / 20)));
   return (
     <section className="creation-fields">
-      <Input
-        label="Buscar solicitações"
-        type="search"
-        value={query}
-        onInput={(e) => {
-          setQuery(e.currentTarget.value);
-          setPage(1);
-        }}
-      />
+      <Card className="creation-fields creation-operation">
+        <div className="creation-section-heading">
+          <h3 className="creation-section-title">{admin ? 'Fila de revisão' : 'Acompanhe suas publicações'}</h3>
+          <p>
+            {admin
+              ? 'Abra uma solicitação para avaliar o conteúdo e registrar sua decisão.'
+              : 'Consulte o retorno da avaliação e os ajustes solicitados para cada conteúdo.'}
+          </p>
+        </div>
+        <Input
+          label="Buscar solicitações"
+          type="search"
+          value={query}
+          onInput={(e) => {
+            setQuery(e.currentTarget.value);
+            setPage(1);
+          }}
+        />
+      </Card>
       {resource.loading ? (
         <Spinner />
       ) : resource.error ? (
@@ -38,7 +48,9 @@ export function RequestsPage({ admin = false }) {
         <div className="creation-list">
           {rows.slice((current - 1) * 20, current * 20).map((request) => (
             <Card key={request.id} className="creation-row">
-              <Badge>{statusLabels[request.status] || request.status}</Badge>
+              <Badge tone={request.status === 'approved' ? 'success' : request.status === 'rejected' ? 'danger' : 'neutral'}>
+                {statusLabels[request.status] || request.status}
+              </Badge>
               <div>
                 <h3>{request.source_code || request.request_code || 'Solicitação de publicação'}</h3>
                 <p>{request.requester_display_name_snapshot}</p>

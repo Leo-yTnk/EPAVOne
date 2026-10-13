@@ -1,5 +1,6 @@
 import { useState } from 'preact/hooks';
 import { Alert, Button, Card, Checkbox, ErrorState, Link, Spinner } from '../../../../design-system/components/index.js';
+import { CreationThumbnail } from '../components/CreationThumbnail.jsx';
 import { adminService } from '../services/adminService.js';
 import { useCreationResource } from '../hooks/useCreationResource.js';
 export function SwiftMetadataReview() {
@@ -48,7 +49,10 @@ export function SwiftMetadataReview() {
           const change = (patch) => setSelected((current) => ({ ...current, [item.product_id]: { ...options, ...patch } }));
           return (
             <section key={item.product_id} className="creation-fields creation-import-row">
-              <strong>{product.name}</strong>
+              <div className="creation-observation-heading">
+                <CreationThumbnail item={{ ...product, image_url: item.image_url || product.image_url }} type="products" />
+                <strong>{product.name}</strong>
+              </div>
               <p>
                 Consulta: {new Date(item.checked_at).toLocaleString('pt-BR')} · CEP {item.reference_zip_code} ·{' '}
                 {item.presentation || 'Apresentação não informada'}

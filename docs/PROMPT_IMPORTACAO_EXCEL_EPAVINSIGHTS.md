@@ -1,10 +1,10 @@
 # Prompt — gerar um Excel de catálogo para o EPAVInsights
 
-Use este documento como instrução para preparar uma planilha `.xlsx` importável. Ele descreve o contrato implementado em `importTemplate.js`, `workbookService.js`, `importParser.js` e na RPC aditiva da migration 042. Não é o formulário semanal de pedidos do EPAVWriter.
+Use este documento como instrução para preparar uma planilha `.xlsx` importável. Ele descreve o contrato implementado em `importTemplate.js`, `workbookService.js`, `importParser.js` na RPC aditiva da migration 042 e na revisão de duplicatas da migration 045. Não é o formulário semanal de pedidos do EPAVWriter.
 
 ## Instrução principal
 
-Você deve converter os dados fornecidos em um arquivo `.xlsx` compatível com o importador do catálogo EPAVInsights, preservando exatamente os nomes das seis abas e os cabeçalhos abaixo. O objetivo é **Adicionar novos**, sem substituir, excluir, reativar ou alterar registros existentes.
+Você deve converter os dados fornecidos em um arquivo `.xlsx` compatível com o importador do catálogo EPAVInsights, preservando exatamente os nomes das seis abas e os cabeçalhos abaixo. O objetivo padrão é **Adicionar novos e manter os originais**. Para revisão de duplicatas solicitada pelo usuário, inclua também as linhas completas dos itens existentes que ele deseja comparar. A escolha de usar conteúdo importado será feita na interface, por registro, com confirmação explícita. Não exclua ou reative registros automaticamente.
 
 Antes de gerar o arquivo:
 
@@ -38,7 +38,7 @@ Regras gerais:
 - Guarde nomes, URLs e SKUs como texto. Um SKU numérico com zeros à esquerda deve continuar texto.
 - Use valores, não fórmulas com resultado em cache. Fórmulas em qualquer aba são rejeitadas.
 - O arquivo inteiro sem registros é inválido. Abas individuais vazias são válidas.
-- Não crie colunas de controle como `modo`, `replace_all`, `scope`, `owner_id`, `status`, `active` ou IDs internos. Elas não comandam a escrita. O servidor define o fluxo aditivo.
+- Não crie colunas de controle como `modo`, `replace_all`, `scope`, `owner_id`, `status`, `active` ou IDs internos. Elas não comandam a escrita. O servidor define o fluxo aditivo por padrão; substituições dependem das escolhas explícitas na interface e da migration 045, nunca de colunas de modo.
 - Não inclua `preco`/`preço`: este contrato deixa preços pendentes de consulta Swift. Nunca coloque um preço fictício ou zero para representar preço confirmado.
 
 ## Produtos
@@ -163,7 +163,7 @@ O lote de aceitação `Produtos_Swift_Adicionar_Yourcipe.xlsx` foi validado loca
 | `pagina=products` em Receitas por Seção                  | Usar `home` ou `recipes` e uma seção dessa página.                                            |
 | Mesmo nome com URL de outro produto                      | Parar e conferir a identidade; não renomear nem forçar a importação para escapar do conflito. |
 | SKU deduzido do nome do arquivo da imagem                | Deixar vazio até verificação oficial.                                                         |
-| Nova ordem para seção já existente                       | O importador ignora a alteração; usar o gerenciamento de seções.                              |
+| Nova ordem para seção já existente                       | Manter original ignora a alteração; usar conteúdo importado atualiza a seção após confirmação.                              |
 | Fórmula `=1+1` em qualquer célula                        | Substituir por valor antes de gerar o arquivo.                                                |
 
 A geração deve terminar com um resumo por entidade: quantidade de linhas, novos, ignorados, conflitos e pendências. Não confundir linhas declaradas com quantidade efetivamente adicionada: categorias e produtos existentes podem ser ignorados.
@@ -178,3 +178,12 @@ A geração deve terminar com um resumo por entidade: quantidade de linhas, novo
 6. Disponibilidade/preço do site Swift e disponibilidade do formulário semanal EPAV são informações distintas. Enviar um CEP não comprova que a resposta respeitou aquela região; confira a indicação de confirmação regional e não prometa valores regionais sem evidência.
 
 A gravação exige conta administradora e a migration 042. Observações/revisão Swift exigem 043 antes do deploy da nova função Edge. O usuário executa as migrations após diagnóstico; este prompt não autoriza executar histórico SQL, criar scheduler duplicado ou arquivar o Yourcipe.
+
+
+## Duplicatas e escolha do conteúdo
+
+Em Administração → Verificar duplicatas, inspecione correspondências por nome normalizado, página Swift ou SKU. Categorias são separadas por tipo; seções são separadas por página. Incluem-se itens inativos. A verificação é somente leitura e grupos ambíguos precisam de revisão nos editores.
+
+Ao importar um Excel, cada correspondência única de produto, receita, categoria ou seção oferece **Manter original (existente)** e **Usar conteúdo importado**, com comparação. A opção original é o padrão. Trocar uma escolha invalida a confirmação anterior. A planilha mantém os mesmos cabeçalhos; não acrescente IDs ou comandos de substituição.
+
+A substituição conserva o ID e vínculos. Produtos recebem nome, categoria, unidade e imagem; preços confirmados, SKU verificado, URL Swift e estado ativo continuam preservados. Receitas recebem dados editoriais, preparo e ingredientes, preservando o estado de publicação. Categorias recebem nome sem reativação. Seções recebem nome, ordem e ativa conforme a escolha. Vínculos por seção existentes continuam aditivos. Identidade ambígua não é resolvida automaticamente; alterações concorrentes invalidam a prévia e qualquer falha desfaz a transação inteira.
