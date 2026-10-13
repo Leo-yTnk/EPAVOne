@@ -1,9 +1,11 @@
-import { useState } from 'preact/hooks';
-import { Alert, Button, Card, Checkbox, Icon, Input } from '../../../../design-system/components/index.js';
-import { adminService } from '../services/adminService.js';
+import { useEffect, useState } from 'preact/hooks';
+import { Alert, Button, Card, Checkbox, Icon, Input, Progress } from '../../../../design-system/components/index.js';
+import { adminService, catalogPriceSync } from '../services/adminService.js';
 import { SwiftMetadataReview } from './SwiftMetadataReview.jsx';
 export function MaintenancePanel() {
-  const [syncPending, setSyncPending] = useState(null);
+  const [progress, setProgress] = useState(catalogPriceSync.snapshot);
+  useEffect(() => catalogPriceSync.subscribe(setProgress), []);
+  const syncing = progress.phase === 'running';
   const [busy, setBusy] = useState(false);
   const [feedbackScope, setFeedbackScope] = useState('sync');
   const [error, setError] = useState('');
@@ -20,23 +22,16 @@ export function MaintenancePanel() {
     setError('');
     setMessage('');
     try {
-      const data = await adminService.sync();
-      setSyncPending(data.pending ? data : null);
-      if (data.pending) return;
-      setMessage(
-        `Consulta concluída: ${data.products_updated || 0} atualizado(s), ${data.products_unchanged || 0} mantido(s), ${data.products_failed || 0} falha(s).`
-      );
+      await catalogPriceSync.start();
       setRevision((value) => value + 1);
-    } catch (failure) {
-      setSyncPending(null);
-      setError(failure.message);
     } finally {
       setBusy(false);
     }
   }
+
   async function cleanup(e) {
     e.preventDefault();
-    if (busy || !confirmed || text !== 'EXCLUIR') return;
+    if (busy || syncing || !confirmed || text !== 'EXCLUIR') return;
     setBusy(true);
     setFeedbackScope('cleanup');
     setMessage('');
@@ -71,13 +66,53 @@ export function MaintenancePanel() {
           <p>Consulte preços e acompanhe a execução sem iniciar lotes repetidos.</p>
         </div>
         <p>O último preço confirmado é preservado se a consulta falhar. Confira o resultado antes de repetir.</p>
-        <Button loading={busy} onClick={sync}>
-          {syncPending ? 'Verificar andamento' : 'Atualizar preços públicos'}
+        <Button loading={syncing} disabled={busy || syncing} onClick={sync}>
+          {progress.phase === 'paused' ? 'Retomar atualização' : 'Atualizar preços públicos'}
         </Button>
-        {syncPending && (
-          <Alert title="Sincronização em andamento">
-            Execução {syncPending.run_id}. O serviço continua processando. Verifique o andamento para consultar o resultado.
-          </Alert>
+        {progress.phase !== 'idle' && (
+          <div className="creation-fields" aria-live="polite">
+            <Progress
+              label="Produtos conferidos"
+              value={progress.processed}
+              max={progress.total || 1}
+              formatValue={() =>
+                `${progress.processed} de ${progress.total} · ${progress.total ? Math.round((progress.processed / progress.total) * 100) : 0}%`
+              }
+            />
+            {syncing && (
+              <p>
+                {progress.waiting ? 'Aguardando confirmação do serviço' : 'Consultando'}: {progress.currentName || 'carregando catálogo…'}
+              </p>
+            )}
+            <p>
+              {progress.updated} atualizado(s) · {progress.unchanged} mantido(s) · {progress.failed} falha(s)
+            </p>
+            {progress.phase === 'paused' && (
+              <Alert tone="danger" title="Atualização pausada">
+                {progress.error} Os itens já conferidos foram preservados.
+              </Alert>
+            )}
+            {progress.phase === 'completed' && (
+              <Alert
+                tone={progress.failed ? 'warning' : 'success'}
+                title={progress.failed ? 'Consulta concluída com falhas' : 'Consulta concluída'}
+              >
+                Confira o resultado antes de usar os preços no atendimento.
+              </Alert>
+            )}
+            {!!progress.failures.length && (
+              <details>
+                <summary>Ver produtos com falha ({progress.failures.length})</summary>
+                <ul>
+                  {progress.failures.map((failure, index) => (
+                    <li key={index}>
+                      {failure.product_name || failure.product_id}: {failure.code}
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            )}
+          </div>
         )}
         {feedbackScope === 'sync' && error && (
           <Alert tone="danger" title="Operação não concluída">
@@ -93,10 +128,10 @@ export function MaintenancePanel() {
           <p>Faça um backup antes de excluir. Estas ações afetam o catálogo público e seus vínculos.</p>
         </div>
         <div className="creation-toolbar">
-          <Button variant="secondary" disabled={busy} onClick={() => choose('inactive')}>
+          <Button variant="secondary" disabled={busy || syncing} onClick={() => choose('inactive')}>
             Excluir itens públicos inativos
           </Button>
-          <Button variant="secondary" disabled={busy} onClick={() => choose('all')}>
+          <Button variant="secondary" disabled={busy || syncing} onClick={() => choose('all')}>
             Excluir todas as receitas e produtos públicos
           </Button>
         </div>
@@ -106,7 +141,7 @@ export function MaintenancePanel() {
               {mode === 'all' ? 'Todas as receitas e produtos públicos serão excluídos.' : 'Os itens públicos inativos serão excluídos.'} O
               servidor confere sua função e senha novamente.
             </Alert>
-            <Input label="Digite EXCLUIR" value={text} onInput={(e) => setText(e.currentTarget.value)} disabled={busy} />
+            <Input label="Digite EXCLUIR" value={text} onInput={(e) => setText(e.currentTarget.value)} disabled={busy || syncing} />
             <Input
               label="Sua senha de administrador"
               type="password"
@@ -114,16 +149,16 @@ export function MaintenancePanel() {
               required
               value={password}
               onInput={(e) => setPassword(e.currentTarget.value)}
-              disabled={busy}
+              disabled={busy || syncing}
             />
-            <Checkbox checked={confirmed} onChange={(e) => setConfirmed(e.currentTarget.checked)} disabled={busy}>
+            <Checkbox checked={confirmed} onChange={(e) => setConfirmed(e.currentTarget.checked)} disabled={busy || syncing}>
               Tenho um backup e entendo que a exclusão é permanente.
             </Checkbox>
             <div className="creation-toolbar">
               <Button type="submit" variant="danger" loading={busy} disabled={!confirmed || text !== 'EXCLUIR' || !password}>
                 Confirmar exclusão permanente
               </Button>
-              <Button variant="ghost" disabled={busy} onClick={() => choose('')}>
+              <Button variant="ghost" disabled={busy || syncing} onClick={() => choose('')}>
                 Cancelar
               </Button>
             </div>

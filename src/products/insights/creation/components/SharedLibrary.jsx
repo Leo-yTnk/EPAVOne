@@ -7,6 +7,10 @@ import { SharedRecipeDialog } from './SharedRecipeDialog.jsx';
 import { CopyDialog } from './CopyDialog.jsx';
 export function SharedLibrary() {
   const resource = useCreationResource(collaborationService.shared, 'shared');
+  const [query, setQuery] = useState('');
+  const items = (resource.data || []).filter(({ recipe }) =>
+    recipe.name.toLocaleLowerCase('pt-BR').includes(query.trim().toLocaleLowerCase('pt-BR'))
+  );
   const [code, setCode] = useState('');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -50,15 +54,16 @@ export function SharedLibrary() {
         </Alert>
       )}
       {message && <p role="status">{message}</p>}
+      <Input label="Buscar receitas compartilhadas" type="search" value={query} onInput={(e) => setQuery(e.currentTarget.value)} />
       {resource.loading ? (
         <Spinner />
       ) : resource.error ? (
         <ErrorState description={resource.error} onAction={resource.reload} />
-      ) : !resource.data.length ? (
-        <EmptyState title="Nenhuma receita compartilhada" description="Use um código recebido para adicionar uma receita." />
+      ) : !items.length ? (
+        <EmptyState title="Nenhuma receita compartilhada encontrada" description="Use um código recebido para adicionar uma receita." />
       ) : (
         <div className="creation-list creation-gallery">
-          {resource.data.map(({ recipe: item }) => (
+          {items.map(({ recipe: item }) => (
             <Card className="creation-row creation-content-card" key={item.id}>
               <CreationThumbnail item={item} />
               <div className="creation-card-copy">

@@ -2,8 +2,15 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/preact';
 import { beforeEach, expect, it, vi } from 'vitest';
 import { CreationPage } from '../src/products/insights/creation/CreationPage.jsx';
 import { MaintenancePanel } from '../src/products/insights/creation/admin/MaintenancePanel.jsx';
-import { adminService } from '../src/products/insights/creation/services/adminService.js';
-vi.mock('../src/products/insights/creation/services/adminService.js', () => ({ adminService: { cleanup: vi.fn(), sync: vi.fn() } }));
+import { adminService, catalogPriceSync } from '../src/products/insights/creation/services/adminService.js';
+vi.mock('../src/products/insights/creation/services/adminService.js', () => ({
+  adminService: { cleanup: vi.fn() },
+  catalogPriceSync: {
+    snapshot: () => ({ phase: 'idle', processed: 0, total: 0, updated: 0, unchanged: 0, failed: 0, failures: [] }),
+    subscribe: vi.fn(() => () => {}),
+    start: vi.fn()
+  }
+}));
 beforeEach(() => vi.clearAllMocks());
 it('denies a regular account a manually entered admin route', () => {
   render(
@@ -26,13 +33,25 @@ it('requires password, exact confirmation and acknowledgement for permanent clea
   await waitFor(() => expect(adminService.cleanup).toHaveBeenCalledWith('all', 'fixture-password'));
   expect(screen.queryByLabelText('Sua senha de administrador')).toBeNull();
 });
-it('shows an active run as progress and checks again instead of showing completion', async () => {
-  adminService.sync.mockResolvedValueOnce({ pending: true, run_id: 19 }).mockResolvedValueOnce({ products_updated: 2 });
+it('shows real progress and resumes a paused catalog update', async () => {
+  let update;
+  catalogPriceSync.subscribe.mockImplementation((callback) => {
+    update = callback;
+    return () => {};
+  });
+  catalogPriceSync.start.mockImplementation(async () => {
+    update({ phase: 'paused', processed: 2, total: 5, updated: 1, unchanged: 1, failed: 0, failures: [], error: 'Rede indisponível' });
+  });
   render(<MaintenancePanel />);
   fireEvent.click(screen.getByRole('button', { name: 'Atualizar preços públicos' }));
-  await screen.findByText('Sincronização em andamento');
-  expect(screen.queryByText(/Consulta concluída/)).toBeNull();
-  fireEvent.click(screen.getByRole('button', { name: 'Verificar andamento' }));
-  await screen.findByText(/Consulta concluída: 2 atualizado/);
-  expect(screen.queryByText('Sincronização em andamento')).toBeNull();
+  await screen.findByText('Atualização pausada');
+  expect(screen.getByRole('progressbar').getAttribute('aria-valuenow')).toBe('2');
+  expect(screen.getByRole('progressbar').getAttribute('aria-valuemax')).toBe('5');
+  expect(screen.queryByText('Consulta concluída')).toBeNull();
+  catalogPriceSync.start.mockImplementation(async () => {
+    update({ phase: 'completed', processed: 5, total: 5, updated: 3, unchanged: 2, failed: 0, failures: [] });
+  });
+  fireEvent.click(screen.getByRole('button', { name: 'Retomar atualização' }));
+  await screen.findByText('Consulta concluída');
+  expect(screen.getByRole('progressbar').getAttribute('aria-valuenow')).toBe('5');
 });

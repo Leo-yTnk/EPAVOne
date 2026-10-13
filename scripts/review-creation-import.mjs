@@ -213,7 +213,28 @@ try {
           pages: [{ id: 'home', key: 'home' }],
           sections: [{ id: 's', page_id: 'home', name: 'Ideias para a semana', active: true, sort_order: 0 }]
         });
-        adminService.sync = async () => ({ pending: true, run_id: 19 });
+        const { catalogPriceSync } = await import('/EPAVOne/src/products/insights/creation/services/adminService.js');
+        let syncState = { phase: 'idle', processed: 0, total: 0, updated: 0, unchanged: 0, failed: 0, failures: [] };
+        const listeners = new Set();
+        catalogPriceSync.snapshot = () => syncState;
+        catalogPriceSync.subscribe = (listener) => {
+          listeners.add(listener);
+          return () => listeners.delete(listener);
+        };
+        catalogPriceSync.start = async () => {
+          syncState = {
+            ...syncState,
+            phase: 'running',
+            total: 32,
+            processed: 8,
+            updated: 3,
+            unchanged: 5,
+            currentName: 'Produto de exemplo',
+            waiting: true
+          };
+          listeners.forEach((listener) => listener(syncState));
+          return syncState;
+        };
         adminService.observations = async () => [];
       }, swiftOfficialProducts);
       for (const section of ['receitas', 'produtos', 'categorias', 'compartilhadas', 'solicitacoes', 'admin']) {
@@ -240,7 +261,7 @@ try {
       }
       await page.getByRole('button', { name: 'Consultar preços Swift' }).click();
       await page.getByRole('button', { name: 'Atualizar preços públicos' }).click();
-      await page.getByText('Sincronização em andamento').waitFor();
+      await page.getByRole('progressbar', { name: 'Produtos conferidos' }).waitFor();
       await page.mouse.move(width - 1, 1);
       await page.waitForTimeout(250);
       await page.screenshot({ path: `${output}/sync-pending-${width}-${theme}.png`, fullPage: true });
