@@ -1,3 +1,4 @@
+import { createCatalogPriceSync } from './catalogPriceSync.js';
 import { authenticatedClient } from '../../../../shared/services/accountService.js';
 import * as api from '../repositories/creationRepository.js';
 import { result } from './creationService.js';
@@ -81,3 +82,14 @@ export const adminService = {
     return result(mode === 'inactive' ? api.adminDeleteInactiveCatalogItems(password) : api.adminDeleteAllProductsAndRecipes(password));
   }
 };
+
+export const catalogPriceSync = createCatalogPriceSync({
+  loadProducts: async () => {
+    await requireAdmin();
+    return result(api.fetchAdminProducts());
+  },
+  refresh: async (id) => {
+    await requireAdmin();
+    return api.refreshProductPrice(id);
+  }
+});
