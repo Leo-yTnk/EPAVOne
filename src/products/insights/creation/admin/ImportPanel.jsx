@@ -1,24 +1,17 @@
 import { useRef, useState } from 'preact/hooks';
-import {
-  Alert,
-  Badge,
-  Button,
-  Card,
-  Checkbox,
-  ErrorState,
-  FileInput,
-  Link,
-  Spinner,
-  Tabs
-} from '../../../../design-system/components/index.js';
+import { Alert, Button, Card, Checkbox, ErrorState, FileInput, Spinner } from '../../../../design-system/components/index.js';
+import { importReplacementChoices } from './catalogDuplicates.js';
+import { ImportReviewPreview } from './ImportReviewPreview.jsx';
 import { adminService } from '../services/adminService.js';
 import { useCreationResource } from '../hooks/useCreationResource.js';
 import { readCatalogFile, downloadImportTemplate } from './workbookService.js';
 import { prepareSwiftBundle } from './swiftBundleService.js';
 import { parseCatalogWorkbook } from './importParser.js';
-import { addModes, importGroups, reviewCatalogImport } from './importReview.js';
+import { addModes, reviewCatalogImport } from './importReview.js';
 export function ImportPanel() {
   const resource = useCreationResource(adminService.context, 'import');
+  const [choices, setChoices] = useState({});
+  const replacementCount = Object.values(choices).filter((value) => value === 'imported').length;
   const [filename, setFilename] = useState('');
   const [payload, setPayload] = useState(null);
   const [review, setReview] = useState(null);
@@ -34,13 +27,16 @@ export function ImportPanel() {
     setBusy(true);
     setError('');
     setMessage('');
+    setChoices({});
     setPayload(null);
     setReview(null);
     setConfirmed(false);
     setFilename(file?.name || 'Produtos oficiais Swift · 07/10/2026');
     try {
       const context = await adminService.context();
-      const parsed = file ? parseCatalogWorkbook(await readCatalogFile(file), context) : prepareSwiftBundle(context);
+      const parsed = file
+        ? parseCatalogWorkbook(await readCatalogFile(file), context)
+        : prepareSwiftBundle(context, { includeExisting: true });
       // An already imported official bundle is a successful no-op, not an empty-file error.
       if (!file && !parsed.products.length) {
         setMessage('Todos os produtos deste lote já existem no catálogo. Nenhum registro foi alterado.');
@@ -49,7 +45,7 @@ export function ImportPanel() {
         setReview(reviewCatalogImport(parsed, context));
         if (!file)
           setMessage(
-            `${parsed.products.length} produtos novos para revisar; ${parsed.skipped} já existentes ignorados. Imagens oficiais, preços pendentes de sincronização.`
+            `${parsed.products.length} produtos para revisar, incluindo possíveis duplicatas. Imagens oficiais, preços pendentes de sincronização.`
           );
       }
     } catch (failure) {
@@ -65,15 +61,25 @@ export function ImportPanel() {
     setBusy(true);
     setError('');
     try {
-      const data = await adminService.importCatalog(addModes, payload);
+      const data = await adminService.importCatalog(addModes, payload, importReplacementChoices(review, choices));
       const total = Object.values(data)
         .filter((row) => row && typeof row === 'object')
-        .reduce((sum, row) => ({ added: sum.added + (row.added || 0), ignored: sum.ignored + (row.ignored || 0) }), {
-          added: 0,
-          ignored: 0
-        });
+        .reduce(
+          (sum, row) => ({
+            added: sum.added + (row.added || 0),
+            ignored: sum.ignored + (row.ignored || 0),
+            replaced: sum.replaced + (row.replaced || 0)
+          }),
+          {
+            added: 0,
+            ignored: 0,
+            replaced: 0
+          }
+        );
       setMessage(
-        `Importação concluída: ${total.added} adicionado(s), ${total.ignored} ignorado(s). Nenhum registro existente foi alterado.`
+        total.replaced
+          ? `Importação concluída: ${total.added} adicionado(s), ${total.replaced} substituído(s), ${total.ignored} mantido(s).`
+          : `Importação concluída: ${total.added} adicionado(s), ${total.ignored} ignorado(s). Nenhum registro existente foi alterado.`
       );
       setPayload(null);
       setReview(null);
@@ -130,79 +136,25 @@ export function ImportPanel() {
             helper="Até 10 MB e 5.000 linhas. Remova fórmulas; preserve os cabeçalhos do modelo."
           />
         )}
-        <Alert tone="info" title="Adicionar novos">
-          Os registros existentes, inclusive inativos, serão preservados. Categorias existentes serão reutilizadas. Identidades conflitantes
-          impedem a importação.
+        <Alert tone="info" title="Verificar duplicatas">
+          Os registros existentes são mantidos por padrão. Para cada duplicata, você pode escolher o conteúdo importado. Categorias
+          existentes serão reutilizadas. Identidades conflitantes impedem a importação.
         </Alert>
       </Card>
       {payload && review && (
         <>
-          <Card className="creation-fields creation-editor-section">
-            <div className="creation-section-heading">
-              <h3 className="creation-section-title">Prévia por entidade</h3>
-              <p>Confira os dados e os vínculos antes de confirmar.</p>
-            </div>
-            <div className="creation-toolbar" role="status">
-              <Badge>{review.totals.new} novos</Badge>
-              <Badge>{review.totals.ignored + (payload.skipped || 0)} ignorados</Badge>
-              <Badge>{review.totals.conflict} conflitos</Badge>
-            </div>
-            <Tabs
-              label="Entidades da planilha"
-              value={group}
-              onChange={setGroup}
-              items={importGroups.map(([value, label]) => ({ value, label: `${label} (${payload[value].length})` }))}
-            />
-            {review.groups[group].length ? (
-              <ul className="creation-import-preview">
-                {review.groups[group].map(({ row, status, differences, existing }, i) => (
-                  <li key={i} className="creation-import-row">
-                    <div>
-                      <strong>{row.name || row.product || row.recipe}</strong>
-                      <Badge>{status === 'new' ? 'Novo' : status === 'ignored' ? 'Ignorado' : 'Conflito'}</Badge>
-                    </div>
-                    <p>
-                      {row.category || row.type || row.section || row.page}
-                      {row.unit ? ` · ${row.unit}` : ''}
-                      {row.sort_order !== undefined ? ` · ordem ${row.sort_order}` : ''} · linha {row.source_line || '?'}
-                    </p>
-                    {row.ingredients && <p>{row.ingredients.map((item) => `${item.product}: ${item.quantity}`).join('; ')}</p>}
-                    {row.instructions && (
-                      <ol>
-                        {row.instructions.map((step, n) => (
-                          <li key={n}>{step}</li>
-                        ))}
-                      </ol>
-                    )}
-                    {/^https:\/\/(www\.)?swift\.com\.br\//i.test(row.swift_product_url || '') && (
-                      <Link href={row.swift_product_url} target="_blank" rel="noopener noreferrer">
-                        Página Swift
-                      </Link>
-                    )}
-                    {/^https?:\/\//i.test(row.image_url || '') && (
-                      <Link href={row.image_url} target="_blank" rel="noopener noreferrer">
-                        Ver imagem
-                      </Link>
-                    )}
-                    {existing?.active === false && <p>O registro existente está inativo e continuará assim.</p>}
-                    {differences.length > 0 && (
-                      <p>
-                        Há diferenças em{' '}
-                        {differences
-                          .map(
-                            (field) => ({ name: 'nome', image_url: 'imagem', unit: 'unidade', swift_product_url: 'página Swift' })[field]
-                          )
-                          .join(', ')}
-                        . O conteúdo existente será mantido.
-                      </p>
-                    )}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>Nenhuma linha nesta aba. Nenhum registro será removido.</p>
-            )}
-          </Card>
+          <ImportReviewPreview
+            payload={payload}
+            review={review}
+            group={group}
+            setGroup={setGroup}
+            choices={choices}
+            busy={busy}
+            onChoice={(key, value) => {
+              setChoices((current) => ({ ...current, [key]: value }));
+              setConfirmed(false);
+            }}
+          />
           {review.errors.length ? (
             <Alert tone="danger" title={`${review.errors.length} erro(s) na planilha`}>
               <ul>
@@ -219,7 +171,9 @@ export function ImportPanel() {
                 </Alert>
               )}
               <Checkbox checked={confirmed} onChange={(e) => setConfirmed(e.currentTarget.checked)} disabled={busy}>
-                Revisei a prévia e quero adicionar somente os novos registros.
+                {replacementCount
+                  ? `Revisei a comparação e autorizo ${replacementCount} substituição(ões), além dos novos registros.`
+                  : 'Revisei a prévia e quero adicionar somente os novos registros.'}
               </Checkbox>
               <Button loading={busy} disabled={!confirmed} onClick={run}>
                 Confirmar importação

@@ -3,6 +3,7 @@ import {
   Alert,
   Button,
   Checkbox,
+  Card,
   Dialog,
   EmptyState,
   ErrorState,
@@ -66,7 +67,7 @@ export function SectionsManager() {
       ) : (
         <div className="creation-list">
           {rows.map((section, i) => (
-            <article className="creation-row creation-section-row" key={section.id}>
+            <Card as="article" className="creation-row creation-section-row" key={section.id}>
               <Icon name="category" />
               <div>
                 <h3>{section.name}</h3>
@@ -95,7 +96,7 @@ export function SectionsManager() {
                   Editar
                 </Button>
               </div>
-            </article>
+            </Card>
           ))}
         </div>
       )}

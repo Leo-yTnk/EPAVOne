@@ -26,3 +26,13 @@ it('requires password, exact confirmation and acknowledgement for permanent clea
   await waitFor(() => expect(adminService.cleanup).toHaveBeenCalledWith('all', 'fixture-password'));
   expect(screen.queryByLabelText('Sua senha de administrador')).toBeNull();
 });
+it('shows an active run as progress and checks again instead of showing completion', async () => {
+  adminService.sync.mockResolvedValueOnce({ pending: true, run_id: 19 }).mockResolvedValueOnce({ products_updated: 2 });
+  render(<MaintenancePanel />);
+  fireEvent.click(screen.getByRole('button', { name: 'Atualizar preços públicos' }));
+  await screen.findByText('Sincronização em andamento');
+  expect(screen.queryByText(/Consulta concluída/)).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Verificar andamento' }));
+  await screen.findByText(/Consulta concluída: 2 atualizado/);
+  expect(screen.queryByText('Sincronização em andamento')).toBeNull();
+});

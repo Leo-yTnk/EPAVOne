@@ -620,7 +620,7 @@ async function fetchCatalogStructure(publicOnly) {
     }, `${operation}:${table}`);
   const [pages, sections, recipes, products] = await Promise.all([
     read('catalog_pages', 'id, key, name, sort_order, active', ['sort_order', 'id'], publicOnly),
-    read('catalog_sections', 'id, page_id, name, slug, sort_order, active', ['sort_order', 'id'], publicOnly),
+    read('catalog_sections', 'id, page_id, name, slug, sort_order, active, updated_at', ['sort_order', 'id'], publicOnly),
     read('catalog_section_recipes', 'section_id, recipe_id, sort_order', ['sort_order', 'section_id', 'recipe_id']),
     read('catalog_section_products', 'section_id, product_id, sort_order', ['sort_order', 'section_id', 'product_id'])
   ]);
@@ -722,12 +722,14 @@ export async function saveSiteProductAtomic(id, fields, sectionIds) {
   );
 }
 const syncInFlight = new Map();
+const pendingSync = new Map();
 async function invokeSwiftPriceSync(body) {
   const key = body.productId || 'batch';
   if (syncInFlight.has(key)) return syncInFlight.get(key);
   const operation = (async () => {
     const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
     if (sessionError || !sessionData?.session?.access_token) {
+      pendingSync.delete(key);
       const error = await normalizeSwiftSyncError({
         code: 'session_expired',
         message: sessionError?.message || 'No active Supabase session'
@@ -736,11 +738,31 @@ async function invokeSwiftPriceSync(body) {
       return { data: null, error };
     }
     let lastError = null;
-    const requestBody = { ...body, requestId: body.requestId || crypto.randomUUID() };
+    const previous = pendingSync.get(key);
+    const requestBody = previous
+      ? { ...body, requestId: previous.requestId, runId: previous.runId, statusOnly: true }
+      : { ...body, requestId: body.requestId || crypto.randomUUID() };
     for (let attempt = 0; attempt < 2; attempt++) {
       try {
         const result = await supabase.functions.invoke('swift-price-sync', { body: requestBody });
+        if (!result.error && result.data?.pending) {
+          pendingSync.set(key, {
+            ...requestBody,
+            runId: result.data.run_id,
+            waitingForOther: previous?.waitingForOther || result.data.conflicting
+          });
+          return { data: result.data, error: null };
+        }
         if (!result.error && result.data && Number.isFinite(result.data.products_failed)) {
+          pendingSync.delete(key);
+          if (previous?.waitingForOther || result.data.conflicting)
+            return {
+              data: null,
+              error: {
+                code: 'sync_other_run_completed',
+                message: 'A outra sincronização terminou. Clique novamente para iniciar a atualização solicitada.'
+              }
+            };
           if (result.data.products_failed > 0)
             return {
               data: result.data,
@@ -770,6 +792,8 @@ async function invokeSwiftPriceSync(body) {
       }
     }
     const error = await normalizeSwiftSyncError(lastError);
+    if (error.code === 'network_error') pendingSync.set(key, { ...requestBody, waitingForOther: previous?.waitingForOther });
+    else pendingSync.delete(key);
     console.error('[Swift price sync] invocation failed', {
       code: error.code,
       status: error.status,
@@ -911,6 +935,13 @@ export async function findSimilarSiteItems(entityType, name) {
 
 export async function adminImportPublicRecipes(mode, recipes) {
   return unwrap(await supabase.rpc('admin_import_public_recipes', { p_mode: mode, p_recipes: recipes }), 'adminImportPublicRecipes');
+}
+
+export async function adminImportReviewedCatalog(payload, choices) {
+  return unwrap(
+    await supabase.rpc('admin_import_reviewed_catalog', { p_payload: payload, p_choices: choices }),
+    'adminImportReviewedCatalog'
+  );
 }
 
 export async function adminAddPublicCatalog(payload) {

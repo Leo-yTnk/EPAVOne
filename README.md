@@ -16,6 +16,8 @@ Operação e encerramento: [ações privadas e aceitação](docs/migration-close
 
 Fluxos, prioridade e limites: [especificação](docs/planner-spec.md), [modelo de dados](docs/planner-data-model.md) e [revisão com evidências](docs/planner-implementation-review.md).
 
+Criação e sincronização Swift: [correção do sync, revisão de duplicatas e implantação 044/045](docs/creation-sync-review.md).
+
 ## Stack
 
 - Preact + JSX

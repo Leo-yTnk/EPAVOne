@@ -14,6 +14,9 @@ const FRIENDLY_BY_CODE = {
   product_not_found: 'O produto foi removido ou está inativo.',
   sync_already_running: 'Já existe uma sincronização em andamento.',
   sync_batch_in_progress: 'Outro lote de preços está realmente em andamento.',
+  sync_request_expired:
+    'A execução foi interrompida e seu prazo expirou. Inicie uma nova atualização; os preços já gravados foram preservados.',
+  sync_request_not_found: 'A solicitação não chegou a iniciar. Clique novamente para iniciar uma atualização.',
   sync_request_in_progress: 'Esta mesma solicitação ainda está sendo processada.',
   sync_request_already_completed: 'Esta solicitação já foi processada e não será executada novamente.'
 };
@@ -23,7 +26,16 @@ function inferCode(message, status, providerCode) {
   if (providerCode === 'forbidden' || status === 403) return 'forbidden';
   if (providerCode === 'unauthorized' || status === 401) return 'unauthorized';
   if (providerCode === 'product_not_found') return 'product_not_found';
-  if (['sync_batch_in_progress', 'sync_request_in_progress', 'sync_request_already_completed'].includes(providerCode)) return providerCode;
+  if (
+    [
+      'sync_batch_in_progress',
+      'sync_request_in_progress',
+      'sync_request_already_completed',
+      'sync_request_expired',
+      'sync_request_not_found'
+    ].includes(providerCode)
+  )
+    return providerCode;
   if (providerCode === 'sync_already_running' || status === 409) return 'sync_already_running';
   if (status === 404) return 'function_not_found';
   if (/failed to send a request|fetch failed|networkerror|cors/i.test(message)) return 'network_error';
@@ -93,7 +105,14 @@ export function buildSwiftSyncReport(result, { catalogReloaded = true } = {}) {
   const data = result?.data || error?.metrics || {};
   const failures = result?.data?.failures || error?.failures || [];
   const reachedService = !['session_expired', 'network_error', 'function_not_found'].includes(error?.code);
-  const runStarted = !!(data.run_id || error?.runId);
+  const pending = !!data.pending;
+  const conflict = [
+    'sync_batch_in_progress',
+    'sync_request_in_progress',
+    'sync_request_expired',
+    'sync_request_already_completed'
+  ].includes(error?.code);
+  const runStarted = !pending && !conflict && !!(data.run_id || error?.runId);
   const synced = count(data.products_synced);
   const failed = count(data.products_failed);
   const updated = count(data.products_updated);
@@ -139,13 +158,17 @@ export function buildSwiftSyncReport(result, { catalogReloaded = true } = {}) {
     }
   ];
   return {
-    title: error
-      ? error.code === 'partial_sync'
-        ? 'Atualização concluída com falhas'
-        : 'Não foi possível atualizar os preços'
-      : 'Preços atualizados com sucesso',
-    summary: error?.message || `${synced} produto(s) consultado(s), sem falhas.`,
-    kind: error ? 'error' : 'success',
+    title: pending
+      ? 'Sincronização em andamento'
+      : error
+        ? error.code === 'partial_sync'
+          ? 'Atualização concluída com falhas'
+          : 'Não foi possível atualizar os preços'
+        : 'Preços atualizados com sucesso',
+    summary: pending
+      ? 'O serviço continua processando. Consulte novamente para acompanhar o resultado.'
+      : error?.message || `${synced} produto(s) consultado(s), sem falhas.`,
+    kind: pending ? 'info' : error ? 'error' : 'success',
     steps,
     failures: failures.map((item) => ({
       product: item.product_name || item.product_id || 'Produto não identificado',

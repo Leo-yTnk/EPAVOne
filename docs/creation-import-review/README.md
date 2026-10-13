@@ -33,3 +33,7 @@ Não houve migration, importação, publicação ou login real em produção. O 
 **Região:** cookies e header solicitam o CEP configurado. A página não fornece evidência suficiente de que respeitou essa região; `region_confirmed=false` é intencional. A tela explica esta limitação e exige conferência. Disponibilidade do site não é disponibilidade da planilha EPAV. Não há descoberta irrestrita de novos produtos: a importação continua revisada, com lote conhecido e URLs oficiais; não copiamos receitas. Fontes sem imagem/metadados estruturados não recebem informações inferidas. O parser conservador pode rejeitar páginas legítimas; não contorna bloqueios.
 
 `npm run verify`: 51 arquivos / 237 testes e build aprovados. A advertência de lint em review-migration.mjs já existia no main.
+
+## Revisão posterior ao PR #50
+
+A captura local e a matriz completa de Criação foram executadas na revisão do ciclo de vida do sync. Correção 044, implantação e resultados atuais: [creation-sync-review.md](../creation-sync-review.md). Esta seção registra a validação posterior, sem alterar os limites de aceite hospedado descritos acima.

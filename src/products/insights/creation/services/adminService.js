@@ -59,12 +59,21 @@ export const adminService = {
     await requireAdmin();
     return result(id ? api.refreshProductPrice(id) : api.refreshAllProductPrices());
   },
-  async importCatalog(modes, payload) {
+  async importCatalog(modes, payload, replacements = []) {
     await requireAdmin();
     if (Object.values(modes).some((mode) => mode !== 'add')) throw new Error('Esta importação aceita somente Adicionar novos.');
     const review = reviewCatalogImport(payload, await adminService.context());
     if (review.errors.length) throw new Error(review.errors.join('\n'));
-    return result(api.adminAddPublicCatalog(payload));
+    if (!Array.isArray(replacements)) throw new Error('Escolhas de duplicatas inválidas.');
+    for (const choice of replacements) {
+      const duplicate = review.groups[choice.entity]?.[choice.index];
+      if (!duplicate || duplicate.status !== 'ignored' || duplicate.existing?.id !== choice.id)
+        throw new Error('A identidade desta duplicata mudou. Prepare a prévia novamente.');
+      const existing = duplicate.existing;
+      if (choice.entity === 'sections' ? existing.updated_at !== choice.updated_at : existing.version !== choice.version)
+        throw new Error('Este registro mudou desde a comparação. Prepare a prévia novamente antes de substituir.');
+    }
+    return result(replacements.length ? api.adminImportReviewedCatalog(payload, replacements) : api.adminAddPublicCatalog(payload));
   },
   async cleanup(mode, password) {
     await requireAdmin();

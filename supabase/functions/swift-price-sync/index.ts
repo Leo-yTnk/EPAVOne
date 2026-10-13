@@ -7,6 +7,8 @@ import {
   parseSwiftProductPage
 } from '../_shared/swift-price-core.js';
 
+import { swiftSyncRunResponse } from '../_shared/swift-sync-run-response.js';
+
 const env = (key: string, fallback?: string) => Deno.env.get(key) || fallback;
 const ZIP = (env('SWIFT_REFERENCE_ZIP_CODE') || '').replace(/\D/g, '');
 const MAX_AGE = Number(env('SWIFT_PRICE_MAX_AGE_MINUTES', '30'));
@@ -132,12 +134,27 @@ Deno.serve(async (req) => {
   }
   if (!cronAuthorized && !authenticated) return json({ error: 'unauthorized', code: 'unauthorized' }, 401);
   if (!cronAuthorized && !adminAuthorized) return json({ error: 'forbidden', code: 'forbidden' }, 403);
-  let body: { productId?: string; staleOnly?: boolean; requestId?: string } = {};
+  let body: { productId?: string; staleOnly?: boolean; requestId?: string; statusOnly?: boolean; runId?: number } = {};
   try {
     body = await req.json();
   } catch {
     /* cron may have no body */
   }
+  const requestKey = body.requestId ? `${body.productId || 'batch'}:${body.requestId}` : null;
+  async function runResponse(runId?: number, conflicting = false) {
+    let query = supabase.from('swift_price_sync_runs').select('*');
+    if (runId) query = query.eq('id', runId);
+    else if (requestKey) query = query.eq('request_key', requestKey);
+    else return json({ code: 'invalid_status_request', error: 'invalid_status_request' }, 400);
+    const { data: existing, error } = await query.maybeSingle();
+    if (error) return json({ code: 'sync_internal_error', error: 'status_query_failed' }, 500);
+    if (!existing) return json({ code: 'sync_request_not_found', error: 'sync_request_not_found' }, 404);
+    const response = swiftSyncRunResponse(existing);
+    return json({ ...response.payload, ...(conflicting ? { conflicting: true } : {}) }, response.status);
+  }
+  // Authentication/administrator checks above apply equally to status reads.
+  // This path cannot start a run or repeat price writes.
+  if (body.statusOnly) return runResponse(body.runId);
   if (cronAuthorized && !body.productId) {
     const { data: lastRun, error: intervalError } = await supabase
       .from('swift_price_sync_runs')
@@ -150,7 +167,6 @@ Deno.serve(async (req) => {
     if (lastRun && Date.now() - Date.parse(lastRun.started_at) < SYNC_INTERVAL * 60_000)
       return new Response(JSON.stringify({ skipped: 'sync_interval_not_elapsed' }), { headers: responseHeaders });
   }
-  const requestKey = body.requestId ? `${body.productId || 'batch'}:${body.requestId}` : null;
   const { data: begun, error: beginError } = await supabase.rpc('begin_swift_price_sync', {
     p_request_key: requestKey,
     p_lease_seconds: LEASE_SECONDS
@@ -159,14 +175,8 @@ Deno.serve(async (req) => {
   const run = begun?.[0];
   if (!run) return json({ error: 'sync_lock_invalid_response', code: 'sync_internal_error', stage: 'begin' }, 500);
   if (run.disposition !== 'started' && run.disposition !== 'recovered_and_started') {
-    const code =
-      run.disposition === 'duplicate_active'
-        ? 'sync_request_in_progress'
-        : run.disposition === 'duplicate_finished'
-          ? 'sync_request_already_completed'
-          : 'sync_batch_in_progress';
-    log('sync_conflict', { run_id: run.id, correlation_id: run.correlation_id, stage: 'begin', code });
-    return json({ error: code, code, run_id: run.id, correlation_id: run.correlation_id }, 409);
+    log('sync_status', { run_id: run.id, disposition: run.disposition });
+    return runResponse(run.id, run.disposition === 'active_conflict');
   }
   if (run.disposition === 'recovered_and_started')
     log('abandoned_run_recovered', {

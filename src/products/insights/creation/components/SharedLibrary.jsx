@@ -2,6 +2,7 @@ import { useState } from 'preact/hooks';
 import { Alert, Button, Card, EmptyState, ErrorState, Icon, Input, Spinner } from '../../../../design-system/components/index.js';
 import { collaborationService } from '../services/collaborationService.js';
 import { useCreationResource } from '../hooks/useCreationResource.js';
+import { CreationThumbnail } from './CreationThumbnail.jsx';
 import { SharedRecipeDialog } from './SharedRecipeDialog.jsx';
 import { CopyDialog } from './CopyDialog.jsx';
 export function SharedLibrary() {
@@ -31,12 +32,18 @@ export function SharedLibrary() {
   }
   return (
     <section className="creation-fields">
-      <form className="creation-toolbar" onSubmit={redeem}>
-        <Input label="Código compartilhado" value={code} onInput={(e) => setCode(e.currentTarget.value)} required autoComplete="off" />
-        <Button type="submit" loading={busy}>
-          Resgatar receita
-        </Button>
-      </form>
+      <Card as="section" className="creation-fields creation-operation">
+        <div className="creation-section-heading">
+          <h3 className="creation-section-title">Receba uma ideia para sua próxima venda</h3>
+          <p>Resgate o código de outro vendedor. Você pode consultar a receita ou criar sua própria cópia.</p>
+        </div>
+        <form className="creation-toolbar" onSubmit={redeem}>
+          <Input label="Código compartilhado" value={code} onInput={(e) => setCode(e.currentTarget.value)} required autoComplete="off" />
+          <Button type="submit" loading={busy}>
+            Resgatar receita
+          </Button>
+        </form>
+      </Card>
       {error && (
         <Alert tone="danger" title="Não foi possível resgatar">
           {error}
@@ -50,20 +57,21 @@ export function SharedLibrary() {
       ) : !resource.data.length ? (
         <EmptyState title="Nenhuma receita compartilhada" description="Use um código recebido para adicionar uma receita." />
       ) : (
-        <div className="creation-list">
+        <div className="creation-list creation-gallery">
           {resource.data.map(({ recipe: item }) => (
-            <Card className="creation-row" key={item.id}>
-              <Icon name="recipe" />
-              <div>
+            <Card className="creation-row creation-content-card" key={item.id}>
+              <CreationThumbnail item={item} />
+              <div className="creation-card-copy">
                 <h3>{item.name}</h3>
-                <div className="creation-toolbar">
-                  <Button variant="secondary" size="sm" onClick={() => setRecipe(item)}>
-                    Ver receita
-                  </Button>
-                  <Button variant="ghost" size="sm" onClick={() => setCopying(item)}>
-                    <Icon name="copy" /> Criar cópia
-                  </Button>
-                </div>
+                <p className="insights-muted">Receita compartilhada · {item.recipe_code || 'Recebida por código'}</p>
+              </div>
+              <div className="creation-row-actions">
+                <Button variant="secondary" size="sm" onClick={() => setRecipe(item)}>
+                  Ver receita
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => setCopying(item)}>
+                  <Icon name="copy" /> Criar cópia
+                </Button>
               </div>
             </Card>
           ))}
