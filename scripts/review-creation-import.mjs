@@ -10,24 +10,39 @@ const require = createRequire(
 const { chromium } = require('playwright');
 const output = 'docs/creation-import-review';
 fs.mkdirSync(output, { recursive: true });
-const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js', '--host', '127.0.0.1', '--port', '5176'], {
+const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js', '--host', '127.0.0.1', '--port', '5176', '--strictPort'], {
   stdio: ['ignore', 'pipe', 'pipe']
 });
 let browser;
 const results = [];
 try {
-  await new Promise((resolve, reject) => {
-    const timer = setTimeout(() => reject(new Error('Vite startup timed out')), 30000);
-    server.stderr.on('data', (data) => console.warn(data.toString()));
-    server.on('exit', (code) => reject(new Error(`Vite exited: ${code}`)));
-    server.stdout.on('data', (data) => {
-      if (data.toString().includes('Local:')) {
-        clearTimeout(timer);
-        resolve();
-      }
-    });
-    server.on('error', reject);
+  // CI can suppress Vite's startup banner. Check the server instead of log wording.
+  let serverError;
+  let serverOutput = '';
+  server.on('error', (error) => {
+    serverError = error;
   });
+  server.on('exit', (code) => {
+    serverError = new Error(`Vite exited: ${code}`);
+  });
+  server.stderr.on('data', (data) => {
+    serverOutput += data.toString();
+  });
+  server.stdout.on('data', (data) => {
+    serverOutput += data.toString();
+  });
+  const deadline = Date.now() + 30000;
+  while (true) {
+    if (serverError) throw serverError;
+    try {
+      const response = await fetch('http://127.0.0.1:5176/EPAVOne/', { signal: AbortSignal.timeout(1000) });
+      if (response.ok) break;
+    } catch {
+      /* The server may still be starting. */
+    }
+    if (Date.now() >= deadline) throw new Error(`Vite startup timed out: ${serverOutput}`);
+    await new Promise((resolve) => setTimeout(resolve, 200));
+  }
   browser = await chromium.launch({
     executablePath: process.env.REVIEW_BROWSER,
     headless: true,
@@ -42,6 +57,9 @@ try {
       const errors = [];
       page.on('pageerror', (error) => errors.push(error.message));
       await page.route('**.supabase.co/**', (route) => route.abort());
+      if (process.env.REVIEW_OFFLINE === '1') {
+        await page.route('**/*', (route) => (new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort()));
+      }
       if (process.env.REVIEW_IMAGE_DIR) {
         for (const [index, product] of swiftOfficialProducts.entries()) {
           const path = `${process.env.REVIEW_IMAGE_DIR}/${index}.jpg`;
@@ -49,7 +67,7 @@ try {
         }
       }
       await page.addInitScript((value) => localStorage.setItem('epavone-theme', value), theme);
-      await page.goto('http://127.0.0.1:5176/EPAVOne/');
+      await page.goto('http://127.0.0.1:5176/EPAVOne/', { waitUntil: 'domcontentloaded' });
       await page.evaluate(async () => {
         const mainSource = await (await fetch('/EPAVOne/src/main.jsx')).text();
         const { render } = await import(mainSource.match(/from ["']([^"']*\/preact\.js[^"']*)/)[1]);
@@ -70,7 +88,14 @@ try {
               undefined,
               undefined
             );
-          render(h('main', { className: 'product-page' }, h(module[name], props)), document.getElementById('app'));
+          render(
+            h(
+              'div',
+              { className: 'app-shell navigation-horizontal' },
+              h('main', { className: 'app-main product-page' }, h(module[name], props))
+            ),
+            document.getElementById('app')
+          );
         };
         const { adminService } = await import('/EPAVOne/src/products/insights/creation/services/adminService.js');
         const { creationService } = await import('/EPAVOne/src/products/insights/creation/services/creationService.js');
@@ -250,6 +275,18 @@ try {
         await page.evaluate(() => document.fonts.ready);
         await page.mouse.move(width - 1, 1);
         await page.waitForTimeout(250);
+        const geometry = await page.evaluate(() => {
+          const nav = document.querySelector('.creation-workspace-nav');
+          const content = document.querySelector('.creation-workspace-content');
+          const stitchesContained = [...document.querySelectorAll('.ds-card > .ds-stitch')].every((stitch) => {
+            const card = stitch.parentElement.getBoundingClientRect();
+            const bounds = stitch.getBoundingClientRect();
+            return bounds.left >= card.left && bounds.right <= card.right + 1 && bounds.top >= card.top && bounds.bottom <= card.bottom + 1;
+          });
+          return { stitchesContained, navigationAbove: nav.getBoundingClientRect().bottom <= content.getBoundingClientRect().top };
+        });
+        assert.ok(geometry.stitchesContained, 'Card stitching must stay inside its own surface');
+        assert.ok(geometry.navigationAbove, 'Workspace navigation must not overlap content');
         await page.screenshot({ path: `${output}/workspace-${section}-${width}-${theme}.png`, fullPage: true });
         results.push({
           view: `workspace ${section} fixture`,

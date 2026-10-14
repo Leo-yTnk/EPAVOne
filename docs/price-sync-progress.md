@@ -6,6 +6,8 @@ A barra mede resultados confirmados sobre o total da fila, incluindo falhas, e a
 
 ## Dependência da implantação existente
 
+Atualização de 14/10: o deploy no main `c9c9d173` concluiu em 13/10 (run 38445341404). A inspeção histórica abaixo foi anterior a esse deploy. Ver [revisão atual](EPAVONE_REVIEW_2026-10-14.md) e [horários diários](daily-price-schedule.md).
+
 Inspeção dos runs em 13/10/2026: Pages publicou `f30762a` (PR #51), mas o último Deploy EPAVOne Swift price sync foi em 09/10, em `34ce937` (PR #50). A correção de status/replay de #51 ainda precisa ser implantada. O status do workflow não certifica a definição do banco hospedado.
 
 Não há nova migration neste PR. O proprietário confirmou em 13/10/2026 a aplicação das duas migrations pendentes (044/045); não houve inspeção direta do banco hospedado. Para validar em produção, executar **Deploy EPAVOne Swift price sync** no main atual, conforme `docs/creation-sync-review.md`. Depois de publicar este frontend, abrir Preços e manutenção com admin e verificar contagens, falhas e preços. Sem acesso ao banco/conta de produção, não foi feita sincronização real nem certificada disponibilidade da Swift.
