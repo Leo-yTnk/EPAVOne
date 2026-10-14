@@ -75,7 +75,7 @@ export function CreationPage({ route, account, onOpenAccount }) {
         description="Crie e organize sua biblioteca. Seus conteúdos pessoais continuam vinculados à sua conta."
       />
       <div className="creation-workspace">
-        <nav className="creation-workspace-nav" aria-label="Biblioteca e criação">
+        <Card as="nav" className="creation-workspace-nav" aria-label="Biblioteca e criação">
           {available.map((item) => (
             <NavItem
               key={item.value}
@@ -101,7 +101,7 @@ export function CreationPage({ route, account, onOpenAccount }) {
               {item.label}
             </NavItem>
           ))}
-        </nav>
+        </Card>
         <div className="creation-workspace-content">
           <div className="creation-workspace-heading">
             <h2>{section.label}</h2>

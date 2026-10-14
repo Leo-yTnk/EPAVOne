@@ -6,7 +6,7 @@ Portal do EPAV para **EPAVInsights**, **EPAVPlanner** e **EPAVWriter**.
 
 As abas **One**, **Insights**, **Planner** e **Writer** separam os apps da navegação entre páginas. Insights e Planner usam a mesma barra de navegação de páginas na segunda linha do header, com as áreas de cada produto. Ao alternar apps, cada aba volta à última rota visitada durante a sessão.
 
-O Writer conserva o formulário carregado, dados do cliente, carrinho e etapa enquanto o usuário consulta outro app. Essa continuidade é em memória: recarregar ou fechar a página inicia uma nova sessão. As abas suportam setas, Home e End; as rotas em hash continuam funcionando com links diretos e histórico do navegador.
+O Writer conserva o formulário carregado, dados do cliente, carrinho e etapa enquanto o usuário consulta outro app. O Excel anexado usa IndexedDB e um identificador de sessão da aba para ser restaurado após recarregar, até a remoção explícita; os demais dados conservam o estado da sessão em memória. As abas suportam setas, Home e End; as rotas em hash continuam funcionando com links diretos e histórico do navegador.
 
 ## EPAVPlanner
 
@@ -17,6 +17,8 @@ Operação e encerramento: [ações privadas e aceitação](docs/migration-close
 Fluxos, prioridade e limites: [especificação](docs/planner-spec.md), [modelo de dados](docs/planner-data-model.md) e [revisão com evidências](docs/planner-implementation-review.md).
 
 Criação e sincronização Swift: [correção do sync, revisão de duplicatas e implantação 044/045](docs/creation-sync-review.md).
+
+Revisão atual: [interfaces e pendências em 14/10/2026](docs/EPAVONE_REVIEW_2026-10-14.md). Preços diários: [configuração 7h/9h/14h de Brasília](docs/daily-price-schedule.md).
 
 ## Stack
 

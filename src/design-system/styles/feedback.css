@@ -71,3 +71,57 @@
 .ds-alert>div,.ds-toast-content{min-width:0;overflow-wrap:anywhere}
 
 .ds-dialog.ds-dialog-expanding{animation:none;transform-origin:top left}
+
+/* Feedback keeps its meaning through icon, text and tone in both themes. */
+.ds-alert > div {
+  display: grid;
+  gap: var(--space-2);
+}
+.ds-alert strong {
+  font: 650 0.875rem/var(--leading-heading-small) var(--font-heading);
+}
+.ds-alert-content {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  line-height: var(--leading-body);
+  overflow-wrap: anywhere;
+}
+.ds-alert-icon {
+  display: grid;
+  place-items: center;
+  width: var(--space-5);
+  height: var(--space-5);
+  font-weight: 700;
+  line-height: 1;
+  border-radius: var(--radius-full);
+  background: var(--surface-primary);
+}
+.ds-alert.is-info .ds-alert-icon {
+  color: var(--ref-color-info-500);
+}
+.ds-alert.is-success .ds-alert-icon {
+  color: var(--ref-color-success-500);
+}
+.ds-alert.is-warning .ds-alert-icon {
+  color: var(--text-primary);
+}
+.ds-alert.is-danger .ds-alert-icon {
+  color: var(--text-danger);
+}
+.ds-toast-content {
+  display: grid;
+  gap: var(--space-1);
+  font-size: 0.875rem;
+}
+.ds-state {
+  gap: var(--space-4);
+}
+.ds-state h3 {
+  font: 650 1.125rem/var(--leading-heading-small) var(--font-heading);
+}
+.ds-state p {
+  font-size: 0.875rem;
+}

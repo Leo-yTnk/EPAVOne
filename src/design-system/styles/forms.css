@@ -75,3 +75,11 @@
 .ds-select-menu{display:flex;flex-direction:column;max-height:var(--layer-max-height,18rem);overflow:hidden;gap:var(--space-1)}
 .ds-select-menu>.ds-field{flex-shrink:0}
 .ds-select-menu>.ds-layer-scroll{min-height:0;max-height:none;overflow:auto}
+
+.ds-input-helper,
+.ds-input-error {
+  font-size: 0.8125rem;
+}
+.ds-input-label {
+  font-family: var(--font-sans);
+}

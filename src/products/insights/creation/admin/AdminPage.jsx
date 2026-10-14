@@ -35,7 +35,7 @@ export function AdminPage({ profile }) {
       </Alert>
     );
   return (
-    <section className="creation-fields">
+    <section className="creation-fields creation-admin-workspace">
       <Card as="header" className="creation-admin-header creation-fields">
         <div className="creation-section-heading">
           <h3 className="creation-section-title">
