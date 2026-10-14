@@ -106,13 +106,14 @@ export function ClientList({ state, week, act, busy, onCreate }) {
             className="planner-client"
             label={`Atalhos de ${customer.name}`}
             items={[
-              { label: 'Ver perfil e preparar conversa', href: `#/planner/clientes/${customer.id}` },
+              { label: 'Ver perfil e preparar conversa', icon: 'user', href: `#/planner/clientes/${customer.id}` },
               {
                 label: 'Adicionar à semana',
+                icon: 'plus',
                 disabled: busy || week.queue.some((entry) => entry.customerId === customer.id),
                 onSelect: () => act({ type: 'add', customerId: customer.id, weekId: week.id }, 'Cliente adicionado à semana.')
               },
-              { label: 'Ver fila da semana', href: '#/planner/semana' }
+              { label: 'Ver fila da semana', icon: 'planner', href: '#/planner/semana' }
             ]}
           >
             <div className="planner-section-head">

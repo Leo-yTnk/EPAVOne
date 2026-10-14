@@ -33,3 +33,6 @@
 .ds-spinner-lg{width:2rem;height:2rem;border-width:.1875rem}
 @keyframes ds-spin{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.ds-spinner{animation-duration:1.5s}.ds-btn:hover:not(:disabled),.ds-icon-btn:hover:not(:disabled){transform:none}}
+
+.ds-btn > span { display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2); min-width: 0; max-width: 100%; }
+.ds-btn > span > .ds-icon { flex: none; }

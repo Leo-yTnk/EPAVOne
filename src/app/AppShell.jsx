@@ -29,21 +29,39 @@ export function AppShell({ route, preferences, account, onOpenAccount, onToggleT
     window.location.hash = lastRoutes.current[product] || PRODUCT_META[product].href;
   }
   const shortcuts = [
-    ...(sectionNav || []).map((item) => ({ label: item.label, href: item.href })),
+    ...(sectionNav || []).map((item) => ({
+      label: item.label,
+      href: item.href,
+      icon:
+        {
+          clientes: 'user',
+          semana: 'planner',
+          oportunidades: 'insights',
+          desempenho: 'difficulty',
+          receitas: 'recipe',
+          produtos: 'product',
+          criacao: 'writer'
+        }[item.section] || 'home',
+      group: 'Nesta área'
+    })),
     ...Object.entries(PRODUCT_META)
       .filter(([key]) => key !== selectedProduct)
       .map(([key, item]) => ({
         label: `Abrir ${item.label}`,
+        icon: key,
+        group: 'Seus apps',
         onSelect: () => selectApp(key)
       })),
     {
       label: 'Ir ao início da página',
+      icon: 'up',
+      group: 'Página',
       onSelect: () => {
         window.scrollTo({ top: 0, behavior: 'auto' });
         document.querySelector('#main')?.focus();
       }
     },
-    ...(onToggleTheme ? [{ label: 'Alternar tema claro / escuro', onSelect: onToggleTheme }] : [])
+    ...(onToggleTheme ? [{ label: 'Alternar tema claro / escuro', icon: 'sun', group: 'Página', onSelect: onToggleTheme }] : [])
   ];
 
   return (
@@ -106,7 +124,6 @@ export function AppShell({ route, preferences, account, onOpenAccount, onToggleT
       <main id="main" className="app-main" tabIndex="-1">
         <div id="workspace-panel" role="tabpanel" aria-labelledby={`app-tab-${selectedProduct}`}>
           <ContextMenu className="workspace-shortcuts" label={`Atalhos do ${PRODUCT_META[selectedProduct].label}`} items={shortcuts}>
-            <p className="workspace-shortcuts-hint">Clique direito ou segure uma área livre para abrir atalhos.</p>
             {children}
           </ContextMenu>
         </div>
