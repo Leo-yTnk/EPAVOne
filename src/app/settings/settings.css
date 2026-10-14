@@ -1,7 +1,7 @@
 .settings-page {
   display: grid;
   gap: var(--space-5);
-  max-width: 60rem;
+  max-width: 70rem;
   margin-inline: auto;
   min-width: 0;
 }
@@ -57,7 +57,8 @@
   }
   .settings-section > .ds-field:first-of-type,
   .settings-section > .ds-switch,
-  .settings-section > .settings-actions {
+  .settings-section > .settings-actions,
+  .settings-section > .settings-controls {
     grid-column: 2;
     grid-row: 1/3;
   }
@@ -67,4 +68,19 @@
     flex-direction: column;
     align-items: start;
   }
+}
+
+.settings-controls {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+.settings-section .ds-switch {
+  align-items: center;
+}
+html[data-text-size='large'] {
+  font-size: 112.5%;
+}
+html[data-show-grid='false'] body {
+  background-image: none;
 }

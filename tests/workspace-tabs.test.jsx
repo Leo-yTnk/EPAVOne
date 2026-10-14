@@ -72,12 +72,13 @@ describe('App workspace tabs', () => {
     expect(document.activeElement).toBe(a);
   });
 
-  it('presents working task shortcuts and identifies the unfinished Planner', () => {
+  it('presents working task shortcuts for the available apps', () => {
     render(<HomePage />);
-    expect(screen.getByRole('link', { name: 'Preparar um pedido ↗' }).getAttribute('href')).toBe('#/writer');
+    expect(screen.getByRole('link', { name: 'Ver o Planner' }).getAttribute('href')).toBe('#/planner');
     expect(screen.getByRole('link', { name: 'Receitas' }).getAttribute('href')).toBe('#/insights/receitas');
     expect(screen.getByRole('link', { name: 'Produtos' }).getAttribute('href')).toBe('#/insights/produtos');
-    expect(screen.getByText('Em desenvolvimento')).toBeTruthy();
+    expect(screen.queryByText('Em desenvolvimento')).toBeNull();
+    expect(screen.getByRole('link', { name: 'Minha semana' }).getAttribute('href')).toBe('#/planner/semana');
     expect(screen.queryByRole('link', { name: 'Ver Component Lab' })).toBeNull();
   });
 });

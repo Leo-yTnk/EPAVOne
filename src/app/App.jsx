@@ -53,7 +53,7 @@ export function App() {
     setTheme(next);
   }
 
-  let page = <HomePage />;
+  let page = <HomePage preferences={preferences} />;
   if (route.product === 'insights') page = <InsightsRoutes route={route} account={account} onOpenAccount={() => setAccountOpen(true)} />;
   if (route.product === 'planner')
     page = (

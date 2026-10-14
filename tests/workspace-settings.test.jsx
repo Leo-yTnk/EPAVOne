@@ -11,7 +11,7 @@ afterEach(() => {
 });
 it('persists and validates workspace preferences, including unavailable storage', () => {
   applyPreferences({ navigation: 'vertical', density: 'compact', reducedMotion: true });
-  expect(readPreferences()).toEqual({ navigation: 'vertical', density: 'compact', reducedMotion: true });
+  expect(readPreferences()).toEqual({ ...DEFAULT_PREFERENCES, navigation: 'vertical', density: 'compact', reducedMotion: true });
   localStorage.setItem('epavone-preferences', '{broken');
   expect(readPreferences()).toEqual(DEFAULT_PREFERENCES);
   localStorage.setItem('epavone-preferences', JSON.stringify({ navigation: 'invalid', density: 'invalid' }));
