@@ -16,6 +16,8 @@ O Planner reúne Visão geral, Semana, Clientes, Oportunidades e Desempenho, com
 
 Operação e encerramento: [ações privadas e aceitação](docs/migration-closeout.md).
 
+Orientação por etapas, atalhos por clique direito/toque prolongado e carregamento por demanda: [implementação e medições](docs/planner-shortcuts-performance.md).
+
 Fluxos, prioridade e limites: [especificação](docs/planner-spec.md), [modelo de dados](docs/planner-data-model.md) e [revisão com evidências](docs/planner-implementation-review.md).
 
 Criação e sincronização Swift: [correção do sync, revisão de duplicatas e implantação 044/045](docs/creation-sync-review.md).

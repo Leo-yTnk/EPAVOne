@@ -36,15 +36,16 @@ describe('Card', () => {
         }
         observe = observe;
         disconnect = disconnect;
+        unobserve = vi.fn();
       }
     );
     try {
       const { container, unmount } = render(<Card>conteúdo</Card>);
       const svg = container.querySelector('.ds-stitch');
       expect(observe).toHaveBeenCalledWith(svg);
-      notify([{ contentRect: { width: 300, height: 180 } }]);
+      notify([{ target: svg, contentRect: { width: 300, height: 180 } }]);
       expect(svg.style.getPropertyValue('--stitch-path-height')).toBe('178px');
-      notify([{ contentRect: { width: 300, height: 260 } }]);
+      notify([{ target: svg, contentRect: { width: 300, height: 260 } }]);
       expect(svg.style.getPropertyValue('--stitch-path-width')).toBe('298px');
       expect(svg.style.getPropertyValue('--stitch-path-height')).toBe('258px');
       unmount();

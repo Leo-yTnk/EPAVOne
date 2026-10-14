@@ -1,5 +1,15 @@
 import { useState } from 'preact/hooks';
-import { Badge, Button, Card, EmptyState, Heading, IconButton, Input, Progress } from '../../../design-system/components/index.js';
+import {
+  Badge,
+  Button,
+  Card,
+  ContextMenu,
+  EmptyState,
+  Heading,
+  IconButton,
+  Input,
+  Progress
+} from '../../../design-system/components/index.js';
 import { OUTCOMES, performance } from '../models/planner.js';
 import { PriorityDetails } from './PriorityDetails.jsx';
 export function WeekPlan({ state, week, busy, act }) {
@@ -67,7 +77,30 @@ export function WeekPlan({ state, week, busy, act }) {
           const customer = state.customers.find((item) => item.id === entry.customerId);
           return (
             <li key={entry.customerId}>
-              <Card className="planner-queue-row">
+              <Card
+                as={ContextMenu}
+                className="planner-queue-row"
+                label={`Atalhos de ${customer.name}`}
+                items={[
+                  { label: 'Preparar conversa', href: `#/planner/clientes/${customer.id}` },
+                  ...(!entry.outcome ? [{ label: 'Atender cliente', href: `#/planner/atendimento/${customer.id}` }] : []),
+                  {
+                    label: 'Subir na fila',
+                    disabled: busy || index === 0,
+                    onSelect: () => act({ type: 'move', weekId: week.id, customerId: customer.id, direction: -1 }, 'Posição atualizada.')
+                  },
+                  {
+                    label: 'Descer na fila',
+                    disabled: busy || index === week.queue.length - 1,
+                    onSelect: () => act({ type: 'move', weekId: week.id, customerId: customer.id, direction: 1 }, 'Posição atualizada.')
+                  },
+                  {
+                    label: entry.role === 'primary' ? 'Mudar para reserva' : 'Mudar para titular',
+                    disabled: busy || Boolean(entry.outcome),
+                    onSelect: () => act({ type: 'role', weekId: week.id, customerId: customer.id }, 'Papel atualizado.')
+                  }
+                ]}
+              >
                 <span className="planner-position" aria-label={`Posição ${index + 1}`}>
                   {String(index + 1).padStart(2, '0')}
                 </span>
@@ -108,7 +141,7 @@ export function WeekPlan({ state, week, busy, act }) {
                       disabled={busy || Boolean(entry.outcome)}
                       onClick={() => act({ type: 'role', weekId: week.id, customerId: customer.id }, 'Papel atualizado.')}
                     >
-                      Trocar papel
+                      {entry.role === 'primary' ? 'Tornar reserva' : 'Tornar titular'}
                     </Button>
                     <Button
                       size="sm"

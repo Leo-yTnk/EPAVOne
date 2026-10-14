@@ -11,3 +11,8 @@
 @keyframes ds-layer-in-bottom{from{transform:translateY(calc(var(--motion-distance-sm) * -1))}to{transform:translateY(0)}}
 @keyframes ds-layer-in-top{from{transform:translateY(var(--motion-distance-sm))}to{transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){.ds-layer-anchor[data-side]{animation:none}}
+
+.ds-context-actions {
+  display: flex;
+  justify-content: flex-end;
+}

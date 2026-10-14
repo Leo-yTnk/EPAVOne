@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { INSIGHTS_NAV, PLANNER_NAV, PRODUCT_META, routeHash } from './routes.js';
-import { Button, NavItem, SelectionIndicator, Tabs, Icon } from '../design-system/components/index.js';
+import { Button, ContextMenu, NavItem, SelectionIndicator, Tabs, Icon } from '../design-system/components/index.js';
 
-export function AppShell({ route, preferences, account, onOpenAccount, children }) {
+export function AppShell({ route, preferences, account, onOpenAccount, onToggleTheme, children }) {
   const tabsRef = useRef(null);
   const sectionsRef = useRef(null);
   const lastRoutes = useRef({});
@@ -28,6 +28,23 @@ export function AppShell({ route, preferences, account, onOpenAccount, children 
   function selectApp(product) {
     window.location.hash = lastRoutes.current[product] || PRODUCT_META[product].href;
   }
+  const shortcuts = [
+    ...(sectionNav || []).map((item) => ({ label: item.label, href: item.href })),
+    ...Object.entries(PRODUCT_META)
+      .filter(([key]) => key !== selectedProduct)
+      .map(([key, item]) => ({
+        label: `Abrir ${item.label}`,
+        onSelect: () => selectApp(key)
+      })),
+    {
+      label: 'Ir ao início da página',
+      onSelect: () => {
+        window.scrollTo({ top: 0, behavior: 'auto' });
+        document.querySelector('#main')?.focus();
+      }
+    },
+    ...(onToggleTheme ? [{ label: 'Alternar tema claro / escuro', onSelect: onToggleTheme }] : [])
+  ];
 
   return (
     <div className={`app-shell navigation-${vertical ? 'vertical' : 'horizontal'}`}>
@@ -88,7 +105,10 @@ export function AppShell({ route, preferences, account, onOpenAccount, children 
       </header>
       <main id="main" className="app-main" tabIndex="-1">
         <div id="workspace-panel" role="tabpanel" aria-labelledby={`app-tab-${selectedProduct}`}>
-          {children}
+          <ContextMenu className="workspace-shortcuts" label={`Atalhos do ${PRODUCT_META[selectedProduct].label}`} items={shortcuts}>
+            <p className="workspace-shortcuts-hint">Clique direito ou segure uma área livre para abrir atalhos.</p>
+            {children}
+          </ContextMenu>
         </div>
       </main>
       <footer className="site-footer">
