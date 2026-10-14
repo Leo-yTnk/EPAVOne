@@ -1,5 +1,6 @@
 import { Badge, Button, Card, Heading, Progress } from '../../../design-system/components/index.js';
-import { dateLabel, daysSince, lastInteraction, performance, priority, recommendations, today } from '../models/planner.js';
+import { dateLabel, daysSince, lastInteraction, performance, priority, recommendations, today, weekStart } from '../models/planner.js';
+import { PlanningGuide } from './PlanningGuide.jsx';
 export function Overview({ state, week, busy, act }) {
   const metrics = performance(state, week);
   const next = week.queue.filter((entry) => !entry.outcome).sort((a, b) => Number(a.role === 'reserve') - Number(b.role === 'reserve'));
@@ -13,12 +14,16 @@ export function Overview({ state, week, busy, act }) {
       );
     })
     .slice(0, 4);
-  const opportunities = [...state.customers]
-    .sort((a, b) => priority(b, state).score - priority(a, state).score)
-    .filter((customer) => !week.queue.some((entry) => entry.customerId === customer.id) && recommendations(customer, state.offers).length)
+  const planned = new Set(week.queue.map((entry) => entry.customerId));
+  const opportunities = state.customers
+    .filter((customer) => !planned.has(customer.id) && recommendations(customer, state.offers).length)
+    .map((customer) => ({ customer, score: priority(customer, state).score }))
+    .sort((a, b) => b.score - a.score)
+    .map(({ customer }) => customer)
     .slice(0, 3);
   return (
     <>
+      <PlanningGuide state={state} week={week} />
       <Card className="planner-hero">
         <div>
           <span className="ds-overline">Quinta-feira · 9h30–10h30</span>
@@ -32,16 +37,19 @@ export function Overview({ state, week, busy, act }) {
           />
         </div>
         <div className="planner-hero-next">
-          <Badge>{next.length ? 'Próximo da fila' : 'Fila concluída ou vazia'}</Badge>
+          <Badge>{next.length ? 'Próximo da fila' : week.queue.length ? 'Fila concluída' : 'Semana ainda sem clientes'}</Badge>
           <Heading level={3}>
             {next.length ? state.customers.find((item) => item.id === next[0].customerId)?.name : 'Escolha sua próxima conversa'}
           </Heading>
           <p className="planner-muted">
             {next.length} clientes aguardando · {metrics.buyers} clientes compraram
           </p>
-          <Button as="a" href={next.length ? `#/planner/atendimento/${next[0].customerId}` : '#/planner/clientes'}>
-            {next.length ? 'Iniciar atendimento' : 'Planejar clientes'}
+          <Button as="a" href={next.length && week.id === weekStart() ? `#/planner/atendimento/${next[0].customerId}` : '#/planner/semana'}>
+            {next.length && week.id === weekStart() ? 'Iniciar atendimento' : 'Revisar semana'}
           </Button>
+          {week.id !== weekStart() && (
+            <p className="planner-muted">Você está revisando outra semana. Resultados são registrados apenas na semana atual.</p>
+          )}
         </div>
       </Card>
       <div className="planner-two-columns">

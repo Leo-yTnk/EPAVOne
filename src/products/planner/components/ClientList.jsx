@@ -1,5 +1,15 @@
 import { usePlannerView } from '../hooks/usePlannerView.js';
-import { Badge, Button, Card, EmptyState, Heading, Input, Pagination, Select } from '../../../design-system/components/index.js';
+import {
+  Badge,
+  Button,
+  Card,
+  ContextMenu,
+  EmptyState,
+  Heading,
+  Input,
+  Pagination,
+  Select
+} from '../../../design-system/components/index.js';
 import { dateLabel, lastInteraction, priority, SEGMENTS } from '../models/planner.js';
 import { PriorityDetails } from './PriorityDetails.jsx';
 export function ClientList({ state, week, act, busy, onCreate }) {
@@ -26,7 +36,9 @@ export function ClientList({ state, week, act, busy, onCreate }) {
               ? !lastInteraction(customer, state.interactions)
               : !customer.preparation.trim()))
     )
-    .sort((a, b) => priority(b, state).score - priority(a, state).score || a.name.localeCompare(b.name));
+    .map((customer) => ({ customer, score: priority(customer, state).score }))
+    .sort((a, b) => b.score - a.score || a.customer.name.localeCompare(b.customer.name))
+    .map(({ customer }) => customer);
   const count = Math.max(1, Math.ceil(filtered.length / 8));
   const current = Math.min(page, count);
   function update(setter, value) {
@@ -88,7 +100,21 @@ export function ClientList({ state, week, act, busy, onCreate }) {
       )}
       <div className="planner-client-grid">
         {filtered.slice((current - 1) * 8, current * 8).map((customer) => (
-          <Card key={customer.id} className="planner-client">
+          <Card
+            key={customer.id}
+            as={ContextMenu}
+            className="planner-client"
+            label={`Atalhos de ${customer.name}`}
+            items={[
+              { label: 'Ver perfil e preparar conversa', href: `#/planner/clientes/${customer.id}` },
+              {
+                label: 'Adicionar à semana',
+                disabled: busy || week.queue.some((entry) => entry.customerId === customer.id),
+                onSelect: () => act({ type: 'add', customerId: customer.id, weekId: week.id }, 'Cliente adicionado à semana.')
+              },
+              { label: 'Ver fila da semana', href: '#/planner/semana' }
+            ]}
+          >
             <div className="planner-section-head">
               <Badge>{customer.segment}</Badge>
               {customer.intent && <span className="planner-muted">Quer comprar</span>}

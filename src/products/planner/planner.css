@@ -338,3 +338,26 @@
   white-space: normal;
   overflow-wrap: anywhere;
 }
+
+.planner-guide,
+.planner-guide-step {
+  display: grid;
+  gap: var(--space-3);
+}
+.planner-guide-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+.planner-guide-step .ds-btn {
+  justify-self: start;
+}
+.planner-queue-row > .ds-context-actions {
+  order: 1;
+  margin-inline-start: auto;
+}
+@media (max-width: 48rem) {
+  .planner-guide-steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

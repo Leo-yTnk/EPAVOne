@@ -360,3 +360,17 @@ html[data-density='compact'] .ds-card:not(.insights-image) {
     min-height: var(--control-md);
   }
 }
+
+.workspace-shortcuts {
+  min-width: 0;
+}
+.workspace-shortcuts > .ds-context-actions {
+  float: right;
+  margin-inline-start: var(--space-3);
+}
+.workspace-shortcuts-hint {
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  min-height: 2rem;
+  margin: 0 0 var(--space-4);
+}

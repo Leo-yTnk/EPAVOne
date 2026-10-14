@@ -1,7 +1,8 @@
 import { usePlannerHandoff } from './services/usePlannerHandoff.js';
 import { TemplateFeedback } from './components/TemplateFeedback.jsx';
 import { PlannerHandoff } from './components/PlannerHandoff.jsx';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useMemo, useState } from 'preact/hooks';
+import { useForegroundInterval } from '../../design-system/behaviors/useForegroundInterval.js';
 import { Alert, PageHeader, Spinner } from '../../design-system/components/index.js';
 import { sessionTemplate, restoreTemplateFile } from './services/sessionTemplate.js';
 import { saoPauloDay, validateOrder, validateCustomer, validateProducts, validateDelivery } from './models/order.js';
@@ -58,15 +59,7 @@ export function WriterRoutes({ active = true }) {
       }
     }
   }, [active, step, template]);
-  useEffect(() => {
-    const refresh = () => setToday(saoPauloDay());
-    const timer = setInterval(refresh, 30000);
-    window.addEventListener('focus', refresh);
-    return () => {
-      clearInterval(timer);
-      window.removeEventListener('focus', refresh);
-    };
-  }, []);
+  useForegroundInterval(() => setToday(saoPauloDay()), 30_000, active);
   async function upload(file) {
     setBusy(true);
     setError('');
@@ -154,11 +147,15 @@ export function WriterRoutes({ active = true }) {
       setBusy(false);
     }
   }
-  const errors = template ? validateOrder(template, order, today) : [];
+  const errors = useMemo(() => (template ? validateOrder(template, order, today) : []), [template, order, today]);
   const expired = template && today > template.period.end;
-  const stageErrors = template
-    ? [validateCustomer(template, order, today), validateProducts(template, order), validateDelivery(template, order, today)]
-    : [];
+  const stageErrors = useMemo(
+    () =>
+      template
+        ? [validateCustomer(template, order, today), validateProducts(template, order), validateDelivery(template, order, today)]
+        : [],
+    [template, order, today]
+  );
   const canVisit = (index) => index <= step || stageErrors.slice(0, index).every((issues) => issues.length === 0);
   function navigate(index) {
     if (busy || !canVisit(index)) return;

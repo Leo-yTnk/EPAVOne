@@ -1,23 +1,25 @@
-import { useEffect, useLayoutEffect, useState } from 'preact/hooks';
+import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { CommercialReturn } from './CommercialReturn.jsx';
 import { AppShell } from './AppShell.jsx';
 import { useAccount } from './account/useAccount.js';
-import { AccountDialog } from './account/AccountDialog.jsx';
 import { useHashRoute } from './useHashRoute.js';
 import { applyTheme, getInitialTheme } from './theme.js';
 import { productTheme } from './productTheme.js';
 import { HomePage } from '../products/home/HomePage.jsx';
-import { InsightsRoutes } from '../products/insights/InsightsRoutes.jsx';
 import { lazy, Suspense } from 'preact/compat';
 import { Spinner } from '../design-system/components/index.js';
-import { WriterRoutes } from '../products/writer/WriterRoutes.jsx';
-import { SettingsPage } from './settings/SettingsPage.jsx';
 import { applyPreferences, readPreferences } from './settings/preferences.js';
 
 const PlannerRoutes = lazy(() => import('../products/planner/PlannerRoutes.jsx').then((module) => ({ default: module.PlannerRoutes })));
+const InsightsRoutes = lazy(() => import('../products/insights/InsightsRoutes.jsx').then((module) => ({ default: module.InsightsRoutes })));
+const WriterRoutes = lazy(() => import('../products/writer/WriterRoutes.jsx').then((module) => ({ default: module.WriterRoutes })));
+const SettingsPage = lazy(() => import('./settings/SettingsPage.jsx').then((module) => ({ default: module.SettingsPage })));
+const AccountDialog = lazy(() => import('./account/AccountDialog.jsx').then((module) => ({ default: module.AccountDialog })));
 
 export function App() {
   const route = useHashRoute();
+  const writerVisited = useRef(false);
+  if (route.product === 'writer') writerVisited.current = true;
   const account = useAccount();
   const [accountOpen, setAccountOpen] = useState(false);
   const [theme, setTheme] = useState(getInitialTheme);
@@ -89,12 +91,20 @@ export function App() {
     >
       {['insights', 'writer'].includes(route.product) && <CommercialReturn />}
       <div key={routeKey} className="route-frame">
-        {page}
+        <Suspense fallback={<Spinner label="Carregando app" />}>{page}</Suspense>
       </div>
       <div key="writer-workspace" className="route-frame" hidden={route.product !== 'writer'}>
-        <WriterRoutes active={route.product === 'writer'} />
+        {writerVisited.current && (
+          <Suspense fallback={<Spinner label="Carregando Writer" />}>
+            <WriterRoutes active={route.product === 'writer'} />
+          </Suspense>
+        )}
       </div>
-      {accountOpen && <AccountDialog account={account} onClose={() => setAccountOpen(false)} />}
+      {accountOpen && (
+        <Suspense fallback={<Spinner label="Carregando conta" />}>
+          <AccountDialog account={account} onClose={() => setAccountOpen(false)} />
+        </Suspense>
+      )}
     </AppShell>
   );
 }

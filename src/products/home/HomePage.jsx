@@ -1,5 +1,6 @@
 import './home.css';
-import { useEffect, useState } from 'preact/hooks';
+import { useState } from 'preact/hooks';
+import { useForegroundInterval } from '../../design-system/behaviors/useForegroundInterval.js';
 import { getDayPeriod } from './dayPeriod.js';
 import { Button, Card, Heading, Text, Icon } from '../../design-system/components/index.js';
 
@@ -44,17 +45,7 @@ const apps = [
 
 export function HomePage({ preferences = {} }) {
   const [now, setNow] = useState(() => new Date());
-  useEffect(() => {
-    const update = () => setNow(new Date());
-    const timer = setInterval(update, 30_000);
-    document.addEventListener('visibilitychange', update);
-    window.addEventListener('focus', update);
-    return () => {
-      clearInterval(timer);
-      document.removeEventListener('visibilitychange', update);
-      window.removeEventListener('focus', update);
-    };
-  }, []);
+  useForegroundInterval(() => setNow(new Date()), 30_000);
   const period = getDayPeriod(now);
   const primary = apps.find((app) => app.theme === preferences.homeAction) || apps[1];
   const name = preferences.displayName?.trim();
