@@ -8,6 +8,8 @@ As abas **One**, **Insights**, **Planner** e **Writer** separam os apps da naveg
 
 O Writer conserva o formulário carregado, dados do cliente, carrinho e etapa enquanto o usuário consulta outro app. O Excel anexado usa IndexedDB e um identificador de sessão da aba para ser restaurado após recarregar, até a remoção explícita; os demais dados conservam o estado da sessão em memória. As abas suportam setas, Home e End; as rotas em hash continuam funcionando com links diretos e histórico do navegador.
 
+Home e Configurações: [personalização, cenários por horário e preferências locais](docs/home-personalization.md).
+
 ## EPAVPlanner
 
 O Planner reúne Visão geral, Semana, Clientes, Oportunidades e Desempenho, com preparação e Modo Atendimento. Visitantes usam demonstração local. Contas autenticadas usam workspace próprio no Supabase (migration 041) e consultam o histórico real em `sales`. Compras confirmadas são registradas junto com o atendimento numa transação idempotente. Sugestões respeitam as restrições cadastradas e abrem a busca do Insights com retorno ao contexto. O Writer associa o cliente explicitamente ao cadastro do Excel; exportar um formulário não registra compra.
