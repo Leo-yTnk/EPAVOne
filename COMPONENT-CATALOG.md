@@ -33,7 +33,7 @@ Os componentes públicos são Preact/JSX e vivem individualmente em `src/design-
 | Slider | progress/focus/disabled |
 | Tabs | active/disabled + Arrow/Home/End |
 | Menu | anchored layer em portal |
-| ContextMenu | botão de atalhos, clique direito e toque prolongado; reutiliza Menu e preserva ações nativas em campos e links |
+| ContextMenu | clique direito, toque prolongado e Shift+F10, sem botão visível; reutiliza Menu e preserva ações nativas em campos e links |
 | Pagination | anterior/próxima + status |
 
 ## Navegação e estrutura

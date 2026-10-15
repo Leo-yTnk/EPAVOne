@@ -19,25 +19,36 @@ export function ContextMenu({ children, items, label = 'Atalhos desta página', 
     <div
       {...props}
       className={className}
+      tabIndex={props.tabIndex ?? 0}
+      role={props.role ?? 'group'}
+      aria-label={label}
+      onKeyDown={(event) => {
+        if (!eligible(event) || !(event.key === 'ContextMenu' || (event.shiftKey && event.key === 'F10'))) return;
+        event.preventDefault();
+        event.stopPropagation();
+        cancel();
+        const rect = event.currentTarget.getBoundingClientRect();
+        setRequest({ x: rect.left + 12, y: Math.max(12, rect.top + 12), returnFocus: event.currentTarget });
+      }}
       onContextMenu={(event) => {
         if (!eligible(event)) return;
         event.preventDefault();
         event.stopPropagation();
         cancel();
-        setRequest({ x: event.clientX, y: event.clientY });
+        setRequest({ x: event.clientX, y: event.clientY, returnFocus: event.currentTarget });
       }}
       onPointerDown={(event) => {
         cancel();
         held.current = false;
         if (!eligible(event) || !['touch', 'pen'].includes(event.pointerType) || event.isPrimary === false) return;
-        const { clientX: x, clientY: y } = event;
+        const { clientX: x, clientY: y, currentTarget: returnFocus } = event;
         gesture.current = {
           x,
           y,
           timer: setTimeout(() => {
             if (window.getSelection?.()?.toString()) return cancel();
             held.current = true;
-            setRequest({ x, y });
+            setRequest({ x, y, returnFocus });
             cancel();
           }, 550)
         };
@@ -57,9 +68,7 @@ export function ContextMenu({ children, items, label = 'Atalhos desta página', 
         event.stopPropagation();
       }}
     >
-      <div className="ds-context-actions">
-        <Menu label={label} triggerLabel="Atalhos" items={items} contextRequest={request} />
-      </div>
+      <Menu label={label} items={items} contextRequest={request} contextOnly />
       {children}
     </div>
   );

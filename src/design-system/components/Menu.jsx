@@ -3,8 +3,9 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'preact/ho
 import { useAnchoredLayer } from '../behaviors/useAnchoredLayer.js';
 import { Button } from './Button.jsx';
 import { Portal } from './Portal.jsx';
+import { Icon } from './Icon.jsx';
 
-export function Menu({ label, triggerLabel = label, items, variant = 'ghost', size = 'sm', contextRequest }) {
+export function Menu({ label, triggerLabel = label, items, variant = 'ghost', size = 'sm', contextRequest, contextOnly = false }) {
   const id = useControlId();
   const triggerRef = useRef(null);
   const layerRef = useRef(null);
@@ -64,7 +65,8 @@ export function Menu({ label, triggerLabel = label, items, variant = 'ghost', si
 
   function close({ focusTrigger = true } = {}) {
     setOpen(false);
-    if (focusTrigger) requestAnimationFrame(() => triggerRef.current?.focus());
+    if (focusTrigger)
+      requestAnimationFrame(() => (contextual ? contextRequest?.returnFocus : triggerRef.current)?.focus({ preventScroll: true }));
   }
 
   function move(direction) {
@@ -102,21 +104,23 @@ export function Menu({ label, triggerLabel = label, items, variant = 'ghost', si
 
   return (
     <>
-      <Button
-        ref={triggerRef}
-        variant={variant}
-        size={size}
-        aria-label={label}
-        aria-haspopup="menu"
-        aria-expanded={open}
-        aria-controls={open ? id : undefined}
-        onClick={() => {
-          setContextual(false);
-          setOpen((current) => !current);
-        }}
-      >
-        {triggerLabel}
-      </Button>
+      {!contextOnly && (
+        <Button
+          ref={triggerRef}
+          variant={variant}
+          size={size}
+          aria-label={label}
+          aria-haspopup="menu"
+          aria-expanded={open}
+          aria-controls={open ? id : undefined}
+          onClick={() => {
+            setContextual(false);
+            setOpen((current) => !current);
+          }}
+        >
+          {triggerLabel}
+        </Button>
+      )}
       {open && (
         <Portal>
           <div
@@ -128,10 +132,17 @@ export function Menu({ label, triggerLabel = label, items, variant = 'ghost', si
             data-positioned={position ? 'true' : 'false'}
             style={position?.style}
             role="menu"
+            aria-label={label}
             onKeyDown={onMenuKeyDown}
           >
             <div className="ds-layer-scroll">
               {items.map((item, index) => {
+                const content = (
+                  <>
+                    {item.icon && <Icon name={item.icon} />}
+                    <span className="ds-menu-item-label">{item.label}</span>
+                  </>
+                );
                 const common = {
                   ref: (node) => {
                     itemRefs.current[index] = node;
@@ -145,17 +156,27 @@ export function Menu({ label, triggerLabel = label, items, variant = 'ghost', si
                   onClick: () => {
                     if (item.disabled) return;
                     item.onSelect?.();
-                    close({ focusTrigger: false });
+                    close({ focusTrigger: contextOnly && !item.href });
                   }
                 };
-                return item.href ? (
+                const action = item.href ? (
                   <a key={item.label} {...common} href={item.disabled ? undefined : item.href}>
-                    {item.label}
+                    {content}
                   </a>
                 ) : (
                   <button key={item.label} {...common} type="button" disabled={item.disabled}>
-                    {item.label}
+                    {content}
                   </button>
+                );
+                return (
+                  <div key={item.label} role="none">
+                    {item.group && item.group !== items[index - 1]?.group && (
+                      <div className="ds-menu-group" role="presentation">
+                        {item.group}
+                      </div>
+                    )}
+                    {action}
+                  </div>
                 );
               })}
             </div>

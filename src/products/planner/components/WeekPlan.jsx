@@ -82,15 +82,17 @@ export function WeekPlan({ state, week, busy, act }) {
                 className="planner-queue-row"
                 label={`Atalhos de ${customer.name}`}
                 items={[
-                  { label: 'Preparar conversa', href: `#/planner/clientes/${customer.id}` },
-                  ...(!entry.outcome ? [{ label: 'Atender cliente', href: `#/planner/atendimento/${customer.id}` }] : []),
+                  { label: 'Preparar conversa', icon: 'user', href: `#/planner/clientes/${customer.id}` },
+                  ...(!entry.outcome ? [{ label: 'Atender cliente', icon: 'writer', href: `#/planner/atendimento/${customer.id}` }] : []),
                   {
                     label: 'Subir na fila',
+                    icon: 'up',
                     disabled: busy || index === 0,
                     onSelect: () => act({ type: 'move', weekId: week.id, customerId: customer.id, direction: -1 }, 'Posição atualizada.')
                   },
                   {
                     label: 'Descer na fila',
+                    icon: 'down',
                     disabled: busy || index === week.queue.length - 1,
                     onSelect: () => act({ type: 'move', weekId: week.id, customerId: customer.id, direction: 1 }, 'Posição atualizada.')
                   },

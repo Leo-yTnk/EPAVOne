@@ -39,14 +39,15 @@ describe('Context shortcuts', () => {
     fireEvent.keyDown(menu, { key: 'Escape' });
     expect(screen.queryByRole('menu')).toBeNull();
     await new Promise((resolve) => requestAnimationFrame(resolve));
-    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Atalhos desta página' }));
+    expect(document.activeElement).toBe(screen.getByRole('group', { name: 'Atalhos desta página' }));
   });
-  it('keeps native context actions for inputs and links, with a visible menu alternative', () => {
+  it('keeps native context actions for inputs and links and offers keyboard access without buttons', () => {
     setup();
     expect(fireEvent.contextMenu(screen.getByLabelText('Editar'))).toBe(true);
     expect(fireEvent.contextMenu(screen.getByText('Pedido'))).toBe(true);
     expect(screen.queryByRole('menu')).toBeNull();
-    fireEvent.click(screen.getByText('Atalhos'));
+    expect(screen.queryByRole('button')).toBeNull();
+    fireEvent.keyDown(screen.getByRole('group', { name: 'Atalhos desta página' }), { key: 'F10', shiftKey: true });
     expect(screen.getByRole('menuitem', { name: 'Minha semana' }).getAttribute('href')).toBe('#/planner/semana');
   });
   it('opens after holding and cancels gestures when moving, scrolling or releasing early', async () => {
@@ -88,7 +89,7 @@ describe('Context shortcuts', () => {
     expect(screen.getByRole('menuitem', { name: 'Preparar' })).toBeTruthy();
     fireEvent.pointerDown(screen.getByText('Fora'));
     expect(screen.queryByRole('menu')).toBeNull();
-    fireEvent.click(screen.getByRole('button', { name: 'Cliente' }));
+    fireEvent.keyDown(screen.getByRole('group', { name: 'Cliente' }), { key: 'ContextMenu' });
     fireEvent(window, new Event('hashchange'));
     expect(screen.queryByRole('menu')).toBeNull();
   });

@@ -8,7 +8,7 @@ describe('Menu', () => {
       <Menu
         label="Conta"
         items={[
-          { label: 'Perfil', href: '#/insights/perfil' },
+          { label: 'Perfil', icon: 'user', group: 'Conta', href: '#/insights/perfil' },
           { label: 'Indisponível', disabled: true }
         ]}
       />
@@ -18,6 +18,9 @@ describe('Menu', () => {
     const menu = screen.getByRole('menu');
     const item = screen.getByRole('menuitem', { name: 'Perfil' });
     expect(menu.parentElement).toBe(document.body);
+    expect(item.querySelector('.ds-icon')).toBeTruthy();
+    expect(item.querySelector('.ds-menu-item-label').textContent).toBe('Perfil');
+    expect(screen.getByText('Conta', { selector: '.ds-menu-group' })).toBeTruthy();
     expect(document.activeElement).toBe(item);
   });
   it('keeps the full item name accessible with a compact visible trigger', () => {
