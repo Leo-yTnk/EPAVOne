@@ -71,7 +71,7 @@ try {
       await page.close();
     }
   }
-  for (const width of [390, 1440]) {
+  for (const width of [1024, 1440]) {
     for (const theme of ['light', 'dark']) {
       const page = await browser.newPage({ viewport: { width, height: 900 } });
       await page.addInitScript(theme => localStorage.setItem('epavone-theme', theme), theme);

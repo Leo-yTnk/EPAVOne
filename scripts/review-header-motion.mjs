@@ -83,7 +83,9 @@ try {
     await page.locator('#app-tab-writer').click();
     assert.equal(await page.locator('.workspace-navigation').evaluate((node) => node.getAnimations().length), 0);
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.locator('#app-tab-planner').click();
+    await page.getByRole('button', { name: /Navegação: Writer/ }).click();
+    await page.getByRole('dialog').getByRole('link', { name: 'EPAVPlanner Planner', exact: true }).click();
+    await page.getByRole('button', { name: /Navegação: Planner/ }).waitFor();
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
     assert.deepEqual(errors, []);
     await page.close();

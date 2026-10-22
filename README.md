@@ -2,6 +2,8 @@
 
 Em **Configurações → Navegação → Navegação no celular e tablet**, escolha barra no topo ou painel lateral. Essa preferência é independente da posição no computador. Abaixo de 1200px, o painel abre pela esquerda pelo botão Navegação; fecha ao escolher um destino, tocar fora ou pressionar Escape, devolvendo o foco ao botão de abertura.
 
+No celular (até 768px), a opção de barra no topo usa um header compacto: app e seção atuais abrem o painel com todos os destinos, evitando uma faixa de abas cortada. Configurações e conta continuam juntas ao lado. A escolha explícita de painel lateral permanece disponível.
+
 Portal do EPAV para **EPAVInsights**, **EPAVPlanner** e **EPAVWriter**.
 
 ## Espaço de trabalho
