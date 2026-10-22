@@ -80,13 +80,33 @@ body {
   color: var(--text-brand);
 }
 .workspace-navigation {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  padding: var(--container-padding);
+  position: relative;
+  isolation: isolate;
   min-width: 0;
   max-width: 100%;
   margin-inline: auto;
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+}
+.workspace-navigation::before {
+  content: '';
+  position: absolute;
+  inset: 1.125rem 0;
+  z-index: -1;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--container-radius);
+  background: var(--surface-primary);
+  box-shadow: var(--shadow-md);
+  pointer-events: none;
+}
+.workspace-navigation-scroll {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--container-padding);
+  min-width: 0;
+  max-width: 100%;
   overflow-x: auto;
   overscroll-behavior-inline: contain;
   scrollbar-width: thin;
@@ -254,6 +274,12 @@ body {
   align-items: stretch;
 }
 .navigation-vertical .workspace-navigation {
+  padding: 0;
+}
+.navigation-vertical .workspace-navigation::before {
+  inset: var(--space-2) 0;
+}
+.navigation-vertical .workspace-navigation-scroll {
   flex-direction: column;
   align-items: stretch;
   margin: 0;
@@ -264,6 +290,10 @@ body {
 .navigation-vertical.has-sections .app-tabs {
   flex-direction: row;
   justify-content: space-between;
+}
+.navigation-vertical.has-sections .app-tabs .ds-tab {
+  min-width: var(--control-md);
+  padding-inline: var(--space-1);
 }
 .navigation-vertical .app-tabs .ds-tab {
   text-align: left;
@@ -392,3 +422,34 @@ html[data-reduced-motion='true'] *::after {
   white-space: nowrap;
 }
 .navigation-vertical .workspace-utilities { justify-content: space-around; }
+
+.mobile-navigation-trigger {
+  min-height: var(--control-md);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-md);
+}
+.mobile-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  width: min(20rem, calc(100vw - var(--space-6)));
+}
+.mobile-sidebar-apps,
+.mobile-sidebar-sections,
+.mobile-sidebar-utilities {
+  display: grid;
+  gap: var(--space-2);
+}
+.mobile-sidebar .ds-nav-item {
+  min-height: var(--control-md);
+}
+.mobile-sidebar-sections > .ds-overline {
+  padding-inline: var(--space-3);
+  color: var(--text-secondary);
+}
+.mobile-sidebar-utilities {
+  margin-top: auto;
+}
+.mobile-sidebar-utilities .ds-btn {
+  justify-content: flex-start;
+}

@@ -27,9 +27,11 @@ import {
   faFileImport,
   faRotate,
   faCheck,
-  faEllipsis
+  faEllipsis,
+  faBars
 } from '@fortawesome/free-solid-svg-icons';
 const icons = {
+  menu: faBars,
   clock: faClock,
   difficulty: faGauge,
   home: faHouse,

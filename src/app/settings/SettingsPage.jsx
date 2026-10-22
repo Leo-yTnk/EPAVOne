@@ -115,7 +115,7 @@ export function SettingsPage({
           <Heading as="h2" level={4}>
             Navegação
           </Heading>
-          <Text size="sm">Uma barra de tabs no topo ou uma biblioteca de apps na lateral. No celular, use a barra compacta no topo.</Text>
+          <Text size="sm">Escolha como navegar em cada tamanho de tela. O painel lateral no celular e tablet abre pela esquerda.</Text>
           <Select
             label="Posição da navegação"
             value={preferences.navigation}
@@ -124,6 +124,15 @@ export function SettingsPage({
               { value: 'vertical', label: 'Vertical · painel lateral' }
             ]}
             onChange={(navigation) => update({ navigation })}
+          />
+          <Select
+            label="Navegação no celular e tablet"
+            value={preferences.mobileNavigation || 'horizontal'}
+            options={[
+              { value: 'horizontal', label: 'Barra no topo' },
+              { value: 'vertical', label: 'Painel lateral' }
+            ]}
+            onChange={(mobileNavigation) => update({ mobileNavigation })}
           />
         </Card>
         <Card as="section" className="settings-section">

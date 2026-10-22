@@ -6,7 +6,7 @@ import { useModalLayer } from '../behaviors/useModalLayer.js';
 import { IconButton } from './IconButton.jsx';
 import { Portal } from './Portal.jsx';
 
-export function Drawer({ open, title, children, onClose }) {
+export function Drawer({ open, title, children, onClose, side = 'end', className = '', id }) {
   const ref = useRef(null);
   const titleId = useControlId();
   useModalLayer(ref, open, onClose);
@@ -14,8 +14,19 @@ export function Drawer({ open, title, children, onClose }) {
 
   return (
     <Portal>
-      <div className="ds-drawer-overlay" onMouseDown={(event) => event.target === event.currentTarget && onClose?.()}>
-        <aside ref={ref} className="ds-drawer ds-stitched-card" role="dialog" aria-modal="true" aria-labelledby={titleId} tabIndex="-1">
+      <div
+        className={`ds-drawer-overlay${side === 'start' ? ' is-start' : ''}`}
+        onMouseDown={(event) => event.target === event.currentTarget && onClose?.()}
+      >
+        <aside
+          id={id}
+          ref={ref}
+          className={`ds-drawer ds-stitched-card${side === 'start' ? ' is-start' : ''} ${className}`}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby={titleId}
+          tabIndex="-1"
+        >
           <div className="ds-drawer-header">
             <h2 id={titleId} className="ds-drawer-title">
               {title}

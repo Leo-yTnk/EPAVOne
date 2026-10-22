@@ -1,5 +1,7 @@
 # EPAVOne
 
+Em **Configurações → Navegação → Navegação no celular e tablet**, escolha barra no topo ou painel lateral. Essa preferência é independente da posição no computador. Abaixo de 1200px, o painel abre pela esquerda pelo botão Navegação; fecha ao escolher um destino, tocar fora ou pressionar Escape, devolvendo o foco ao botão de abertura.
+
 Portal do EPAV para **EPAVInsights**, **EPAVPlanner** e **EPAVWriter**.
 
 ## Espaço de trabalho

@@ -1,5 +1,7 @@
 # EPAVOne — Component Catalog
 
+`Drawer` aceita `side="start"` para abrir pela esquerda e `className`/`id` para composição. O padrão permanece à direita. A variante mantém Portal, trava de rolagem, Escape, foco contido e retorno de foco.
+
 Os componentes públicos são Preact/JSX e vivem individualmente em `src/design-system/components/`.
 
 ## Fundação

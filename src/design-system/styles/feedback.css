@@ -72,6 +72,19 @@
 
 .ds-dialog.ds-dialog-expanding{animation:none;transform-origin:top left}
 
+.ds-drawer-overlay.is-start { justify-items: start; }
+.ds-drawer.is-start {
+  border-radius: 0 var(--radius-2xl) var(--radius-2xl) 0;
+  animation-name: ds-drawer-start-in;
+}
+@keyframes ds-drawer-start-in {
+  from { transform: translateX(calc(-1 * var(--motion-distance-md))); }
+  to { transform: translateX(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-drawer.is-start { animation: none; }
+}
+
 /* Feedback keeps its meaning through icon, text and tone in both themes. */
 .ds-alert > div {
   display: grid;
