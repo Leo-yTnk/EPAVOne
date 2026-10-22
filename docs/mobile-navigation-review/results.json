@@ -64,7 +64,12 @@
     "theme": "light",
     "overlap": {
       "top": -4,
-      "bottom": 4
+      "bottom": 4,
+      "radius": 24,
+      "stitchRadius": 18,
+      "stitchGap": 6,
+      "curveError": 0,
+      "thumbHeight": 48
     }
   },
   {
@@ -78,7 +83,12 @@
     "theme": "dark",
     "overlap": {
       "top": -4,
-      "bottom": 4
+      "bottom": 4,
+      "radius": 24,
+      "stitchRadius": 18,
+      "stitchGap": 6,
+      "curveError": 0,
+      "thumbHeight": 48
     }
   },
   {
@@ -86,5 +96,265 @@
     "theme": "dark",
     "overflow": 0,
     "errors": []
+  },
+  {
+    "width": 390,
+    "theme": "light",
+    "route": "",
+    "edge": "start",
+    "geometry": {
+      "startInset": 10,
+      "endInset": 0,
+      "startOverlap": 4,
+      "endOverlap": -182,
+      "clipped": false
+    }
+  },
+  {
+    "width": 390,
+    "theme": "light",
+    "route": "writer",
+    "edge": "end",
+    "geometry": {
+      "startInset": 0,
+      "endInset": 10,
+      "startOverlap": -169,
+      "endOverlap": 4,
+      "clipped": false
+    }
+  },
+  {
+    "width": 390,
+    "theme": "light",
+    "route": "planner/desempenho",
+    "edge": "end",
+    "geometry": {
+      "startInset": 0,
+      "endInset": 10,
+      "startOverlap": -140,
+      "endOverlap": 4,
+      "clipped": false
+    }
+  },
+  {
+    "width": 390,
+    "theme": "light",
+    "route": "insights/criacao",
+    "edge": "end",
+    "geometry": {
+      "startInset": 0,
+      "endInset": 10,
+      "startOverlap": -174,
+      "endOverlap": 4,
+      "clipped": false
+    }
+  },
+  {
+    "width": 390,
+    "theme": "light",
+    "route": "planner/semana",
+    "edge": null,
+    "geometry": {
+      "startInset": 0,
+      "endInset": 0,
+      "startOverlap": -98,
+      "endOverlap": -108,
+      "clipped": false
+    }
+  },
+  {
+    "width": 390,
+    "theme": "dark",
+    "route": "",
+    "edge": "start",
+    "geometry": {
+      "startInset": 10,
+      "endInset": 0,
+      "startOverlap": 4,
+      "endOverlap": -182,
+      "clipped": false
+    }
+  },
+  {
+    "width": 390,
+    "theme": "dark",
+    "route": "writer",
+    "edge": "end",
+    "geometry": {
+      "startInset": 0,
+      "endInset": 10,
+      "startOverlap": -169,
+      "endOverlap": 4,
+      "clipped": false
+    }
+  },
+  {
+    "width": 390,
+    "theme": "dark",
+    "route": "planner/desempenho",
+    "edge": "end",
+    "geometry": {
+      "startInset": 0,
+      "endInset": 10,
+      "startOverlap": -140,
+      "endOverlap": 4,
+      "clipped": false
+    }
+  },
+  {
+    "width": 390,
+    "theme": "dark",
+    "route": "insights/criacao",
+    "edge": "end",
+    "geometry": {
+      "startInset": 0,
+      "endInset": 10,
+      "startOverlap": -174,
+      "endOverlap": 4,
+      "clipped": false
+    }
+  },
+  {
+    "width": 390,
+    "theme": "dark",
+    "route": "planner/semana",
+    "edge": null,
+    "geometry": {
+      "startInset": 0,
+      "endInset": 0,
+      "startOverlap": -98,
+      "endOverlap": -108,
+      "clipped": false
+    }
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "route": "",
+    "edge": "start",
+    "geometry": {
+      "startInset": 10,
+      "endInset": 0,
+      "startOverlap": 4,
+      "endOverlap": -252,
+      "clipped": false
+    }
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "route": "writer",
+    "edge": "end",
+    "geometry": {
+      "startInset": 0,
+      "endInset": 10,
+      "startOverlap": -239,
+      "endOverlap": 4,
+      "clipped": false
+    }
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "route": "planner/desempenho",
+    "edge": "end",
+    "geometry": {
+      "startInset": 0,
+      "endInset": 10,
+      "startOverlap": -560,
+      "endOverlap": 4,
+      "clipped": false
+    }
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "route": "insights/criacao",
+    "edge": "end",
+    "geometry": {
+      "startInset": 0,
+      "endInset": 10,
+      "startOverlap": -424,
+      "endOverlap": 4,
+      "clipped": false
+    }
+  },
+  {
+    "width": 1440,
+    "theme": "light",
+    "route": "planner/semana",
+    "edge": null,
+    "geometry": {
+      "startInset": 0,
+      "endInset": 0,
+      "startOverlap": -98,
+      "endOverlap": -526,
+      "clipped": false
+    }
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "route": "",
+    "edge": "start",
+    "geometry": {
+      "startInset": 10,
+      "endInset": 0,
+      "startOverlap": 4,
+      "endOverlap": -252,
+      "clipped": false
+    }
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "route": "writer",
+    "edge": "end",
+    "geometry": {
+      "startInset": 0,
+      "endInset": 10,
+      "startOverlap": -239,
+      "endOverlap": 4,
+      "clipped": false
+    }
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "route": "planner/desempenho",
+    "edge": "end",
+    "geometry": {
+      "startInset": 0,
+      "endInset": 10,
+      "startOverlap": -560,
+      "endOverlap": 4,
+      "clipped": false
+    }
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "route": "insights/criacao",
+    "edge": "end",
+    "geometry": {
+      "startInset": 0,
+      "endInset": 10,
+      "startOverlap": -424,
+      "endOverlap": 4,
+      "clipped": false
+    }
+  },
+  {
+    "width": 1440,
+    "theme": "dark",
+    "route": "planner/semana",
+    "edge": null,
+    "geometry": {
+      "startInset": 0,
+      "endInset": 0,
+      "startOverlap": -98,
+      "endOverlap": -526,
+      "clipped": false
+    }
   }
 ]

@@ -1,6 +1,6 @@
 .ds-btn{
   min-height:var(--control-md);display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2);padding:0 var(--space-4);
-  border:1px solid transparent;border-radius:var(--radius-md);font-weight:650;line-height:var(--leading-control);cursor:pointer;
+  border:1px solid transparent;border-radius:var(--radius-action);font-weight:650;line-height:var(--leading-control);cursor:pointer;
   transition:background-color var(--duration-normal) var(--ease-standard),border-color var(--duration-normal) var(--ease-standard),color var(--duration-normal) var(--ease-standard),transform var(--duration-fast) var(--ease-emphasized),box-shadow var(--duration-normal) var(--ease-standard),opacity var(--duration-fast) var(--ease-standard)
 }
 .ds-btn:hover:not(:disabled):not([aria-disabled="true"]){transform:translateY(-1px);box-shadow:var(--shadow-sm)}
@@ -19,7 +19,7 @@
 .ds-btn.is-loading>span:last-child{opacity:.78}
 
 .ds-icon-btn{
-  width:var(--control-md);height:var(--control-md);display:inline-grid;place-items:center;border:1px solid var(--border-default);border-radius:var(--radius-md);
+  width:var(--control-md);height:var(--control-md);display:inline-grid;place-items:center;border:1px solid var(--border-default);border-radius:var(--radius-action);
   background:var(--surface-primary);color:var(--text-primary);cursor:pointer;
   transition:background-color var(--duration-normal) var(--ease-standard),border-color var(--duration-normal) var(--ease-standard),color var(--duration-normal) var(--ease-standard),transform var(--duration-fast) var(--ease-emphasized),box-shadow var(--duration-normal) var(--ease-standard)
 }
