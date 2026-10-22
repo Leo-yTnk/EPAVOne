@@ -104,6 +104,9 @@ body {
   background: var(--surface-primary);
   box-shadow: var(--shadow-sm);
   pointer-events: none;
+  transition:
+    inset-inline-start var(--duration-slow) var(--ease-emphasized),
+    inset-inline-end var(--duration-slow) var(--ease-emphasized);
 }
 .workspace-navigation-scroll {
   display: flex;
@@ -247,6 +250,8 @@ body {
   top: calc((var(--selection-height, var(--control-md)) - var(--shell-thumb-height)) / 2);
   height: var(--shell-thumb-height);
   border-radius: var(--card-radius);
+  transition-duration: var(--duration-slow);
+  transition-timing-function: var(--ease-emphasized);
 }
 .site-header .ds-selection-indicator.is-stitched .ds-stitch rect {
   /* Include the Card border and the SVG path's 1px inset in the inner curve. */
