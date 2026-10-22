@@ -4,7 +4,7 @@ import { CatalogSections } from './CatalogSections.jsx';
 import { catalogGroups } from '../models/sections.js';
 import { ProductCard } from './ProductCard.jsx';
 import { useState } from 'preact/hooks';
-import { Badge, Button, Card, EmptyState, ErrorState, Heading, Icon, Text } from '../../../design-system/components/index.js';
+import { Badge, Button, Card, EmptyState, ErrorState, Heading, Icon, Text, AppLogo } from '../../../design-system/components/index.js';
 import { catalogService } from '../services/catalogService.js';
 import { useCatalogResource } from '../hooks/useCatalogResource.js';
 import { productPricing } from '../models/catalog.js';
@@ -46,6 +46,7 @@ export function InsightsHomePage() {
     <div className="insights-home insights-discovery">
       <section className="insights-discovery-hero" aria-labelledby="insights-home-title">
         <div className="insights-discovery-copy">
+          <AppLogo product="insights" wordmark size="lg" />
           <span className="ds-overline">Ideias para o próximo atendimento</span>
           <Heading as="h1" id="insights-home-title" className="insights-home-title">
             Uma boa venda começa com uma boa ideia.

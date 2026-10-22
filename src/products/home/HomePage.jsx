@@ -2,7 +2,7 @@ import './home.css';
 import { useState } from 'preact/hooks';
 import { useForegroundInterval } from '../../design-system/behaviors/useForegroundInterval.js';
 import { getDayPeriod } from './dayPeriod.js';
-import { Button, Card, Heading, Text, Icon } from '../../design-system/components/index.js';
+import { Button, Card, Heading, Text, Icon, AppLogo } from '../../design-system/components/index.js';
 
 const apps = [
   {
@@ -104,10 +104,7 @@ export function HomePage({ preferences = {} }) {
                 </span>
                 <div className="product-step-content">
                   <div className="product-card-top">
-                    <span className="product-glyph" aria-hidden="true">
-                      <Icon name={app.glyph} />
-                    </span>
-                    <span className="ds-overline">EPAV{app.name}</span>
+                    <AppLogo product={app.theme} wordmark size="lg" />
                   </div>
                   <Heading as="h3" level={4}>
                     {app.task}

@@ -1,5 +1,6 @@
 export const DEFAULT_PREFERENCES = {
   navigation: 'horizontal',
+  mobileNavigation: 'horizontal',
   density: 'comfortable',
   reducedMotion: false,
   displayName: '',
@@ -16,6 +17,7 @@ export function normalizePreferences(saved = {}) {
   const preferences = { ...DEFAULT_PREFERENCES };
   const choices = {
     navigation: ['horizontal', 'vertical'],
+    mobileNavigation: ['horizontal', 'vertical'],
     density: ['comfortable', 'compact'],
     textSize: ['standard', 'large'],
     homeBackground: ['adaptive', 'neutral'],

@@ -71,8 +71,8 @@ it('uses vertical arrows and switches to horizontal tabs on small screens', () =
     </AppShell>
   );
   expect(screen.getByRole('tablist').getAttribute('aria-orientation')).toBe('horizontal');
-  expect(screen.getByRole('tab', { name: 'Configurações' }).getAttribute('aria-selected')).toBe('true');
-  expect(screen.getByRole('tabpanel', { name: 'Configurações' })).toBeTruthy();
+  expect(screen.getByRole('link', { name: 'Configurações' }).getAttribute('aria-current')).toBe('page');
+  expect(screen.getByRole('region', { name: 'Configurações' })).toBeTruthy();
   expect(screen.queryByText('Component Lab')).toBeNull();
 });
 

@@ -1,11 +1,15 @@
 import { useLayoutEffect, useState } from 'preact/hooks';
+import { Card } from './Card.jsx';
 
-export function SelectionIndicator({ containerRef, value }) {
+export function SelectionIndicator({ containerRef, value, stitched = false }) {
   const [geometry, setGeometry] = useState(null);
   useLayoutEffect(() => {
     const container = containerRef.current;
     const selected = container?.querySelector('[aria-current], [aria-selected="true"]');
-    if (!container || !selected) return;
+    if (!container || !selected) {
+      setGeometry(null);
+      return;
+    }
     const update = () => {
       const outer = container.getBoundingClientRect();
       const inner = selected.getBoundingClientRect();
@@ -27,5 +31,11 @@ export function SelectionIndicator({ containerRef, value }) {
       window.removeEventListener('resize', update);
     };
   }, [containerRef, value]);
-  return <span className="ds-selection-indicator" aria-hidden="true" data-ready={Boolean(geometry)} style={geometry ?? undefined} />;
+  const props = {
+    className: `ds-selection-indicator${stitched ? ' is-stitched' : ''}`,
+    'aria-hidden': 'true',
+    'data-ready': Boolean(geometry),
+    style: geometry ?? undefined
+  };
+  return stitched ? <Card as="span" {...props} /> : <span {...props} />;
 }
