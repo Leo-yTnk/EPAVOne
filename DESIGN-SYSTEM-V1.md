@@ -1,5 +1,7 @@
 # EPAVOne Design System — v1 RC
 
+Botões e itens de navegação usam `--radius-action` e `--radius-navigation` em cápsula. No shell, raios finitos são calculados pela altura real das ilhas. Cantos internos descontam padding e borda; a costura desconta também o deslocamento do path SVG. `--card-radius` é a fonte comum da superfície e da costura do indicador, evitando curvas divergentes.
+
 > Fundação para iniciar a migração do EPAVInsights. A versão só vira **1.0** depois do fluxo piloto real.
 
 ## 1. Princípios do produto

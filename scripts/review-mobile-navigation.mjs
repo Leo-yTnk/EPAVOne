@@ -51,16 +51,61 @@ try {
           const rect = track.getBoundingClientRect();
           const painted = getComputedStyle(track, '::before');
           const thumb = track.querySelector('.ds-selection-indicator').getBoundingClientRect();
+          const thumbNode = track.querySelector('.ds-selection-indicator');
+          const stitch = thumbNode.querySelector('.ds-stitch rect');
+          const radius = parseFloat(getComputedStyle(thumbNode).borderTopLeftRadius);
+          const stitchRadius = parseFloat(getComputedStyle(stitch).rx);
+          const stitchGap = stitch.getBoundingClientRect().left - thumb.left;
           const inset = parseFloat(painted.top);
-          return { top: thumb.top - (rect.top + inset), bottom: thumb.bottom - (rect.bottom - parseFloat(painted.bottom)) };
+          return { top: thumb.top - (rect.top + inset), bottom: thumb.bottom - (rect.bottom - parseFloat(painted.bottom)), radius, stitchRadius, stitchGap, curveError: Math.abs(radius - stitchRadius - stitchGap), thumbHeight: thumb.height };
         });
         assert(geometry.top < 0 && geometry.bottom > 0, 'Stitched thumb must overlap the painted navbar');
+        assert(geometry.curveError <= 1, 'Stitch and outer capsule must have concentric corners');
+        assert(Math.abs(geometry.radius - geometry.thumbHeight / 2) <= 1, 'Thumb must use the maximum capsule radius');
         await page.screenshot({ path: `${output}/header-${width}-${theme}.png` });
         results.push({ width, theme, overlap: geometry });
       }
       assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
       assert.deepEqual(errors, []);
       results.push({ width, theme, overflow: 0, errors });
+      await page.close();
+    }
+  }
+  for (const width of [390, 1440]) {
+    for (const theme of ['light', 'dark']) {
+      const page = await browser.newPage({ viewport: { width, height: 900 } });
+      await page.addInitScript(theme => localStorage.setItem('epavone-theme', theme), theme);
+      await page.route('**/rest/v1/**', route => route.fulfill({ contentType: 'application/json', body: '[]' }));
+      for (const [route, edge] of [['', 'start'], ['writer', 'end'], ['planner/desempenho', 'end'], ['insights/criacao', 'end'], ['planner/semana', null]]) {
+        await page.goto(`http://127.0.0.1:5176/EPAVOne/#/${route}`);
+        await page.locator('h1').first().waitFor();
+        await page.evaluate(() => document.fonts.ready);
+        await page.waitForTimeout(250);
+        const geometry = await page.locator('.workspace-navigation').evaluate((track, edge) => {
+          const scroll = track.querySelector('.workspace-navigation-scroll');
+          scroll.scrollLeft = edge === 'end' ? scroll.scrollWidth : 0;
+          const rect = track.getBoundingClientRect();
+          const painted = getComputedStyle(track, '::before');
+          const thumbs = track.querySelectorAll('.ds-selection-indicator');
+          const thumb = thumbs[edge === 'end' ? thumbs.length - 1 : 0].getBoundingClientRect();
+          const clip = scroll.getBoundingClientRect();
+          return {
+            startInset: parseFloat(painted.left), endInset: parseFloat(painted.right),
+            startOverlap: rect.left + parseFloat(painted.left) - thumb.left,
+            endOverlap: thumb.right - (rect.right - parseFloat(painted.right)),
+            clipped: thumb.left < clip.left - 1 || thumb.right > clip.right + 1
+          };
+        }, edge);
+        if (edge) {
+          assert(geometry[`${edge}Overlap`] >= 3, `${route}: active ${edge} cap must cover the rail edge`);
+          assert(!geometry.clipped, `${route}: edge stitch must remain inside the scroll viewport`);
+          assert.equal(geometry[edge === 'start' ? 'endInset' : 'startInset'], 0, 'Inactive opposite edge keeps the full rail');
+        } else {
+          assert.equal(geometry.startInset, 0);
+          assert.equal(geometry.endInset, 0);
+        }
+        results.push({ width, theme, route, edge, geometry });
+      }
       await page.close();
     }
   }
