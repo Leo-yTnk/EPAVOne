@@ -49,6 +49,8 @@ try {
         const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
         assert(overflow <= 1, `${route} ${width} ${theme}: overflow ${overflow}`);
         const geometry = await page.locator('.site-header').evaluate(header => {
+          const compact = header.querySelector('.mobile-context-trigger');
+          if (compact) return { compact: true, singleRow: true, islandHeight: compact.getBoundingClientRect().height, stitched: true, thumbsInside: true };
           const tabs = header.querySelector('.app-tabs').getBoundingClientRect();
           const nav = header.querySelector('.product-section-nav')?.getBoundingClientRect();
           const island = header.querySelector('.workspace-navigation').getBoundingClientRect();

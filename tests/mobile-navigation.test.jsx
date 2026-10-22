@@ -19,6 +19,33 @@ function renderSidebar() {
 }
 
 describe('Mobile and tablet sidebar', () => {
+  it('uses a contextual phone header with app and page instead of a clipped tab strip', async () => {
+    vi.stubGlobal('matchMedia', query => ({ matches: query.includes('max-width: 48rem'), addEventListener: vi.fn(), removeEventListener: vi.fn() }));
+    const account = vi.fn();
+    const { container, rerender } = render(
+      <AppShell route={{ product: 'planner', segments: ['semana'] }} preferences={{ mobileNavigation: 'horizontal' }} onOpenAccount={account}>Página</AppShell>
+    );
+    const trigger = screen.getByRole('button', { name: 'Navegação: Planner, Semana' });
+    expect(screen.queryByRole('tablist')).toBeNull();
+    expect(screen.getByRole('region', { name: 'Planner' })).not.toBeNull();
+    expect(screen.getByRole('link', { name: 'Configurações' }).closest('.workspace-utilities').querySelector('.workspace-account')).not.toBeNull();
+    trigger.focus();
+    fireEvent.click(trigger);
+    const drawer = await screen.findByRole('dialog', { name: 'Seus apps' });
+    expect(container.contains(drawer)).toBe(false);
+    fireEvent.keyDown(document, { key: 'Escape' });
+    expect(document.activeElement).toBe(trigger);
+    fireEvent.click(trigger);
+    const performance = within(await screen.findByRole('dialog')).getByRole('link', { name: 'Desempenho', exact: true });
+    expect(performance.getAttribute('href')).toBe('#/planner/desempenho');
+    fireEvent.click(performance);
+    expect(screen.queryByRole('dialog')).toBeNull();
+    rerender(<AppShell route={{ product: 'planner', segments: ['desempenho'] }} preferences={{ mobileNavigation: 'horizontal' }} onOpenAccount={account}>Página</AppShell>);
+    expect(screen.getByRole('button', { name: 'Navegação: Planner, Desempenho' })).not.toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Entrar na conta' }));
+    expect(account).toHaveBeenCalledTimes(1);
+  });
+
   it('opens a left portal drawer, closes with Escape and returns focus', async () => {
     const { container } = renderSidebar();
     const trigger = screen.getByRole('button', { name: 'Navegação' });

@@ -10,6 +10,7 @@ export function AppShell({ route, preferences, account, onOpenAccount, onToggleT
   const sectionsRef = useRef(null);
   const lastRoutes = useRef({});
   const [wide, setWide] = useState(() => window.matchMedia?.('(min-width: 75rem)').matches ?? true);
+  const [phone, setPhone] = useState(() => window.matchMedia?.('(max-width: 48rem)').matches ?? false);
   const vertical = preferences?.navigation === 'vertical' && wide;
   const mobileSidebar = !wide && preferences?.mobileNavigation === 'vertical';
   const [navigationOpen, setNavigationOpen] = useState(false);
@@ -19,14 +20,24 @@ export function AppShell({ route, preferences, account, onOpenAccount, onToggleT
   const selectedSection = route.product === 'planner' && section === 'atendimento' ? 'semana' : section === 'home' ? '' : section;
   const activeSection = sectionNav?.some((item) => item.section === selectedSection) ? selectedSection : '';
   const selectedProduct = Object.hasOwn(PRODUCT_META, route.product) ? route.product : 'home';
-  useHeaderMotion(navigationRef, selectedProduct, !vertical && !mobileSidebar);
+  const compactHeader = phone && !mobileSidebar;
+  const drawerNavigation = mobileSidebar || compactHeader;
+  const currentPage = sectionNav?.find((item) => item.section === activeSection)?.label;
+  useHeaderMotion(navigationRef, selectedProduct, !vertical && !drawerNavigation);
   useEffect(() => {
     setNavigationOpen(false);
-  }, [route.product, route.raw, mobileSidebar]);
+  }, [route.product, route.raw, drawerNavigation]);
   useEffect(() => {
     const media = window.matchMedia?.('(min-width: 75rem)');
     if (!media) return;
     const update = () => setWide(media.matches);
+    media.addEventListener('change', update);
+    return () => media.removeEventListener('change', update);
+  }, []);
+  useEffect(() => {
+    const media = window.matchMedia?.('(max-width: 48rem)');
+    if (!media) return;
+    const update = () => setPhone(media.matches);
     media.addEventListener('change', update);
     return () => media.removeEventListener('change', update);
   }, []);
@@ -96,52 +107,82 @@ export function AppShell({ route, preferences, account, onOpenAccount, onToggleT
           </Button>
         ) : (
           <div className="workspace-bar">
-            <a className="brand" data-product="one" href="#/" aria-label="EPAVOne, página inicial">
-              <AppLogo product="one" />
-              <span className="brand-name">
-                EPAV<span className="brand-one">One</span>
-              </span>
-            </a>
-            <div ref={navigationRef} className="workspace-navigation">
-              <div className="workspace-navigation-scroll">
-                <div ref={tabsRef} className="workspace-apps">
-                  <Tabs
-                    label="Apps do EPAVOne"
-                    className="app-tabs"
-                    orientation={vertical && !sectionNav ? 'vertical' : 'horizontal'}
-                    stitchedIndicator
-                    value={selectedProduct}
-                    onChange={selectApp}
-                    items={Object.entries(PRODUCT_META)
-                      .filter(([key]) => key !== 'settings')
-                      .map(([key, item]) => ({
-                        value: key,
-                        id: `app-tab-${key}`,
-                        panelId: 'workspace-panel',
-                        label: (
-                          <span className="app-tab-label" data-product={item.product} data-app={key} title={item.label}>
-                            <span className="app-tab-glyph" aria-hidden="true">
-                              {key === 'settings' ? <Icon name="settings" /> : <AppLogo product={item.product} size="sm" />}
-                            </span>
-                            <span className="app-tab-name">{item.label}</span>
-                          </span>
-                        )
-                      }))}
-                  />
+            {compactHeader ? (
+              <Button
+                className="mobile-context-trigger"
+                variant="secondary"
+                onClick={() => setNavigationOpen(true)}
+                aria-label={`Navegação: ${PRODUCT_META[selectedProduct].label}${currentPage ? `, ${currentPage}` : ''}`}
+                aria-haspopup="dialog"
+                aria-expanded={navigationOpen}
+                aria-controls="mobile-navigation"
+              >
+                <AppLogo product={PRODUCT_META[selectedProduct].product} size="sm" />
+                <span className="mobile-context-label">
+                  <span className="mobile-context-app">{PRODUCT_META[selectedProduct].label}</span>
+                  <span className="mobile-context-page">{currentPage || 'Seus apps'}</span>
+                </span>
+                <Icon name="menu" />
+              </Button>
+            ) : (
+              <>
+                <a className="brand" data-product="one" href="#/" aria-label="EPAVOne, página inicial">
+                  <AppLogo product="one" />
+                  <span className="brand-name">
+                    EPAV<span className="brand-one">One</span>
+                  </span>
+                </a>
+                <div ref={navigationRef} className="workspace-navigation">
+                  <div className="workspace-navigation-scroll">
+                    <div ref={tabsRef} className="workspace-apps">
+                      <Tabs
+                        label="Apps do EPAVOne"
+                        className="app-tabs"
+                        orientation={vertical && !sectionNav ? 'vertical' : 'horizontal'}
+                        stitchedIndicator
+                        value={selectedProduct}
+                        onChange={selectApp}
+                        items={Object.entries(PRODUCT_META)
+                          .filter(([key]) => key !== 'settings')
+                          .map(([key, item]) => ({
+                            value: key,
+                            id: `app-tab-${key}`,
+                            panelId: 'workspace-panel',
+                            label: (
+                              <span className="app-tab-label" data-product={item.product} data-app={key} title={item.label}>
+                                <span className="app-tab-glyph" aria-hidden="true">
+                                  {key === 'settings' ? <Icon name="settings" /> : <AppLogo product={item.product} size="sm" />}
+                                </span>
+                                <span className="app-tab-name">{item.label}</span>
+                              </span>
+                            )
+                          }))}
+                      />
+                    </div>
+                    {sectionNav && <span className="workspace-nav-separator" aria-hidden="true" />}
+                    {sectionNav && (
+                      <nav
+                        ref={sectionsRef}
+                        className="product-section-nav"
+                        aria-label={`Navegação do ${PRODUCT_META[selectedProduct].label}`}
+                      >
+                        <SelectionIndicator containerRef={sectionsRef} value={activeSection} stitched />
+                        {sectionNav.map((item) => (
+                          <NavItem
+                            key={item.href}
+                            className="product-tab section-tab"
+                            href={item.href}
+                            active={activeSection === item.section}
+                          >
+                            {item.label}
+                          </NavItem>
+                        ))}
+                      </nav>
+                    )}
+                  </div>
                 </div>
-                {sectionNav && <span className="workspace-nav-separator" aria-hidden="true" />}
-                {sectionNav && (
-                  <nav ref={sectionsRef} className="product-section-nav" aria-label={`Navegação do ${PRODUCT_META[selectedProduct].label}`}>
-                    <SelectionIndicator containerRef={sectionsRef} value={activeSection} stitched />
-                    {sectionNav.map((item) => (
-                      <NavItem key={item.href} className="product-tab section-tab" href={item.href} active={activeSection === item.section}>
-                        {item.label}
-                      </NavItem>
-                    ))}
-                  </nav>
-                )}
-              </div>
-            </div>
+              </>
+            )}
             <div className="workspace-utilities">
               <NavItem
                 id="workspace-settings-link"
@@ -168,7 +209,7 @@ export function AppShell({ route, preferences, account, onOpenAccount, onToggleT
           </div>
         )}
       </header>
-      {mobileSidebar && (
+      {drawerNavigation && (
         <MobileNavigation
           open={navigationOpen}
           onClose={closeNavigation}
@@ -183,10 +224,10 @@ export function AppShell({ route, preferences, account, onOpenAccount, onToggleT
       <main id="main" className="app-main" tabIndex="-1">
         <div
           id="workspace-panel"
-          role={mobileSidebar || selectedProduct === 'settings' ? 'region' : 'tabpanel'}
-          aria-label={mobileSidebar ? PRODUCT_META[selectedProduct].label : undefined}
+          role={drawerNavigation || selectedProduct === 'settings' ? 'region' : 'tabpanel'}
+          aria-label={drawerNavigation ? PRODUCT_META[selectedProduct].label : undefined}
           aria-labelledby={
-            mobileSidebar ? undefined : selectedProduct === 'settings' ? 'workspace-settings-link' : `app-tab-${selectedProduct}`
+            drawerNavigation ? undefined : selectedProduct === 'settings' ? 'workspace-settings-link' : `app-tab-${selectedProduct}`
           }
         >
           <ContextMenu className="workspace-shortcuts" label={`Atalhos do ${PRODUCT_META[selectedProduct].label}`} items={shortcuts}>

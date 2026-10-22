@@ -482,6 +482,41 @@ html[data-reduced-motion='true'] *::after {
   border-radius: var(--radius-action);
   box-shadow: var(--shadow-md);
 }
+.site-header .mobile-context-trigger {
+  flex: 1;
+  min-width: 0;
+  min-height: var(--shell-island-height);
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-action);
+  border-color: var(--border-subtle);
+  background: var(--surface-primary);
+  color: var(--text-brand);
+  box-shadow: var(--shadow-sm);
+}
+.mobile-context-trigger > span {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  width: 100%;
+  min-width: 0;
+}
+.mobile-context-label {
+  display: grid;
+  gap: 0.125rem;
+  flex: 1;
+  min-width: 0;
+  text-align: start;
+}
+.mobile-context-app,
+.mobile-context-page {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.mobile-context-app { font-size: 0.8125rem; }
+.mobile-context-page { font-size: 0.6875rem; font-weight: 500; color: var(--text-secondary); }
+.mobile-context-trigger .ds-app-logo,
+.mobile-context-trigger .ds-icon { flex: none; }
 .mobile-sidebar {
   display: flex;
   flex-direction: column;
