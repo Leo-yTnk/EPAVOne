@@ -1,6 +1,6 @@
 # Costura sobreposta e navegação lateral responsiva
 
-A ilha de navegação separa trilho visual e área rolável. No header horizontal, o trilho mede 44px de altura e os destaques costurados medem 58px, alinhados às ilhas de marca e conta e avançando 7px acima e abaixo do trilho. Os alvos continuam com 44px. Itens inativos usam texto de 12px, ícones de app de 18px e espaçamento mais compacto; itens ativos conservam texto de 13px e ícones de 24px. O espaço interno do contêiner rolável preserva a costura e a sombra sem clipping. O movimento continua no indicador único de cada grupo.
+A ilha de navegação separa trilho visual e área rolável. No header horizontal, o trilho mede 40px de altura e os destaques costurados medem 52px, alinhados às ilhas de marca e conta e avançando 6px acima e abaixo do trilho. Os alvos continuam com 44px. Itens inativos usam texto de 12px, ícones de app de 18px e espaçamento mais compacto; itens ativos conservam texto de 13px e ícones de 24px. O espaço interno do contêiner rolável preserva a costura e a sombra sem clipping. O movimento continua no indicador único de cada grupo.
 
 A preferência `mobileNavigation` é independente de `navigation`, tem padrão horizontal e é persistida junto das demais escolhas. Abaixo de 1200px, a opção vertical substitui o header por um botão que abre Drawer à esquerda. Apps, páginas, Configurações e conta ficam disponíveis com nomes completos. Rotas profundas e histórico por app são preservados. Em telas maiores, continua valendo a preferência de computador.
 
