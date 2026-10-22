@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { MobileNavigation } from './MobileNavigation.jsx';
+import { useHeaderMotion } from './useHeaderMotion.js';
 import { INSIGHTS_NAV, PLANNER_NAV, PRODUCT_META, routeHash } from './routes.js';
 import { Button, ContextMenu, NavItem, SelectionIndicator, Tabs, Icon, AppLogo } from '../design-system/components/index.js';
 
 export function AppShell({ route, preferences, account, onOpenAccount, onToggleTheme, children }) {
   const tabsRef = useRef(null);
+  const navigationRef = useRef(null);
   const sectionsRef = useRef(null);
   const lastRoutes = useRef({});
   const [wide, setWide] = useState(() => window.matchMedia?.('(min-width: 75rem)').matches ?? true);
@@ -17,6 +19,7 @@ export function AppShell({ route, preferences, account, onOpenAccount, onToggleT
   const selectedSection = route.product === 'planner' && section === 'atendimento' ? 'semana' : section === 'home' ? '' : section;
   const activeSection = sectionNav?.some((item) => item.section === selectedSection) ? selectedSection : '';
   const selectedProduct = Object.hasOwn(PRODUCT_META, route.product) ? route.product : 'home';
+  useHeaderMotion(navigationRef, selectedProduct, !vertical && !mobileSidebar);
   useEffect(() => {
     setNavigationOpen(false);
   }, [route.product, route.raw, mobileSidebar]);
@@ -99,7 +102,7 @@ export function AppShell({ route, preferences, account, onOpenAccount, onToggleT
                 EPAV<span className="brand-one">One</span>
               </span>
             </a>
-            <div className="workspace-navigation">
+            <div ref={navigationRef} className="workspace-navigation">
               <div className="workspace-navigation-scroll">
                 <div ref={tabsRef} className="workspace-apps">
                   <Tabs
