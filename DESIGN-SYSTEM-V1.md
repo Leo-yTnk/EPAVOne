@@ -21,7 +21,7 @@
 
 A base é **Warm Paper**, com fundos quentes e contraste confortável. A cor do produto destaca seleção, ações e pequenos indicadores. Os tons `700` dos botões preservam o contraste com texto branco; grandes superfícies permanecem neutras.
 
-Composição precede componentes: use tipografia, espaçamento e relações espaciais para hierarquia. Sobre o canvas quadriculado, evite separadores por linhas; agrupe unidades independentes em Cards stitched. Card representa uma unidade independente e sempre mantém a costura. A Home explica o fluxo Insights → Planner → Writer; preferências usam uma lista estruturada de Cards, preservando a relação entre descrição e controles. O header horizontal ocupa toda a largura, enquanto o conteúdo mantém margens e largura máxima compartilhadas. Fontes oficiais com licença OFL são servidas pelo próprio projeto para preservar a tipografia sem depender do Google Fonts em tempo de execução.
+Composição precede componentes: use tipografia, espaçamento e relações espaciais para hierarquia. Sobre o canvas quadriculado, evite separadores por linhas; agrupe unidades independentes em Cards stitched. Card representa uma unidade independente e sempre mantém a costura. A Home explica o fluxo Insights → Planner → Writer; preferências usam uma lista estruturada de Cards, preservando a relação entre descrição e controles. O header horizontal fica suspenso em ilhas de identidade, navegação e conta, alinhadas à largura máxima do conteúdo. Insights e Planner compactam os apps em ícones e posicionam as páginas ao lado, após um separador. As seleções usam indicadores deslizantes em Card stitched, sem alterar o foco ou a semântica de abas e links. Fontes oficiais com licença OFL são servidas pelo próprio projeto para preservar a tipografia sem depender do Google Fonts em tempo de execução.
 
 ### Tipografia
 
@@ -355,3 +355,7 @@ Ele serve para validar:
 - dark/light;
 - radius nesting;
 - stitched cards.
+
+## Família de marcas
+
+`AppLogo` usa os SVGs originais em `public/brand`, com grade 64 × 64, cantos de 16 e traço de 3. O fundo usa o tom 700 do produto para contraste com o símbolo claro. O wordmark usa `--text-primary` e `--text-brand`, adaptando-se ao tema; os nomes acompanham os símbolos. One mantém azul no shell. Evidências e critérios: [revisão de marcas](docs/brand-review/README.md).

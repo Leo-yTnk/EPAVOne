@@ -2,8 +2,18 @@ import { useRef } from 'preact/hooks';
 import { SelectionIndicator } from './SelectionIndicator.jsx';
 import { cx } from '../../shared/utils/cx.js';
 
-export function Tabs({ items, value, onChange, label = 'Abas', className = '', id, orientation = 'horizontal' }) {
+export function Tabs({
+  items,
+  value,
+  onChange,
+  label = 'Abas',
+  className = '',
+  id,
+  orientation = 'horizontal',
+  stitchedIndicator = false
+}) {
   const containerRef = useRef(null);
+  const focusValue = items.some((item) => item.value === value) ? value : items.find((item) => !item.disabled)?.value;
   function onKeyDown(event) {
     const enabled = items.filter((item) => !item.disabled);
     if (!enabled.length) return;
@@ -34,13 +44,13 @@ export function Tabs({ items, value, onChange, label = 'Abas', className = '', i
       aria-label={label}
       onKeyDown={onKeyDown}
     >
-      <SelectionIndicator containerRef={containerRef} value={value} />
+      <SelectionIndicator containerRef={containerRef} value={value} stitched={stitchedIndicator} />
       {items.map((item) => (
         <button
           key={item.value}
           id={item.id}
           aria-controls={item.panelId}
-          tabIndex={item.value === value ? 0 : -1}
+          tabIndex={item.value === focusValue ? 0 : -1}
           className={cx('ds-tab', item.value === value && 'is-active')}
           role="tab"
           aria-selected={item.value === value}

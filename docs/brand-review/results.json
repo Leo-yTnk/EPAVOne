@@ -1,0 +1,680 @@
+{
+  "matrix": [
+    {
+      "route": "one",
+      "width": 320,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights",
+      "width": 320,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights/receitas",
+      "width": 320,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights/produtos",
+      "width": 320,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights/criacao",
+      "width": 320,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner",
+      "width": 320,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/semana",
+      "width": 320,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/clientes",
+      "width": 320,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/oportunidades",
+      "width": 320,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/desempenho",
+      "width": 320,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "writer",
+      "width": 320,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "settings",
+      "width": 320,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "one",
+      "width": 320,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights",
+      "width": 320,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights/receitas",
+      "width": 320,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights/produtos",
+      "width": 320,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights/criacao",
+      "width": 320,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner",
+      "width": 320,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/semana",
+      "width": 320,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/clientes",
+      "width": 320,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/oportunidades",
+      "width": 320,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/desempenho",
+      "width": 320,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "writer",
+      "width": 320,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "settings",
+      "width": 320,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "one",
+      "width": 390,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights",
+      "width": 390,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights/receitas",
+      "width": 390,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights/produtos",
+      "width": 390,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights/criacao",
+      "width": 390,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner",
+      "width": 390,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/semana",
+      "width": 390,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/clientes",
+      "width": 390,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/oportunidades",
+      "width": 390,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/desempenho",
+      "width": 390,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "writer",
+      "width": 390,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "settings",
+      "width": 390,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "one",
+      "width": 390,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights",
+      "width": 390,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights/receitas",
+      "width": 390,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights/produtos",
+      "width": 390,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights/criacao",
+      "width": 390,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner",
+      "width": 390,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/semana",
+      "width": 390,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/clientes",
+      "width": 390,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/oportunidades",
+      "width": 390,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/desempenho",
+      "width": 390,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "writer",
+      "width": 390,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "settings",
+      "width": 390,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "one",
+      "width": 768,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights",
+      "width": 768,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights/receitas",
+      "width": 768,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights/produtos",
+      "width": 768,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights/criacao",
+      "width": 768,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner",
+      "width": 768,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/semana",
+      "width": 768,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/clientes",
+      "width": 768,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/oportunidades",
+      "width": 768,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/desempenho",
+      "width": 768,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "writer",
+      "width": 768,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "settings",
+      "width": 768,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "one",
+      "width": 768,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights",
+      "width": 768,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights/receitas",
+      "width": 768,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights/produtos",
+      "width": 768,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights/criacao",
+      "width": 768,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner",
+      "width": 768,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/semana",
+      "width": 768,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/clientes",
+      "width": 768,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/oportunidades",
+      "width": 768,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/desempenho",
+      "width": 768,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "writer",
+      "width": 768,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "settings",
+      "width": 768,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "one",
+      "width": 1440,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights",
+      "width": 1440,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights/receitas",
+      "width": 1440,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights/produtos",
+      "width": 1440,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights/criacao",
+      "width": 1440,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner",
+      "width": 1440,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/semana",
+      "width": 1440,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/clientes",
+      "width": 1440,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/oportunidades",
+      "width": 1440,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/desempenho",
+      "width": 1440,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "writer",
+      "width": 1440,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "settings",
+      "width": 1440,
+      "theme": "light",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "one",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights/receitas",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights/produtos",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "insights/criacao",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/semana",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/clientes",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/oportunidades",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "planner/desempenho",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "writer",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    },
+    {
+      "route": "settings",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": 0,
+      "brokenLogos": 0
+    }
+  ],
+  "pageErrors": [],
+  "sidebar": "passed",
+  "reducedMotion": "passed",
+  "catalog": "fixture, no hosted writes"
+}

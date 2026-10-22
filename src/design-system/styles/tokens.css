@@ -50,7 +50,7 @@
   --surface-selected: var(--brand-100);
   --text-primary: var(--ref-color-ink-900);
   --text-secondary: var(--ref-color-ink-600);
-  --text-tertiary: var(--ref-color-ink-400);
+  --text-tertiary: #6b5d55;
   --text-inverse: #fff;
   --text-brand: var(--brand-700);
   --text-info: #314581;
@@ -215,6 +215,8 @@
 }
 
 [data-theme='dark'] {
+  --border-focus: #aebef5;
+  --focus-ring: 0 0 0 0.1875rem rgba(174, 190, 245, 0.24);
   --text-info: #aebef5;
   --text-success: #9ad4a6;
   --text-warning: #e6c36d;

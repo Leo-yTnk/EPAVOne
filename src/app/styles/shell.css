@@ -1,4 +1,4 @@
-/* Shared canvas keeps the same quiet grid across every route and product. */
+/* The quiet canvas remains visible between the suspended navigation islands. */
 body {
   --page-grid-line: color-mix(in srgb, var(--text-primary) 5%, transparent);
   background-image:
@@ -9,9 +9,9 @@ body {
 [data-theme='dark'] body {
   --page-grid-line: color-mix(in srgb, var(--text-primary) 4%, transparent);
 }
-
 .app-shell {
   --shell-gutter: var(--space-5);
+  --shell-content-width: 80rem;
   width: 100%;
   min-height: 100vh;
   margin-inline: auto;
@@ -33,64 +33,87 @@ body {
 }
 .site-header {
   position: sticky;
-  top: 0;
+  top: var(--space-3);
   z-index: var(--z-sticky);
-  background: var(--surface-canvas);
-  border-bottom: 1px solid var(--border-subtle);
+  min-width: 0;
+}
+.navigation-horizontal .site-header,
+.navigation-horizontal .app-main,
+.navigation-horizontal .site-footer {
+  width: min(100% - 2 * var(--shell-gutter), var(--shell-content-width));
+  margin-inline: auto;
+}
+.navigation-horizontal .site-header {
+  margin-top: var(--space-3);
 }
 .workspace-bar {
   display: flex;
   align-items: center;
   gap: var(--space-3);
   min-width: 0;
-  padding-block: var(--space-1);
+}
+/* Three functional groups: identity, navigation, account. No costly backdrop filters. */
+.brand,
+.workspace-navigation,
+.workspace-utilities {
+  --container-radius: var(--radius-xl);
+  --container-padding: 0.375rem;
+  --nested-radius: max(var(--radius-sm), calc(var(--container-radius) - var(--container-padding)));
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--container-radius);
+  background: var(--surface-primary);
+  box-shadow: var(--shadow-md);
 }
 .brand {
   display: inline-flex;
+  flex: none;
   align-items: center;
   gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  min-height: 3.625rem;
   font: 700 1rem/1 var(--font-heading);
   letter-spacing: -0.04em;
   text-decoration: none;
   white-space: nowrap;
 }
-.brand-mark {
-  display: grid;
-  place-items: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: var(--radius-md);
-  background: var(--brand-500);
-  color: #fff;
-  font: 400 1.5rem/1 var(--font-display);
-}
 .brand-one {
   color: var(--text-brand);
 }
+.workspace-navigation {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--container-padding);
+  min-width: 0;
+  max-width: 100%;
+  margin-inline: auto;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+}
 .workspace-apps {
-  flex: 1;
+  flex: none;
   min-width: 0;
 }
 .app-tabs {
-  gap: 0;
-  overflow-x: auto;
-  scrollbar-width: thin;
+  gap: var(--space-1);
   border: 0;
+  overflow: visible;
 }
 .app-tabs .ds-tab {
-  flex: 0 0 auto;
-  padding: 0 var(--space-3);
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--control-md);
+  min-width: 3.5rem;
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--nested-radius);
   font-size: 0.8125rem;
   white-space: nowrap;
-  min-height: var(--control-sm);
 }
 .app-tabs .ds-tab.is-active {
-  background: var(--surface-primary);
-  border-color: var(--border-subtle);
-  border-bottom-color: var(--surface-primary);
-  color: var(--text-primary);
+  color: var(--text-brand);
 }
 .app-tab-label {
   display: flex;
@@ -98,14 +121,12 @@ body {
   gap: var(--space-2);
 }
 .app-tab-glyph {
-  display: none;
-  color: var(--text-secondary);
-}
-/* Utility controls stay quiet alongside the app tabs. Their names remain accessible. */
-.navigation-horizontal [data-app='settings'] .app-tab-glyph {
   display: grid;
   place-items: center;
+  flex: none;
 }
+/* Names stay available to screen readers when apps collapse to symbols. */
+.has-sections .app-tab-name,
 .navigation-horizontal [data-app='settings'] .app-tab-name,
 .navigation-horizontal .workspace-account-label {
   position: absolute;
@@ -116,94 +137,69 @@ body {
   clip-path: inset(50%);
   white-space: nowrap;
 }
-.workspace-account {
-  flex: 0 0 auto;
-  min-height: var(--control-sm);
-  color: var(--text-secondary);
+.has-sections .app-tabs .ds-tab {
+  padding: var(--space-2) var(--space-3);
+}
+.workspace-nav-separator {
+  flex: none;
+  width: 1px;
+  height: var(--space-5);
+  background: var(--border-default);
 }
 .product-section-nav {
-  --container-radius: var(--radius-sm);
-  --container-padding: 0;
+  --container-radius: var(--radius-xl);
+  --container-padding: 0.375rem;
+  --nested-radius: max(var(--radius-sm), calc(var(--container-radius) - var(--container-padding)));
   position: relative;
   isolation: isolate;
   display: flex;
-  gap: var(--space-2);
-  padding: var(--container-padding);
-  width: fit-content;
-  max-width: 100%;
-  overflow-x: auto;
-  margin-bottom: 0;
+  flex: none;
+  align-items: center;
+  gap: var(--space-1);
 }
 .product-tab {
   position: relative;
   z-index: 1;
+  flex: none;
+  min-height: var(--control-md);
+  padding-inline: var(--space-4);
+  border-radius: var(--nested-radius);
   font-size: 0.8125rem;
   white-space: nowrap;
+}
+.section-tab:hover {
+  transform: none;
 }
 .section-tab.is-active {
   background: transparent;
   color: var(--text-brand);
 }
-.navigation-horizontal .site-header {
-  --header-apps-bg: #eae9e7;
-  --header-pages-bg: #f2f1ef;
-  background: var(--header-pages-bg);
+.site-header .app-tabs > .ds-selection-indicator,
+.product-section-nav > .ds-selection-indicator {
+  top: 2px;
+  bottom: auto;
+  width: var(--selection-width, 0px);
+  height: max(0px, calc(var(--selection-height, 0px) - 4px));
+  transform: translate(var(--selection-x, 0px), var(--selection-y, 0px));
+  border-radius: var(--nested-radius);
+  background: var(--surface-selected);
 }
-[data-theme='dark'] .navigation-horizontal .site-header {
-  --header-apps-bg: #2a2827;
-  --header-pages-bg: #22201f;
+.site-header .workspace-account {
+  flex: none;
+  width: 3.625rem;
+  min-height: 3.625rem;
+  padding: var(--space-2);
+  color: var(--text-secondary);
 }
-.navigation-horizontal .app-tabs .ds-tab.is-active {
-  background: var(--header-pages-bg);
-  border-bottom-color: var(--header-pages-bg);
-}
-.navigation-horizontal .product-section-nav {
-  width: 100%;
-  background: var(--header-pages-bg);
-}
-.navigation-horizontal .workspace-bar,
-.navigation-horizontal .product-section-nav {
-  padding-inline: max(var(--shell-gutter), calc((100% - 90rem) / 2));
-}
-.navigation-horizontal .workspace-bar {
-  background: var(--header-apps-bg);
-  border-bottom: 1px solid var(--border-subtle);
-  padding-bottom: 0;
-}
-.navigation-horizontal .section-tab {
-  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
-  font-weight: 550;
-}
-.navigation-horizontal .section-tab:hover {
-  transform: none;
-}
-.navigation-horizontal .section-tab.is-active {
-  font-weight: 650;
-}
-.navigation-horizontal .product-section-nav .ds-selection-indicator {
-  top: auto;
-  bottom: 0;
-  height: 2px;
-  border-radius: var(--radius-full);
-  transform: translateX(var(--selection-x, 0px));
-  background: var(--text-brand);
-}
-.navigation-vertical .app-tabs .ds-tab {
-  border-radius: var(--radius-md);
-}
-.navigation-vertical .section-tab.is-active {
-  background: transparent;
-  color: var(--text-brand);
-}
-.navigation-horizontal .app-main,
-.navigation-horizontal .site-footer {
-  width: min(100% - 2 * var(--shell-gutter), 90rem);
-  margin-inline: auto;
+.workspace-account > span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
 }
 .app-main {
   flex: 1;
   min-width: 0;
-  padding: var(--space-5) 0;
+  padding: var(--space-6) 0;
 }
 .app-main:focus {
   outline: none;
@@ -238,7 +234,7 @@ body {
   color: var(--text-secondary);
 }
 .navigation-vertical {
-  width: min(100% - 2 * var(--shell-gutter), 90rem);
+  width: min(100% - 2 * var(--shell-gutter), var(--shell-content-width));
   display: grid;
   grid-template-columns: 14.5rem minmax(0, 1fr);
   grid-template-rows: 1fr auto;
@@ -247,46 +243,69 @@ body {
 .navigation-vertical .site-header {
   grid-row: 1 / 3;
   align-self: start;
-  top: var(--space-3);
-  height: calc(100dvh - 2 * var(--space-3));
-  border-bottom: 0;
-  border-right: 1px solid var(--border-subtle);
-  padding: var(--space-3) var(--space-4) var(--space-3) 0;
+  max-height: calc(100dvh - 2 * var(--space-3));
+  margin-top: var(--space-3);
   overflow-y: auto;
   scrollbar-width: thin;
+  padding: var(--space-1);
 }
 .navigation-vertical .workspace-bar {
-  gap: var(--space-4);
   flex-direction: column;
   align-items: stretch;
-  min-height: 0;
 }
-.navigation-vertical .brand {
-  padding: var(--space-3);
+.navigation-vertical .workspace-navigation {
+  flex-direction: column;
+  align-items: stretch;
+  margin: 0;
 }
 .navigation-vertical .app-tabs {
-  gap: var(--space-1);
   flex-direction: column;
-  overflow: visible;
+}
+.navigation-vertical.has-sections .app-tabs {
+  flex-direction: row;
+  justify-content: space-between;
 }
 .navigation-vertical .app-tabs .ds-tab {
-  min-height: var(--control-md);
-  padding: var(--space-3);
   text-align: left;
-}
-.navigation-vertical .workspace-account {
   justify-content: flex-start;
+}
+.navigation-vertical .workspace-nav-separator {
+  width: auto;
+  height: 1px;
+  margin: var(--space-2);
 }
 .navigation-vertical .product-section-nav {
   flex-direction: column;
+  align-items: stretch;
+}
+.navigation-vertical .section-tab {
+  white-space: normal;
+}
+.navigation-vertical .workspace-account {
   width: 100%;
-  margin-top: var(--space-5);
-  gap: var(--space-1);
-  padding: var(--space-2) 0;
-  overflow: visible;
+  justify-content: flex-start;
+  padding-inline: var(--space-4);
 }
 .navigation-vertical .site-footer {
   grid-column: 2;
+}
+.workspace-shortcuts {
+  min-width: 0;
+}
+.workspace-shortcuts:focus-visible {
+  outline: 2px solid var(--border-focus);
+  outline-offset: var(--space-2);
+  border-radius: var(--radius-md);
+}
+html[data-density='compact'] .ds-card:not(.insights-image) {
+  --container-padding: var(--space-4);
+}
+html[data-reduced-motion='true'] *,
+html[data-reduced-motion='true'] *::before,
+html[data-reduced-motion='true'] *::after {
+  animation-duration: 0s;
+  transition-duration: 0s;
+  scroll-behavior: auto;
 }
 @keyframes ds-route-fallback-in {
   from {
@@ -296,52 +315,40 @@ body {
     transform: translateX(0);
   }
 }
-html[data-reduced-motion='true'] *,
-html[data-reduced-motion='true'] *::before,
-html[data-reduced-motion='true'] *::after {
-  animation-duration: 0s;
-  transition-duration: 0s;
-  scroll-behavior: auto;
-}
 @media (prefers-reduced-motion: reduce) {
   .route-frame {
     animation: none;
   }
 }
-@media (max-width: 64rem) {
-  .brand-name {
+@media (max-width: 74rem) {
+  .navigation-horizontal .brand-name {
     display: none;
   }
-  .workspace-bar {
-    gap: var(--space-2);
-  }
-  .app-tabs .ds-tab {
-    padding-inline: var(--space-3);
+  .navigation-horizontal .brand {
+    padding: var(--space-2);
   }
 }
 @media (max-width: 48rem) {
   .app-shell {
     --shell-gutter: var(--space-3);
   }
+  .workspace-bar {
+    gap: var(--space-2);
+  }
+  .workspace-navigation {
+    margin-inline: 0;
+  }
+  .navigation-horizontal .brand {
+    display: none;
+  }
+  .navigation-horizontal .workspace-navigation {
+    flex: 1;
+  }
   .app-tabs .ds-tab {
     padding-inline: var(--space-2);
-    font-size: 0.8125rem;
   }
-  .app-tab-glyph {
-    display: none;
-  }
-  .workspace-account-label {
-    display: none;
-  }
-  .workspace-account {
-    padding-inline: var(--space-2);
-  }
-  .product-section-nav {
-    width: 100%;
-  }
-  .product-section-nav .ds-nav-item {
-    flex: 0 0 auto;
-    justify-content: center;
+  .has-sections .app-tabs .ds-tab {
+    padding: var(--space-2);
   }
   .app-main {
     padding-block: var(--space-4);
@@ -351,62 +358,37 @@ html[data-reduced-motion='true'] *::after {
   }
 }
 
-.workspace-account > span {
+.workspace-utilities {
+  display: flex;
+  align-items: center;
+  flex: none;
+  gap: var(--space-1);
+  padding: var(--container-padding);
+}
+.site-header .workspace-utilities .workspace-account,
+.site-header .workspace-settings {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
+  justify-content: center;
+  width: var(--control-md);
+  min-height: var(--control-md);
+  padding: var(--space-2);
+  border: 0;
+  border-radius: var(--nested-radius);
+  background: transparent;
+  box-shadow: none;
+  color: var(--text-secondary);
 }
-html[data-density='compact'] .ds-card:not(.insights-image) {
-  --container-padding: var(--space-4);
-}
-
-/* Touch targets grow without enlarging the navigation type. */
-@media (pointer: coarse) {
-  .site-header .ds-tab,
-  .site-header .ds-nav-item,
-  .workspace-account {
-    min-height: var(--control-md);
-  }
-}
-
-.workspace-shortcuts {
-  min-width: 0;
-}
-
-.navigation-vertical .brand-name {
-  display: inline;
-}
-.navigation-vertical .app-tab-glyph {
-  display: grid;
-  place-items: center;
-  flex: none;
-}
-.navigation-vertical .app-tab-label {
-  gap: var(--space-3);
-}
-.navigation-vertical .app-tabs .ds-tab.is-active {
+.site-header .workspace-settings.is-active {
   background: var(--surface-selected);
-  border-color: transparent;
   color: var(--text-brand);
 }
-.navigation-vertical .product-section-nav .ds-selection-indicator {
-  border-radius: var(--radius-md);
-  background: var(--surface-selected);
+.workspace-settings-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
-.navigation-vertical .section-tab {
-  min-height: var(--control-md);
-  padding: var(--space-3);
-  white-space: normal;
-}
-.navigation-vertical .workspace-account {
-  min-height: var(--control-md);
-  padding-inline: var(--space-3);
-}
-.workspace-shortcuts:focus-visible {
-  outline: 2px solid var(--border-focus);
-  outline-offset: var(--space-2);
-  border-radius: var(--radius-md);
-}
-.navigation-vertical .ds-tab.is-active .app-tab-glyph {
-  color: currentColor;
-}
+.navigation-vertical .workspace-utilities { justify-content: space-around; }

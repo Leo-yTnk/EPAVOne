@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { Alert, Button, Card, Icon, NavItem, PageHeader, Spinner } from '../../../design-system/components/index.js';
+import { Alert, Button, Card, Icon, NavItem, AppLogo, PageHeader, Spinner } from '../../../design-system/components/index.js';
 import { EntityManager } from './components/EntityManager.jsx';
 import { SharedLibrary } from './components/SharedLibrary.jsx';
 import { RequestsPage } from './components/RequestsPage.jsx';
@@ -22,7 +22,7 @@ export function CreationPage({ route, account, onOpenAccount }) {
     return (
       <section className="creation-welcome">
         <PageHeader
-          eyebrow="EPAVInsights"
+          eyebrow={<AppLogo product="insights" wordmark />}
           title="Seu espaço de criação"
           description="Entre com a credencial YCP para acessar suas receitas, produtos e categorias."
         />
@@ -70,7 +70,7 @@ export function CreationPage({ route, account, onOpenAccount }) {
   return (
     <section className="creation-fields" key={account.session.user.id}>
       <PageHeader
-        eyebrow="EPAVInsights"
+        eyebrow={<AppLogo product="insights" wordmark />}
         title="Modo de criação"
         description="Crie e organize sua biblioteca. Seus conteúdos pessoais continuam vinculados à sua conta."
       />

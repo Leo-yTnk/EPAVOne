@@ -117,7 +117,7 @@ async function review() {
           const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
           assert(overflow <= 1, `Horizontal overflow: ${width} ${theme} ${hash} ${overflow}`);
           const header = await page.locator('.site-header').boundingBox();
-          assert(Math.abs(header.x) <= 1 && Math.abs(header.width - width) <= 1, `Header width: ${width} ${theme} ${hash}`);
+          assert(header.x > 0 && header.x + header.width < width, `Inset header: ${width} ${theme} ${hash}`);
           results.push({ width, theme, route: hash || '#/', overflow, headerWidth: header.width, headerX: header.x });
           if ((width === 1440 && theme === 'light') || (width === 390 && theme === 'dark')) {
             const name = hash.replace('#/', '').replaceAll('/', '-') || 'home';

@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'preact/compat';
-import { Breadcrumb, Button, PageHeader, Spinner } from '../../design-system/components/index.js';
+import { Breadcrumb, Button, AppLogo, PageHeader, Spinner } from '../../design-system/components/index.js';
 import { ProductCatalogPage } from './components/ProductCatalogPage.jsx';
 import { RecipesPage } from './components/RecipesPage.jsx';
 import { InsightsHomePage } from './components/InsightsHomePage.jsx';
@@ -35,7 +35,7 @@ export function InsightsRoutes({ route, account, onOpenAccount }) {
           ...(!home ? [{ label: info ? section[0].toUpperCase() + section.slice(1) : 'Página não encontrada' }] : [])
         ]}
       />
-      {info && <PageHeader eyebrow="EPAVInsights" title={info.title} description={info.description} />}
+      {info && <PageHeader eyebrow={<AppLogo product="insights" wordmark />} title={info.title} description={info.description} />}
       {home ? (
         <InsightsHomePage />
       ) : section === 'receitas' ? (
@@ -59,7 +59,7 @@ export function InsightsRoutes({ route, account, onOpenAccount }) {
         />
       ) : (
         <PageHeader
-          eyebrow="EPAVInsights"
+          eyebrow={<AppLogo product="insights" wordmark />}
           title="Página não encontrada"
           description="Volte ao catálogo do EPAVInsights."
           actions={

@@ -44,6 +44,36 @@ describe('App workspace tabs', () => {
     expect(within(insights).getByRole('link', { name: 'Produtos' }).getAttribute('aria-current')).toBe('page');
   });
 
+  it('keeps stitched app and section thumbs mounted while navigating within the shared island', () => {
+    const { container, rerender } = render(shell({ product: 'planner', segments: ['semana'] }));
+    const island = container.querySelector('.workspace-navigation');
+    const tabs = screen.getByRole('tablist', { name: 'Apps do EPAVOne' });
+    const nav = screen.getByRole('navigation', { name: 'Navegação do Planner' });
+    expect(island.contains(tabs)).toBe(true);
+    expect(island.contains(nav)).toBe(true);
+    const thumbs = [...island.querySelectorAll('.ds-selection-indicator')];
+    expect(thumbs).toHaveLength(2);
+    expect(thumbs.every(thumb => thumb.classList.contains('ds-stitched-card'))).toBe(true);
+    expect(thumbs.every(thumb => thumb.getAttribute('aria-hidden') === 'true')).toBe(true);
+    expect(screen.getByRole('tab', { name: 'Planner' }).getAttribute('aria-selected')).toBe('true');
+    rerender(shell({ product: 'planner', segments: ['clientes'] }));
+    expect([...island.querySelectorAll('.ds-selection-indicator')]).toEqual(thumbs);
+    expect(within(nav).getByRole('link', { name: 'Clientes' }).getAttribute('aria-current')).toBe('page');
+  });
+
+  it('keeps settings beside account and leaves app tabs reachable on the settings page', () => {
+    const { container, rerender } = render(shell({ product: 'planner', segments: [] }));
+    const settings = screen.getByRole('link', { name: 'Configurações' });
+    expect(settings.closest('.workspace-utilities')).not.toBeNull();
+    expect(settings.closest('.workspace-utilities').querySelector('.workspace-account')).not.toBeNull();
+    expect(screen.queryByRole('tab', { name: 'Configurações' })).toBeNull();
+    rerender(shell({ product: 'settings', segments: [] }));
+    expect(settings.getAttribute('aria-current')).toBe('page');
+    expect(screen.getByRole('region', { name: 'Configurações' })).not.toBeNull();
+    expect(screen.getByRole('tab', { name: 'One' }).tabIndex).toBe(0);
+    expect(container.querySelector('.app-tabs .ds-selection-indicator').dataset.ready).toBe('false');
+  });
+
   it('supports arrows, Home and End with roving focus and skips disabled tabs', () => {
     const onChange = vi.fn();
     const items = [

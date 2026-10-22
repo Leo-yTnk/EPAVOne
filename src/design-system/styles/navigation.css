@@ -233,3 +233,32 @@
 .ds-menu-layer .ds-layer-scroll {
   max-height: max(0px, calc(var(--layer-max-height, 18rem) - 2 * var(--container-padding) - 2px));
 }
+
+/* Optional stitched thumb shares the canonical Card surface and stitch geometry. */
+.ds-selection-indicator.is-stitched {
+  position: absolute;
+  transition:
+    transform var(--duration-normal) var(--ease-standard),
+    width var(--duration-normal) var(--ease-standard),
+    height var(--duration-normal) var(--ease-standard),
+    background-color var(--duration-normal) var(--ease-standard),
+    border-color var(--duration-normal) var(--ease-standard);
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+  pointer-events: none;
+  --card-radius: var(--nested-radius);
+  --card-stitch-inset: var(--space-1);
+  --card-stitch-width: 1px;
+  --card-stitch-dash: 3px;
+  --card-stitch-gap: 3px;
+  --card-stitch-color: color-mix(in srgb, var(--text-brand) 35%, var(--surface-selected));
+  border-color: color-mix(in srgb, var(--text-brand) 18%, var(--border-subtle));
+  box-shadow: var(--shadow-sm);
+}
+[data-reduced-motion='true'] .ds-selection-indicator.is-stitched {
+  transition: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ds-selection-indicator.is-stitched { transition: none; }
+}

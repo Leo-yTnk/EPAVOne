@@ -4,7 +4,7 @@ Portal do EPAV para **EPAVInsights**, **EPAVPlanner** e **EPAVWriter**.
 
 ## Espaço de trabalho
 
-As abas **One**, **Insights**, **Planner** e **Writer** separam os apps da navegação entre páginas. Insights e Planner usam a mesma barra de navegação de páginas na segunda linha do header, com as áreas de cada produto. Ao alternar apps, cada aba volta à última rota visitada durante a sessão.
+As abas **One**, **Insights**, **Planner** e **Writer** separam os apps da navegação entre páginas. O header usa ilhas suspensas. No Insights e no Planner, os apps aparecem como ícones e a navegação de páginas fica ao lado, após um separador, na mesma linha. Os destaques de app e seção usam cards costurados que deslizam entre as seleções. Ao alternar apps, cada aba volta à última rota visitada durante a sessão.
 
 O Writer conserva o formulário carregado, dados do cliente, carrinho e etapa enquanto o usuário consulta outro app. O Excel anexado usa IndexedDB e um identificador de sessão da aba para ser restaurado após recarregar, até a remoção explícita; os demais dados conservam o estado da sessão em memória. As abas suportam setas, Home e End; as rotas em hash continuam funcionando com links diretos e histórico do navegador.
 

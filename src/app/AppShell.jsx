@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'preact/hooks';
 import { INSIGHTS_NAV, PLANNER_NAV, PRODUCT_META, routeHash } from './routes.js';
-import { Button, ContextMenu, NavItem, SelectionIndicator, Tabs, Icon } from '../design-system/components/index.js';
+import { Button, ContextMenu, NavItem, SelectionIndicator, Tabs, Icon, AppLogo } from '../design-system/components/index.js';
 
 export function AppShell({ route, preferences, account, onOpenAccount, onToggleTheme, children }) {
   const tabsRef = useRef(null);
@@ -22,6 +22,7 @@ export function AppShell({ route, preferences, account, onOpenAccount, onToggleT
   }, []);
   useEffect(() => {
     lastRoutes.current[route.product] = routeHash(route.product, route.segments);
+    sectionsRef.current?.querySelector('[aria-current="page"]')?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
     tabsRef.current?.querySelector('[aria-selected="true"]')?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
   }, [route, vertical]);
 
@@ -65,64 +66,87 @@ export function AppShell({ route, preferences, account, onOpenAccount, onToggleT
   ];
 
   return (
-    <div className={`app-shell navigation-${vertical ? 'vertical' : 'horizontal'}`}>
+    <div className={`app-shell navigation-${vertical ? 'vertical' : 'horizontal'}${sectionNav ? ' has-sections' : ''}`}>
       <a className="skip-link" href="#main">
         Ir para o conteúdo
       </a>
       <header className="site-header">
         <div className="workspace-bar">
-          <a className="brand" href="#/" aria-label="EPAVOne, página inicial">
-            <span className="brand-mark">e.</span>
+          <a className="brand" data-product="one" href="#/" aria-label="EPAVOne, página inicial">
+            <AppLogo product="one" />
             <span className="brand-name">
               EPAV<span className="brand-one">One</span>
             </span>
           </a>
-          <div ref={tabsRef} className="workspace-apps">
-            <Tabs
-              label="Apps do EPAVOne"
-              className="app-tabs"
-              orientation={vertical ? 'vertical' : 'horizontal'}
-              value={selectedProduct}
-              onChange={selectApp}
-              items={Object.entries(PRODUCT_META).map(([key, item]) => ({
-                value: key,
-                id: `app-tab-${key}`,
-                panelId: 'workspace-panel',
-                label: (
-                  <span className="app-tab-label" data-product={item.product} data-app={key}>
-                    <span className="app-tab-glyph" aria-hidden="true">
-                      <Icon name={key} />
-                    </span>
-                    <span className="app-tab-name">{item.label}</span>
-                  </span>
-                )
-              }))}
-            />
+          <div className="workspace-navigation">
+            <div ref={tabsRef} className="workspace-apps">
+              <Tabs
+                label="Apps do EPAVOne"
+                className="app-tabs"
+                orientation={vertical && !sectionNav ? 'vertical' : 'horizontal'}
+                stitchedIndicator
+                value={selectedProduct}
+                onChange={selectApp}
+                items={Object.entries(PRODUCT_META)
+                  .filter(([key]) => key !== 'settings')
+                  .map(([key, item]) => ({
+                    value: key,
+                    id: `app-tab-${key}`,
+                    panelId: 'workspace-panel',
+                    label: (
+                      <span className="app-tab-label" data-product={item.product} data-app={key} title={item.label}>
+                        <span className="app-tab-glyph" aria-hidden="true">
+                          {key === 'settings' ? <Icon name="settings" /> : <AppLogo product={item.product} size="sm" />}
+                        </span>
+                        <span className="app-tab-name">{item.label}</span>
+                      </span>
+                    )
+                  }))}
+              />
+            </div>
+            {sectionNav && <span className="workspace-nav-separator" aria-hidden="true" />}
+            {sectionNav && (
+              <nav ref={sectionsRef} className="product-section-nav" aria-label={`Navegação do ${PRODUCT_META[selectedProduct].label}`}>
+                <SelectionIndicator containerRef={sectionsRef} value={activeSection} stitched />
+                {sectionNav.map((item) => (
+                  <NavItem key={item.href} className="product-tab section-tab" href={item.href} active={activeSection === item.section}>
+                    {item.label}
+                  </NavItem>
+                ))}
+              </nav>
+            )}
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="workspace-account"
-            onClick={onOpenAccount}
-            aria-label={account?.session ? 'Minha conta' : 'Entrar na conta'}
-          >
-            <Icon name="user" />
-            <span className="workspace-account-label">Conta</span>
-          </Button>
+          <div className="workspace-utilities">
+            <NavItem
+              id="workspace-settings-link"
+              className="workspace-settings"
+              href="#/settings"
+              active={route.product === 'settings'}
+              aria-label="Configurações"
+              title="Configurações"
+            >
+              <Icon name="settings" />
+              <span className="workspace-settings-label">Configurações</span>
+            </NavItem>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="workspace-account"
+              onClick={onOpenAccount}
+              aria-label={account?.session ? 'Minha conta' : 'Entrar na conta'}
+            >
+              <Icon name="user" />
+              <span className="workspace-account-label">Conta</span>
+            </Button>
+          </div>
         </div>
-        {sectionNav && (
-          <nav ref={sectionsRef} className="product-section-nav" aria-label={`Navegação do ${PRODUCT_META[selectedProduct].label}`}>
-            <SelectionIndicator containerRef={sectionsRef} value={activeSection} />
-            {sectionNav.map((item) => (
-              <NavItem key={item.href} className="product-tab section-tab" href={item.href} active={activeSection === item.section}>
-                {item.label}
-              </NavItem>
-            ))}
-          </nav>
-        )}
       </header>
       <main id="main" className="app-main" tabIndex="-1">
-        <div id="workspace-panel" role="tabpanel" aria-labelledby={`app-tab-${selectedProduct}`}>
+        <div
+          id="workspace-panel"
+          role={selectedProduct === 'settings' ? 'region' : 'tabpanel'}
+          aria-labelledby={selectedProduct === 'settings' ? 'workspace-settings-link' : `app-tab-${selectedProduct}`}
+        >
           <ContextMenu className="workspace-shortcuts" label={`Atalhos do ${PRODUCT_META[selectedProduct].label}`} items={shortcuts}>
             {children}
           </ContextMenu>
