@@ -92,7 +92,7 @@ body {
 .workspace-navigation::before {
   content: '';
   position: absolute;
-  inset: 1.125rem 0;
+  inset: var(--space-3) 0;
   z-index: -1;
   border: 1px solid var(--border-subtle);
   border-radius: var(--container-radius);
@@ -203,6 +203,35 @@ body {
   transform: translate(var(--selection-x, 0px), var(--selection-y, 0px));
   border-radius: var(--nested-radius);
   background: var(--surface-selected);
+}
+.navigation-horizontal .app-tabs,
+.navigation-horizontal .product-section-nav {
+  gap: 0.125rem;
+}
+.navigation-horizontal .workspace-navigation-scroll {
+  gap: var(--space-1);
+}
+.navigation-horizontal .app-tabs .ds-tab:not(.is-active) {
+  min-width: var(--control-md);
+  padding-inline: var(--space-2);
+  font-size: 0.75rem;
+}
+.navigation-horizontal .ds-tab:not(.is-active) .app-tab-label {
+  gap: var(--space-1);
+}
+.navigation-horizontal .ds-tab:not(.is-active) .ds-app-logo img {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+.navigation-horizontal .product-tab:not(.is-active) {
+  padding-inline: var(--space-3);
+  font-size: 0.75rem;
+}
+.navigation-horizontal .app-tabs > .ds-selection-indicator,
+.navigation-horizontal .product-section-nav > .ds-selection-indicator {
+  top: -0.4375rem;
+  height: calc(var(--selection-height, 0px) + 0.875rem);
+  border-radius: var(--radius-xl);
 }
 .site-header .workspace-account {
   flex: none;
