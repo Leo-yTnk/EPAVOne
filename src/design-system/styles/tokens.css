@@ -43,11 +43,13 @@
   --brand-500: var(--ref-color-home-500);
   --brand-700: var(--ref-color-home-700);
   --brand-900: var(--ref-color-home-900);
+  --hover-brand-strength: 8%;
   --surface-canvas: var(--ref-color-paper-100);
   --surface-primary: var(--ref-color-paper-0);
   --surface-secondary: var(--ref-color-paper-50);
   --surface-tertiary: var(--ref-color-paper-200);
   --surface-selected: var(--brand-100);
+  --surface-hover: color-mix(in srgb, var(--brand-500) var(--hover-brand-strength), var(--surface-primary));
   --text-primary: var(--ref-color-ink-900);
   --text-secondary: var(--ref-color-ink-600);
   --text-tertiary: #6b5d55;
@@ -65,7 +67,7 @@
   --button-bg-default: var(--brand-700);
   --button-bg-hover: var(--brand-900);
   --button-content-default: #fff;
-  --navigation-item-hover-bg: color-mix(in srgb, var(--brand-100) 45%, transparent);
+  --navigation-item-hover-bg: var(--surface-hover);
 
   --font-display: 'DM Serif Display', Georgia, serif;
   --font-heading: 'Inter Tight', 'Inter', system-ui, sans-serif;
@@ -172,6 +174,7 @@
 }
 
 [data-theme='dark'] {
+  --hover-brand-strength: 12%;
   --surface-canvas: #191615;
   --surface-primary: #211d1b;
   --surface-secondary: #2a2522;
@@ -205,11 +208,12 @@
 /* Resolve semantic aliases at every product boundary, including nested app links. */
 [data-product] {
   --surface-selected: var(--brand-100);
+  --surface-hover: color-mix(in srgb, var(--brand-500) var(--hover-brand-strength), var(--surface-primary));
   --text-brand: var(--brand-700);
   --border-brand: var(--brand-500);
   --button-bg-default: var(--brand-700);
   --button-bg-hover: var(--brand-900);
-  --navigation-item-hover-bg: color-mix(in srgb, var(--brand-100) 45%, transparent);
+  --navigation-item-hover-bg: var(--surface-hover);
 }
 [data-theme='dark'][data-product],
 [data-theme='dark'] [data-product] {

@@ -25,7 +25,7 @@
   border-radius:var(--radius-sm);background:transparent;color:var(--text-primary);font-weight:500;line-height:var(--leading-control);text-align:left;cursor:pointer;
   transition:background-color var(--duration-fast) var(--ease-standard),color var(--duration-fast) var(--ease-standard),transform var(--duration-fast) var(--ease-emphasized)
 }
-.ds-option:hover,.ds-option.is-highlighted{background:var(--surface-secondary)}
+.ds-option:hover,.ds-option.is-highlighted{background:var(--surface-hover)}
 .ds-option[aria-selected="true"]{background:var(--surface-selected);color:var(--text-brand);font-weight:700}
 .ds-option[aria-selected="true"]::after{content:'✓'}
 .ds-option:active:not(:disabled){transform:scale(.99)}

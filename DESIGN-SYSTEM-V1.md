@@ -363,3 +363,5 @@ Ele serve para validar:
 `AppLogo` usa os SVGs originais em `public/brand`, com grade 64 × 64, cantos de 16 e traço de 3. O fundo usa o tom 700 do produto para contraste com o símbolo claro. O wordmark usa `--text-primary` e `--text-brand`, adaptando-se ao tema; os nomes acompanham os símbolos. One mantém azul no shell. Evidências e critérios: [revisão de marcas](docs/brand-review/README.md).
 
 Contrato atualizado de pressão, acomodação e preferências: [continuidade de movimento](docs/continuous-motion.md).
+
+Hover e seleção têm tokens distintos: `--surface-hover` mantém o tom da superfície no modo escuro; `--surface-selected` identifica o destino ativo. Indicadores costurados aceitam arraste direto, confirmando a mudança ao soltar e preservando rolagem, teclado e movimento reduzido. [Contrato do gesto](docs/stitched-navigation-drag.md).
