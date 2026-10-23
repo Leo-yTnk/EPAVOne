@@ -71,7 +71,8 @@ export function usePressFeedback() {
       pointercancel: clear,
       keydown: down,
       keyup: release,
-      focusout: focusOut
+      focusout: focusOut,
+      'ds-selection-drag-start': clear
     };
     Object.entries(listeners).forEach(([name, handler]) => document.addEventListener(name, handler, true));
     window.addEventListener('blur', clear);

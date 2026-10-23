@@ -1,7 +1,9 @@
 import { useLayoutEffect, useState } from 'preact/hooks';
+import { selectionGeometry } from '../behaviors/selectionGeometry.js';
+import { useSelectionDrag } from '../behaviors/useSelectionDrag.js';
 import { Card } from './Card.jsx';
 
-export function SelectionIndicator({ containerRef, value, stitched = false }) {
+export function SelectionIndicator({ containerRef, value, stitched = false, orientation = 'horizontal' }) {
   const [geometry, setGeometry] = useState(null);
   useLayoutEffect(() => {
     const container = containerRef.current;
@@ -11,25 +13,12 @@ export function SelectionIndicator({ containerRef, value, stitched = false }) {
       return;
     }
     const update = () => {
-      const outer = container.getBoundingClientRect();
-      const inner = selected.getBoundingClientRect();
-      // Press feedback scales the visual box, not its layout. Measure the
-      // unscaled target so a long press cannot leave the thumb undersized.
-      const style = getComputedStyle(selected);
-      const width = parseFloat(style.width) || inner.width;
-      const height = parseFloat(style.height) || inner.height;
-      const positionedHere = selected.offsetParent === container;
-      const x = positionedHere
-        ? selected.offsetLeft
-        : inner.left + (inner.width - width) / 2 - outer.left + container.scrollLeft - container.clientLeft;
-      const y = positionedHere
-        ? selected.offsetTop
-        : inner.top + (inner.height - height) / 2 - outer.top + container.scrollTop - container.clientTop;
+      const box = selectionGeometry(container, selected);
       const next = {
-        '--selection-x': x + 'px',
-        '--selection-y': y + 'px',
-        '--selection-width': width + 'px',
-        '--selection-height': height + 'px'
+        '--selection-x': box.x + 'px',
+        '--selection-y': box.y + 'px',
+        '--selection-width': box.width + 'px',
+        '--selection-height': box.height + 'px'
       };
       setGeometry((current) => (current && Object.keys(next).every((key) => current[key] === next[key]) ? current : next));
     };
@@ -43,6 +32,7 @@ export function SelectionIndicator({ containerRef, value, stitched = false }) {
       window.removeEventListener('resize', update);
     };
   }, [containerRef, value]);
+  useSelectionDrag(containerRef, stitched, value, orientation);
   const props = {
     className: `ds-selection-indicator${stitched ? ' is-stitched' : ''}`,
     'aria-hidden': 'true',

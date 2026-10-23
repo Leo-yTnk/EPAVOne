@@ -88,9 +88,9 @@
     background-color var(--duration-normal) var(--ease-standard),
     transform var(--duration-fast) var(--ease-emphasized);
 }
-.ds-tab:hover:not(:disabled) {
+.ds-tab:hover:not(:disabled):not(.is-active) {
   color: var(--text-primary);
-  background: color-mix(in srgb, var(--surface-selected) 45%, transparent);
+  background: var(--surface-hover);
 }
 .ds-tab:active:not(:disabled) {
   transform: scale(var(--press-scale));
@@ -133,7 +133,7 @@
 }
 .ds-menu-item:hover,
 .ds-menu-item.is-highlighted {
-  background: var(--surface-selected);
+  background: var(--surface-hover);
   color: var(--text-brand);
 }
 .ds-menu-item:active {
@@ -174,9 +174,9 @@
   top: 0;
   pointer-events: none;
   z-index: 0;
-  transform: translate(var(--selection-x, 0px), var(--selection-y, 0px));
-  width: var(--selection-width, 0px);
-  height: var(--selection-height, 0px);
+  transform: translate(var(--selection-drag-x, var(--selection-x, 0px)), var(--selection-drag-y, var(--selection-y, 0px)));
+  width: var(--selection-drag-width, var(--selection-width, 0px));
+  height: var(--selection-drag-height, var(--selection-height, 0px));
   border-radius: var(--nested-radius);
   background: var(--button-bg-default);
   transition:
@@ -199,7 +199,7 @@
   top: auto;
   bottom: 0;
   height: 2px;
-  transform: translateX(var(--selection-x, 0px));
+  transform: translateX(var(--selection-drag-x, var(--selection-x, 0px)));
   border-radius: var(--radius-full);
   background: var(--text-brand);
 }
@@ -207,8 +207,8 @@
   top: 0;
   bottom: auto;
   width: 2px;
-  height: var(--selection-height, 0px);
-  transform: translateY(var(--selection-y, 0px));
+  height: var(--selection-drag-height, var(--selection-height, 0px));
+  transform: translateY(var(--selection-drag-y, var(--selection-y, 0px)));
 }
 
 .ds-menu-group {
@@ -262,4 +262,13 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .ds-selection-indicator.is-stitched { transition: none; }
+}
+
+/* Dragging affects only the decorative thumb. Targets never move or resize. */
+.ds-selection-indicator.is-stitched[data-dragging='true'] { transition: none; }
+[data-selection-drag-orientation='horizontal'] > :is([aria-selected='true'], [aria-current='page']) { touch-action: pan-y; cursor: grab; user-select: none; }
+[data-selection-drag-orientation='vertical'] > :is([aria-selected='true'], [aria-current='page']) { touch-action: pan-x; cursor: grab; user-select: none; }
+[data-selection-dragging='true'] > :is([role='tab'], a[href]) { cursor: grabbing; }
+@media (hover: none) {
+  .ds-tab:hover:not(:disabled):not(.is-active) { background: transparent; }
 }

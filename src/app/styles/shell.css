@@ -212,12 +212,12 @@ body {
 }
 .site-header .app-tabs > .ds-selection-indicator,
 .product-section-nav > .ds-selection-indicator {
-  --card-radius: calc((var(--selection-height, var(--control-md)) - 4px) / 2);
+  --card-radius: calc((var(--selection-drag-height, var(--selection-height, var(--control-md))) - 4px) / 2);
   top: 2px;
   bottom: auto;
-  width: var(--selection-width, 0px);
-  height: max(0px, calc(var(--selection-height, 0px) - 4px));
-  transform: translate(var(--selection-x, 0px), var(--selection-y, 0px));
+  width: var(--selection-drag-width, var(--selection-width, 0px));
+  height: max(0px, calc(var(--selection-drag-height, var(--selection-height, 0px)) - 4px));
+  transform: translate(var(--selection-drag-x, var(--selection-x, 0px)), var(--selection-drag-y, var(--selection-y, 0px)));
   border-radius: var(--card-radius);
   background: var(--surface-selected);
 }
@@ -247,7 +247,7 @@ body {
 .navigation-horizontal .app-tabs > .ds-selection-indicator,
 .navigation-horizontal .product-section-nav > .ds-selection-indicator {
   --card-radius: calc(var(--shell-thumb-height) / 2);
-  top: calc((var(--selection-height, var(--control-md)) - var(--shell-thumb-height)) / 2);
+  top: calc((var(--selection-drag-height, var(--selection-height, var(--control-md))) - var(--shell-thumb-height)) / 2);
   height: var(--shell-thumb-height);
   border-radius: var(--card-radius);
   transition-duration: var(--duration-slow);

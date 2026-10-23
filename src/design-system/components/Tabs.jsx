@@ -44,7 +44,7 @@ export function Tabs({
       aria-label={label}
       onKeyDown={onKeyDown}
     >
-      <SelectionIndicator containerRef={containerRef} value={value} stitched={stitchedIndicator} />
+      <SelectionIndicator containerRef={containerRef} value={value} stitched={stitchedIndicator} orientation={orientation} />
       {items.map((item) => (
         <button
           key={item.value}

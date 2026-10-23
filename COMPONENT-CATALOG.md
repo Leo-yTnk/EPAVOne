@@ -139,3 +139,5 @@ Em telas estreitas, o Writer quebra nomes e rótulos por extenso, empilha contro
 `SelectionIndicator` aceita `stitched` para compor o destaque com o Card canônico; `Tabs` expõe `stitchedIndicator`. O header usa essa variante ampliada para app/seção, preservando um único indicador por grupo, animação de posição/largura e movimento reduzido.
 
 Movimento compartilhado: pressão com retorno elástico, indicadores com mola, rotas direcionais e expansão do card com acomodação. Contrato e limites: [continuidade de movimento](docs/continuous-motion.md).
+
+`SelectionIndicator` costurado permite arrastar a seleção ativa até outro destino habilitado. `orientation` acompanha o eixo de `Tabs`; seções usam o padrão horizontal. A rota só muda ao soltar, mantendo alvos e layout estáveis durante a prévia. Contrato e testes: [arraste e hovers](docs/stitched-navigation-drag.md).
