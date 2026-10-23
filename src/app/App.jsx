@@ -1,4 +1,6 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
+import { useRouteMotion } from './useRouteMotion.js';
+import { usePressFeedback } from '../design-system/behaviors/usePressFeedback.js';
 import { CommercialReturn } from './CommercialReturn.jsx';
 import { AppShell } from './AppShell.jsx';
 import { useAccount } from './account/useAccount.js';
@@ -18,6 +20,9 @@ const AccountDialog = lazy(() => import('./account/AccountDialog.jsx').then((mod
 
 export function App() {
   const route = useHashRoute();
+  const pageRef = useRef(null);
+  const writerRef = useRef(null);
+  usePressFeedback();
   const writerVisited = useRef(false);
   if (route.product === 'writer') writerVisited.current = true;
   const account = useAccount();
@@ -31,6 +36,7 @@ export function App() {
     );
   }, [preferences]);
   const routeKey = [route.product, ...route.segments].join('/');
+  useRouteMotion(route.product === 'writer' ? writerRef : pageRef, routeKey, route.product);
 
   useEffect(() => {
     applyTheme(theme);
@@ -90,10 +96,10 @@ export function App() {
       onOpenAccount={() => setAccountOpen(true)}
     >
       {['insights', 'writer'].includes(route.product) && <CommercialReturn />}
-      <div key={routeKey} className="route-frame">
+      <div ref={pageRef} key={routeKey} className="route-frame">
         <Suspense fallback={<Spinner label="Carregando app" />}>{page}</Suspense>
       </div>
-      <div key="writer-workspace" className="route-frame" hidden={route.product !== 'writer'}>
+      <div ref={writerRef} key="writer-workspace" className="route-frame" hidden={route.product !== 'writer'}>
         {writerVisited.current && (
           <Suspense fallback={<Spinner label="Carregando Writer" />}>
             <WriterRoutes active={route.product === 'writer'} />

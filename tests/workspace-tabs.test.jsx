@@ -53,8 +53,8 @@ describe('App workspace tabs', () => {
     expect(island.contains(nav)).toBe(true);
     const thumbs = [...island.querySelectorAll('.ds-selection-indicator')];
     expect(thumbs).toHaveLength(2);
-    expect(thumbs.every(thumb => thumb.classList.contains('ds-stitched-card'))).toBe(true);
-    expect(thumbs.every(thumb => thumb.getAttribute('aria-hidden') === 'true')).toBe(true);
+    expect(thumbs.every((thumb) => thumb.classList.contains('ds-stitched-card'))).toBe(true);
+    expect(thumbs.every((thumb) => thumb.getAttribute('aria-hidden') === 'true')).toBe(true);
     expect(screen.getByRole('tab', { name: 'Planner' }).getAttribute('aria-selected')).toBe('true');
     rerender(shell({ product: 'planner', segments: ['clientes'] }));
     expect([...island.querySelectorAll('.ds-selection-indicator')]).toEqual(thumbs);
@@ -111,4 +111,22 @@ describe('App workspace tabs', () => {
     expect(screen.getByRole('link', { name: 'Minha semana' }).getAttribute('href')).toBe('#/planner/semana');
     expect(screen.queryByRole('link', { name: 'Ver Component Lab' })).toBeNull();
   });
+});
+it('remeasures the section thumb when switching apps on their default section', () => {
+  const rect = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function () {
+    if (this.matches('.product-section-nav')) return { left: 100, top: 20, width: 500, height: 44 };
+    if (this.matches('.section-tab'))
+      return { left: 100, top: 20, width: this.getAttribute('href').includes('insights') ? 80 : 110, height: 44 };
+    return { left: 0, top: 0, width: 0, height: 0 };
+  });
+  try {
+    const { container, rerender } = render(shell({ product: 'planner', segments: [] }));
+    const thumb = container.querySelector('.product-section-nav .ds-selection-indicator');
+    expect(thumb.style.getPropertyValue('--selection-width')).toBe('110px');
+    rerender(shell({ product: 'insights', segments: [] }));
+    expect(container.querySelector('.product-section-nav .ds-selection-indicator')).toBe(thumb);
+    expect(thumb.style.getPropertyValue('--selection-width')).toBe('80px');
+  } finally {
+    rect.mockRestore();
+  }
 });

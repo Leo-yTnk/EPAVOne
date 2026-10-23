@@ -137,3 +137,5 @@ Em telas estreitas, o Writer quebra nomes e rótulos por extenso, empilha contro
 `SelectionIndicator` mantém um único destaque montado e anima sua posição e dimensões entre itens com `aria-current`. É usado nas abas de produto e nas etapas do Writer. Recalcula a geometria quando o contêiner ou o item muda de tamanho e respeita movimento reduzido. Conteúdo, menus e diálogos usam deslocamentos de 4–6 px sem ficar transparentes; somente o fundo de bloqueio do modal varia a opacidade.
 
 `SelectionIndicator` aceita `stitched` para compor o destaque com o Card canônico; `Tabs` expõe `stitchedIndicator`. O header usa essa variante ampliada para app/seção, preservando um único indicador por grupo, animação de posição/largura e movimento reduzido.
+
+Movimento compartilhado: pressão com retorno elástico, indicadores com mola, rotas direcionais e expansão do card com acomodação. Contrato e limites: [continuidade de movimento](docs/continuous-motion.md).

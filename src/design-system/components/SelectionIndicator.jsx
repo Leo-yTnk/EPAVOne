@@ -13,11 +13,23 @@ export function SelectionIndicator({ containerRef, value, stitched = false }) {
     const update = () => {
       const outer = container.getBoundingClientRect();
       const inner = selected.getBoundingClientRect();
+      // Press feedback scales the visual box, not its layout. Measure the
+      // unscaled target so a long press cannot leave the thumb undersized.
+      const style = getComputedStyle(selected);
+      const width = parseFloat(style.width) || inner.width;
+      const height = parseFloat(style.height) || inner.height;
+      const positionedHere = selected.offsetParent === container;
+      const x = positionedHere
+        ? selected.offsetLeft
+        : inner.left + (inner.width - width) / 2 - outer.left + container.scrollLeft - container.clientLeft;
+      const y = positionedHere
+        ? selected.offsetTop
+        : inner.top + (inner.height - height) / 2 - outer.top + container.scrollTop - container.clientTop;
       const next = {
-        '--selection-x': inner.left - outer.left + container.scrollLeft - container.clientLeft + 'px',
-        '--selection-y': inner.top - outer.top + container.scrollTop - container.clientTop + 'px',
-        '--selection-width': inner.width + 'px',
-        '--selection-height': inner.height + 'px'
+        '--selection-x': x + 'px',
+        '--selection-y': y + 'px',
+        '--selection-width': width + 'px',
+        '--selection-height': height + 'px'
       };
       setGeometry((current) => (current && Object.keys(next).every((key) => current[key] === next[key]) ? current : next));
     };

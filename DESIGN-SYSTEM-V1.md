@@ -126,7 +126,7 @@ Filtros de blur e backdrop-filter são proibidos por custo de renderização. Us
 - entrada normalmente usa easing de desaceleração;
 - press usa scale sutil;
 - páginas se deslocam poucos pixels, mantendo a opacidade;
-- layers usam deslocamento curto sem escala de entrada ou desaparecimento;
+- layers usam deslocamento curto e escala sutil, com uma pequena ultrapassagem antes de acomodar;
 - o transform-origin de uma layer ancorada deve partir do trigger;
 - `prefers-reduced-motion` remove coreografia e reduz durações;
 - nenhuma animação pode atrasar uma ação funcional.
@@ -138,7 +138,7 @@ Rotas usam deslocamento CSS curto sem zerar a opacidade. O cabeçalho permanece 
 A página:
 
 - atualiza o conteúdo sem dissolver a página inteira;
-- entra com deslocamento de até 6 px, sem alterar a opacidade;
+- entra com deslocamento direcional de até 18 px e acomodação de 1,5 px, sem alterar a opacidade;
 - mantém o header visualmente estável;
 - respeita reduced motion.
 
@@ -361,3 +361,5 @@ Ele serve para validar:
 ## Família de marcas
 
 `AppLogo` usa os SVGs originais em `public/brand`, com grade 64 × 64, cantos de 16 e traço de 3. O fundo usa o tom 700 do produto para contraste com o símbolo claro. O wordmark usa `--text-primary` e `--text-brand`, adaptando-se ao tema; os nomes acompanham os símbolos. One mantém azul no shell. Evidências e critérios: [revisão de marcas](docs/brand-review/README.md).
+
+Contrato atualizado de pressão, acomodação e preferências: [continuidade de movimento](docs/continuous-motion.md).

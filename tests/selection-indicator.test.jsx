@@ -58,3 +58,21 @@ describe('Continuous selection highlight', () => {
     }
   });
 });
+it('measures the layout box while a selected tab is compressed by touch', () => {
+  const rect = vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockImplementation(function () {
+    if (this.tagName === 'NAV') return { left: 10, top: 20, width: 300, height: 44 };
+    return { left: 122, top: 21, width: 96, height: 42 };
+  });
+  const styles = vi.spyOn(window, 'getComputedStyle').mockReturnValue({ width: '100px', height: '44px' });
+  try {
+    const { container } = render(<Navigation value="b" />);
+    const highlight = container.querySelector('.ds-selection-indicator');
+    expect(highlight.style.getPropertyValue('--selection-x')).toBe('110px');
+    expect(highlight.style.getPropertyValue('--selection-y')).toBe('0px');
+    expect(highlight.style.getPropertyValue('--selection-width')).toBe('100px');
+    expect(highlight.style.getPropertyValue('--selection-height')).toBe('44px');
+  } finally {
+    rect.mockRestore();
+    styles.mockRestore();
+  }
+});
