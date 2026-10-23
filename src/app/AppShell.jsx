@@ -166,7 +166,7 @@ export function AppShell({ route, preferences, account, onOpenAccount, onToggleT
                         className="product-section-nav"
                         aria-label={`Navegação do ${PRODUCT_META[selectedProduct].label}`}
                       >
-                        <SelectionIndicator containerRef={sectionsRef} value={activeSection} stitched />
+                        <SelectionIndicator containerRef={sectionsRef} value={`${selectedProduct}/${activeSection}`} stitched />
                         {sectionNav.map((item) => (
                           <NavItem
                             key={item.href}

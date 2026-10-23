@@ -61,3 +61,21 @@ describe('Dialog expansion from its initiating card', () => {
     vi.unstubAllGlobals();
   });
 });
+it('uses the initiating touch geometry even when the browser does not focus the trigger', async () => {
+  const { rememberMotionOrigin } = await import('../src/design-system/behaviors/motion.js');
+  const cancel = vi.fn();
+  const animate = vi.fn(() => ({ cancel }));
+  Element.prototype.animate = animate;
+  vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function () {
+    return this.hasAttribute('data-dialog-origin')
+      ? { left: 40, top: 80, width: 200, height: 160 }
+      : { left: 20, top: 30, width: 800, height: 640 };
+  });
+  render(<Example />);
+  const trigger = screen.getByRole('button', { name: 'Abrir' });
+  rememberMotionOrigin(trigger);
+  fireEvent.click(trigger);
+  expect(animate.mock.calls[0][0][0].transform).toBe('translate(20px, 50px) scale(0.25, 0.25)');
+  expect(animate.mock.calls[0][0][1].transform).toContain('1.008');
+  delete Element.prototype.animate;
+});

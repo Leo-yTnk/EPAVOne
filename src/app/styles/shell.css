@@ -251,7 +251,7 @@ body {
   height: var(--shell-thumb-height);
   border-radius: var(--card-radius);
   transition-duration: var(--duration-slow);
-  transition-timing-function: var(--ease-emphasized);
+  transition-timing-function: var(--ease-spring), var(--ease-emphasized), var(--ease-emphasized), var(--ease-standard), var(--ease-standard);
 }
 .site-header .ds-selection-indicator.is-stitched .ds-stitch rect {
   /* Include the Card border and the SVG path's 1px inset in the inner curve. */
@@ -542,3 +542,13 @@ html[data-reduced-motion='true'] *::after {
 .mobile-sidebar-utilities .ds-btn {
   justify-content: flex-start;
 }
+
+/* JS coordinates direction and cancellation; CSS remains the fallback. */
+.route-frame.has-route-motion { animation: none; }
+
+html[data-reduced-motion='true'] { --press-scale: 1; }
+html[data-reduced-motion='true'] .ds-btn:hover:not(:disabled),
+html[data-reduced-motion='true'] .ds-icon-btn:hover:not(:disabled) { transform: none; }
+
+/* Anchored layers have a more specific animation rule than the global preference. */
+html[data-reduced-motion='true'] .ds-layer-anchor[data-side] { animation: none; }

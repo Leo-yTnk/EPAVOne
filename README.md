@@ -30,6 +30,8 @@ Criação e sincronização Swift: [correção do sync, revisão de duplicatas e
 
 Revisão atual: [interfaces e pendências em 14/10/2026](docs/EPAVONE_REVIEW_2026-10-14.md). Preços diários: [configuração 7h/9h/14h de Brasília](docs/daily-price-schedule.md).
 
+Continuidade entre telas e resposta ao toque: [movimento e validação](docs/continuous-motion.md).
+
 ## Stack
 
 - Preact + JSX

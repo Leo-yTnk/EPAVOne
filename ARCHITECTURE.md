@@ -105,7 +105,7 @@ useModalLayer
 
 ## Motion architecture
 
-- deslocamento CSS curto, sem capturar ou dissolver a página inteira;
+- deslocamento direcional de até 18px, com acomodação curta, sem capturar ou dissolver a página inteira;
 - fallback CSS quando não;
 - tokens únicos de duração/easing/distância;
 - reduced motion obrigatório;
@@ -144,3 +144,5 @@ O checker valida também:
 - compact line-height;
 - stitched Card;
 - boundaries entre produtos.
+
+Decisão de movimento: [continuidade e resposta ao toque](docs/continuous-motion.md).
