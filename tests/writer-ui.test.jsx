@@ -18,6 +18,7 @@ vi.mock('../src/products/writer/models/order.js', async (importOriginal) => ({
   saoPauloDay: () => '2026-09-30'
 }));
 beforeEach(() => {
+  localStorage.setItem('epavone-introduction-v1', 'done');
   importTemplate.mockReset();
   sessionTemplate.load.mockReset().mockResolvedValue(null);
   sessionTemplate.save.mockReset().mockResolvedValue();

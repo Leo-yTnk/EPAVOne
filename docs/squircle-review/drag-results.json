@@ -1,0 +1,28 @@
+[
+  {
+    "theme": "light",
+    "hover": {
+      "background": "color(srgb 0.95702 0.940078 0.96549)",
+      "rgb": [
+        244,
+        240,
+        246
+      ],
+      "contrast": 13.406809712050121,
+      "selected": "rgb(235, 229, 250)"
+    }
+  },
+  {
+    "theme": "dark",
+    "hover": {
+      "background": "color(srgb 0.169412 0.14102 0.193882)",
+      "rgb": [
+        43,
+        36,
+        49
+      ],
+      "contrast": 13.481959049560231,
+      "selected": "color(srgb 0.196078 0.159216 0.252549)"
+    }
+  }
+]

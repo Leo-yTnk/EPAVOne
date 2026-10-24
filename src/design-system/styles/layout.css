@@ -10,6 +10,7 @@
 
 .ds-toolbar,.ds-filter-bar{
   --container-radius:var(--radius-xl);--container-padding:var(--space-3);
+  --nested-radius:max(0px,calc(var(--container-radius) - var(--container-padding) - 1px));
   display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-3);padding:var(--container-padding);
   border:1px solid var(--border-subtle);border-radius:var(--container-radius);background:var(--surface-primary)
 }

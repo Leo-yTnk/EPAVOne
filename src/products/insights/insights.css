@@ -132,7 +132,7 @@
 /* Only the image is a stitched card; the text shares the page surface. */
 .insights-image.ds-card {
   --container-padding: 0rem;
-  --card-radius: var(--radius-lg);
+  --card-radius: var(--radius-xl);
   --card-stitch-color: rgba(255, 255, 255, 0.4);
   --card-stitch-underlay-color: rgba(0, 0, 0, 0.24);
   --card-stitch-width: 0.0625rem;
@@ -160,9 +160,9 @@
   opacity: 1;
 }
 .insights-image > .ds-stitch rect {
-  rx: max(var(--radius-xs), calc(var(--card-radius) - var(--card-stitch-inset)));
+  rx: max(0px, calc(var(--card-radius) - var(--card-stitch-inset) - 2px));
 }
-.insights-image > .ds-stitch rect.ds-stitch-underlay {
+.insights-image > .ds-stitch .ds-stitch-underlay {
   stroke-width: calc(var(--card-stitch-width) + 0.0625rem);
 }
 .insights-recipe-card .insights-image img,
@@ -341,10 +341,11 @@
   grid-template-columns: 3.5rem minmax(0, 1fr);
   gap: var(--space-3);
   align-items: center;
-  padding: var(--space-3);
+  --container-padding: var(--space-5);
+  padding: var(--container-padding);
 }
 .insights-ingredient .insights-image {
-  --card-radius: var(--radius-md);
+  --card-radius: var(--radius-lg);
   aspect-ratio: 1;
 }
 @container catalog-image (max-width: 6rem) {
@@ -448,7 +449,7 @@
   gap: var(--space-3);
 }
 .insights-spotlight {
-  --container-padding: var(--space-4);
+  --container-padding: var(--space-5);
   display: grid;
   grid-template-columns: 10rem minmax(0, 1fr);
   gap: var(--space-4);
@@ -509,7 +510,7 @@
   gap: var(--space-3);
 }
 .insights-opportunity {
-  --container-padding: var(--space-4);
+  --container-padding: var(--space-5);
   display: grid;
   gap: var(--space-3);
   min-width: 0;
@@ -630,7 +631,8 @@ html[data-density='compact'] .creation-row {
   --card-radius: max(var(--radius-md), calc(var(--radius-2xl) - var(--space-6)));
   grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
   grid-template-areas: 'image summary';
-  padding: var(--space-4);
+  --container-padding: var(--space-5);
+  padding: var(--container-padding);
   gap: var(--space-4);
   align-items: center;
 }
@@ -681,7 +683,8 @@ html[data-density='compact'] .creation-row {
   gap: var(--space-4);
 }
 .insights-recipe-panel.ds-card {
-  padding: var(--space-4);
+  --container-padding: var(--space-5);
+  padding: var(--container-padding);
   border-top-color: transparent;
   align-content: start;
 }
@@ -713,7 +716,8 @@ html[data-density='compact'] .creation-row {
   --card-radius: max(var(--radius-sm), calc(var(--radius-xl) - var(--space-4)));
   background: var(--insights-detail-nested-surface);
   grid-template-columns: 4rem minmax(0, 1fr);
-  padding: var(--space-4);
+  --container-padding: var(--space-5);
+  padding: var(--container-padding);
   gap: var(--space-3);
   align-items: start;
 }
@@ -761,7 +765,8 @@ html[data-density='compact'] .creation-row {
   .insights-recipe-overview.ds-card {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas: 'title' 'title-divider' 'image' 'facts';
-    padding: var(--space-3);
+    --container-padding: var(--space-5);
+    padding: var(--container-padding);
     gap: var(--space-3);
   }
   .insights-recipe-summary {
@@ -850,7 +855,8 @@ html[data-density='compact'] .creation-row {
   padding-bottom: 0;
 }
 .insights-product-overview.ds-card {
-  padding: var(--space-4);
+  --container-padding: var(--space-5);
+  padding: var(--container-padding);
   gap: var(--space-4);
   align-items: center;
 }
@@ -860,15 +866,32 @@ html[data-density='compact'] .creation-row {
   font-size: 0.8125rem;
 }
 .insights-related-recipe.ds-card {
-  padding: var(--space-3);
+  --container-padding: var(--space-5);
+  padding: var(--container-padding);
   background: var(--insights-detail-nested-surface);
   --card-radius: max(var(--radius-sm), calc(var(--radius-xl) - var(--space-4)));
 }
 @media (max-width: 40rem) {
   .insights-choices {
-    padding: var(--space-4);
+    --container-padding: var(--space-5);
+    padding: var(--container-padding);
   }
   .insights-product-overview.ds-card {
-    padding: var(--space-3);
+    --container-padding: var(--space-5);
+    padding: var(--container-padding);
   }
+}
+
+/* Resolve on the parent before a child overrides its own card radius. */
+.insights-recipe-overview,
+.insights-product-overview,
+.insights-ingredient,
+.insights-related-recipe {
+  --detail-image-radius: max(0px, calc(var(--card-radius) - var(--container-padding) - 1px));
+}
+.insights-recipe-overview > .insights-image,
+.insights-product-overview > .insights-image,
+.insights-ingredient > .insights-image,
+.insights-related-recipe > .insights-image {
+  --card-radius: var(--detail-image-radius);
 }

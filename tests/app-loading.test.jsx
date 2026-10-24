@@ -26,6 +26,7 @@ describe('Deferred app loading', () => {
   it('defers Writer until first use and keeps its state across app switches and subpages', async () => {
     window.scrollTo = vi.fn();
     window.location.hash = '#/';
+    localStorage.setItem('epavone-introduction-v1', 'done');
     render(<App />);
     await screen.findByText('Home de teste');
     expect(lifecycle.mounts).toBe(0);
@@ -42,4 +43,18 @@ describe('Deferred app loading', () => {
     expect(lifecycle.mounts).toBe(1);
     expect(lifecycle.unmounts).toBe(0);
   });
+});
+
+it('shows the introduction only at home, remembers completion and allows revisiting it', async () => {
+  localStorage.removeItem('epavone-introduction-v1');
+  window.scrollTo = vi.fn();
+  window.location.hash = '#/';
+  render(<App />);
+  fireEvent.click(await screen.findByRole('button', { name: /Começar minha experiência/ }));
+  await screen.findByText('Home de teste');
+  expect(localStorage.getItem('epavone-introduction-v1')).toBe('done');
+  navigate('#/welcome');
+  fireEvent.click(await screen.findByRole('button', { name: 'Já conheço o EPAVOne' }));
+  await screen.findByText('Home de teste');
+  expect(window.location.hash).toBe('#/');
 });

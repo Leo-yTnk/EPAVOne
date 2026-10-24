@@ -202,7 +202,7 @@
   padding-top: 0;
 }
 .creation-library {
-  --container-padding: var(--space-5);
+  --container-padding: var(--space-6);
   box-shadow: none;
 }
 .creation-library .creation-toolbar > .ds-field {
@@ -243,7 +243,8 @@
   color: var(--text-brand);
 }
 .creation-fields .creation-editor-section {
-  padding: var(--space-4);
+  --container-padding: var(--space-5);
+  padding: var(--container-padding);
   border-radius: var(--radius-lg);
 }
 .creation-editor-section .ds-field {
@@ -274,13 +275,14 @@
 }
 @media (max-width: 48rem) {
   .creation-library {
-    --container-padding: var(--space-4);
+    --container-padding: var(--space-5);
   }
   .creation-row {
     grid-template-columns: minmax(0, 1fr) auto;
   }
   .creation-fields .creation-editor-section {
-    padding: var(--space-3);
+    --container-padding: var(--space-5);
+    padding: var(--container-padding);
   }
   .creation-library .creation-toolbar > .ds-btn {
     width: 100%;
@@ -305,7 +307,8 @@
 .creation-introduction {
   display: grid;
   gap: var(--space-4);
-  padding: var(--space-6);
+  --container-padding: var(--space-6);
+  padding: var(--container-padding);
   box-shadow: none;
 }
 .creation-introduction > .ds-overline {
@@ -338,9 +341,10 @@
   gap: var(--space-3);
 }
 .creation-row.ds-card {
-  padding: var(--space-4);
+  --container-padding: var(--space-5);
+  padding: var(--container-padding);
   border: 1px solid var(--border-subtle);
-  --card-radius: var(--radius-xl);
+  --card-radius: var(--radius-2xl);
   border-radius: var(--card-radius);
   box-shadow: none;
 }
@@ -354,7 +358,8 @@
 }
 @media (max-width: 40rem) {
   .creation-introduction {
-    padding: var(--space-4);
+    --container-padding: var(--space-5);
+    padding: var(--container-padding);
   }
   .creation-introduction-features {
     grid-template-columns: 1fr;
@@ -377,9 +382,10 @@
 }
 .creation-fields .creation-editor-section.ds-card {
   border: 1px solid var(--border-subtle);
-  padding: var(--space-5);
+  --container-padding: var(--space-6);
+  padding: var(--container-padding);
   background: var(--surface-secondary);
-  --card-radius: var(--radius-lg);
+  --card-radius: var(--radius-xl);
   border-radius: var(--card-radius);
 }
 .creation-fields fieldset.ds-card {
@@ -425,7 +431,8 @@
 }
 @media (max-width: 48rem) {
   .creation-fields .creation-editor-section.ds-card {
-    padding: var(--space-4);
+    --container-padding: var(--space-5);
+    padding: var(--container-padding);
   }
   .creation-row.ds-card {
     grid-template-columns: minmax(0, 1fr);
@@ -586,7 +593,7 @@
   aspect-ratio: 1;
   padding: var(--space-2);
   margin: 0;
-  --card-radius: var(--radius-md);
+  --card-radius: var(--radius-lg);
 }
 .creation-thumbnail img {
   width: 100%;
@@ -605,7 +612,8 @@
 }
 .creation-operation,
 .creation-admin-header {
-  padding: var(--space-5);
+  --container-padding: var(--space-6);
+  padding: var(--container-padding);
   box-shadow: none;
 }
 .creation-admin-header > .ds-field {
@@ -630,7 +638,8 @@
   grid-template-columns: 1fr;
 }
 .creation-editor-preview .creation-content-preview {
-  padding: var(--space-4);
+  --container-padding: var(--space-5);
+  padding: var(--container-padding);
 }
 .creation-editor-preview ul,
 .creation-editor-preview ol {
@@ -647,7 +656,8 @@
 }
 .creation-import-row {
   align-content: start;
-  padding: var(--space-3);
+  --container-padding: var(--space-5);
+  padding: var(--container-padding);
 }
 .creation-workspace-heading h2 {
   color: var(--text-brand);
@@ -681,7 +691,8 @@
   }
   .creation-operation,
   .creation-admin-header {
-    padding: var(--space-4);
+    --container-padding: var(--space-5);
+    padding: var(--container-padding);
   }
 }
 
@@ -722,7 +733,8 @@
 }
 
 .creation-library-controls.ds-card {
-  padding: var(--space-4);
+  --container-padding: var(--space-5);
+  padding: var(--container-padding);
   box-shadow: none;
 }
 .creation-admin-navigation {
@@ -730,7 +742,8 @@
   grid-template-columns: minmax(12rem, 1fr) minmax(0, 2fr);
   gap: var(--space-5);
   align-items: center;
-  padding: var(--space-4);
+  --container-padding: var(--space-5);
+  padding: var(--container-padding);
   box-shadow: none;
 }
 .creation-admin-context {
@@ -774,14 +787,16 @@
   min-width: 9rem;
 }
 .creation-content-card.ds-card {
-  padding: var(--space-3);
+  --container-padding: var(--space-5);
+  padding: var(--container-padding);
 }
 .creation-workspace-heading h2 {
   font-size: clamp(1.5rem, 2.5vw, 1.875rem);
 }
 .creation-operation,
 .creation-admin-header {
-  padding: var(--space-4);
+  --container-padding: var(--space-5);
+  padding: var(--container-padding);
 }
 .creation-section-heading {
   padding-bottom: var(--space-2);
@@ -818,7 +833,7 @@
 }
 .creation-workspace-nav.ds-card,
 .navigation-vertical .creation-workspace-nav.ds-card {
-  --container-padding: var(--space-3);
+  --container-padding: var(--space-5);
   position: relative;
   top: auto;
   display: flex;
@@ -853,9 +868,10 @@
 .creation-content-card.ds-card {
   grid-template-columns: 6rem minmax(0, 1fr);
   grid-template-rows: 1fr auto;
-  padding: var(--space-4);
+  --container-padding: var(--space-5);
+  padding: var(--container-padding);
   gap: var(--space-3);
-  --card-radius: var(--radius-lg);
+  --card-radius: var(--radius-xl);
 }
 .creation-content-card .creation-card-copy {
   gap: var(--space-2);
@@ -873,7 +889,8 @@
   font-size: 0.8125rem;
 }
 .creation-library-controls.ds-card {
-  padding: var(--space-5);
+  --container-padding: var(--space-6);
+  padding: var(--container-padding);
   gap: var(--space-4);
   background: var(--surface-secondary);
 }
@@ -892,7 +909,8 @@
 }
 .creation-admin-header,
 .creation-admin-navigation {
-  padding: var(--space-5);
+  --container-padding: var(--space-6);
+  padding: var(--container-padding);
   gap: var(--space-4);
   align-content: start;
   background: var(--surface-secondary);
@@ -917,11 +935,12 @@
   line-height: var(--leading-body);
 }
 .creation-operation {
-  padding: var(--space-5);
+  --container-padding: var(--space-6);
+  padding: var(--container-padding);
   gap: var(--space-4);
 }
 .creation-fields .creation-editor-section.ds-card {
-  --container-padding: var(--space-5);
+  --container-padding: var(--space-6);
   padding: var(--container-padding);
   gap: var(--space-4);
 }
@@ -934,7 +953,8 @@
   padding: var(--space-3) var(--space-2);
 }
 .creation-import-row {
-  padding: var(--space-4);
+  --container-padding: var(--space-5);
+  padding: var(--container-padding);
   gap: var(--space-3);
 }
 .creation-history pre {
@@ -967,12 +987,28 @@
   .creation-admin-header,
   .creation-admin-navigation,
   .creation-operation {
-    padding: var(--space-4);
+    --container-padding: var(--space-5);
+    padding: var(--container-padding);
   }
   .creation-fields .creation-editor-section.ds-card {
-    --container-padding: var(--space-4);
+    --container-padding: var(--space-5);
   }
   .creation-card-copy h3 {
     font-size: 1.125rem;
   }
+}
+
+/* Dense library cards still reserve a clear interval before their actions. */
+.creation-content-card {
+  align-content: start;
+}
+.creation-content-card .creation-row-actions {
+  padding-top: var(--space-2);
+}
+.creation-operation,
+.creation-library-controls {
+  align-content: start;
+}
+.creation-editor-section > .ds-field + .ds-field {
+  margin-top: 0;
 }

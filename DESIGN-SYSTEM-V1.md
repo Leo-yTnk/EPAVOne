@@ -1,6 +1,6 @@
 # EPAVOne Design System — v1 RC
 
-Botões e itens de navegação usam `--radius-action` e `--radius-navigation` em cápsula. No shell, raios finitos são calculados pela altura real das ilhas. Cantos internos descontam padding e borda; a costura desconta também o deslocamento do path SVG. `--card-radius` é a fonte comum da superfície e da costura do indicador, evitando curvas divergentes.
+Superfícies usam cantos contínuos (`corner-shape: squircle`) e raios semânticos finitos. `border-radius` define a extensão da curva e permanece como fallback arredondado nos navegadores sem suporte. Ações seguem a mesma família; o header e seus indicadores preservam cápsulas arredondadas com raio máximo. Costuras SVG usam uma superelipse n=4 quando suportada. Raios internos próximos às bordas descontam padding e borda, sem mínimo arbitrário. [Contrato e validação](docs/squircle-review/README.md).
 
 > Fundação para iniciar a migração do EPAVInsights. A versão só vira **1.0** depois do fluxo piloto real.
 
@@ -50,7 +50,7 @@ Line-height é deliberadamente compacta:
 O contrato recomendado é:
 
 ```css
---nested-radius: max(var(--radius-sm), calc(var(--container-radius) - var(--container-padding)));
+--nested-radius: max(0px, calc(var(--container-radius) - var(--container-padding) - 1px));
 ```
 
 Esse padrão é obrigatório principalmente em ilhas de navegação e seus controles internos.

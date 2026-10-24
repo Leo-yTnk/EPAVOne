@@ -1,0 +1,510 @@
+[
+  {
+    "view": "six-sheet upload and confirmation fixture",
+    "width": 1440,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "editor preview and unsaved guard fixture",
+    "width": 1440,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "Swift selective editorial review fixture",
+    "width": 1440,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace receitas fixture",
+    "width": 1440,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace produtos fixture",
+    "width": 1440,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace categorias fixture",
+    "width": 1440,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace compartilhadas fixture",
+    "width": 1440,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace solicitacoes fixture",
+    "width": 1440,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace admin fixture",
+    "width": 1440,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "pending sync fixture",
+    "width": 1440,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "catalog duplicate check fixture",
+    "width": 1440,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "reviewed duplicate replacement fixture",
+    "width": 1440,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "six-sheet upload and confirmation fixture",
+    "width": 1440,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "editor preview and unsaved guard fixture",
+    "width": 1440,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "Swift selective editorial review fixture",
+    "width": 1440,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace receitas fixture",
+    "width": 1440,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace produtos fixture",
+    "width": 1440,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace categorias fixture",
+    "width": 1440,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace compartilhadas fixture",
+    "width": 1440,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace solicitacoes fixture",
+    "width": 1440,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace admin fixture",
+    "width": 1440,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "pending sync fixture",
+    "width": 1440,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "catalog duplicate check fixture",
+    "width": 1440,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "reviewed duplicate replacement fixture",
+    "width": 1440,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "six-sheet upload and confirmation fixture",
+    "width": 390,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "editor preview and unsaved guard fixture",
+    "width": 390,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "Swift selective editorial review fixture",
+    "width": 390,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace receitas fixture",
+    "width": 390,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace produtos fixture",
+    "width": 390,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace categorias fixture",
+    "width": 390,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace compartilhadas fixture",
+    "width": 390,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace solicitacoes fixture",
+    "width": 390,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace admin fixture",
+    "width": 390,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "pending sync fixture",
+    "width": 390,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "catalog duplicate check fixture",
+    "width": 390,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "reviewed duplicate replacement fixture",
+    "width": 390,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "six-sheet upload and confirmation fixture",
+    "width": 390,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "editor preview and unsaved guard fixture",
+    "width": 390,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "Swift selective editorial review fixture",
+    "width": 390,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace receitas fixture",
+    "width": 390,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace produtos fixture",
+    "width": 390,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace categorias fixture",
+    "width": 390,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace compartilhadas fixture",
+    "width": 390,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace solicitacoes fixture",
+    "width": 390,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace admin fixture",
+    "width": 390,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "pending sync fixture",
+    "width": 390,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "catalog duplicate check fixture",
+    "width": 390,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "reviewed duplicate replacement fixture",
+    "width": 390,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "six-sheet upload and confirmation fixture",
+    "width": 320,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "editor preview and unsaved guard fixture",
+    "width": 320,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "Swift selective editorial review fixture",
+    "width": 320,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace receitas fixture",
+    "width": 320,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace produtos fixture",
+    "width": 320,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace categorias fixture",
+    "width": 320,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace compartilhadas fixture",
+    "width": 320,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace solicitacoes fixture",
+    "width": 320,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace admin fixture",
+    "width": 320,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "pending sync fixture",
+    "width": 320,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "catalog duplicate check fixture",
+    "width": 320,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "reviewed duplicate replacement fixture",
+    "width": 320,
+    "theme": "light",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "six-sheet upload and confirmation fixture",
+    "width": 320,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "editor preview and unsaved guard fixture",
+    "width": 320,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "Swift selective editorial review fixture",
+    "width": 320,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace receitas fixture",
+    "width": 320,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace produtos fixture",
+    "width": 320,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace categorias fixture",
+    "width": 320,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace compartilhadas fixture",
+    "width": 320,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace solicitacoes fixture",
+    "width": 320,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "workspace admin fixture",
+    "width": 320,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "pending sync fixture",
+    "width": 320,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "catalog duplicate check fixture",
+    "width": 320,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "reviewed duplicate replacement fixture",
+    "width": 320,
+    "theme": "dark",
+    "overflow": false,
+    "errors": []
+  },
+  {
+    "view": "published before changes",
+    "blocked": "page.goto: net::ERR_EMPTY_RESPONSE at https://leo-ytnk.github.io/EPAVOne/#/insights"
+  }
+]

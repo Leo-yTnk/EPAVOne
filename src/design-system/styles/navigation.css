@@ -72,6 +72,7 @@
   gap: 0;
   border-bottom: 1px solid var(--border-default);
   overflow: auto;
+  scrollbar-width: none;
 }
 .ds-tab {
   border-radius: var(--radius-navigation);
@@ -107,7 +108,7 @@
 .ds-menu-layer {
   --container-radius: var(--radius-lg);
   --container-padding: var(--space-2);
-  --nested-radius: max(var(--radius-sm), calc(var(--container-radius) - var(--container-padding)));
+  --nested-radius: max(0px, calc(var(--container-radius) - var(--container-padding) - 1px));
   padding: var(--container-padding);
   min-width: min(14rem, calc(100vw - 2 * var(--space-3)));
 }
@@ -272,3 +273,5 @@
 @media (hover: none) {
   .ds-tab:hover:not(:disabled):not(.is-active) { background: transparent; }
 }
+
+.ds-tabs::-webkit-scrollbar { display: none; width: 0; height: 0; }
