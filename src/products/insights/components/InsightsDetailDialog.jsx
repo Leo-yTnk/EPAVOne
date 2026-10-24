@@ -2,6 +2,7 @@ import { useId, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { Button, Dialog } from '../../../design-system/components/index.js';
 import { ProductOverview } from './ProductOverview.jsx';
 import { RecipeDetails } from './RecipeDetails.jsx';
+import { useContentMotion } from '../../../design-system/behaviors/useContentMotion.js';
 
 export function InsightsDetailDialog({ initial, onClose }) {
   const [history, setHistory] = useState([initial]);
@@ -10,6 +11,7 @@ export function InsightsDetailDialog({ initial, onClose }) {
   const recipeTitleId = useId();
   const current = history[history.length - 1];
   const previous = history[history.length - 2];
+  useContentMotion(contentRef, current, history.length);
   useLayoutEffect(() => {
     if (firstRender.current) {
       firstRender.current = false;

@@ -48,8 +48,8 @@
 @keyframes ds-feedback-in{from{transform:translateY(var(--motion-distance-sm))}to{transform:translateY(0)}}
 @keyframes ds-shimmer{100%{transform:translateX(110%)}}
 @keyframes ds-overlay-in{from{opacity:0;}to{opacity:1;}}
-@keyframes ds-dialog-in{from{transform:translateY(var(--motion-distance-md)) scale(.98)}72%{transform:translateY(-1px) scale(1.008)}to{transform:translateY(0) scale(1)}}
-@keyframes ds-drawer-in{from{transform:translateX(18px)}72%{transform:translateX(-1.5px)}to{transform:translateX(0)}}
+@keyframes ds-dialog-in{from{opacity:.65;transform:translateY(var(--motion-distance-md)) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes ds-drawer-in{from{transform:translateX(18px)}to{transform:translateX(0)}}
 @keyframes ds-toast-in{from{transform:translateY(var(--motion-distance-md))}to{transform:translateY(0)}}
 
 @media(prefers-reduced-motion:reduce){
@@ -79,7 +79,6 @@
 }
 @keyframes ds-drawer-start-in {
   from { transform: translateX(-18px); }
-  72% { transform: translateX(1.5px); }
   to { transform: translateX(0); }
 }
 @media (prefers-reduced-motion: reduce) {

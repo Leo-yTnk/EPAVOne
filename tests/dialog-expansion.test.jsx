@@ -76,6 +76,6 @@ it('uses the initiating touch geometry even when the browser does not focus the 
   rememberMotionOrigin(trigger);
   fireEvent.click(trigger);
   expect(animate.mock.calls[0][0][0].transform).toBe('translate(20px, 50px) scale(0.25, 0.25)');
-  expect(animate.mock.calls[0][0][1].transform).toContain('1.008');
+  expect(animate.mock.calls[0][0].at(-1).transform).toBe('translate(0, 0) scale(1, 1)');
   delete Element.prototype.animate;
 });

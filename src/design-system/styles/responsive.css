@@ -11,9 +11,17 @@
  .ds-drawer{width:min(28rem,100vw);padding:var(--space-4)}
  .ds-filter-toggle{display:inline-flex;width:100%}
  .ds-filter-fields{display:none;margin-top:var(--space-3)}
- .ds-filter-disclosure[data-open="true"] .ds-filter-fields{display:grid;grid-template-columns:1fr;gap:var(--space-3)}
+ .ds-filter-disclosure[data-open="true"] .ds-filter-fields{display:grid;grid-template-columns:1fr;gap:var(--space-3);animation:ds-filter-in var(--duration-normal) var(--ease-enter)}
  .ds-filter-fields .ds-checkbox{min-height:2.75rem}
  .ds-input,.ds-textarea{font-size:1rem}
  .ds-btn,.ds-select-trigger,.ds-icon-button{min-height:2.75rem}
  .ds-toast-region{bottom:calc(5rem + env(safe-area-inset-bottom))}
+}
+@keyframes ds-filter-in {
+ from { opacity: .6; transform: translateY(calc(-1 * var(--motion-distance-sm))); }
+ to { opacity: 1; transform: translateY(0); }
+}
+html[data-reduced-motion='true'] .ds-filter-disclosure .ds-filter-fields { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+ .ds-filter-disclosure[data-open='true'] .ds-filter-fields { animation: none; }
 }
