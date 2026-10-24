@@ -11,7 +11,6 @@ export function CatalogSection({ group, renderItem }) {
       aria-labelledby={`heading-${group.id}`}
     >
       <Carousel
-        headingSurface
         label={group.name}
         headingId={`heading-${group.id}`}
         expanded={expanded}

@@ -1,7 +1,6 @@
 import { CatalogChoices } from './CatalogChoices.jsx';
 import { CatalogLoading } from './CatalogLoading.jsx';
-import { CatalogSections } from './CatalogSections.jsx';
-import { browseCatalogGroups, orderedCatalogItems } from '../models/sections.js';
+import { orderedCatalogItems } from '../models/sections.js';
 import { useMemo, useState } from 'preact/hooks';
 import {
   Button,
@@ -11,13 +10,11 @@ import {
   EmptyState,
   ErrorState,
   Input,
-  Pagination,
   Select
 } from '../../../design-system/components/index.js';
 import { catalogService } from '../services/catalogService.js';
 import { useCatalogResource } from '../hooks/useCatalogResource.js';
 import { filterRecipes } from '../models/recipes.js';
-import { CATALOG_PAGE_SIZE } from '../models/catalog.js';
 import { RecipeCard } from './RecipeCard.jsx';
 import { RecipeDialog } from './RecipeDialog.jsx';
 
@@ -25,7 +22,6 @@ export function RecipesPage({ initialSection = '' }) {
   const resource = useCatalogResource(catalogService.recipes, 'published');
   const structure = useCatalogResource(catalogService.structure, 'public');
   const [filters, setFilters] = useState({ query: '', category: '', quick: false, section: initialSection });
-  const [page, setPage] = useState(1);
   const [selected, setSelected] = useState(null);
   const recipes = resource.data || [];
   const candidates = useMemo(() => filterRecipes(recipes, filters), [resource.data, filters]);
@@ -40,11 +36,8 @@ export function RecipesPage({ initialSection = '' }) {
   );
   const filtered = filters.section && structure.data ? candidates.filter((item) => memberIds.has(item.id)) : candidates;
   const ordered = orderedCatalogItems(filtered, structure.data, 'recipes', 'recipes');
-  const pageCount = Math.max(1, Math.ceil(filtered.length / CATALOG_PAGE_SIZE));
-  const currentPage = Math.min(page, pageCount);
   function update(patch) {
     setFilters((current) => ({ ...current, ...patch }));
-    setPage(1);
   }
   function reset() {
     update({ query: '', category: '', quick: false, section: '' });
@@ -139,17 +132,12 @@ export function RecipesPage({ initialSection = '' }) {
           onAction={reset}
         />
       ) : (
-        <CatalogSections
-          groups={browseCatalogGroups(
-            ordered.slice((currentPage - 1) * CATALOG_PAGE_SIZE, currentPage * CATALOG_PAGE_SIZE),
-            structure.data,
-            'recipes',
-            'recipes'
-          )}
-          renderItem={(item) => <RecipeCard key={item.id} recipe={item} onOpen={setSelected} />}
-        />
+        <div className="insights-recipes-collection" aria-label="Todas as receitas encontradas">
+          {ordered.map((item) => (
+            <RecipeCard key={item.id} recipe={item} onOpen={setSelected} />
+          ))}
+        </div>
       )}
-      {pageCount > 1 && <Pagination page={currentPage} pageCount={pageCount} onChange={setPage} label="Páginas de receitas" />}
       {selected && <RecipeDialog key={selected.id} recipe={selected} onClose={() => setSelected(null)} />}
     </section>
   );
