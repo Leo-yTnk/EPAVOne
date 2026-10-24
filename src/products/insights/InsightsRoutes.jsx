@@ -4,16 +4,18 @@ import { ProductCatalogPage } from './components/ProductCatalogPage.jsx';
 import { RecipesPage } from './components/RecipesPage.jsx';
 import { InsightsHomePage } from './components/InsightsHomePage.jsx';
 import './insights.css';
+import './catalog-cards.css';
+import './detail-sheet.css';
+import './insights-design.css';
+import { InsightsPageHeader } from './components/InsightsPageHeader.jsx';
 const CreationPage = lazy(() => import('./creation/CreationPage.jsx').then((module) => ({ default: module.CreationPage })));
 
 const sections = {
   receitas: {
-    title: 'Receitas para inspirar o atendimento',
-    description: 'Encontre ideias de preparo, confira ingredientes e sugira uma refeição completa.'
+    title: 'Receitas'
   },
   produtos: {
-    title: 'Produtos para sua próxima venda',
-    description: 'Consulte o catálogo Swift, compare preços e encontre receitas relacionadas.'
+    title: 'Produtos'
   }
 };
 export function InsightsRoutes({ route, account, onOpenAccount }) {
@@ -28,14 +30,16 @@ export function InsightsRoutes({ route, account, onOpenAccount }) {
   const home = section === 'home';
   return (
     <section className="product-page insights-page">
-      <Breadcrumb
-        items={[
-          { label: 'EPAVOne', href: '#/' },
-          { label: 'Insights', href: home ? undefined : '#/insights' },
-          ...(!home ? [{ label: info ? section[0].toUpperCase() + section.slice(1) : 'Página não encontrada' }] : [])
-        ]}
-      />
-      {info && <PageHeader eyebrow={<AppLogo product="insights" wordmark />} title={info.title} description={info.description} />}
+      {!home && (
+        <Breadcrumb
+          items={[
+            { label: 'EPAVOne', href: '#/' },
+            { label: 'Insights', href: home ? undefined : '#/insights' },
+            ...(!home ? [{ label: info ? section[0].toUpperCase() + section.slice(1) : 'Página não encontrada' }] : [])
+          ]}
+        />
+      )}
+      {info && <InsightsPageHeader title={info.title} />}
       {home ? (
         <InsightsHomePage />
       ) : section === 'receitas' ? (

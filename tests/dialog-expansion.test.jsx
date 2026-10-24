@@ -18,7 +18,7 @@ function Example({ expand = true }) {
 }
 afterEach(() => vi.restoreAllMocks());
 describe('Dialog expansion from its initiating card', () => {
-  it('uses card geometry, cancels on close and restores trigger focus', () => {
+  it('limits arrival without stretching the card, cancels on close and restores trigger focus', () => {
     const cancel = vi.fn();
     const animate = vi.fn(() => ({ cancel }));
     vi.spyOn(Element.prototype, 'getBoundingClientRect').mockImplementation(function () {
@@ -36,7 +36,7 @@ describe('Dialog expansion from its initiating card', () => {
     trigger.focus();
     fireEvent.click(trigger);
     expect(animate).toHaveBeenCalledTimes(1);
-    expect(animate.mock.calls[0][0][0].transform).toBe('translate(20px, 50px) scale(0.25, 0.25)');
+    expect(animate.mock.calls[0][0][0].transform).toBe('translate(-6px, 12px)');
     expect(screen.getByRole('dialog').classList.contains('ds-dialog-expanding')).toBe(true);
     fireEvent.keyDown(document, { key: 'Escape' });
     expect(cancel).toHaveBeenCalledOnce();
@@ -75,7 +75,7 @@ it('uses the initiating touch geometry even when the browser does not focus the 
   const trigger = screen.getByRole('button', { name: 'Abrir' });
   rememberMotionOrigin(trigger);
   fireEvent.click(trigger);
-  expect(animate.mock.calls[0][0][0].transform).toBe('translate(20px, 50px) scale(0.25, 0.25)');
-  expect(animate.mock.calls[0][0].at(-1).transform).toBe('translate(0, 0) scale(1, 1)');
+  expect(animate.mock.calls[0][0][0].transform).toBe('translate(-6px, 12px)');
+  expect(animate.mock.calls[0][0].at(-1).transform).toBe('translate(0, 0)');
   delete Element.prototype.animate;
 });

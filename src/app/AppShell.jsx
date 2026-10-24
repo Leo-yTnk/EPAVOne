@@ -118,7 +118,7 @@ export function AppShell({ route, preferences, account, onOpenAccount, onToggleT
                 aria-controls="mobile-navigation"
               >
                 <AppLogo product={PRODUCT_META[selectedProduct].product} size="sm" />
-                <span className="mobile-context-label">
+                <span key={`${selectedProduct}/${currentPage}`} className="mobile-context-label">
                   <span className="mobile-context-app">{PRODUCT_META[selectedProduct].label}</span>
                   <span className="mobile-context-page">{currentPage || 'Seus apps'}</span>
                 </span>

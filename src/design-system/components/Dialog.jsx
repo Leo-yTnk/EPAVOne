@@ -12,6 +12,7 @@ export function Dialog({
   title,
   titleId: contentTitleId,
   titleInContent = false,
+  headerContent,
   children,
   actions,
   onClose,
@@ -39,6 +40,7 @@ export function Dialog({
           tabIndex="-1"
         >
           <div className="ds-dialog-head">
+            {headerContent}
             {!titleInContent && (
               <h2 id={titleId} className="ds-dialog-title">
                 {title}

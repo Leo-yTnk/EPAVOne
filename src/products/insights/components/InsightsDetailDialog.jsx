@@ -26,21 +26,31 @@ export function InsightsDetailDialog({ initial, onClose }) {
     <Dialog
       open
       expandFromTrigger
-      titleInContent={current.kind === 'recipe'}
-      titleId={current.kind === 'recipe' ? recipeTitleId : undefined}
+      stitched={false}
+      titleInContent
+      titleId={recipeTitleId}
+      headerContent={
+        previous ? (
+          <Button variant="ghost" size="sm" className="insights-detail-back" onClick={() => setHistory((items) => items.slice(0, -1))}>
+            {previous.kind === 'product' ? '← Voltar ao produto' : '← Voltar à receita'}
+          </Button>
+        ) : (
+          <span className="ds-overline">{current.kind === 'recipe' ? 'Receita' : 'Produto'}</span>
+        )
+      }
       title={current.item.name}
       onClose={onClose}
       size="lg"
       className={`insights-detail-dialog${current.kind === 'recipe' ? ' is-recipe-detail' : ''}`}
     >
       <div ref={contentRef} tabIndex="-1" className="insights-detail-content">
-        {previous && (
-          <Button variant="ghost" size="sm" className="insights-detail-back" onClick={() => setHistory((items) => items.slice(0, -1))}>
-            {previous.kind === 'product' ? '← Voltar ao produto' : '← Voltar à receita'}
-          </Button>
-        )}
         {current.kind === 'product' ? (
-          <ProductOverview key={`product-${current.item.id}`} product={current.item} onOpenRecipe={(item) => open('recipe', item)} />
+          <ProductOverview
+            key={`product-${current.item.id}`}
+            titleId={recipeTitleId}
+            product={current.item}
+            onOpenRecipe={(item) => open('recipe', item)}
+          />
         ) : (
           <RecipeDetails
             key={`recipe-${current.item.id}`}

@@ -50,6 +50,8 @@ Os componentes públicos são Preact/JSX e vivem individualmente em `src/design-
 - FilterBar;
 - FilterControl;
 - DateRange.
+- Insights pode usar `Carousel.headingSurface` para apresentar o título e as ações da coleção em Card sem acrescentar artigos à lista. O padrão do Carousel continua sem superfície no cabeçalho.
+- Carousel: fileira com rolagem nativa por toque/trackpad, scroll snap, setas e teclado no contêiner (Arrow/Home/End); `expanded` muda para grade, `action` recebe a ação da seção e `headingId` conecta título e região. Sem autoplay, clones ou listeners de arraste. Respeita movimento reduzido.
 
 ## Dados
 

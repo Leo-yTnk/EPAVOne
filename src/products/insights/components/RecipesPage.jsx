@@ -1,10 +1,11 @@
 import { CatalogChoices } from './CatalogChoices.jsx';
 import { CatalogLoading } from './CatalogLoading.jsx';
 import { CatalogSections } from './CatalogSections.jsx';
-import { catalogGroups, orderedCatalogItems } from '../models/sections.js';
+import { browseCatalogGroups, orderedCatalogItems } from '../models/sections.js';
 import { useMemo, useState } from 'preact/hooks';
 import {
   Button,
+  Card,
   Checkbox,
   FilterDisclosure,
   EmptyState,
@@ -53,79 +54,81 @@ export function RecipesPage({ initialSection = '' }) {
     return <ErrorState title="Não foi possível carregar as receitas" description={resource.error} onAction={resource.retry} />;
   return (
     <section className="insights-catalog" aria-label="Catálogo de receitas">
-      {recipes.length > 0 && (
-        <CatalogChoices
-          title="Quanto tempo seu cliente tem?"
-          icon="clock"
-          description="Escolha um ponto de partida e refine pela busca."
-          choices={[
-            {
-              label: 'Todas as receitas',
-              count: recipes.length,
-              active: !filters.quick && !filters.category,
-              onSelect: () => update({ quick: false, category: '' })
-            },
-            {
-              label: 'Preparo até 30 min',
-              count: filterRecipes(recipes, { quick: true }).length,
-              active: filters.quick,
-              onSelect: () => update({ quick: true })
-            }
-          ]}
-        />
-      )}
-      <div className="insights-filters">
-        <Input
-          id="insights-recipe-search"
-          label="Buscar receita"
-          type="search"
-          placeholder="Nome ou categoria"
-          value={filters.query}
-          onInput={(event) => update({ query: event.currentTarget.value })}
-        />
-        <FilterDisclosure count={Number(Boolean(filters.section)) + Number(Boolean(filters.category)) + Number(filters.quick)}>
-          {sectionOptions.length > 0 && (
+      <Card as="section" className="insights-catalog-tools" aria-label="Explorar receitas">
+        {recipes.length > 0 && (
+          <CatalogChoices
+            title="Quanto tempo seu cliente tem?"
+            icon="clock"
+            description="Escolha um ponto de partida e refine pela busca."
+            choices={[
+              {
+                label: 'Todas as receitas',
+                count: recipes.length,
+                active: !filters.quick && !filters.category,
+                onSelect: () => update({ quick: false, category: '' })
+              },
+              {
+                label: 'Preparo até 30 min',
+                count: filterRecipes(recipes, { quick: true }).length,
+                active: filters.quick,
+                onSelect: () => update({ quick: true })
+              }
+            ]}
+          />
+        )}
+        <div className="insights-filters">
+          <Input
+            id="insights-recipe-search"
+            label="Buscar receita"
+            type="search"
+            placeholder="Nome ou categoria"
+            value={filters.query}
+            onInput={(event) => update({ query: event.currentTarget.value })}
+          />
+          <FilterDisclosure count={Number(Boolean(filters.section)) + Number(Boolean(filters.category)) + Number(filters.quick)}>
+            {sectionOptions.length > 0 && (
+              <Select
+                label="Seção do catálogo"
+                value={filters.section}
+                options={[{ value: '', label: 'Todas as seções' }, ...sectionOptions.map((item) => ({ value: item.id, label: item.name }))]}
+                onChange={(section) => update({ section })}
+                searchable
+              />
+            )}
             <Select
-              label="Seção do catálogo"
-              value={filters.section}
-              options={[{ value: '', label: 'Todas as seções' }, ...sectionOptions.map((item) => ({ value: item.id, label: item.name }))]}
-              onChange={(section) => update({ section })}
+              label="Categoria de receita"
+              options={[{ value: '', label: 'Todas as categorias' }, ...categories.map((item) => ({ value: item.id, label: item.name }))]}
+              value={filters.category}
+              onChange={(category) => update({ category })}
               searchable
             />
-          )}
-          <Select
-            label="Categoria de receita"
-            options={[{ value: '', label: 'Todas as categorias' }, ...categories.map((item) => ({ value: item.id, label: item.name }))]}
-            value={filters.category}
-            onChange={(category) => update({ category })}
-            searchable
+            <Checkbox
+              aria-label="Até 30 minutos"
+              checked={filters.quick}
+              onChange={(event) => update({ quick: event.currentTarget.checked })}
+            >
+              Até 30 minutos
+            </Checkbox>
+          </FilterDisclosure>
+        </div>
+        {structure.error && (
+          <ErrorState
+            title="Seções indisponíveis"
+            description="O catálogo continua disponível. Tente carregar sua organização novamente."
+            onAction={structure.retry}
           />
-          <Checkbox
-            aria-label="Até 30 minutos"
-            checked={filters.quick}
-            onChange={(event) => update({ quick: event.currentTarget.checked })}
-          >
-            Até 30 minutos
-          </Checkbox>
-        </FilterDisclosure>
-      </div>
-      {structure.error && (
-        <ErrorState
-          title="Seções indisponíveis"
-          description="O catálogo continua disponível. Tente carregar sua organização novamente."
-          onAction={structure.retry}
-        />
-      )}
-      <div className="insights-results">
-        <p className="insights-muted" role="status">
-          {filtered.length} {filtered.length === 1 ? 'receita encontrada' : 'receitas encontradas'}
-        </p>
-        {filtered.length > 0 && (filters.query || filters.section || filters.category || filters.quick) && (
-          <Button variant="ghost" size="sm" onClick={reset}>
-            Limpar filtros
-          </Button>
         )}
-      </div>
+        <div className="insights-results">
+          <p className="insights-muted" role="status">
+            {filtered.length} {filtered.length === 1 ? 'receita encontrada' : 'receitas encontradas'}
+          </p>
+          {filtered.length > 0 && (filters.query || filters.section || filters.category || filters.quick) && (
+            <Button variant="ghost" size="sm" onClick={reset}>
+              Limpar filtros
+            </Button>
+          )}
+        </div>
+      </Card>
       {!filtered.length ? (
         <EmptyState
           title={recipes.length ? 'Nenhuma receita encontrada' : 'Ainda não há receitas publicadas'}
@@ -137,7 +140,7 @@ export function RecipesPage({ initialSection = '' }) {
         />
       ) : (
         <CatalogSections
-          groups={catalogGroups(
+          groups={browseCatalogGroups(
             ordered.slice((currentPage - 1) * CATALOG_PAGE_SIZE, currentPage * CATALOG_PAGE_SIZE),
             structure.data,
             'recipes',

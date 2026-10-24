@@ -70,7 +70,7 @@
 
 .ds-alert>div,.ds-toast-content{min-width:0;overflow-wrap:anywhere}
 
-.ds-dialog.ds-dialog-expanding{animation:none;transform-origin:top left}
+.ds-dialog.ds-dialog-expanding{animation:none;transform-origin:center}
 
 .ds-drawer-overlay.is-start { justify-items: start; }
 .ds-drawer.is-start {

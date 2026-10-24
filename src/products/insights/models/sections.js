@@ -40,3 +40,24 @@ export function orderedCatalogItems(items, structure, pageKey, kind) {
     ).values()
   ];
 }
+
+// Configured sections take priority; unassigned items get meaningful category
+// shelves rather than one undifferentiated “all content” block.
+export function browseCatalogGroups(items, structure, pageKey, kind) {
+  return catalogGroups(items, structure, pageKey, kind).flatMap((group) => {
+    if (group.id !== 'other') return [group];
+    const categories = new Map();
+    for (const item of group.items) {
+      const key = item.category_id || item.category?.id || item.category?.name || 'uncategorized';
+      if (!categories.has(key))
+        categories.set(key, {
+          id: `${kind}-category-${key}`,
+          name: item.category?.name || (kind === 'recipes' ? 'Mais receitas' : 'Mais produtos'),
+          categoryName: item.category?.name,
+          items: []
+        });
+      categories.get(key).items.push(item);
+    }
+    return [...categories.values()];
+  });
+}

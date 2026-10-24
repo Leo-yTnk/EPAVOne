@@ -1,0 +1,296 @@
+/* Each item is a contained unit. Photography leads recipes; price leads products. */
+.insights-catalog,
+.insights-discovery {
+  grid-template-columns: minmax(0, 1fr);
+}
+.insights-choices {
+  min-width: 0;
+  max-width: 100%;
+}
+.insights-catalog-card.ds-card {
+  --container-padding: var(--space-5);
+  --card-radius: var(--radius-lg);
+  --catalog-image-radius: max(0px, calc(var(--card-radius) - var(--container-padding) - 1px));
+  padding: var(--container-padding);
+  gap: var(--space-4);
+  box-shadow: none;
+}
+.insights-catalog-card > .insights-image.ds-card {
+  --card-radius: var(--catalog-image-radius);
+  border: 0;
+}
+.insights-grid .insights-catalog-card .insights-product-name {
+  min-height: 0;
+  font: 700 1.0625rem/var(--leading-heading-small) var(--font-heading);
+  letter-spacing: -0.015em;
+}
+.insights-catalog-card .ds-badge {
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-size: 0.6875rem;
+}
+.insights-catalog-card .insights-product-copy,
+.insights-catalog-card .insights-recipe-copy {
+  gap: var(--space-3);
+}
+.insights-catalog-card .ds-btn {
+  justify-content: space-between;
+  width: 100%;
+  align-self: stretch;
+  min-height: 2.75rem;
+  padding-inline: 0;
+  border: 0;
+  font-size: 0.8125rem;
+}
+.insights-catalog-card .ds-btn > span {
+  gap: var(--space-3);
+}
+.insights-recipe-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-3);
+}
+.insights-recipe-meta > span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+.insights-recipe-meta .ds-icon {
+  font-size: 0.75rem;
+}
+.insights-grid:has(> .insights-recipe-card) {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+}
+.insights-grid:has(> .insights-product-card) {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+}
+.insights-catalog-card.insights-recipe-card > .insights-image {
+  aspect-ratio: 16/10;
+}
+.insights-catalog-card .insights-price strong {
+  font-size: 1.125rem;
+}
+.insights-catalog-card .insights-price p > span {
+  font-size: 0.75rem;
+}
+.insights-catalog-card .insights-price small {
+  font-size: 0.6875rem;
+}
+.insights-catalog-card .insights-promotion {
+  font-size: 0.75rem;
+}
+.insights-catalog-card .insights-promotion strong {
+  font-size: 0.875rem;
+}
+
+/* A single arrival per result collection, not hundreds of animated cards. */
+.insights-catalog-sections {
+  animation: insights-catalog-in var(--duration-normal) var(--ease-enter);
+}
+@keyframes insights-catalog-in {
+  from {
+    opacity: 0.75;
+    transform: translateY(var(--motion-distance-md));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+html[data-reduced-motion='true'] .insights-catalog-sections {
+  animation: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .insights-catalog-sections {
+    animation: none;
+  }
+}
+
+@container insights-catalog (max-width: 38rem) {
+  .insights-grid:has(> .insights-product-card) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-3);
+  }
+  .insights-grid > .insights-product-card {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    align-items: start;
+    column-gap: var(--space-4);
+  }
+  .insights-product-card > .insights-image.ds-card {
+    aspect-ratio: 1;
+  }
+  .insights-grid .insights-product-card .insights-product-name {
+    font-size: 1rem;
+  }
+  .insights-product-card .insights-product-copy {
+    gap: var(--space-2);
+  }
+  .insights-product-card .insights-price {
+    margin-top: var(--space-1);
+  }
+  .insights-product-card .ds-btn {
+    margin-top: 0;
+  }
+  .insights-catalog-card .insights-image-fallback {
+    font-size: 0.6875rem;
+  }
+}
+@container insights-catalog (max-width: 22rem) {
+  .insights-grid > .insights-product-card {
+    grid-template-columns: 4.25rem minmax(0, 1fr);
+    column-gap: var(--space-3);
+  }
+}
+@media (max-width: 48rem) {
+  .insights-catalog-card.ds-card {
+    --card-radius: var(--radius-card);
+  }
+  .insights-catalog-section > .insights-section-heading h2 {
+    font-size: 1.25rem;
+  }
+  .insights-section-heading > .insights-muted {
+    font-size: 0.75rem;
+  }
+  .insights-section-number {
+    display: none;
+  }
+  .insights-section-index {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-block: var(--space-1) var(--space-3);
+  }
+  .insights-section-index a {
+    flex: none;
+    border-radius: var(--radius-full);
+    font-size: 0.75rem;
+  }
+  .insights-section-index a span {
+    display: none;
+  }
+  .insights-choices.ds-card {
+    --container-padding: var(--space-5);
+  }
+  .insights-choices-heading p {
+    display: none;
+  }
+  .insights-choice-buttons {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .insights-choice-buttons > .ds-btn {
+    flex: none;
+    white-space: nowrap;
+  }
+}
+
+/* Discovery shelves use compact, equally paced cards. Full collections stay available. */
+.insights-catalog-section .ds-carousel-track > .insights-catalog-card {
+  --container-padding: var(--space-4);
+  --card-radius: var(--radius-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding: var(--container-padding);
+}
+.insights-catalog-section .insights-catalog-card > .insights-image.ds-card {
+  aspect-ratio: 16/10;
+}
+.insights-catalog-section .insights-catalog-card .insights-product-name {
+  font-family: var(--font-heading);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  line-height: var(--leading-heading-small);
+  letter-spacing: -0.015em;
+  min-height: 2lh;
+}
+.insights-catalog-section .insights-catalog-card .insights-product-copy,
+.insights-catalog-section .insights-catalog-card .insights-recipe-copy {
+  gap: var(--space-2);
+}
+.insights-catalog-section .insights-recipe-meta {
+  font-size: 0.75rem;
+  gap: var(--space-1) var(--space-2);
+}
+.insights-catalog-section .insights-recipe-meta > span:last-child:not(:first-child) {
+  color: var(--text-secondary);
+}
+.insights-catalog-section .insights-catalog-card .ds-btn {
+  margin-top: auto;
+}
+.insights-catalog-section .insights-catalog-card .insights-price {
+  margin-top: var(--space-1);
+}
+.insights-catalog-section .insights-catalog-card .insights-price strong {
+  font-size: 1.0625rem;
+}
+.insights-catalog-section .ds-carousel-actions > .ds-btn {
+  min-height: 2.75rem;
+  padding-inline: var(--space-2);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+.insights-catalog-sections {
+  gap: var(--space-7);
+}
+.insights-section-explore {
+  justify-self: start;
+}
+.insights-catalog-section + .insights-catalog-section {
+  padding-top: 0;
+}
+.insights-choices {
+  display: block;
+  padding: 0;
+  box-shadow: none;
+}
+.insights-choice-buttons {
+  display: flex;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-block: 1px var(--space-2);
+  gap: var(--space-2);
+}
+.insights-choice-buttons > .ds-btn {
+  flex: none;
+  white-space: nowrap;
+}
+@media (max-width: 48rem) {
+  .insights-catalog-section .ds-carousel[data-expanded='true'] .ds-carousel-track {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .insights-catalog-section .ds-carousel[data-expanded='true'] .insights-catalog-card {
+    --container-padding: var(--space-3);
+  }
+  .insights-catalog-section .ds-carousel[data-expanded='true'] .insights-product-name {
+    font-size: 0.875rem;
+  }
+  .insights-catalog-section .ds-carousel[data-expanded='true'] .insights-price p > span {
+    display: block;
+  }
+  .insights-catalog-section .ds-carousel[data-expanded='true'] .insights-recipe-meta {
+    font-size: 0.6875rem;
+  }
+}
+.insights-catalog-section .ds-carousel-track:has(> :only-child) {
+  grid-auto-columns: min(100%, 24rem);
+}
+.insights-catalog-section .ds-carousel-track:has(> :only-child) > .insights-catalog-card {
+  flex-direction: row;
+  align-items: start;
+}
+.insights-catalog-section .ds-carousel-track:has(> :only-child) > .insights-catalog-card > .insights-image {
+  width: 5rem;
+  aspect-ratio: 1;
+  flex: none;
+}
+.insights-discovery-writer {
+  justify-self: start;
+}
+.insights-catalog-section[data-category='true'] .insights-catalog-card .ds-badge {
+  display: none;
+}
