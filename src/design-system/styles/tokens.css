@@ -105,7 +105,8 @@
   --radius-full: 999rem;
   --radius-action: var(--radius-md);
   --radius-navigation: var(--radius-full);
-  --card-radius: 3rem;
+  --radius-card: 3rem;
+  --card-radius: var(--radius-card);
   --card-padding: var(--space-6);
   --card-stitch-inset: 0.5rem;
   --card-stitch-color: var(--border-subtle);
@@ -230,4 +231,8 @@
   --text-warning: #e6c36d;
   --text-danger: #f1a394;
   --card-stitch-color: #342d29;
+}
+
+@media (max-width: 48rem) {
+  :root { --radius-card: 1.75rem; --radius-xl: 1.75rem; --radius-2xl: 2rem; --radius-lg: 1.25rem; }
 }

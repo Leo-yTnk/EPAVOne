@@ -61,7 +61,7 @@ const fs = require('node:fs');
       body: JSON.stringify(rows.slice(Number(new URL(route.request().url()).searchParams.get('offset') || 0)))
     });
   });
-  const output = 'docs/insights-detail-review';
+  const output = process.env.REVIEW_OUTPUT || 'docs/recipe-redesign-review';
   fs.mkdirSync(output, { recursive: true });
   const results = [];
   for (const width of [320, 390, 768, 1440]) {
@@ -77,13 +77,19 @@ const fs = require('node:fs');
       await page.getByRole('heading', { name: 'Ingredientes', exact: true }).waitFor();
       await page.waitForTimeout(350);
       const geometry = await page.getByRole('dialog').evaluate((node) => ({
+        hierarchy: (() => {
+          const size = (selector) => parseFloat(getComputedStyle(node.querySelector(selector)).fontSize);
+          return { title: size('.recipe-detail-title'), section: size('.recipe-detail-section > h3'), tip: size('.recipe-detail-tip h3') };
+        })(),
         stitches: node.querySelectorAll('.ds-stitch').length,
         outerStitch: Boolean(node.querySelector(':scope > .ds-stitch')),
         productStitch: Boolean(node.querySelector('.insights-ingredient > .ds-stitch')),
-        sectionStitches: node.querySelectorAll('.insights-recipe-panel > .ds-stitch, .insights-recipe-fact > .ds-stitch').length,
+        sectionStitches: node.querySelectorAll('.insights-recipe-panel > .ds-stitch, .recipe-detail-fact > .ds-stitch').length,
         layout: (() => {
-          const image = node.querySelector('.insights-recipe-overview > .insights-image').getBoundingClientRect();
-          const title = node.querySelector('.insights-recipe-title').getBoundingClientRect();
+          const image = node.querySelector('.recipe-detail-hero > .insights-image').getBoundingClientRect();
+          const title = node.querySelector('.recipe-detail-title').getBoundingClientRect();
+          const close = node.querySelector('.ds-dialog-head').getBoundingClientRect();
+          if (title.top < close.bottom) throw new Error('Recipe title overlaps close control');
           return {
             image: { left: image.left, top: image.top, right: image.right },
             title: { left: title.left, top: title.top, bottom: title.bottom }
@@ -92,14 +98,16 @@ const fs = require('node:fs');
         overflow: node.scrollWidth > node.clientWidth,
         expansion: node.classList.contains('ds-dialog-expanding'),
         width: node.getBoundingClientRect().width,
-        facts: [...node.querySelectorAll('.insights-recipe-fact')].map((n) => ({ width: n.clientWidth, scroll: n.scrollWidth })),
-        lines: [...node.querySelectorAll('.insights-recipe-steps li,.insights-recipe-extras li')].some(
+        facts: [...node.querySelectorAll('.recipe-detail-fact')].map((n) => ({ width: n.clientWidth, scroll: n.scrollWidth })),
+        lines: [...node.querySelectorAll('.recipe-detail-steps li,.recipe-detail-extras li')].some(
           (n) => parseFloat(getComputedStyle(n).borderBottomWidth) > 0
         )
       }));
+      if (!(geometry.hierarchy.title > geometry.hierarchy.section && geometry.hierarchy.section > geometry.hierarchy.tip))
+        throw new Error('Recipe typography hierarchy failed');
       if (
         !geometry.outerStitch ||
-        !geometry.productStitch ||
+        geometry.productStitch ||
         geometry.sectionStitches ||
         geometry.overflow ||
         !geometry.expansion ||
@@ -107,8 +115,6 @@ const fs = require('node:fs');
         geometry.facts.some((n) => n.scroll > n.width)
       )
         throw new Error(JSON.stringify({ width, theme, geometry }));
-      if (width > 640 ? geometry.layout.title.left < geometry.layout.image.right : geometry.layout.title.bottom > geometry.layout.image.top)
-        throw new Error('Recipe title layout failed');
       if (width === 1440 || width === 390) await page.screenshot({ path: `${output}/recipe-${width}-${theme}.png` });
       await page.getByRole('button', { name: `Ver produto ${product.name}` }).click();
       await page.getByRole('heading', { name: product.name, exact: true }).waitFor();
@@ -136,6 +142,37 @@ const fs = require('node:fs');
   await page.getByRole('button', { name: `Ver receita de ${recipe.name}` }).click();
   const reduced = await page.getByRole('dialog').evaluate((n) => !n.classList.contains('ds-dialog-expanding'));
   if (!reduced) throw new Error('Reduced motion failed');
+  await page.setViewportSize({ width: 390, height: 844 });
+  for (const theme of ['light', 'dark']) {
+    await page.goto('http://127.0.0.1:5174/EPAVOne/#/settings');
+    await page.evaluate((value) => {
+      localStorage.setItem('epavone-theme', value);
+      document.documentElement.dataset.theme = value;
+    }, theme);
+    await page.evaluate(() => document.fonts.ready);
+    await page.screenshot({ path: `${output}/settings-mobile-${theme}.png`, fullPage: true });
+    await page.getByRole('button', { name: /^Navegação:/ }).click();
+    const drawer = page.getByRole('dialog', { name: 'Seus apps' });
+    await drawer.waitFor();
+    const grid = await drawer.locator('.mobile-sidebar-apps .ds-nav-item').evaluateAll((nodes) =>
+      nodes.map((node) => {
+        const b = node.getBoundingClientRect();
+        return { top: b.top, left: b.left };
+      })
+    );
+    if (grid.length !== 4 || Math.abs(grid[0].top - grid[1].top) > 1 || grid[2].top <= grid[0].top)
+      throw new Error('App drawer grid failed');
+    await page.screenshot({ path: `${output}/app-drawer-mobile-${theme}.png` });
+    await page.keyboard.press('Escape');
+  }
+  await page.goto('http://127.0.0.1:5174/EPAVOne/#/settings');
+  await page.addStyleTag({ content: '* { corner-shape: round; } .ds-stitch path { display: none; } .ds-stitch rect { display: block; }' });
+  const radius = await page
+    .locator('.settings-section')
+    .first()
+    .evaluate((node) => parseFloat(getComputedStyle(node).borderTopLeftRadius));
+  if (radius > 28) throw new Error('Mobile fallback radius is too large');
+  await page.screenshot({ path: `${output}/settings-mobile-fallback.png`, fullPage: true });
   fs.writeFileSync(
     `${output}/results.json`,
     JSON.stringify({ results, reducedMotion: reduced, errors, fixture: 'Controlled catalog data; no live database writes.' }, null, 2)
