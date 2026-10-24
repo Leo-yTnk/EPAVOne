@@ -7,6 +7,8 @@ import { useAccount } from './account/useAccount.js';
 import { useHashRoute } from './useHashRoute.js';
 import { applyTheme, getInitialTheme } from './theme.js';
 import { productTheme } from './productTheme.js';
+import { IntroductionPage } from './welcome/IntroductionPage.jsx';
+import { hasSeenIntroduction, completeIntroduction } from './welcome/introduction.js';
 import { HomePage } from '../products/home/HomePage.jsx';
 import { lazy, Suspense } from 'preact/compat';
 import { Spinner } from '../design-system/components/index.js';
@@ -20,6 +22,14 @@ const AccountDialog = lazy(() => import('./account/AccountDialog.jsx').then((mod
 
 export function App() {
   const route = useHashRoute();
+  const [introductionSeen, setIntroductionSeen] = useState(hasSeenIntroduction);
+  const showIntroduction = route.product === 'home' && (!introductionSeen || route.raw === 'welcome');
+  const finishIntroduction = () => {
+    completeIntroduction();
+    setIntroductionSeen(true);
+    if (route.raw === 'welcome') window.location.hash = '#/';
+    requestAnimationFrame(() => document.querySelector('#main')?.focus({ preventScroll: true }));
+  };
   const pageRef = useRef(null);
   const writerRef = useRef(null);
   usePressFeedback();
@@ -61,7 +71,7 @@ export function App() {
     setTheme(next);
   }
 
-  let page = <HomePage preferences={preferences} />;
+  let page = showIntroduction ? <IntroductionPage onComplete={finishIntroduction} /> : <HomePage preferences={preferences} />;
   if (route.product === 'insights') page = <InsightsRoutes route={route} account={account} onOpenAccount={() => setAccountOpen(true)} />;
   if (route.product === 'planner')
     page = (

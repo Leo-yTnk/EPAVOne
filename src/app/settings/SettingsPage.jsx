@@ -1,4 +1,5 @@
-import { Button, Card, Heading, Input, PageHeader, Select, Switch, Text } from '../../design-system/components/index.js';
+import { SettingsSection } from './SettingsSection.jsx';
+import { Button, Input, PageHeader, Select, Switch, Text } from '../../design-system/components/index.js';
 import { DEFAULT_PREFERENCES } from './preferences.js';
 import { useState } from 'preact/hooks';
 import { legacySummary, downloadLegacyReview } from '../../shared/services/legacyStorage.js';
@@ -27,95 +28,91 @@ export function SettingsPage({
         {saveStatus}
       </p>
       <div className="settings-list">
-        <Card as="section" className="settings-section">
-          <Heading as="h2" level={4}>
-            Seu jeito de começar
-          </Heading>
-          <Text size="sm">Seu nome aparece na saudação da home. Estas escolhas ficam somente neste navegador.</Text>
-          <div className="settings-controls">
-            <Input
-              label="Como podemos chamar você?"
-              value={preferences.displayName}
-              maxLength={40}
-              placeholder="Seu nome ou apelido"
-              helper="Até 40 caracteres. Não altera o nome da sua conta."
-              onInput={(event) => update({ displayName: event.currentTarget.value })}
-            />
-            <Select
-              label="Atalho principal da home"
-              value={preferences.homeAction}
-              options={[
-                { value: 'planner', label: 'Planejar atendimentos' },
-                { value: 'insights', label: 'Explorar ideias' },
-                { value: 'writer', label: 'Preparar um pedido' }
-              ]}
-              onChange={(homeAction) => update({ homeAction })}
-            />
-          </div>
-        </Card>
-        <Card as="section" className="settings-section">
-          <Heading as="h2" level={4}>
-            Uma home que acolhe
-          </Heading>
-          <Text size="sm">
-            O cenário acompanha o horário deste dispositivo, inclusive se a página ficar aberta. O tema claro ou escuro continua sendo sua
-            escolha.
-          </Text>
-          <div className="settings-controls">
-            <Select
-              label="Fundo da home"
-              value={preferences.homeBackground}
-              options={[
-                { value: 'adaptive', label: 'Adaptar ao horário local' },
-                { value: 'neutral', label: 'Papel neutro' }
-              ]}
-              onChange={(homeBackground) => update({ homeBackground })}
-            />
-            <Switch checked={preferences.showInspiration} onChange={(event) => update({ showInspiration: event.currentTarget.checked })}>
-              Mostrar mensagem de inspiração
-            </Switch>
-            <Switch
-              checked={preferences.showWeeklyReminder}
-              onChange={(event) => update({ showWeeklyReminder: event.currentTarget.checked })}
-            >
-              Mostrar lembrete do formulário semanal
-            </Switch>
-          </div>
-        </Card>
-        <Card as="section" className="settings-section">
-          <Heading as="h2" level={4}>
-            Aparência
-          </Heading>
-          <Text size="sm">Escolha o tema, o espaço entre os elementos e a textura do fundo.</Text>
-          <div className="settings-controls">
-            <Select
-              label="Tema"
-              value={theme}
-              options={[
-                { value: 'light', label: 'Claro' },
-                { value: 'dark', label: 'Escuro' }
-              ]}
-              onChange={(next) => next !== theme && onToggleTheme()}
-            />
-            <Select
-              label="Densidade dos cards"
-              value={preferences.density}
-              options={[
-                { value: 'comfortable', label: 'Confortável' },
-                { value: 'compact', label: 'Compacta' }
-              ]}
-              onChange={(density) => update({ density })}
-            />
-            <Switch checked={preferences.showGrid} onChange={(event) => update({ showGrid: event.currentTarget.checked })}>
-              Fundo quadriculado
-            </Switch>
-          </div>
-        </Card>
-        <Card as="section" className="settings-section">
-          <Heading as="h2" level={4}>
-            Navegação
-          </Heading>
-          <Text size="sm">Escolha como navegar em cada tamanho de tela. O painel lateral no celular e tablet abre pela esquerda.</Text>
+        <SettingsSection
+          title="Seu jeito de começar"
+          icon="user"
+          description={<> Seu nome aparece na saudação da home. Estas escolhas ficam somente neste navegador. </>}
+        >
+          <Input
+            label="Como podemos chamar você?"
+            value={preferences.displayName}
+            maxLength={40}
+            placeholder="Seu nome ou apelido"
+            helper="Até 40 caracteres. Não altera o nome da sua conta."
+            onInput={(event) => update({ displayName: event.currentTarget.value })}
+          />
+          <Select
+            label="Atalho principal da home"
+            value={preferences.homeAction}
+            options={[
+              { value: 'planner', label: 'Planejar atendimentos' },
+              { value: 'insights', label: 'Explorar ideias' },
+              { value: 'writer', label: 'Preparar um pedido' }
+            ]}
+            onChange={(homeAction) => update({ homeAction })}
+          />
+        </SettingsSection>
+        <SettingsSection
+          title="Uma home que acolhe"
+          icon="home"
+          description={
+            <>
+              O cenário acompanha o horário deste dispositivo, inclusive se a página ficar aberta. O tema claro ou escuro continua sendo sua
+              escolha.
+            </>
+          }
+        >
+          <Select
+            label="Fundo da home"
+            value={preferences.homeBackground}
+            options={[
+              { value: 'adaptive', label: 'Adaptar ao horário local' },
+              { value: 'neutral', label: 'Papel neutro' }
+            ]}
+            onChange={(homeBackground) => update({ homeBackground })}
+          />
+          <Switch checked={preferences.showInspiration} onChange={(event) => update({ showInspiration: event.currentTarget.checked })}>
+            Mostrar mensagem de inspiração
+          </Switch>
+          <Switch
+            checked={preferences.showWeeklyReminder}
+            onChange={(event) => update({ showWeeklyReminder: event.currentTarget.checked })}
+          >
+            Mostrar lembrete do formulário semanal
+          </Switch>
+        </SettingsSection>
+        <SettingsSection
+          title="Aparência"
+          icon="sun"
+          description={<> Escolha o tema, o espaço entre os elementos e a textura do fundo. </>}
+        >
+          <Select
+            label="Tema"
+            value={theme}
+            options={[
+              { value: 'light', label: 'Claro' },
+              { value: 'dark', label: 'Escuro' }
+            ]}
+            onChange={(next) => next !== theme && onToggleTheme()}
+          />
+          <Select
+            label="Densidade dos cards"
+            value={preferences.density}
+            options={[
+              { value: 'comfortable', label: 'Confortável' },
+              { value: 'compact', label: 'Compacta' }
+            ]}
+            onChange={(density) => update({ density })}
+          />
+          <Switch checked={preferences.showGrid} onChange={(event) => update({ showGrid: event.currentTarget.checked })}>
+            Fundo quadriculado
+          </Switch>
+        </SettingsSection>
+        <SettingsSection
+          title="Navegação"
+          icon="menu"
+          description={<> Escolha como navegar em cada tamanho de tela. O painel lateral no celular e tablet abre pela esquerda. </>}
+        >
           <Select
             label="Posição da navegação"
             value={preferences.navigation}
@@ -134,34 +131,36 @@ export function SettingsPage({
             ]}
             onChange={(mobileNavigation) => update({ mobileNavigation })}
           />
-        </Card>
-        <Card as="section" className="settings-section">
-          <Heading as="h2" level={4}>
-            Acessibilidade
-          </Heading>
-          <Text size="sm">As preferências de movimento do sistema também são respeitadas.</Text>
-          <div className="settings-controls">
-            <Select
-              label="Tamanho de leitura"
-              value={preferences.textSize}
-              options={[
-                { value: 'standard', label: 'Padrão' },
-                { value: 'large', label: 'Ampliado' }
-              ]}
-              onChange={(textSize) => update({ textSize })}
-            />
-            <Switch checked={preferences.reducedMotion} onChange={(event) => update({ reducedMotion: event.currentTarget.checked })}>
-              Reduzir animações
-            </Switch>
-          </div>
-        </Card>
-        <Card as="section" className="settings-section">
-          <Heading as="h2" level={4}>
-            Conta e biblioteca
-          </Heading>
-          <Text size="sm">
-            {account?.session ? account.session.user.email : 'Entre para gerenciar sua biblioteca pessoal e os conteúdos compartilhados.'}
-          </Text>
+        </SettingsSection>
+        <SettingsSection
+          title="Acessibilidade"
+          icon="difficulty"
+          description={<> As preferências de movimento do sistema também são respeitadas. </>}
+        >
+          <Select
+            label="Tamanho de leitura"
+            value={preferences.textSize}
+            options={[
+              { value: 'standard', label: 'Padrão' },
+              { value: 'large', label: 'Ampliado' }
+            ]}
+            onChange={(textSize) => update({ textSize })}
+          />
+          <Switch checked={preferences.reducedMotion} onChange={(event) => update({ reducedMotion: event.currentTarget.checked })}>
+            Reduzir animações
+          </Switch>
+        </SettingsSection>
+        <SettingsSection
+          title="Conta e biblioteca"
+          icon="user"
+          description={
+            <>
+              {account?.session
+                ? account.session.user.email
+                : 'Entre para gerenciar sua biblioteca pessoal e os conteúdos compartilhados.'}{' '}
+            </>
+          }
+        >
           <div className="settings-actions">
             <Button variant="secondary" onClick={onOpenAccount}>
               {account?.session ? 'Gerenciar minha conta' : 'Entrar na conta'}
@@ -170,16 +169,18 @@ export function SettingsPage({
               Abrir minha biblioteca
             </Button>
           </div>
-        </Card>
+        </SettingsSection>
         {legacyKeys.length > 0 && (
-          <Card as="section" className="settings-section">
-            <Heading as="h2" level={4}>
-              Dados anteriores preservados
-            </Heading>
-            <Text size="sm">
-              Encontramos {legacyKeys.length} conjuntos de dados neste navegador. Receitas, favoritos e vendas locais precisam de revisão
-              antes de serem associados à sua conta.
-            </Text>
+          <SettingsSection
+            title="Dados anteriores preservados"
+            icon="save"
+            description={
+              <>
+                Encontramos {legacyKeys.length} conjuntos de dados neste navegador. Receitas, favoritos e vendas locais precisam de revisão
+                antes de serem associados à sua conta.
+              </>
+            }
+          >
             <Button
               variant="secondary"
               onClick={() => {
@@ -193,10 +194,13 @@ export function SettingsPage({
               Baixar dados para revisão
             </Button>
             {legacyError && <p role="alert">{legacyError}</p>}
-          </Card>
+          </SettingsSection>
         )}
       </div>
       <div className="settings-reset">
+        <Button as="a" href="#/welcome" variant="ghost">
+          Rever a introdução
+        </Button>
         <Text size="sm">Restaure aparência, navegação e movimento sem alterar seus conteúdos.</Text>
         <Button
           variant="secondary"

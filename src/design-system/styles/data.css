@@ -1,5 +1,6 @@
 .ds-card{
-  --container-radius:var(--card-radius);--container-padding:var(--space-5);
+  --container-radius:var(--card-radius);--container-padding:var(--card-padding);
+  --nested-radius:max(0px,calc(var(--container-radius) - var(--container-padding) - 1px));
   position:relative;background:var(--surface-primary);border:1px solid var(--border-subtle);border-radius:var(--card-radius);padding:var(--container-padding);
   box-shadow:var(--shadow-sm);overflow:hidden;
   transition:border-color var(--duration-normal) var(--ease-standard),box-shadow var(--duration-normal) var(--ease-standard),transform var(--duration-normal) var(--ease-emphasized),background-color var(--duration-normal) var(--ease-standard)
@@ -15,14 +16,15 @@
   overflow: visible;
   color: var(--card-stitch-color);
 }
-.ds-stitch rect {
+.ds-stitch rect,
+.ds-stitch path {
   width: var(--stitch-path-width, calc(100% - 2px));
   height: var(--stitch-path-height, calc(100% - 2px));
   fill: none;
   stroke: currentColor;
   stroke-width: var(--card-stitch-width);
   stroke-dasharray: var(--card-stitch-dash) var(--card-stitch-gap);
-  rx: max(var(--radius-xs), calc(var(--card-radius) - var(--card-stitch-inset)));
+  rx: max(0px, calc(var(--card-radius) - var(--card-stitch-inset) - 2px));
   vector-effect: non-scaling-stroke;
 }
 .ds-card > :not(.ds-stitch) {
@@ -46,8 +48,8 @@ a.ds-card:active,.ds-card[data-interactive="true"]:active{transform:translateY(0
 .ds-metric-trend{font-size:.75rem;font-weight:650;line-height:var(--leading-control)}
 .ds-metric-trend.is-positive{color:var(--text-success)}.ds-metric-trend.is-negative{color:var(--text-danger)}.ds-metric-trend.is-neutral{color:var(--text-secondary)}
 
-.ds-table-card{padding:0}
-.ds-table-wrap{overflow:auto;border-radius:max(var(--radius-xs),calc(var(--card-radius) - 1px))}
+.ds-table-card{padding:var(--container-padding)}
+.ds-table-wrap{overflow:auto;border-radius:var(--nested-radius)}
 .ds-data-table{width:100%;min-width:38rem;border-collapse:collapse;font-size:.875rem;line-height:var(--leading-body-compact)}
 .ds-data-table th,.ds-data-table td{padding:var(--space-3) var(--space-4);border-bottom:1px solid var(--border-subtle);text-align:left}
 .ds-data-table th{background:var(--surface-secondary);color:var(--text-secondary);font-size:.75rem;line-height:var(--leading-control);text-transform:uppercase}
@@ -76,7 +78,20 @@ a.ds-card:active,.ds-card[data-interactive="true"]:active{transform:translateY(0
 
 @media(prefers-reduced-motion:reduce){a.ds-card:hover,.ds-card[data-interactive="true"]:hover,.ds-chart-bar:hover{transform:none}.ds-chart-bar,.ds-progress-fill{animation:none}}
 
-.ds-stitch rect.ds-stitch-underlay {
+.ds-stitch .ds-stitch-underlay {
  stroke: var(--card-stitch-underlay-color, rgba(0,0,0,.45));
  stroke-width: calc(var(--card-stitch-width) + .125rem);
+}
+
+/* Native continuous corners and SVG stitching share the same n=4 curve. */
+.ds-stitch path { display: none; }
+@supports (corner-shape: squircle) {
+  .ds-stitch rect { display: none; }
+  .ds-stitch path { display: block; }
+}
+/* Circles convey radio/loader semantics rather than surface geometry. */
+.ds-radio-control, .ds-radio-control::after, .ds-spinner,
+.ds-switch-thumb, .ds-skeleton-circle, .ds-chart-legend i { corner-shape: round; }
+@media (max-width: 48rem) {
+  :root { --card-padding: var(--space-5); }
 }

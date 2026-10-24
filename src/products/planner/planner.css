@@ -77,7 +77,8 @@
   gap: var(--space-4);
 }
 .planner-hero {
-  padding: var(--space-6);
+  --container-padding: var(--space-6);
+  padding: var(--container-padding);
 }
 .planner-hero-next {
   align-content: start;
@@ -293,7 +294,8 @@
     width: fit-content;
   }
   .planner-hero {
-    padding: var(--space-5);
+    --container-padding: var(--space-6);
+    padding: var(--container-padding);
   }
   .planner-demo-note {
     flex-direction: column;
@@ -360,7 +362,8 @@
 
 .planner-guide-step {
   gap: var(--space-4);
-  padding: var(--space-5);
+  --container-padding: var(--space-6);
+  padding: var(--container-padding);
 }
 .planner-guide-step h4 {
   display: flex;
@@ -372,4 +375,21 @@
 }
 .planner-guide-step .ds-btn {
   margin-inline-start: calc(-1 * var(--space-3));
+}
+
+/* A title, its context and its action form one readable group. */
+.planner-flow-card,
+.planner-panel,
+.planner-client,
+.planner-form {
+  align-content: start;
+}
+.planner-client .planner-section-head {
+  align-items: start;
+}
+.planner-queue-row + .planner-queue-row {
+  padding-top: var(--space-2);
+}
+.planner-guide-step {
+  --container-padding: var(--card-padding);
 }
