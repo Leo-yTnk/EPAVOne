@@ -99,7 +99,9 @@ try {
         ['produtos', 'products']
       ]) {
         await page.goto(`http://127.0.0.1:5177/EPAVOne/?reviewTheme=${theme}#/insights/${section}`);
-        const cards = page.locator('.ds-carousel-track > .insights-catalog-card');
+        const cards = page.locator(
+          kind === 'recipes' ? '.insights-recipes-collection > .insights-catalog-card' : '.ds-carousel-track > .insights-catalog-card'
+        );
         await cards
           .first()
           .waitFor()
@@ -109,7 +111,7 @@ try {
           });
         await page.evaluate(() => document.fonts.ready);
         await page
-          .locator('.insights-catalog-section')
+          .locator(kind === 'recipes' ? '.insights-recipes-collection' : '.insights-catalog-section')
           .first()
           .evaluate((node) => node.scrollIntoView({ block: 'start', behavior: 'instant' }));
         await page.waitForTimeout(350);
@@ -171,7 +173,7 @@ try {
           await page.evaluate(() => scrollTo({ top: 0, behavior: 'instant' }));
           await page.screenshot({ path: `${output}/${kind}-${width}-${theme}.png`, fullPage: true });
         }
-        const sectionNode = page.locator('.insights-catalog-section').first();
+        const sectionNode = page.locator(kind === 'recipes' ? '.insights-recipes-collection' : '.insights-catalog-section').first();
         const toggle = sectionNode.getByRole('button', { name: /^Ver todos de/ });
         if (await toggle.count()) {
           await toggle.click();
@@ -247,7 +249,7 @@ try {
       assert((await page.locator('.insights-catalog-section').count()) >= 2, 'Home must provide real content sections');
       assert.equal(await page.locator('.insights-discovery-hero').count(), 0);
       assert.equal(await page.locator('.insights-discovery-controls > .ds-stitch').count(), 1);
-      assert((await page.locator('.ds-carousel-heading > .ds-stitch').count()) >= 2);
+      assert.equal(await page.locator('.ds-carousel-heading > .ds-stitch').count(), 0);
       const track = page.locator('.ds-carousel-track').first();
       await track.focus();
       await page.keyboard.press('ArrowRight');

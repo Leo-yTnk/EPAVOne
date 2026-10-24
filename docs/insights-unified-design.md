@@ -22,3 +22,5 @@ Cabeçalho compartilhado, navegação da biblioteca lateral no desktop e horizon
 - `review-creation-import.mjs`: três larguras e dois temas, biblioteca, compartilhamento, solicitações, administração, editor, importação/revisão e duplicatas. Geometria da costura e separação entre navegação/conteúdo são verificadas.
 
 Capturas públicas usam amostras do catálogo em respostas simuladas. A revisão autenticada usa fixtures locais e serviços simulados; não valida permissões reais ou escreve no Supabase. Chromium não substitui Safari físico. Não há migrations novas.
+
+Atualização: o catálogo de receitas apresenta todos os resultados em uma grade contínua, sem paginação nem agrupamentos. Busca, filtros e links de seção continuam funcionando. Os títulos das coleções da Home e de produtos ficam diretamente sobre o canvas, sem Card ao redor.

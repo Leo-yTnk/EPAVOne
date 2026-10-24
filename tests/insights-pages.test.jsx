@@ -87,12 +87,11 @@ describe('Insights pages and contextual navigation', () => {
     expect(document.activeElement).toBe(open);
   });
 
-  it('loads the independent recipe catalog, paginates and combines accent, category and time filters', async () => {
+  it('shows every recipe on one page and combines accent, category and time filters', async () => {
     render(<InsightsRoutes route={route(['receitas'])} />);
     await screen.findByText('25 receitas encontradas');
-    expect(screen.getAllByRole('article')).toHaveLength(24);
-    fireEvent.click(screen.getByRole('button', { name: 'Próxima página' }));
-    expect(screen.getAllByRole('article')).toHaveLength(1);
+    expect(screen.getAllByRole('article')).toHaveLength(25);
+    expect(screen.queryByRole('button', { name: 'Próxima página' })).toBeNull();
     fireEvent.input(screen.getByLabelText('Buscar receita'), { target: { value: 'file frango' } });
     expect(screen.getByText('1 receita encontrada')).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: 'Categoria de receita Todas as categorias' }));
@@ -105,7 +104,7 @@ describe('Insights pages and contextual navigation', () => {
     fireEvent.input(screen.getByLabelText('Buscar receita'), { target: { value: 'inexistente' } });
     expect(screen.getByText('Nenhuma receita encontrada')).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: 'Limpar filtros' }));
-    expect(screen.getAllByRole('article')).toHaveLength(24);
+    expect(screen.getAllByRole('article')).toHaveLength(25);
   });
 
   it('opens product categories selected from Home and keeps products separate from Home', async () => {

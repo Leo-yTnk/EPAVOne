@@ -53,6 +53,7 @@ describe('Yourcipe public section organization', () => {
         renderItem={(item) => <article key={item.id}>{item.name}</article>}
       />
     );
+    expect(screen.getByRole('heading', { name: 'Sugestões' }).closest('.ds-card')).toBeNull();
     const toggle = screen.getByRole('button', { name: 'Ver todos de Sugestões' });
     fireEvent.click(toggle);
     expect(toggle.getAttribute('aria-expanded')).toBe('true');
