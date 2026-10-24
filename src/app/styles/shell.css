@@ -537,7 +537,7 @@ html[data-reduced-motion='true'] *::after {
   color: var(--text-secondary);
 }
 .mobile-sidebar-utilities {
-  margin-top: auto;
+  margin-top: var(--space-3);
 }
 .mobile-sidebar-utilities .ds-btn {
   justify-content: flex-start;
@@ -564,3 +564,29 @@ html[data-reduced-motion='true'] .ds-layer-anchor[data-side] { animation: none; 
 .site-header .ds-stitch rect { display: block; }
 
 .mobile-sidebar .ds-nav-item { corner-shape: round; }
+
+/* The mobile drawer groups destinations together rather than pushing utilities
+   to the bottom of a viewport that changes with Safari's browser controls. */
+.mobile-sidebar.ds-drawer {
+  width: min(21rem, calc(100vw - var(--space-7)));
+  height: 100dvh;
+  max-height: 100dvh;
+  padding: max(var(--space-5), env(safe-area-inset-top)) var(--space-5) max(var(--space-5), env(safe-area-inset-bottom));
+  gap: var(--space-5);
+  --card-radius: var(--radius-lg);
+  scrollbar-width: none;
+}
+.mobile-sidebar-apps, .mobile-sidebar-sections, .mobile-sidebar-utilities { flex: none; }
+.mobile-sidebar .ds-nav-item, .mobile-sidebar-utilities .ds-btn { min-height: 3rem; border-radius: var(--radius-md); padding: var(--space-3); gap: var(--space-3); }
+.mobile-sidebar .ds-nav-item.is-active { background: var(--surface-selected); color: var(--text-brand); }
+.mobile-sidebar .ds-stitch { display: none; }
+.mobile-sidebar::-webkit-scrollbar { display: none; }
+
+.mobile-sidebar-caption { color: var(--text-secondary); font-size: .875rem; margin-top: calc(-1 * var(--space-3)); }
+.mobile-sidebar-apps { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--space-3); }
+.mobile-sidebar-apps .ds-nav-item { flex-direction: column; justify-content: center; text-align: center; min-height: 7rem; gap: var(--space-3); border-radius: var(--radius-md); font-size: .875rem; }
+.mobile-sidebar-apps .ds-app-logo img { width: 3rem; height: 3rem; }
+.mobile-sidebar-apps .ds-nav-item:not(.is-active) { background: var(--surface-secondary); }
+.mobile-sidebar-sections { gap: var(--space-1); }
+.mobile-sidebar-sections > .ds-overline { margin-bottom: var(--space-2); }
+.mobile-sidebar-utilities { padding-top: var(--space-3); border-top: 1px solid var(--border-subtle); }

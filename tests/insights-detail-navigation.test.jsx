@@ -51,3 +51,16 @@ describe('Connected Insights details', () => {
     expect(onClose).toHaveBeenCalledTimes(1);
   });
 });
+
+it('uses one recipe surface with open sections and unboxed ingredient rows', async () => {
+  const { container } = render(<RecipeDialog recipe={{ ...recipe, tips: 'Sirva quente.', extras: ['Sal'] }} onClose={vi.fn()} />);
+  const dialog = screen.getByRole('dialog');
+  await within(dialog).findByText('1 pacote');
+  expect(dialog.querySelector('.recipe-detail-hero').tagName).toBe('HEADER');
+  expect(dialog.querySelectorAll('.recipe-detail-section.ds-card')).toHaveLength(0);
+  expect(dialog.querySelector('.recipe-product-row').tagName).toBe('LI');
+  expect(dialog.querySelector('.recipe-product-row > .ds-stitch')).toBeNull();
+  expect(within(dialog).getByText('Sirva quente.')).toBeTruthy();
+  expect(within(dialog).getByText('Sal')).toBeTruthy();
+  expect(container.querySelector('[role="dialog"]')).toBeNull();
+});

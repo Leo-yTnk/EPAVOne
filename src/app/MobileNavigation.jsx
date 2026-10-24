@@ -4,6 +4,7 @@ import { PRODUCT_META } from './routes.js';
 export function MobileNavigation({ open, onClose, onSelectApp, sectionNav, activeSection, product, onOpenAccount, signedIn }) {
   return (
     <Drawer open={open} onClose={onClose} side="start" title="Seus apps" id="mobile-navigation" className="mobile-sidebar">
+      <p className="mobile-sidebar-caption">Tudo para o seu atendimento.</p>
       <nav className="mobile-sidebar-apps" aria-label="Apps do EPAVOne">
         {Object.entries(PRODUCT_META)
           .filter(([key]) => key !== 'settings')
@@ -11,6 +12,7 @@ export function MobileNavigation({ open, onClose, onSelectApp, sectionNav, activ
             <NavItem
               key={key}
               href={item.href}
+              aria-label={item.label}
               active={product === key}
               onClick={(event) => {
                 event.preventDefault();
@@ -18,7 +20,7 @@ export function MobileNavigation({ open, onClose, onSelectApp, sectionNav, activ
                 onClose();
               }}
             >
-              <AppLogo product={item.product} size="sm" /> {item.label}
+              <AppLogo product={item.product} size="lg" /> <span>{item.label}</span>
             </NavItem>
           ))}
       </nav>
