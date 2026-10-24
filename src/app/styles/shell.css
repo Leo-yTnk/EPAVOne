@@ -590,3 +590,21 @@ html[data-reduced-motion='true'] .ds-layer-anchor[data-side] { animation: none; 
 .mobile-sidebar-sections { gap: var(--space-1); }
 .mobile-sidebar-sections > .ds-overline { margin-bottom: var(--space-2); }
 .mobile-sidebar-utilities { padding-top: var(--space-3); border-top: 1px solid var(--border-subtle); }
+
+/* A short arrival for three groups, rather than one animation per destination.
+   No delay or hidden starting state: links remain available immediately. */
+.mobile-sidebar-apps,
+.mobile-sidebar-sections,
+.mobile-sidebar-utilities {
+  animation: app-drawer-content-in var(--duration-slow) var(--ease-enter);
+}
+@keyframes app-drawer-content-in {
+  from { opacity: .65; translate: 0 var(--motion-distance-md); }
+  to { opacity: 1; translate: 0 0; }
+}
+html[data-reduced-motion='true'] .mobile-sidebar-apps,
+html[data-reduced-motion='true'] .mobile-sidebar-sections,
+html[data-reduced-motion='true'] .mobile-sidebar-utilities { animation: none; }
+@media (prefers-reduced-motion: reduce) {
+  .mobile-sidebar-apps, .mobile-sidebar-sections, .mobile-sidebar-utilities { animation: none; }
+}

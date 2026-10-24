@@ -28,7 +28,6 @@ export function useDialogExpansion(ref, open, enabled) {
           transform: `translate(${from.left - to.left}px, ${from.top - to.top}px) scale(${from.width / to.width}, ${from.height / to.height})`,
           opacity: 0.65
         },
-        { transform: 'translate(0, -1px) scale(1.008, 1.008)', opacity: 1, offset: 0.76 },
         { transform: 'translate(0, 0) scale(1, 1)', opacity: 1 }
       ],
       { duration, easing: styles.getPropertyValue('--ease-standard').trim() || 'ease-out' }

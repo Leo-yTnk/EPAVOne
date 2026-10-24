@@ -118,8 +118,18 @@ const fs = require('node:fs');
       if (width === 1440 || width === 390) await page.screenshot({ path: `${output}/recipe-${width}-${theme}.png` });
       await page.getByRole('button', { name: `Ver produto ${product.name}` }).click();
       await page.getByRole('heading', { name: product.name, exact: true }).waitFor();
+      const arrival = await page.locator('.insights-detail-content').evaluate((node) => {
+        const animation = node.getAnimations()[0];
+        return animation && { frames: animation.effect.getKeyframes(), duration: animation.effect.getTiming().duration };
+      });
+      if (!arrival || arrival.frames[0].transform !== 'translateX(6px)' || arrival.duration > 320)
+        throw new Error('Detail arrival must be short and move forward');
       await page.getByRole('button', { name: '← Voltar à receita' }).click();
       await page.getByRole('heading', { name: 'Modo de preparo', exact: true }).waitFor();
+      const returnMotion = await page
+        .locator('.insights-detail-content')
+        .evaluate((node) => node.getAnimations()[0]?.effect.getKeyframes()[0].transform);
+      if (returnMotion !== 'translateX(-6px)') throw new Error('Detail return motion must reverse direction');
       await page.keyboard.press('Escape');
       if (await page.getByRole('dialog').count()) throw new Error('Dialog remains open');
       await page.goto('http://127.0.0.1:5174/EPAVOne/#/insights/produtos');
@@ -142,6 +152,9 @@ const fs = require('node:fs');
   await page.getByRole('button', { name: `Ver receita de ${recipe.name}` }).click();
   const reduced = await page.getByRole('dialog').evaluate((n) => !n.classList.contains('ds-dialog-expanding'));
   if (!reduced) throw new Error('Reduced motion failed');
+  await page.getByRole('button', { name: `Ver produto ${product.name}` }).click();
+  if (await page.locator('.insights-detail-content').evaluate((node) => node.getAnimations().length))
+    throw new Error('Reduced motion must skip detail arrivals');
   await page.setViewportSize({ width: 390, height: 844 });
   for (const theme of ['light', 'dark']) {
     await page.goto('http://127.0.0.1:5174/EPAVOne/#/settings');
@@ -154,6 +167,8 @@ const fs = require('node:fs');
     await page.getByRole('button', { name: /^Navegação:/ }).click();
     const drawer = page.getByRole('dialog', { name: 'Seus apps' });
     await drawer.waitFor();
+    if (await drawer.locator('.mobile-sidebar-apps').evaluate((node) => node.getAnimations().length))
+      throw new Error('Reduced motion must skip drawer group arrivals');
     const grid = await drawer.locator('.mobile-sidebar-apps .ds-nav-item').evaluateAll((nodes) =>
       nodes.map((node) => {
         const b = node.getBoundingClientRect();
@@ -165,6 +180,28 @@ const fs = require('node:fs');
     await page.screenshot({ path: `${output}/app-drawer-mobile-${theme}.png` });
     await page.keyboard.press('Escape');
   }
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+  await page.getByRole('button', { name: /^Navegação:/ }).click();
+  const groupMotion = await page.locator('.mobile-sidebar-apps').evaluate((node) => node.getAnimations()[0]?.effect.getTiming().duration);
+  if (!groupMotion || groupMotion > 320) throw new Error('Drawer group arrival must be short');
+  await page.evaluate(() => {
+    document.documentElement.dataset.reducedMotion = 'true';
+  });
+  if (await page.locator('.mobile-sidebar-apps').evaluate((node) => node.getAnimations().length))
+    throw new Error('Local preference must stop drawer group animation');
+  await page.keyboard.press('Escape');
+  await page.goto('http://127.0.0.1:5174/EPAVOne/#/insights/receitas');
+  await page.evaluate(() => {
+    delete document.documentElement.dataset.reducedMotion;
+  });
+  await page.getByRole('button', { name: /^Filtros/ }).click();
+  const filterDuration = await page.locator('.ds-filter-fields').evaluate((node) => node.getAnimations()[0]?.effect.getTiming().duration);
+  if (!filterDuration || filterDuration > 220) throw new Error('Filter arrival must be short');
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  if (await page.locator('.ds-filter-fields').evaluate((node) => node.getAnimations().length))
+    throw new Error('System preference must cancel filter arrival');
+  await page.getByRole('button', { name: /^Filtros/ }).click();
+  if (await page.locator('.ds-filter-fields').isVisible()) throw new Error('Filters must close immediately');
   await page.goto('http://127.0.0.1:5174/EPAVOne/#/settings');
   await page.addStyleTag({ content: '* { corner-shape: round; } .ds-stitch path { display: none; } .ds-stitch rect { display: block; }' });
   const radius = await page

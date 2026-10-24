@@ -21,3 +21,11 @@ Validação automatizada: `npm run verify`, incluindo pressão, cancelamento ao 
 `tests/press-feedback.test.jsx`, `tests/selection-indicator.test.jsx` e `tests/workspace-tabs.test.jsx` cobrem as regressões. `scripts/review-continuous-motion.mjs` usa Playwright e um Chromium indicado por `REVIEW_BROWSER`; grava evidências temporárias em `REVIEW_OUTPUT` ou `/tmp/epav-continuous-motion`.
 
 O teste de navegador passa por pressão prolongada nos quatro apps, alinhamento final dos indicadores de app e seção, sequência rápida de trocas, menus com movimento reduzido e retorno de foco, painel mobile com Escape e troca de destino, ausência de overflow horizontal e de exceções JavaScript. As chamadas de catálogo são simuladas com resposta vazia; dados autenticados e integrações remotas não foram alterados nem validados por essa revisão visual.
+
+## Refinamento de fluidez
+
+Os detalhes de Insights agora acompanham a direção do histórico: 6px para entrar no produto e direção inversa ao voltar à receita, com opacidade de 0,6 a 1 em 220ms. A primeira abertura mantém apenas a expansão do diálogo, sem sobrepor duas animações. O conteúdo e o foco são atualizados imediatamente. Trocas rápidas, desmontagem, redimensionamento e alterações da preferência de movimento cancelam a animação anterior. Sem Web Animations API, a troca continua imediata.
+
+A gaveta de apps anima três grupos de conteúdo por 320ms, sem atraso por item. Os filtros mobile entram em 220ms e fecham imediatamente. Diálogos e gavetas acomodam diretamente na posição final, sem ultrapassagem de escala. Todos os novos movimentos usam apenas opacidade e transformações; não há dependência adicional, medição por frame, animação de altura ou `will-change` permanente. As preferências do sistema e das Configurações desativam os novos movimentos.
+
+Validação: `tests/content-motion.test.jsx` cobre direção, cancelamento, preferências e fallback. `scripts/review-insights-details.mjs` verifica as animações reais, direção do histórico, limites de duração, filtros mobile, gaveta, preferências local e do sistema, foco e navegação em oito combinações de tamanho/tema. Usa catálogo simulado, sem escrita remota. A verificação não substitui medição de desempenho em aparelho físico.
