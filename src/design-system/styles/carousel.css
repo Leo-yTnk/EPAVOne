@@ -1,0 +1,75 @@
+.ds-carousel {
+  min-width: 0;
+  display: grid;
+  gap: var(--space-3);
+}
+.ds-carousel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+.ds-carousel-heading h2 {
+  color: var(--text-primary);
+  font: 700 1.25rem/var(--leading-heading-small) var(--font-heading);
+  letter-spacing: -0.025em;
+}
+.ds-carousel-actions,
+.ds-carousel-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex: none;
+}
+.ds-carousel-track {
+  min-width: 0;
+  max-width: 100%;
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: var(--carousel-item-width, 15rem);
+  gap: var(--space-3);
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scroll-snap-type: x proximity;
+  scroll-padding-inline: 1px;
+  padding: 1px 1px var(--space-3);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-default) transparent;
+}
+.ds-carousel-track > * {
+  min-width: 0;
+  scroll-snap-align: start;
+}
+.ds-carousel-track:focus-visible {
+  outline: 2px solid var(--border-brand);
+  outline-offset: var(--space-1);
+  border-radius: var(--radius-sm);
+}
+.ds-carousel[data-expanded='true'] .ds-carousel-track {
+  grid-auto-flow: row;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  grid-auto-columns: auto;
+  overflow: visible;
+}
+@media (max-width: 48rem) {
+  .ds-carousel {
+    --carousel-item-width: min(72vw, 14rem);
+  }
+  .ds-carousel-heading h2 {
+    font-size: 1.125rem;
+  }
+  .ds-carousel-heading {
+    align-items: start;
+  }
+  .ds-carousel-actions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    max-width: 45%;
+  }
+  .ds-carousel-track {
+    scrollbar-width: none;
+  }
+  .ds-carousel-controls {
+    display: none;
+  }
+}

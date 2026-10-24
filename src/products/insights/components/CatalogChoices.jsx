@@ -1,21 +1,14 @@
-import { Button, Card, Icon } from '../../../design-system/components/index.js';
+import { Button } from '../../../design-system/components/index.js';
 
-export function CatalogChoices({ title, description, icon, choices }) {
+export function CatalogChoices({ title, choices }) {
   return (
-    <Card as="section" className="insights-choices" aria-label={title}>
-      <div className="insights-choices-heading">
-        <Icon name={icon} />
-        <div>
-          <h2>{title}</h2>
-          <p>{description}</p>
-        </div>
-      </div>
+    <nav className="insights-choices" aria-label={title}>
       <div className="insights-choice-buttons">
         {choices.map((choice) => (
           <Button
             key={choice.label}
             size="sm"
-            variant={choice.active ? 'primary' : 'ghost'}
+            variant={choice.active ? 'primary' : 'secondary'}
             aria-pressed={choice.active}
             onClick={choice.onSelect}
           >
@@ -23,6 +16,6 @@ export function CatalogChoices({ title, description, icon, choices }) {
           </Button>
         ))}
       </div>
-    </Card>
+    </nav>
   );
 }

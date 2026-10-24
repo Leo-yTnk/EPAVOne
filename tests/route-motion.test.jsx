@@ -1,19 +1,39 @@
-import { render } from '@testing-library/preact';
+import { act, render } from '@testing-library/preact';
 import { useRef } from 'preact/hooks';
 import { afterEach, expect, it, vi } from 'vitest';
 import { useRouteMotion } from '../src/app/useRouteMotion.js';
-function Example({ product }) {
+function Example({ product, loading = false }) {
   const ref = useRef(null);
   useRouteMotion(ref, product, product);
   return (
     <div ref={ref} key={product}>
-      {product}
+      {loading ? <span data-route-loading>Carregando app</span> : product}
     </div>
   );
 }
 afterEach(() => {
   delete Element.prototype.animate;
   delete document.documentElement.dataset.reducedMotion;
+});
+it('waits for lazy app content instead of spending the transition on the spinner', async () => {
+  const animate = vi.fn(() => ({ cancel: vi.fn() }));
+  Element.prototype.animate = animate;
+  const view = render(<Example product="home" />);
+  view.rerender(<Example product="planner" loading />);
+  expect(animate).not.toHaveBeenCalled();
+  await act(async () => view.rerender(<Example product="planner" />));
+  expect(animate).toHaveBeenCalledTimes(1);
+  expect(animate.mock.calls[0][0][0].opacity).toBe(0.72);
+});
+it('does not animate abandoned app loads or pending content after reduced motion is enabled', async () => {
+  const animate = vi.fn(() => ({ cancel: vi.fn() }));
+  Element.prototype.animate = animate;
+  const view = render(<Example product="home" />);
+  view.rerender(<Example product="planner" loading />);
+  view.rerender(<Example product="insights" loading />);
+  document.documentElement.dataset.reducedMotion = 'true';
+  await act(async () => view.rerender(<Example product="insights" />));
+  expect(animate).not.toHaveBeenCalled();
 });
 it('uses spatial direction, cancels rapid transitions and settles at the natural layout', () => {
   const cancel = vi.fn();

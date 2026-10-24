@@ -1,0 +1,107 @@
+/* One reading surface. The toolbar stays put while recipe/product content scrolls. */
+.insights-detail-dialog.ds-dialog.is-large {
+  width: min(calc(100vw - var(--space-7)), 60rem);
+  max-height: min(90dvh, 64rem);
+  padding: 0;
+  background: var(--surface-primary);
+  --card-radius: var(--radius-xl);
+}
+.insights-detail-dialog.ds-dialog .ds-dialog-head {
+  position: relative;
+  inset: auto;
+  min-height: 4rem;
+  padding: var(--space-3) var(--space-6);
+  column-gap: var(--space-4);
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.insights-detail-dialog .ds-dialog-head > .ds-overline {
+  color: var(--text-secondary);
+}
+.insights-detail-dialog .ds-dialog-head .insights-detail-back {
+  margin: 0;
+  padding-inline: 0;
+}
+.insights-detail-dialog.ds-dialog .ds-dialog-content {
+  margin: 0;
+  padding: var(--space-5) var(--space-6) var(--space-6);
+  scrollbar-width: thin;
+  scrollbar-gutter: stable;
+  color: var(--text-primary);
+}
+.insights-detail-dialog .ds-card {
+  background: transparent;
+  box-shadow: none;
+  border: 0;
+}
+.insights-detail-dialog .insights-product-overview {
+  gap: var(--space-6);
+  align-items: center;
+}
+.insights-product-detail-title {
+  font: 400 clamp(1.75rem, 3vw, 2.5rem)/var(--leading-heading) var(--font-display);
+  text-wrap: pretty;
+  overflow-wrap: anywhere;
+  color: var(--text-primary);
+}
+.insights-detail-dialog .insights-product-overview > .insights-image {
+  --card-radius: var(--radius-lg);
+}
+.insights-detail-dialog .insights-product-summary {
+  gap: var(--space-4);
+}
+.insights-detail-dialog .insights-detail-section {
+  margin-top: var(--space-5);
+  padding-top: var(--space-6);
+}
+.insights-detail-dialog .insights-related {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.insights-detail-dialog .insights-related-recipe {
+  padding-block: var(--space-3);
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  gap: var(--space-4);
+}
+.insights-detail-dialog .insights-related-recipe > .insights-image {
+  --card-radius: var(--radius-md);
+}
+.insights-detail-dialog .insights-product-note {
+  font-size: 0.75rem;
+}
+@media (max-width: 48rem) {
+  .ds-dialog-overlay:has(> .insights-detail-dialog) {
+    align-items: end;
+  }
+  .insights-detail-dialog.ds-dialog.is-large,
+  .insights-detail-dialog.ds-dialog.is-large.is-recipe-detail {
+    width: 100%;
+    max-height: calc(100dvh - max(var(--space-4), env(safe-area-inset-top)));
+    border-radius: var(--radius-card) var(--radius-card) 0 0;
+    border-bottom: 0;
+    padding: 0;
+  }
+  .insights-detail-dialog.ds-dialog .ds-dialog-head {
+    padding-inline: var(--space-5);
+    min-height: 3.75rem;
+  }
+  .insights-detail-dialog.ds-dialog .ds-dialog-content {
+    padding: var(--space-4) var(--space-5) max(var(--space-7), env(safe-area-inset-bottom));
+    scrollbar-gutter: auto;
+  }
+  .insights-detail-dialog .insights-product-overview {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-5);
+  }
+  .insights-detail-dialog .insights-product-overview > .insights-image {
+    max-width: 100%;
+    aspect-ratio: 16/10;
+  }
+  .insights-detail-dialog .insights-product-overview > .insights-image img {
+    object-fit: contain;
+  }
+  .insights-detail-dialog .insights-related {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

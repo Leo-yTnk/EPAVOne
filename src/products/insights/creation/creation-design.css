@@ -1,0 +1,196 @@
+/* One workspace grammar for personal libraries, sharing, submissions and administration. */
+.creation-fields,
+.creation-welcome {
+  gap: var(--space-5);
+  min-width: 0;
+}
+.creation-workspace {
+  grid-template-columns: 14rem minmax(0, 1fr);
+  gap: var(--space-5);
+  align-items: start;
+}
+.creation-workspace-content {
+  display: grid;
+  gap: var(--space-5);
+  min-width: 0;
+}
+.creation-workspace-nav.ds-card {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  position: sticky;
+  background: var(--surface-primary);
+  --container-padding: var(--space-4);
+  padding: var(--container-padding);
+  gap: var(--space-2);
+  top: 6rem;
+}
+.creation-workspace-nav .ds-nav-item {
+  justify-content: flex-start;
+  flex: none;
+  padding: var(--space-3);
+  gap: var(--space-3);
+  min-height: 3rem;
+  font-size: 0.875rem;
+  border-radius: min(var(--radius-md), var(--nested-radius));
+}
+.creation-workspace-heading {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-1);
+}
+.creation-workspace-heading h2 {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  font-weight: 700;
+  line-height: var(--leading-heading-small);
+  color: var(--text-primary);
+}
+.creation-workspace-heading p {
+  max-width: 42rem;
+  font-size: 0.875rem;
+}
+.creation-workspace-content .creation-operation,
+.creation-workspace-content .creation-admin-header,
+.creation-workspace-content .creation-admin-navigation,
+.creation-editor-section.ds-card {
+  --container-padding: var(--space-5);
+  padding: var(--container-padding);
+  gap: var(--space-4);
+}
+.creation-admin-workspace {
+  gap: var(--space-5);
+}
+.creation-admin-navigation {
+  grid-template-columns: minmax(12rem, 0.7fr) minmax(0, 1fr);
+  align-items: center;
+}
+.creation-admin-context {
+  padding-left: var(--space-4);
+}
+.creation-section-heading {
+  gap: var(--space-2);
+}
+.creation-section-title {
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  font-weight: 700;
+  line-height: var(--leading-heading-small);
+}
+.creation-section-title .ds-icon {
+  color: var(--text-brand);
+}
+.creation-list {
+  gap: var(--space-3);
+}
+.creation-row {
+  padding: var(--space-4);
+  gap: var(--space-4);
+  align-items: center;
+}
+.creation-row h3 {
+  font-weight: 700;
+  font-size: 1rem;
+}
+.creation-toolbar {
+  gap: var(--space-3);
+}
+.creation-editor-layout {
+  gap: var(--space-5);
+}
+.creation-editor-section {
+  gap: var(--space-4);
+}
+.creation-editor-section h3 {
+  font-size: 1.125rem;
+}
+.creation-import-preview,
+.creation-import-row,
+.creation-duplicate-choice {
+  gap: var(--space-4);
+}
+.creation-introduction.ds-card {
+  --container-padding: var(--space-6);
+  padding: var(--container-padding);
+  gap: var(--space-5);
+}
+.creation-introduction-features {
+  gap: var(--space-5);
+}
+@media (max-width: 60rem) {
+  .creation-workspace {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .creation-workspace-nav.ds-card {
+    position: relative;
+    top: auto;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+    scrollbar-width: none;
+    gap: var(--space-2);
+  }
+  .creation-workspace-nav .ds-nav-item {
+    flex: none;
+    white-space: nowrap;
+  }
+}
+@media (max-width: 48rem) {
+  .creation-admin-navigation {
+    grid-template-columns: 1fr;
+  }
+  .creation-admin-context {
+    padding-left: 0;
+  }
+  .creation-row {
+    padding: var(--space-4);
+  }
+  .creation-workspace-heading h2 {
+    font-size: 1.25rem;
+  }
+  .creation-introduction.ds-card {
+    --container-padding: var(--space-5);
+  }
+  .creation-introduction-features {
+    grid-template-columns: 1fr;
+  }
+  .creation-actions {
+    padding: var(--space-3) 0;
+    gap: var(--space-2);
+  }
+  .creation-actions .ds-btn {
+    flex: 1;
+  }
+}
+
+.creation-workspace-nav.ds-card {
+  display: block;
+  overflow: hidden;
+}
+.creation-workspace-links {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+@media (max-width: 60rem) {
+  .creation-workspace-links {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    gap: var(--space-2);
+    padding-block: 1px;
+  }
+  .creation-workspace-links > .ds-nav-item {
+    flex: none;
+  }
+}
+
+.creation-admin-navigation {
+  grid-template-columns: minmax(0, 1fr);
+}
+.creation-admin-context {
+  padding-left: 0;
+}
+.creation-gallery .creation-row h3 {
+  font-family: var(--font-heading);
+}

@@ -75,7 +75,13 @@ export function App() {
   if (route.product === 'insights') page = <InsightsRoutes route={route} account={account} onOpenAccount={() => setAccountOpen(true)} />;
   if (route.product === 'planner')
     page = (
-      <Suspense fallback={<Spinner label="Carregando Planner" />}>
+      <Suspense
+        fallback={
+          <span data-route-loading>
+            <Spinner label="Carregando Planner" />
+          </span>
+        }
+      >
         <PlannerRoutes key={account.session?.user?.id || 'guest'} route={route} account={account} />
       </Suspense>
     );
@@ -107,11 +113,25 @@ export function App() {
     >
       {['insights', 'writer'].includes(route.product) && <CommercialReturn />}
       <div ref={pageRef} key={routeKey} className="route-frame">
-        <Suspense fallback={<Spinner label="Carregando app" />}>{page}</Suspense>
+        <Suspense
+          fallback={
+            <span data-route-loading>
+              <Spinner label="Carregando app" />
+            </span>
+          }
+        >
+          {page}
+        </Suspense>
       </div>
       <div ref={writerRef} key="writer-workspace" className="route-frame" hidden={route.product !== 'writer'}>
         {writerVisited.current && (
-          <Suspense fallback={<Spinner label="Carregando Writer" />}>
+          <Suspense
+            fallback={
+              <span data-route-loading>
+                <Spinner label="Carregando Writer" />
+              </span>
+            }
+          >
             <WriterRoutes active={route.product === 'writer'} />
           </Suspense>
         )}

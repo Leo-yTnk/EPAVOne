@@ -1,8 +1,8 @@
 import { useLayoutEffect, useRef } from 'preact/hooks';
 import { consumeMotionOrigin, motionDuration, reducedMotion } from './motion.js';
 
-// Measure the initiating card before the modal moves focus. Animate only the
-// compositor transform; layout, scrolling and controls are ready immediately.
+// Keep the dialog at its real dimensions throughout arrival. Scaling a small
+// catalog thumbnail into a tall sheet stretches text and images, especially on mobile.
 export function useDialogExpansion(ref, open, enabled) {
   const origin = useRef(null);
   useLayoutEffect(() => {
@@ -21,14 +21,15 @@ export function useDialogExpansion(ref, open, enabled) {
       return undefined;
     }
     const styles = getComputedStyle(node);
-    const duration = motionDuration(node, '--duration-slow', 320);
+    const duration = motionDuration(node, '--duration-normal', 220);
+    const offsetX = Math.max(-6, Math.min(6, (from.left + from.width / 2 - to.left - to.width / 2) * 0.04));
     const animation = node.animate(
       [
         {
-          transform: `translate(${from.left - to.left}px, ${from.top - to.top}px) scale(${from.width / to.width}, ${from.height / to.height})`,
-          opacity: 0.65
+          transform: `translate(${offsetX}px, 12px)`,
+          opacity: 0.8
         },
-        { transform: 'translate(0, 0) scale(1, 1)', opacity: 1 }
+        { transform: 'translate(0, 0)', opacity: 1 }
       ],
       { duration, easing: styles.getPropertyValue('--ease-standard').trim() || 'ease-out' }
     );

@@ -1,5 +1,7 @@
 # Continuidade de movimento
 
+Atualização: a revisão de [catálogo mobile e detalhes](mobile-catalog-review.md) substitui a expansão geométrica descrita abaixo por entrada sem escala e aprimora a chegada de apps carregados sob demanda. Os demais registros documentam a evolução anterior.
+
 A interface mantém o shell e os indicadores montados. Os destaques deslizam até a seleção; páginas entram na direção da posição dos apps, com 18px de deslocamento e acomodação de 1,5px, sem dissolver ou capturar o documento. Esta é uma ampliação deliberada do limite anterior de 6px, solicitada para tornar a continuidade perceptível. A rota e os controles ficam disponíveis imediatamente. O Writer mantém sua instância e o formulário ao alternar apps.
 
 O comportamento compartilhado de pressão cobre botões, links, abas e origens de detalhes, incluindo portais: escala 0,97 ao pressionar, retorno até 1,018 e acomodação em 1. O scale individual preserva transforms existentes. Arrastar mais de 10px, pointercancel, perda de foco do controle ou da janela, ocultação da aba e desmontagem cancelam o feedback. Nenhum evento nativo é bloqueado, nem há promessa de vibração física.

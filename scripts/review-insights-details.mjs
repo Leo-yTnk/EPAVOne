@@ -106,7 +106,7 @@ const fs = require('node:fs');
       if (!(geometry.hierarchy.title > geometry.hierarchy.section && geometry.hierarchy.section > geometry.hierarchy.tip))
         throw new Error('Recipe typography hierarchy failed');
       if (
-        !geometry.outerStitch ||
+        geometry.outerStitch ||
         geometry.productStitch ||
         geometry.sectionStitches ||
         geometry.overflow ||
@@ -140,7 +140,7 @@ const fs = require('node:fs');
         expansion: node.classList.contains('ds-dialog-expanding'),
         overflow: node.scrollWidth > node.clientWidth
       }));
-      if (productGeometry.stitches !== 1 || !productGeometry.expansion || productGeometry.overflow)
+      if (productGeometry.stitches !== 0 || !productGeometry.expansion || productGeometry.overflow)
         throw new Error('Product expansion failed');
       if (width === 390 || width === 1440) await page.screenshot({ path: `${output}/product-${width}-${theme}.png` });
       await page.keyboard.press('Escape');

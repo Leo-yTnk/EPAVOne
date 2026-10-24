@@ -46,4 +46,18 @@ describe('Yourcipe public section organization', () => {
     expect(scroll).toHaveBeenCalled();
     expect(window.location.hash).toBe(before);
   });
+  it('expands a shelf without hiding or duplicating records', () => {
+    render(
+      <CatalogSections
+        groups={[{ id: 'sample', name: 'Sugestões', items }]}
+        renderItem={(item) => <article key={item.id}>{item.name}</article>}
+      />
+    );
+    const toggle = screen.getByRole('button', { name: 'Ver todos de Sugestões' });
+    fireEvent.click(toggle);
+    expect(toggle.getAttribute('aria-expanded')).toBe('true');
+    expect(screen.getAllByRole('article')).toHaveLength(3);
+    fireEvent.click(screen.getByRole('button', { name: 'Recolher Sugestões' }));
+    expect(toggle.getAttribute('aria-expanded')).toBe('false');
+  });
 });

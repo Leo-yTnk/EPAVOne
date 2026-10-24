@@ -8,7 +8,7 @@ const require = createRequire(
   `${process.env.CODEX_PRIMARY_RUNTIME_NODE_MODULES || process.cwd() + '/node_modules'}/playwright/package.json`
 );
 const { chromium } = require('playwright');
-const output = 'docs/creation-import-review';
+const output = process.env.REVIEW_OUTPUT || 'docs/creation-import-review';
 fs.mkdirSync(output, { recursive: true });
 const server = spawn(process.execPath, ['node_modules/vite/bin/vite.js', '--host', '127.0.0.1', '--port', '5176', '--strictPort'], {
   stdio: ['ignore', 'pipe', 'pipe']
@@ -46,13 +46,17 @@ try {
   browser = await chromium.launch({
     executablePath: process.env.REVIEW_BROWSER,
     headless: true,
-    args: ['--no-sandbox']
+    args: ['--no-sandbox', '--no-zygote', '--single-process', '--use-gl=disabled', '--disable-software-rasterizer']
   });
+  const page = await browser.newPage();
   for (const width of [1440, 390, 320])
     for (const theme of ['light', 'dark']) {
-      const context = await browser.newContext({ viewport: { width, height: 950 }, colorScheme: theme });
+      await page.setViewportSize({ width, height: 950 });
+      await page.emulateMedia({ colorScheme: theme });
+      await page.unrouteAll();
+      page.removeAllListeners('pageerror');
       console.warn(`Inspecting ${width}px / ${theme}`);
-      const page = await context.newPage();
+
       page.setDefaultTimeout(15000);
       const errors = [];
       page.on('pageerror', (error) => errors.push(error.message));
@@ -283,10 +287,32 @@ try {
             const bounds = stitch.getBoundingClientRect();
             return bounds.left >= card.left && bounds.right <= card.right + 1 && bounds.top >= card.top && bounds.bottom <= card.bottom + 1;
           });
-          return { stitchesContained, navigationAbove: nav.getBoundingClientRect().bottom <= content.getBoundingClientRect().top };
+          const a = nav.getBoundingClientRect();
+          const b = content.getBoundingClientRect();
+          return { stitchesContained, navigationSeparate: a.bottom <= b.top + 1 || a.right <= b.left + 1 };
         });
-        assert.ok(geometry.stitchesContained, 'Card stitching must stay inside its own surface');
-        assert.ok(geometry.navigationAbove, 'Workspace navigation must not overlap content');
+        assert.ok(
+          geometry.stitchesContained,
+          JSON.stringify({
+            width,
+            theme,
+            section,
+            bad: await page.evaluate(() =>
+              [...document.querySelectorAll('.ds-card > .ds-stitch')]
+                .map((stitch) => {
+                  const c = stitch.parentElement.getBoundingClientRect();
+                  const s = stitch.getBoundingClientRect();
+                  return {
+                    name: stitch.parentElement.className,
+                    c: { x: c.x, y: c.y, w: c.width, h: c.height },
+                    s: { x: s.x, y: s.y, w: s.width, h: s.height }
+                  };
+                })
+                .filter(({ c, s }) => s.x < c.x || s.x + s.w > c.x + c.w + 1 || s.y < c.y || s.y + s.h > c.y + c.h + 1)
+            )
+          })
+        );
+        assert.ok(geometry.navigationSeparate, 'Workspace navigation must not overlap content');
         await page.screenshot({ path: `${output}/workspace-${section}-${width}-${theme}.png`, fullPage: true });
         results.push({
           view: `workspace ${section} fixture`,
@@ -372,16 +398,7 @@ try {
         overflow: await page.evaluate(() => document.documentElement.scrollWidth > innerWidth),
         errors: [...errors]
       });
-      await context.close();
     }
-  const live = await browser.newPage();
-  try {
-    await live.goto('https://leo-ytnk.github.io/EPAVOne/#/insights', { timeout: 20000 });
-    await live.screenshot({ path: `${output}/published-before.png`, fullPage: true });
-    results.push({ view: 'published before changes', title: await live.title() });
-  } catch (error) {
-    results.push({ view: 'published before changes', blocked: error.message.split('\n')[0] });
-  }
   fs.writeFileSync(`${output}/results.json`, JSON.stringify(results, null, 2));
   assert.ok(results.filter((row) => row.width).every((row) => !row.overflow && !row.errors.length));
   console.warn(JSON.stringify(results));

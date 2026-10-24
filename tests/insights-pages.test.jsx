@@ -68,13 +68,14 @@ describe('Insights pages and contextual navigation', () => {
 
   it('makes Home an editorial starting point with real counts and working category and recipe actions', async () => {
     render(<InsightsRoutes route={route()} />);
-    await screen.findByRole('heading', { name: 'Uma boa venda começa com uma boa ideia.' });
+    await screen.findByRole('heading', { name: 'O que vamos preparar?' });
     expect(screen.queryByLabelText('Buscar produto')).toBeNull();
     expect(screen.queryByLabelText('Buscar receita')).toBeNull();
-    expect(await screen.findByRole('heading', { name: 'Comece pela ocasião.' })).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: 'Ideias para hoje' })).toBeTruthy();
+    expect(screen.queryByText('Comece pela ocasião.')).toBeNull();
     expect(screen.getByRole('link', { name: 'Aves' }).getAttribute('href')).toBe('#/insights/produtos/categoria/aves');
-    expect(screen.getByRole('link', { name: 'Encontrar uma receita' }).getAttribute('href')).toBe('#/insights/receitas');
-    const open = screen.getByRole('button', { name: 'Conhecer a receita' });
+    expect(screen.getByRole('link', { name: 'Todas as receitas' }).getAttribute('href')).toBe('#/insights/receitas');
+    const open = screen.getAllByRole('button', { name: 'Ver receita de Receita 0' })[0];
     open.focus();
     fireEvent.click(open);
     const dialog = screen.getByRole('dialog');
@@ -109,10 +110,10 @@ describe('Insights pages and contextual navigation', () => {
 
   it('opens product categories selected from Home and keeps products separate from Home', async () => {
     render(<InsightsRoutes route={route(['produtos', 'categoria', 'aves'])} />);
-    await screen.findByRole('heading', { name: 'Produtos para sua próxima venda' });
+    await screen.findByRole('heading', { name: 'Produtos' });
     await screen.findByText('1 produto encontrado');
     expect(screen.getByRole('button', { name: 'Categoria Aves' })).toBeTruthy();
-    expect(screen.queryByRole('heading', { name: 'Uma boa venda começa com uma boa ideia.' })).toBeNull();
+    expect(screen.queryByRole('heading', { name: 'O que vamos preparar?' })).toBeNull();
     expect(catalogService.loadHome).not.toHaveBeenCalled();
   });
 
@@ -198,12 +199,23 @@ describe('Insights pages and contextual navigation', () => {
     expect(screen.getByText('2 produtos encontrados')).toBeTruthy();
   });
 
-  it('connects spotlight ingredient actions to the product dialog and preserves the Writer shortcut', async () => {
-    catalogService.recipeIngredients.mockResolvedValue([{ id: 'ingredient', quantity: 1, product: products[0] }]);
+  it('opens a product from its shelf and preserves the Writer shortcut', async () => {
     render(<InsightsRoutes route={route()} />);
-    fireEvent.click(await screen.findByRole('button', { name: 'Consultar Frango Swift' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Ver detalhes de Frango Swift' }));
     expect(screen.getByRole('dialog', { name: 'Frango Swift' })).toBeTruthy();
     fireEvent.keyDown(document, { key: 'Escape' });
-    expect(screen.getByRole('link', { name: /Prepare o pedido/ }).getAttribute('href')).toBe('#/writer');
+    expect(screen.getByRole('link', { name: /Montar pedido/ }).getAttribute('href')).toBe('#/writer');
+  });
+  it('searches recipes and products on Home and clears an empty search', async () => {
+    render(<InsightsRoutes route={route()} />);
+    const search = await screen.findByLabelText('Buscar no Insights');
+    await screen.findByRole('heading', { name: 'Ideias para hoje' });
+    fireEvent.input(search, { target: { value: 'frango' } });
+    expect(screen.getByRole('heading', { name: 'Receitas encontradas' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'Produtos encontrados' })).toBeTruthy();
+    fireEvent.input(search, { target: { value: 'inexistente' } });
+    expect(screen.getByText('Nenhum resultado encontrado')).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'Limpar busca' }));
+    expect(screen.getByRole('heading', { name: 'Ideias para hoje' })).toBeTruthy();
   });
 });

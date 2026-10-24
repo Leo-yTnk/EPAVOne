@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { Alert, Button, Card, Icon, NavItem, AppLogo, PageHeader, Spinner } from '../../../design-system/components/index.js';
+import { Alert, Button, Card, Icon, NavItem, Spinner } from '../../../design-system/components/index.js';
 import { EntityManager } from './components/EntityManager.jsx';
 import { SharedLibrary } from './components/SharedLibrary.jsx';
 import { RequestsPage } from './components/RequestsPage.jsx';
@@ -7,6 +7,9 @@ import { ShareDialog } from './components/ShareDialog.jsx';
 import { SubmitDialog } from './components/SubmitDialog.jsx';
 import { AdminPage } from './admin/AdminPage.jsx';
 import './creation.css';
+import '../insights-design.css';
+import './creation-design.css';
+import { InsightsPageHeader } from '../components/InsightsPageHeader.jsx';
 const sections = [
   { value: 'receitas', label: 'Minhas receitas', type: 'recipes' },
   { value: 'produtos', label: 'Meus produtos', type: 'products' },
@@ -21,8 +24,7 @@ export function CreationPage({ route, account, onOpenAccount }) {
   if (!account?.session)
     return (
       <section className="creation-welcome">
-        <PageHeader
-          eyebrow={<AppLogo product="insights" wordmark />}
+        <InsightsPageHeader
           title="Seu espaço de criação"
           description="Entre com a credencial YCP para acessar suas receitas, produtos e categorias."
         />
@@ -69,38 +71,39 @@ export function CreationPage({ route, account, onOpenAccount }) {
   const section = available.find((x) => x.value === route.segments[1]) || sections[0];
   return (
     <section className="creation-fields" key={account.session.user.id}>
-      <PageHeader
-        eyebrow={<AppLogo product="insights" wordmark />}
+      <InsightsPageHeader
         title="Modo de criação"
         description="Crie e organize sua biblioteca. Seus conteúdos pessoais continuam vinculados à sua conta."
       />
       <div className="creation-workspace">
         <Card as="nav" className="creation-workspace-nav" aria-label="Biblioteca e criação">
-          {available.map((item) => (
-            <NavItem
-              key={item.value}
-              href={`#/insights/criacao/${item.value}`}
-              active={item.value === section.value}
-              aria-current={item.value === section.value ? 'page' : undefined}
-            >
-              <Icon
-                name={
-                  item.type === 'recipes'
-                    ? 'recipe'
-                    : item.type === 'products'
-                      ? 'product'
-                      : item.type === 'categories'
-                        ? 'category'
-                        : item.value === 'compartilhadas'
-                          ? 'share'
-                          : item.value === 'admin'
-                            ? 'settings'
-                            : 'check'
-                }
-              />{' '}
-              {item.label}
-            </NavItem>
-          ))}
+          <div className="creation-workspace-links">
+            {available.map((item) => (
+              <NavItem
+                key={item.value}
+                href={`#/insights/criacao/${item.value}`}
+                active={item.value === section.value}
+                aria-current={item.value === section.value ? 'page' : undefined}
+              >
+                <Icon
+                  name={
+                    item.type === 'recipes'
+                      ? 'recipe'
+                      : item.type === 'products'
+                        ? 'product'
+                        : item.type === 'categories'
+                          ? 'category'
+                          : item.value === 'compartilhadas'
+                            ? 'share'
+                            : item.value === 'admin'
+                              ? 'settings'
+                              : 'check'
+                  }
+                />{' '}
+                {item.label}
+              </NavItem>
+            ))}
+          </div>
         </Card>
         <div className="creation-workspace-content">
           <div className="creation-workspace-heading">

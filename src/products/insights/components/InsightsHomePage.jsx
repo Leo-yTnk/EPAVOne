@@ -1,19 +1,14 @@
-import { SpotlightIngredients } from './SpotlightIngredients.jsx';
+import { useMemo, useState } from 'preact/hooks';
+import { Button, Card, EmptyState, ErrorState, Input } from '../../../design-system/components/index.js';
 import { CatalogLoading } from './CatalogLoading.jsx';
 import { CatalogSections } from './CatalogSections.jsx';
-import { catalogGroups } from '../models/sections.js';
 import { ProductCard } from './ProductCard.jsx';
-import { useState } from 'preact/hooks';
-import { Badge, Button, Card, EmptyState, ErrorState, Heading, Icon, Text, AppLogo } from '../../../design-system/components/index.js';
-import { catalogService } from '../services/catalogService.js';
-import { useCatalogResource } from '../hooks/useCatalogResource.js';
-import { productPricing } from '../models/catalog.js';
-import { recipeSuggestions } from '../models/recipes.js';
 import { RecipeCard } from './RecipeCard.jsx';
 import { RecipeDialog } from './RecipeDialog.jsx';
-import { CatalogImage } from './CatalogImage.jsx';
-import { ProductPrice } from './ProductPrice.jsx';
 import { ProductDetails } from './ProductDetails.jsx';
+import { catalogService } from '../services/catalogService.js';
+import { useCatalogResource } from '../hooks/useCatalogResource.js';
+import { discoverySections } from '../models/discovery.js';
 import '../home.css';
 
 export function InsightsHomePage() {
@@ -21,206 +16,85 @@ export function InsightsHomePage() {
   const structure = useCatalogResource(catalogService.structure, 'public');
   const [recipe, setRecipe] = useState(null);
   const [product, setProduct] = useState(null);
-  const { products = [], recipes = [], categories = [] } = resource.data || {};
-  const suggestions = recipeSuggestions(recipes, 5);
-  const homeGroups = new Map();
-  for (const kind of ['recipes', 'products']) {
-    for (const group of catalogGroups(kind === 'recipes' ? recipes : products, structure.data, 'home', kind)) {
-      if (group.id === 'other') continue;
-      const previous = homeGroups.get(group.id);
-      homeGroups.set(group.id, {
-        ...group,
-        items: [...(previous?.items || []), ...group.items.map((item) => ({ ...item, catalogKind: kind }))]
-      });
-    }
-  }
-  const configuredHome = [...homeGroups.values()].sort((a, b) => {
-    const sections = structure.data?.sections || [];
-    return sections.findIndex((item) => item.id === a.id) - sections.findIndex((item) => item.id === b.id);
-  });
-  const spotlight = suggestions[0];
-  const opportunities = products.filter((item) => productPricing(item).promo).slice(0, 4);
-  const ready = !resource.loading && !resource.error && resource.data;
-
+  const [query, setQuery] = useState('');
+  const groups = useMemo(
+    () => discoverySections({ ...resource.data, structure: structure.data, query }),
+    [resource.data, structure.data, query]
+  );
+  const categories = (resource.data?.categories || []).filter((category) =>
+    resource.data.products.some((item) => item.category_id === category.id)
+  );
   return (
     <div className="insights-home insights-discovery">
-      <section className="insights-discovery-hero" aria-labelledby="insights-home-title">
-        <div className="insights-discovery-copy">
-          <AppLogo product="insights" wordmark size="lg" />
-          <span className="ds-overline">Ideias para o próximo atendimento</span>
-          <Heading as="h1" id="insights-home-title" className="insights-home-title">
-            Uma boa venda começa com uma boa ideia.
-          </Heading>
-          <Text>Da receita aos ingredientes: encontre uma sugestão que combine com o que seu cliente quer preparar.</Text>
-          <div className="insights-home-actions">
-            <Button as="a" href="#/insights/receitas" size="sm">
-              Encontrar uma receita
+      <Card as="section" className="insights-discovery-controls" aria-label="Descobrir receitas e produtos">
+        <header className="insights-discovery-header">
+          <div>
+            <h1>O que vamos preparar?</h1>
+          </div>
+          <nav aria-label="Explorar o Insights" className="insights-discovery-nav">
+            <Button as="a" href="#/insights/receitas" variant="secondary" size="sm">
+              Todas as receitas
             </Button>
             <Button as="a" href="#/insights/produtos" variant="secondary" size="sm">
               Consultar produtos
             </Button>
-          </div>
-          {ready && (
-            <Card as="nav" className="insights-home-overview insights-workflow" aria-label="Seu caminho no atendimento">
-              {[
-                {
-                  icon: 'recipe',
-                  number: '01',
-                  title: 'Inspire',
-                  detail: `${recipes.length} receitas para sugerir`,
-                  href: '#/insights/receitas'
-                },
-                {
-                  icon: 'product',
-                  number: '02',
-                  title: 'Combine',
-                  detail: `${products.length} produtos para consultar`,
-                  href: '#/insights/produtos'
-                },
-                { icon: 'writer', number: '03', title: 'Prepare o pedido', detail: 'Confira o formulário da semana', href: '#/writer' }
-              ].map((step) => (
-                <Button key={step.number} as="a" href={step.href} variant="ghost" className="insights-workflow-step">
-                  <Icon name={step.icon} />
-                  <span>
-                    <span className="ds-overline">
-                      {step.number} · {step.title}
-                    </span>
-                    <span>{step.detail}</span>
-                  </span>
-                  <Icon name="next" />
-                </Button>
-              ))}
-            </Card>
-          )}
-        </div>
-        {resource.loading && <CatalogLoading spotlight label="Preparando suas sugestões…" />}
-        {ready && spotlight && (
-          <Card as="section" data-dialog-origin className="insights-spotlight" aria-label="Uma ideia para começar">
-            <CatalogImage url={spotlight.image_url} name={spotlight.name} />
-            <div className="insights-spotlight-summary">
-              <Badge>Uma ideia para começar</Badge>
-              <Heading as="h2" level={3}>
-                {spotlight.name}
-              </Heading>
-              <p className="insights-muted">
-                {[spotlight.prep_time && `${spotlight.prep_time} min`, spotlight.servings && `${spotlight.servings} porções`]
-                  .filter(Boolean)
-                  .join(' · ')}
-              </p>
-              <Button size="sm" onClick={() => setRecipe(spotlight)}>
-                Conhecer a receita
+          </nav>
+        </header>
+        <Input
+          label="Buscar no Insights"
+          type="search"
+          placeholder="Uma receita, um produto ou uma categoria"
+          value={query}
+          onInput={(event) => setQuery(event.currentTarget.value)}
+        />
+        {categories.length > 0 && (
+          <nav className="insights-discovery-categories" aria-label="Categorias de produtos">
+            {categories.map((category) => (
+              <Button key={category.id} as="a" href={`#/insights/produtos/categoria/${category.id}`} variant="ghost" size="sm">
+                {category.name}
               </Button>
-            </div>
-            <SpotlightIngredients recipe={spotlight} onOpenProduct={setProduct} />
-          </Card>
+            ))}
+          </nav>
         )}
-      </section>
-      {resource.error && (
+      </Card>
+      {resource.loading ? (
+        <CatalogLoading label="Preparando suas sugestões…" />
+      ) : resource.error ? (
         <ErrorState title="Não foi possível carregar as sugestões" description={resource.error} onAction={resource.retry} />
-      )}
-      {ready && (
+      ) : (
         <>
-          {!spotlight && <EmptyState title="Novas ideias em breve" description="As receitas publicadas aparecerão aqui." />}
           {structure.error && (
-            <ErrorState title="Seções indisponíveis" description="As sugestões continuam disponíveis." onAction={structure.retry} />
+            <ErrorState
+              title="Seções indisponíveis"
+              description="As categorias e sugestões continuam disponíveis."
+              onAction={structure.retry}
+            />
           )}
-          <div className="insights-discovery-body">
-            <div className="insights-home-main">
-              {configuredHome.length > 0 && (
-                <CatalogSections
-                  groups={configuredHome.map((group) => ({
-                    ...group,
-                    total: group.items.length,
-                    items: group.items.slice(0, 3),
-                    href: `#/insights/${group.items[0]?.catalogKind === 'products' ? 'produtos' : 'receitas'}/secao/${group.id}`
-                  }))}
-                  renderItem={(item) =>
-                    item.catalogKind === 'recipes' ? (
-                      <RecipeCard key={`recipe-${item.id}`} recipe={item} onOpen={setRecipe} />
-                    ) : (
-                      <ProductCard key={`product-${item.id}`} product={item} onOpen={setProduct} />
-                    )
-                  }
-                />
-              )}
-
-              {suggestions.length > 1 && (
-                <section className="insights-home-section" aria-labelledby="insights-inspiration-title">
-                  <div className="insights-section-heading">
-                    <Heading as="h2" id="insights-inspiration-title" level={4}>
-                      Mais ideias para o atendimento
-                    </Heading>
-                    <Button as="a" href="#/insights/receitas" variant="ghost" size="sm">
-                      Todas as receitas →
-                    </Button>
-                  </div>
-                  <div className="insights-home-recipes">
-                    {suggestions.slice(1, 5).map((item) => (
-                      <RecipeCard key={item.id} recipe={item} onOpen={setRecipe} />
-                    ))}
-                  </div>
-                </section>
-              )}
-              {opportunities.length > 0 && (
-                <section className="insights-home-section" aria-labelledby="insights-opportunity-title">
-                  <div className="insights-section-heading">
-                    <Heading as="h2" id="insights-opportunity-title" level={4}>
-                      Preços por quantidade
-                    </Heading>
-                    <Button as="a" href="#/insights/produtos" variant="ghost" size="sm">
-                      Ver produtos →
-                    </Button>
-                  </div>
-                  <div className="insights-home-opportunities">
-                    {opportunities.map((item) => (
-                      <article data-dialog-origin key={item.id} className="insights-opportunity">
-                        <CatalogImage url={item.image_url} name={item.name} />
-                        <div>
-                          <Heading as="h3" level={5}>
-                            {item.name}
-                          </Heading>
-                          <ProductPrice product={item} />
-                          <Button variant="ghost" size="sm" onClick={() => setProduct(item)}>
-                            Ver detalhes
-                          </Button>
-                        </div>
-                      </article>
-                    ))}
-                  </div>
-                </section>
-              )}
-            </div>
-            <aside className="insights-home-aside" aria-label="Atalhos para o atendimento">
-              {categories.length > 0 && (
-                <Card as="section" className="insights-home-section" aria-labelledby="insights-category-title">
-                  <Heading as="h2" id="insights-category-title" level={4}>
-                    Explore por categoria
-                  </Heading>
-                  <div className="insights-category-links">
-                    {categories.map((category) => (
-                      <Button key={category.id} as="a" href={`#/insights/produtos/categoria/${category.id}`} variant="ghost" size="sm">
-                        {category.name}
-                      </Button>
-                    ))}
-                  </div>
-                </Card>
-              )}
-              <Card as="section" className="insights-home-section insights-conversation" aria-labelledby="insights-conversation-title">
-                <Heading as="h2" id="insights-conversation-title" level={4}>
-                  Comece pela ocasião.
-                </Heading>
-                <Text size="sm">
-                  O cliente quer uma refeição rápida, um almoço em família ou algo especial? Use a receita para orientar sua sugestão.
-                </Text>
-                <Text size="sm">Confira os produtos e os preços no formulário da semana antes de concluir.</Text>
-                <Button as="a" href="#/writer" variant="ghost" size="sm">
-                  Montar o pedido no Writer →
-                </Button>
-              </Card>
-            </aside>
-          </div>
+          {groups.length ? (
+            <CatalogSections
+              index={false}
+              groups={groups}
+              renderItem={(item) =>
+                item.catalogKind === 'recipes' ? (
+                  <RecipeCard key={`recipe-${item.id}`} recipe={item} onOpen={setRecipe} />
+                ) : (
+                  <ProductCard key={`product-${item.id}`} product={item} onOpen={setProduct} />
+                )
+              }
+            />
+          ) : (
+            <EmptyState
+              title={query ? 'Nenhum resultado encontrado' : 'Novas ideias em breve'}
+              description={query ? 'Tente outro nome ou categoria.' : 'As receitas e produtos publicados aparecerão aqui.'}
+              actionLabel={query ? 'Limpar busca' : undefined}
+              onAction={query ? () => setQuery('') : undefined}
+            />
+          )}
         </>
       )}
+      <Button as="a" href="#/writer" variant="ghost" size="sm" className="insights-discovery-writer">
+        Montar pedido →
+      </Button>
       {recipe && <RecipeDialog recipe={recipe} onClose={() => setRecipe(null)} />}
       {product && <ProductDetails product={product} onClose={() => setProduct(null)} />}
     </div>

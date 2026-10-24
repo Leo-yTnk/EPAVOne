@@ -49,3 +49,4 @@ export { SelectionIndicator } from './SelectionIndicator.jsx';
 export { FilterDisclosure } from './FilterDisclosure.jsx';
 export { ContextMenu } from './ContextMenu.jsx';
 export { AppLogo } from './AppLogo.jsx';
+export { Carousel } from './Carousel.jsx';

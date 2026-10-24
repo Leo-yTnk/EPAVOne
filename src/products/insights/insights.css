@@ -156,6 +156,14 @@
   object-fit: contain;
   border-radius: var(--nested-radius);
 }
+.insights-image.ds-card > img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  min-width: 0;
+  min-height: 0;
+  border-radius: inherit;
+}
 .insights-image > .ds-stitch {
   opacity: 1;
 }
@@ -297,29 +305,6 @@
 .insights-detail-content .ds-btn,
 .insights-home .ds-btn {
   text-decoration: none;
-}
-@container insights-catalog (max-width: 38rem) {
-  .insights-grid {
-    grid-template-columns: minmax(0, 1fr);
-    row-gap: var(--space-4);
-  }
-  .insights-grid > .insights-product {
-    display: grid;
-    grid-template-columns: 6rem minmax(0, 1fr);
-    align-items: start;
-    gap: var(--space-3);
-  }
-  .insights-grid .insights-image.ds-card {
-    aspect-ratio: 1;
-  }
-  .insights-grid .insights-product-name {
-    min-height: 0;
-  }
-}
-@container insights-catalog (max-width: 22rem) {
-  .insights-grid > .insights-product {
-    grid-template-columns: 4.5rem minmax(0, 1fr);
-  }
 }
 .insights-home {
   display: grid;
@@ -494,51 +479,6 @@ html[data-density='compact'] .creation-row {
   min-height: 8rem;
 }
 
-/* Details use a compact shared overview and two aligned content surfaces. */
-.insights-detail-dialog {
-  --insights-detail-surface: color-mix(in srgb, var(--surface-primary) 96%, #000);
-  --insights-detail-nested-surface: color-mix(in srgb, var(--surface-primary) 92%, #000);
-}
-[data-theme='dark'] .insights-detail-dialog {
-  --insights-detail-surface: color-mix(in srgb, var(--surface-primary) 78%, #000);
-  --insights-detail-nested-surface: color-mix(in srgb, var(--surface-primary) 65%, #000);
-}
-.insights-detail-dialog .ds-card {
-  background: var(--insights-detail-surface);
-  border: 1px solid transparent;
-  box-shadow: none;
-}
-.insights-detail-dialog.is-recipe-detail.ds-dialog.is-large {
-  width: min(calc(100vw - 2 * var(--space-4)), 58rem);
-}
-.insights-image.is-thumbnail > .ds-icon {
-  color: var(--text-tertiary);
-}
-.insights-image.is-thumbnail > .sr-only {
-  position: absolute;
-}
-.insights-detail-dialog.is-recipe-detail .ds-dialog-head {
-  position: absolute;
-  top: var(--space-6);
-  right: var(--space-6);
-  z-index: 3;
-}
-.insights-detail-dialog.is-recipe-detail .ds-dialog-content {
-  margin-top: 0;
-}
-.insights-detail-dialog.is-recipe-detail .insights-detail-back {
-  margin-bottom: var(--space-3);
-}
-@media (max-width: 40rem) {
-  .insights-detail-dialog.is-recipe-detail.ds-dialog.is-large {
-    width: calc(100vw - 2 * var(--space-3));
-  }
-  .insights-detail-dialog.is-recipe-detail .ds-dialog-head {
-    top: var(--space-4);
-    right: var(--space-4);
-  }
-}
-
 /* Guided entry points share the existing filter state; the catalog stays primary. */
 .insights-choices {
   display: grid;
@@ -580,41 +520,4 @@ html[data-density='compact'] .creation-row {
 }
 .insights-catalog .insights-filters {
   padding-bottom: 0;
-}
-.insights-product-overview.ds-card {
-  --container-padding: var(--space-5);
-  padding: var(--container-padding);
-  gap: var(--space-4);
-  align-items: center;
-}
-.insights-product-overview .insights-product-note {
-  border-top: 0;
-  padding: var(--space-2) 0 0;
-  font-size: 0.8125rem;
-}
-.insights-related-recipe.ds-card {
-  --container-padding: var(--space-5);
-  padding: var(--container-padding);
-  background: var(--insights-detail-nested-surface);
-  --card-radius: max(var(--radius-sm), calc(var(--radius-xl) - var(--space-4)));
-}
-@media (max-width: 40rem) {
-  .insights-choices {
-    --container-padding: var(--space-5);
-    padding: var(--container-padding);
-  }
-  .insights-product-overview.ds-card {
-    --container-padding: var(--space-5);
-    padding: var(--container-padding);
-  }
-}
-
-/* Resolve on the parent before a child overrides its own card radius. */
-.insights-product-overview,
-.insights-related-recipe {
-  --detail-image-radius: max(0px, calc(var(--card-radius) - var(--container-padding) - 1px));
-}
-.insights-product-overview > .insights-image,
-.insights-related-recipe > .insights-image {
-  --card-radius: var(--detail-image-radius);
 }

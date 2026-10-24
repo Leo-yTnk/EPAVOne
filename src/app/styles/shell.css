@@ -392,12 +392,21 @@ html[data-reduced-motion='true'] *::after {
 }
 @keyframes ds-route-fallback-in {
   from {
+    opacity: .72;
     transform: translateX(var(--motion-distance-md));
   }
   to {
+    opacity: 1;
     transform: translateX(0);
   }
 }
+.mobile-context-label { animation: app-context-in var(--duration-normal) var(--ease-enter); }
+@keyframes app-context-in {
+  from { opacity: .65; translate: 0 var(--motion-distance-sm); }
+  to { opacity: 1; translate: 0 0; }
+}
+html[data-reduced-motion='true'] .mobile-context-label { animation: none; }
+@media (prefers-reduced-motion: reduce) { .mobile-context-label { animation: none; } }
 @media (prefers-reduced-motion: reduce) {
   .route-frame {
     animation: none;
