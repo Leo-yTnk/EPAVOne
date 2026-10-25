@@ -1,8 +1,9 @@
+import { memo } from 'preact/compat';
 import { Badge, Button, Card } from '../../../design-system/components/index.js';
 import { CatalogImage } from './CatalogImage.jsx';
 import { ProductPrice } from './ProductPrice.jsx';
 
-export function ProductCard({ product, onOpen }) {
+export const ProductCard = memo(function ProductCard({ product, onOpen }) {
   return (
     <Card data-dialog-origin className="insights-product insights-product-card insights-catalog-card">
       <CatalogImage stitched={false} url={product.image_url} name={product.name} />
@@ -16,4 +17,4 @@ export function ProductCard({ product, onOpen }) {
       </div>
     </Card>
   );
-}
+});

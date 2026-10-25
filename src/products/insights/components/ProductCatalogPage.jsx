@@ -5,6 +5,7 @@ import { CatalogSections } from './CatalogSections.jsx';
 import { browseCatalogGroups, orderedCatalogItems } from '../models/sections.js';
 import { useMemo, useRef, useState } from 'preact/hooks';
 import {
+  ModalPresence,
   Button,
   Card,
   Checkbox,
@@ -167,7 +168,7 @@ export function ProductCatalogPage({ initialCategory = '', initialSection = '', 
         )}
       </div>
       {pageCount > 1 && <Pagination page={currentPage} pageCount={pageCount} onChange={setPage} label="Páginas do catálogo" />}
-      {selected && <ProductDetails key={selected.id} product={selected} onClose={() => setSelected(null)} />}
+      <ModalPresence>{selected && <ProductDetails key={selected.id} product={selected} onClose={() => setSelected(null)} />}</ModalPresence>
     </section>
   );
 }

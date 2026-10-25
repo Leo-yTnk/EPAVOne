@@ -75,6 +75,20 @@ Os componentes públicos são Preact/JSX e vivem individualmente em `src/design-
 - Toast / ToastRegion;
 - Tooltip.
 
+## Presença de modais
+
+`Dialog` e `Drawer` mantêm uma saída visual curta quando `open` passa a falso. A ação de fechar, o foco e a rolagem são liberados imediatamente; a superfície restante é inerte e oculta para tecnologia assistiva. Movimento reduzido remove a retenção.
+
+Quando o componente inteiro é condicional, componha com `ModalPresence` para permitir a saída:
+
+```jsx
+<ModalPresence>
+  {selected && <RecipeDialog recipe={selected} onClose={() => setSelected(null)} />}
+</ModalPresence>
+```
+
+O componente deve receber `null`/`false` quando fechado. Reabrir antes de terminar a saída cria uma instância limpa. Portais ancorados dentro do modal são removidos ao começar a saída.
+
 ## Portal contract
 
 Select, Menu, Tooltip, Dialog, Drawer e Toast são renderizados fora da árvore visual da página por `Portal`.

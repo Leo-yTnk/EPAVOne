@@ -28,7 +28,7 @@ As transições horizontais existentes dos detalhes foram preservadas. Rotas, in
 - As animações de conteúdo anteriores são canceladas ao trocar rapidamente, redimensionar, desmontar ou mudar a preferência de movimento. Sem Web Animations API, os controles continuam disponíveis normalmente.
 - Movimento reduzido do sistema e das Configurações desativa os novos movimentos. As barras também respeitam ambas as preferências.
 - Nenhuma dependência de produção foi adicionada. Sem blur, `transition: all`, clones ou `will-change` permanente.
-- Fechamento de diálogos, gavetas, menus e disclosures continua imediato, preservando a remoção dos controles e a liberação do foco. Esta revisão não implementa uma infraestrutura de presença para saídas.
+- Registro desta etapa: o fechamento ainda era imediato. A [revisão posterior de diálogos](insights-dialogs-and-performance.md) adiciona uma saída visual de 150 ms, com interação e foco liberados imediatamente. Menus e disclosures continuam com fechamento imediato.
 - As novas chegadas usam os tokens de duração e easing do Design System. A primeira apresentação do progresso usa `@starting-style` onde disponível; a atualização entre valores funciona sem essa melhoria.
 
 ## Validação reproduzível

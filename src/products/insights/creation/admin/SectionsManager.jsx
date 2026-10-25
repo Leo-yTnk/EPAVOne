@@ -1,5 +1,6 @@
 import { useState } from 'preact/hooks';
 import {
+  ModalPresence,
   Alert,
   Button,
   Checkbox,
@@ -100,17 +101,19 @@ export function SectionsManager() {
           ))}
         </div>
       )}
-      {editing && (
-        <SectionEditor
-          section={editing.section}
-          page={page}
-          onClose={() => setEditing(null)}
-          onSaved={() => {
-            setEditing(null);
-            resource.reload();
-          }}
-        />
-      )}
+      <ModalPresence>
+        {editing && (
+          <SectionEditor
+            section={editing.section}
+            page={page}
+            onClose={() => setEditing(null)}
+            onSaved={() => {
+              setEditing(null);
+              resource.reload();
+            }}
+          />
+        )}
+      </ModalPresence>
     </section>
   );
 }

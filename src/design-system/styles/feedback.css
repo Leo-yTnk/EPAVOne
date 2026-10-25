@@ -21,19 +21,19 @@
 .ds-skeleton-line{height:.875rem}.ds-skeleton-title{height:1.5rem;width:58%}.ds-skeleton-circle{width:2.5rem;height:2.5rem;border-radius:50%}
 
 .ds-dialog-overlay,.ds-drawer-overlay{
-  position:fixed;inset:0;z-index:var(--z-overlay);display:grid;background:rgba(0,0,0,.38);
+  position:fixed;inset:0;width:100vw;z-index:var(--z-overlay);display:grid;background:rgba(0,0,0,.38);
   animation:ds-overlay-in var(--duration-normal) var(--ease-standard) both
 }
 .ds-dialog-overlay{place-items:center}
 .ds-dialog,.ds-drawer{
-  --card-radius:var(--radius-2xl);position:relative;border-radius:var(--card-radius);background:var(--surface-primary);box-shadow:var(--shadow-lg);padding:var(--space-6);overflow:auto;
+  --card-radius:var(--radius-2xl);position:relative;border-radius:var(--card-radius);background:var(--surface-primary);box-shadow:var(--shadow-lg);--container-padding:var(--space-6);padding:var(--container-padding);overflow:auto;min-width:0;
   border:1px solid var(--border-subtle)
 }
 .ds-dialog{display:flex;flex-direction:column;overflow:hidden;width:min(90vw,32rem);max-height:90vh;max-height:90dvh;transform-origin:center 30%;animation:ds-dialog-in var(--duration-slow) var(--ease-enter) both}
 .ds-dialog.is-large{width:min(94vw,56rem)}
 .ds-dialog-head,.ds-drawer-header{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:var(--space-4)}
 .ds-dialog-title,.ds-drawer-title{font:700 var(--heading-4)/var(--leading-heading-small) var(--font-heading)}
-.ds-dialog-content{overflow:auto;min-height:0;padding:var(--space-1);margin:var(--space-4) 0;color:var(--text-secondary);line-height:var(--leading-body)}
+.ds-dialog-content{overflow:auto;min-height:0;padding:var(--space-1);margin:var(--space-4) calc(-1 * var(--space-1));color:var(--text-secondary);line-height:var(--leading-body)}
 .ds-dialog-actions{flex-shrink:0;flex-wrap:wrap;display:flex;justify-content:flex-end;gap:var(--space-3)}
 .ds-drawer-overlay{justify-items:end}
 .ds-drawer{width:min(28rem,92vw);height:100%;border-radius:var(--radius-2xl) 0 0 var(--radius-2xl);animation:ds-drawer-in var(--duration-slow) var(--ease-enter) both}
@@ -48,7 +48,7 @@
 @keyframes ds-feedback-in{from{transform:translateY(var(--motion-distance-sm))}to{transform:translateY(0)}}
 @keyframes ds-shimmer{100%{transform:translateX(110%)}}
 @keyframes ds-overlay-in{from{opacity:0;}to{opacity:1;}}
-@keyframes ds-dialog-in{from{opacity:.65;transform:translateY(var(--motion-distance-md)) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes ds-dialog-in{from{opacity:.65;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes ds-drawer-in{from{transform:translateX(18px)}to{transform:translateX(0)}}
 @keyframes ds-toast-in{from{transform:translateY(var(--motion-distance-md))}to{transform:translateY(0)}}
 
@@ -63,7 +63,7 @@
 .ds-dialog-title,.ds-drawer-title{min-width:0;overflow-wrap:anywhere}
 .ds-dialog-head .ds-icon-btn,.ds-drawer-header .ds-icon-btn{flex-shrink:0}
 @media(max-width:40rem){
- .ds-dialog{width:calc(100vw - 2 * var(--space-3));max-height:calc(100dvh - 2 * var(--space-3));padding:var(--space-4)}
+ .ds-dialog{width:calc(100vw - 2 * var(--space-3));max-height:calc(100dvh - 2 * var(--space-3));--container-padding:var(--space-5)}
  .ds-dialog.is-large{width:calc(100vw - 2 * var(--space-3))}
  .ds-dialog-actions>.ds-btn{flex:1}
 }
@@ -137,4 +137,29 @@
 }
 .ds-state p {
   font-size: 0.875rem;
+}
+
+/* Closing is visual only: the original action, focus and scroll unlock are immediate. */
+.ds-dialog-overlay[data-exiting='true'],
+.ds-drawer-overlay[data-exiting='true'] {
+  pointer-events: none;
+  animation: ds-overlay-out var(--duration-fast) var(--ease-exit) both;
+}
+.ds-dialog-overlay[data-exiting='true'] > .ds-dialog {
+  animation: ds-dialog-out var(--duration-fast) var(--ease-exit) both;
+}
+.ds-drawer-overlay[data-exiting='true'] > .ds-drawer {
+  animation: ds-drawer-out var(--duration-fast) var(--ease-exit) both;
+}
+.ds-drawer-overlay[data-exiting='true'] > .ds-drawer.is-start {
+  animation-name: ds-drawer-start-out;
+}
+@keyframes ds-overlay-out { to { opacity: 0; } }
+@keyframes ds-dialog-out { to { transform: translateY(8px); } }
+@keyframes ds-drawer-out { to { transform: translateX(18px); } }
+@keyframes ds-drawer-start-out { to { transform: translateX(-18px); } }
+@media (prefers-reduced-motion: reduce) {
+  .ds-dialog-overlay[data-exiting='true'], .ds-drawer-overlay[data-exiting='true'],
+  .ds-dialog-overlay[data-exiting='true'] > .ds-dialog,
+  .ds-drawer-overlay[data-exiting='true'] > .ds-drawer { animation: none; }
 }

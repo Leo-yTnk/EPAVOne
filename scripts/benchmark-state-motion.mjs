@@ -50,6 +50,8 @@ const products = Array.from({ length: 48 }, (_, index) => ({
 const median = (values) => [...values].sort((a, b) => a - b)[Math.floor(values.length / 2)];
 const quantile = (values, fraction) =>
   [...values].sort((a, b) => a - b)[Math.min(values.length - 1, Math.floor(values.length * fraction))] || 0;
+const widths = (process.env.BENCH_WIDTHS || '390,1440').split(',').map(Number);
+const throttles = (process.env.BENCH_THROTTLES || '1,4').split(',').map(Number);
 const servers = { baseline: await serve(baseline), candidate: await serve('dist') };
 let browser;
 try {
@@ -59,8 +61,8 @@ try {
   });
   const raw = [];
   const attempts = Number(process.env.BENCH_REPEATS || 3);
-  for (const width of [390, 1440])
-    for (const throttle of [1, 4])
+  for (const width of widths)
+    for (const throttle of throttles)
       for (let repeat = 0; repeat < attempts; repeat++) {
         // Alternate order to reduce systematic effects from warming and host drift.
         for (const variant of repeat % 2 ? ['candidate', 'baseline'] : ['baseline', 'candidate']) {
@@ -71,15 +73,20 @@ try {
           await page.addInitScript(() => {
             localStorage.setItem('epavone-introduction-v1', 'done');
             window.turnstile = { render: () => 'fixture', remove: () => {}, reset: () => {} };
-            window.__motionMetrics = { gaps: [], longTasks: [], animations: [], measuring: false };
+            window.__motionMetrics = { gaps: [], longTasks: [], animations: [], measuring: false, marks: [], tracedTasks: [] };
             const original = Element.prototype.animate;
             Element.prototype.animate = function (frames, options) {
               window.__motionMetrics.animations.push({ target: this.className, frames, duration: options.duration });
               return original.call(this, frames, options);
             };
             new PerformanceObserver((list) => {
-              if (window.__motionMetrics.measuring)
+              if (window.__motionMetrics.measuring) {
                 window.__motionMetrics.longTasks.push(...list.getEntries().map((entry) => entry.duration));
+                for (const entry of list.getEntries()) {
+                  const mark = window.__motionMetrics.marks.findLast((mark) => mark.time <= entry.startTime);
+                  window.__motionMetrics.tracedTasks.push({ duration: entry.duration, phase: mark?.phase || 'other' });
+                }
+              }
             }).observe({ type: 'longtask', buffered: false });
             let last;
             const frame = (now) => {
@@ -134,12 +141,25 @@ try {
             const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
             const input = document.querySelector('#insights-recipe-search');
             for (const query of ['0', '01', '010', '01', '0', '', '1', '11', 'inexistente', '']) {
+              window.__motionMetrics.marks.push({ phase: 'search:' + query, time: performance.now() });
               input.value = query;
               input.dispatchEvent(new Event('input', { bubbles: true }));
               await pause(160);
             }
           });
           assert.equal(await page.locator('.insights-recipes-collection > article').count(), 120);
+          const detailStart = await metrics();
+          const detailRounds = Number(process.env.BENCH_DETAILS_ROUNDS || 0);
+          for (let round = 0; round < detailRounds; round++) {
+            await page.evaluate(() => window.__motionMetrics.marks.push({ phase: 'detail-open', time: performance.now() }));
+            await page.getByRole('button', { name: 'Ver receita de Receita 000', exact: true }).click();
+            await page.getByRole('dialog').waitFor();
+            await page.waitForTimeout(240);
+            await page.evaluate(() => window.__motionMetrics.marks.push({ phase: 'detail-close', time: performance.now() }));
+            await page.keyboard.press('Escape');
+            await page.waitForTimeout(200);
+          }
+          const detailEnd = await metrics();
           await page.evaluate(() => {
             location.hash = '#/insights/produtos';
           });
@@ -147,6 +167,7 @@ try {
           await page.evaluate(async () => {
             const section = document.querySelector('.insights-catalog-section');
             for (let index = 0; index < 8; index++) {
+              window.__motionMetrics.marks.push({ phase: 'carousel:' + index, time: performance.now() });
               section.querySelector('button[aria-expanded]').click();
               await new Promise((resolve) => setTimeout(resolve, 180));
             }
@@ -155,6 +176,7 @@ try {
           await page.getByRole('dialog').waitFor();
           await page.evaluate(async () => {
             for (let index = 0; index < 6; index++) {
+              window.__motionMetrics.marks.push({ phase: 'account:' + index, time: performance.now() });
               [...document.querySelectorAll('.account-content button')]
                 .find((button) => /^(Criar uma conta|Já tenho credencial)$/.test(button.textContent))
                 .click();
@@ -185,6 +207,7 @@ try {
             wall,
             mainCorePercent: ((end.TaskDuration - start.TaskDuration) / wall) * 100,
             mainTaskMs: (end.TaskDuration - start.TaskDuration) * 1000,
+            detailMainMs: detailRounds ? (detailEnd.TaskDuration - detailStart.TaskDuration) * 1000 : null,
             scriptMs: (end.ScriptDuration - start.ScriptDuration) * 1000,
             layoutMs: (end.LayoutDuration - start.LayoutDuration) * 1000,
             styleMs: (end.RecalcStyleDuration - start.RecalcStyleDuration) * 1000,
@@ -192,6 +215,8 @@ try {
             frameP95: quantile(samples.gaps, 0.95),
             slowFrames: samples.gaps.filter((gap) => gap > 34).length,
             longTasks: samples.longTasks.length,
+            maxLongTaskMs: Math.max(0, ...samples.longTasks),
+            tracedTasks: samples.tracedTasks,
             blockingMs: samples.longTasks.reduce((sum, duration) => sum + duration - 50, 0),
             idleMainMs: (idleEnd.TaskDuration - idleStart.TaskDuration) * 1000,
             heapMiB: end.JSHeapUsedSize / 1024 ** 2,
@@ -207,8 +232,8 @@ try {
         }
       }
   const summary = [];
-  for (const width of [390, 1440])
-    for (const throttle of [1, 4]) {
+  for (const width of widths)
+    for (const throttle of throttles) {
       const rows = raw.filter((row) => row.width === width && row.throttle === throttle);
       const delta = [];
       for (let repeat = 0; repeat < attempts; repeat++) {
@@ -225,6 +250,7 @@ try {
               [
                 'mainCorePercent',
                 'mainTaskMs',
+                'detailMainMs',
                 'scriptMs',
                 'layoutMs',
                 'styleMs',

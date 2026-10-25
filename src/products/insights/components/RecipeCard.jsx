@@ -1,7 +1,8 @@
+import { memo } from 'preact/compat';
 import { Badge, Button, Card, Icon } from '../../../design-system/components/index.js';
 import { CatalogImage } from './CatalogImage.jsx';
 
-export function RecipeCard({ recipe, onOpen, compact = false }) {
+export const RecipeCard = memo(function RecipeCard({ recipe, onOpen, compact = false }) {
   return (
     <Card data-dialog-origin className={`insights-product insights-recipe-card insights-catalog-card${compact ? ' is-compact' : ''}`}>
       <CatalogImage stitched={false} url={recipe.image_url} name={recipe.name} />
@@ -23,4 +24,4 @@ export function RecipeCard({ recipe, onOpen, compact = false }) {
       </div>
     </Card>
   );
-}
+});

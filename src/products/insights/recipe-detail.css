@@ -33,7 +33,7 @@
   font-size: 0.9375rem;
 }
 .recipe-detail-hero > .insights-image.ds-card {
-  --card-radius: var(--radius-xl);
+  --card-radius: max(0px, calc(var(--radius-xl) - var(--insights-detail-gutter, var(--space-5))));
   aspect-ratio: 4/5;
   background: transparent;
 }
@@ -204,7 +204,7 @@
     gap: var(--space-5);
   }
   .recipe-detail-hero > .insights-image.ds-card {
-    --card-radius: var(--radius-lg);
+    --card-radius: max(0px, calc(var(--radius-card) - var(--insights-detail-gutter, var(--space-4))));
     aspect-ratio: 16/10;
   }
   .recipe-detail-hero > .insights-image.ds-card:not(:has(img)) {

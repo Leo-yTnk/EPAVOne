@@ -36,7 +36,7 @@ describe('Dialog expansion from its initiating card', () => {
     trigger.focus();
     fireEvent.click(trigger);
     expect(animate).toHaveBeenCalledTimes(1);
-    expect(animate.mock.calls[0][0][0].transform).toBe('translate(-6px, 12px)');
+    expect(animate.mock.calls[0][0][0].transform).toBe('translate(-6px, 16px)');
     expect(screen.getByRole('dialog').classList.contains('ds-dialog-expanding')).toBe(true);
     fireEvent.keyDown(document, { key: 'Escape' });
     expect(cancel).toHaveBeenCalledOnce();
@@ -75,7 +75,7 @@ it('uses the initiating touch geometry even when the browser does not focus the 
   const trigger = screen.getByRole('button', { name: 'Abrir' });
   rememberMotionOrigin(trigger);
   fireEvent.click(trigger);
-  expect(animate.mock.calls[0][0][0].transform).toBe('translate(-6px, 12px)');
+  expect(animate.mock.calls[0][0][0].transform).toBe('translate(-6px, 16px)');
   expect(animate.mock.calls[0][0].at(-1).transform).toBe('translate(0, 0)');
   delete Element.prototype.animate;
 });

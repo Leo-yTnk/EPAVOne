@@ -1,52 +1,55 @@
-import { useLayoutEffect } from 'preact/hooks';
+import { useLayoutEffect, useRef } from 'preact/hooks';
 
-let modalLockCount=0;
+let modalLockCount = 0;
 
 export function useModalLayer(ref, open, onClose) {
-  useLayoutEffect(()=>{
-    if(!open) return undefined;
+  const close = useRef(onClose);
+  close.current = onClose;
+  useLayoutEffect(() => {
+    if (!open) return undefined;
 
-    const previous=document.activeElement;
-    modalLockCount+=1;
+    const previous = document.activeElement;
+    modalLockCount += 1;
     document.body.classList.add('ds-layer-open');
     ref.current?.focus();
 
-    function onKeyDown(event){
+    function onKeyDown(event) {
       // Anchored layers handle Escape first, including through portals.
-      if(event.defaultPrevented) return;
-      if(event.key==='Escape'){
+      if (event.defaultPrevented) return;
+      if (event.key === 'Escape') {
         event.preventDefault();
-        onClose?.();
+        close.current?.();
         return;
       }
-      if(event.key!=='Tab'||!ref.current) return;
+      if (event.key !== 'Tab' || !ref.current) return;
 
-      const focusable=[...ref.current.querySelectorAll('button,input,textarea,a[href],[tabindex]:not([tabindex="-1"])')]
-        .filter(node=>!node.disabled&&node.getAttribute('aria-hidden')!=='true');
+      const focusable = [...ref.current.querySelectorAll('button,input,textarea,a[href],[tabindex]:not([tabindex="-1"])')].filter(
+        (node) => !node.disabled && node.getAttribute('aria-hidden') !== 'true'
+      );
 
-      if(!focusable.length){
+      if (!focusable.length) {
         event.preventDefault();
         ref.current.focus();
         return;
       }
 
-      const first=focusable[0];
-      const last=focusable.at(-1);
-      if(event.shiftKey&&document.activeElement===first){
+      const first = focusable[0];
+      const last = focusable.at(-1);
+      if (event.shiftKey && document.activeElement === first) {
         event.preventDefault();
         last.focus();
-      }else if(!event.shiftKey&&document.activeElement===last){
+      } else if (!event.shiftKey && document.activeElement === last) {
         event.preventDefault();
         first.focus();
       }
     }
 
-    document.addEventListener('keydown',onKeyDown);
-    return ()=>{
-      document.removeEventListener('keydown',onKeyDown);
-      modalLockCount=Math.max(0,modalLockCount-1);
-      if(modalLockCount===0) document.body.classList.remove('ds-layer-open');
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      modalLockCount = Math.max(0, modalLockCount - 1);
+      if (modalLockCount === 0) document.body.classList.remove('ds-layer-open');
       previous?.focus?.();
     };
-  },[onClose,open,ref]);
+  }, [open, ref]);
 }

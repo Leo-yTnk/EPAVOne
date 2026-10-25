@@ -1,5 +1,15 @@
 import { useMemo, useState } from 'preact/hooks';
-import { Alert, Button, ErrorState, Heading, AppLogo, PageHeader, Select, Skeleton } from '../../design-system/components/index.js';
+import {
+  ModalPresence,
+  Alert,
+  Button,
+  ErrorState,
+  Heading,
+  AppLogo,
+  PageHeader,
+  Select,
+  Skeleton
+} from '../../design-system/components/index.js';
 import { dateLabel, emptyWeek, shiftDay, weekStart, validDay } from './models/planner.js';
 import { usePlanner } from './hooks/usePlanner.js';
 import { Overview } from './components/Overview.jsx';
@@ -134,15 +144,17 @@ export function PlannerRoutes({ route = { segments: [] }, service, account }) {
           <Overview {...props} />
         )}
       </div>
-      {editing && (
-        <ClientEditor
-          customer={editing === 'new' ? null : editing}
-          act={resource.act}
-          busy={resource.busy}
-          notice={resource.notice}
-          onClose={() => setEditing(null)}
-        />
-      )}
+      <ModalPresence>
+        {editing && (
+          <ClientEditor
+            customer={editing === 'new' ? null : editing}
+            act={resource.act}
+            busy={resource.busy}
+            notice={resource.notice}
+            onClose={() => setEditing(null)}
+          />
+        )}
+      </ModalPresence>
     </section>
   );
 }
