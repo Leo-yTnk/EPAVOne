@@ -3,9 +3,9 @@ import { useRef } from 'preact/hooks';
 import { afterEach, expect, it, vi } from 'vitest';
 import { useContentMotion } from '../src/design-system/behaviors/useContentMotion.js';
 
-function Example({ current, depth }) {
+function Example({ current, depth, axis }) {
   const ref = useRef(null);
-  useContentMotion(ref, current, depth);
+  useContentMotion(ref, current, depth, axis);
   return (
     <div ref={ref}>
       <button>{current}</button>
@@ -16,6 +16,22 @@ afterEach(() => {
   delete Element.prototype.animate;
   delete document.documentElement.dataset.reducedMotion;
   vi.unstubAllGlobals();
+});
+it('uses a gentle vertical arrival for results, skips identical results and cancels on resize', () => {
+  const cancel = vi.fn();
+  const animate = vi.fn(() => ({ cancel }));
+  Element.prototype.animate = animate;
+  const view = render(<Example current="all" axis="y" />);
+  view.rerender(<Example current="filtered" axis="y" />);
+  expect(view.getByRole('button').textContent).toBe('filtered');
+  expect(animate.mock.calls[0][0]).toEqual([
+    { opacity: 0.85, transform: 'translateY(4px)' },
+    { opacity: 1, transform: 'translateY(0)' }
+  ]);
+  view.rerender(<Example current="filtered" axis="y" />);
+  expect(animate).toHaveBeenCalledTimes(1);
+  window.dispatchEvent(new Event('resize'));
+  expect(cancel).toHaveBeenCalledTimes(1);
 });
 it('shows new controls immediately, reverses on back and cancels interrupted transitions', () => {
   const cancel = vi.fn();

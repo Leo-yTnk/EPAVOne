@@ -1,7 +1,8 @@
+import { useContentMotion } from '../../../design-system/behaviors/useContentMotion.js';
 import { CatalogChoices } from './CatalogChoices.jsx';
 import { CatalogLoading } from './CatalogLoading.jsx';
 import { orderedCatalogItems } from '../models/sections.js';
-import { useMemo, useState } from 'preact/hooks';
+import { useMemo, useRef, useState } from 'preact/hooks';
 import {
   Button,
   Card,
@@ -36,6 +37,9 @@ export function RecipesPage({ initialSection = '' }) {
   );
   const filtered = filters.section && structure.data ? candidates.filter((item) => memberIds.has(item.id)) : candidates;
   const ordered = orderedCatalogItems(filtered, structure.data, 'recipes', 'recipes');
+  const resultsRef = useRef(null);
+  const resultKey = JSON.stringify([resource.loading, Boolean(resource.error), ordered.map((item) => item.id)]);
+  useContentMotion(resultsRef, resultKey, 0, 'y');
   function update(patch) {
     setFilters((current) => ({ ...current, ...patch }));
   }
@@ -122,22 +126,26 @@ export function RecipesPage({ initialSection = '' }) {
           )}
         </div>
       </Card>
-      {!filtered.length ? (
-        <EmptyState
-          title={recipes.length ? 'Nenhuma receita encontrada' : 'Ainda não há receitas publicadas'}
-          description={
-            recipes.length ? 'Tente outra busca ou ajuste os filtros.' : 'As receitas aparecerão aqui quando forem publicadas no catálogo.'
-          }
-          actionLabel={recipes.length ? 'Limpar filtros' : undefined}
-          onAction={reset}
-        />
-      ) : (
-        <div className="insights-recipes-collection" aria-label="Todas as receitas encontradas">
-          {ordered.map((item) => (
-            <RecipeCard key={item.id} recipe={item} onOpen={setSelected} />
-          ))}
-        </div>
-      )}
+      <div ref={resultsRef} className="insights-results-content">
+        {!filtered.length ? (
+          <EmptyState
+            title={recipes.length ? 'Nenhuma receita encontrada' : 'Ainda não há receitas publicadas'}
+            description={
+              recipes.length
+                ? 'Tente outra busca ou ajuste os filtros.'
+                : 'As receitas aparecerão aqui quando forem publicadas no catálogo.'
+            }
+            actionLabel={recipes.length ? 'Limpar filtros' : undefined}
+            onAction={reset}
+          />
+        ) : (
+          <div className="insights-recipes-collection" aria-label="Todas as receitas encontradas">
+            {ordered.map((item) => (
+              <RecipeCard key={item.id} recipe={item} onOpen={setSelected} />
+            ))}
+          </div>
+        )}
+      </div>
       {selected && <RecipeDialog key={selected.id} recipe={selected} onClose={() => setSelected(null)} />}
     </section>
   );

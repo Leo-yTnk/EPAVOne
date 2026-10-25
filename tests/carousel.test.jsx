@@ -3,6 +3,33 @@ import { afterEach, expect, it, vi } from 'vitest';
 import { Carousel } from '../src/design-system/components/Carousel.jsx';
 afterEach(() => {
   delete document.documentElement.dataset.reducedMotion;
+  delete Element.prototype.animate;
+});
+it('keeps the same items and focus when expanding and cancels motion on a rapid collapse', () => {
+  const cancel = vi.fn();
+  const animate = vi.fn(() => ({ cancel }));
+  Element.prototype.animate = animate;
+  const items = [<button key="a">Produto A</button>, <button key="b">Produto B</button>];
+  const view = render(<Carousel label="Coleção">{items}</Carousel>);
+  const button = screen.getByRole('button', { name: 'Produto A' });
+  button.focus();
+  view.rerender(
+    <Carousel label="Coleção" expanded>
+      {items}
+    </Carousel>
+  );
+  expect(animate).toHaveBeenCalledTimes(1);
+  expect(document.activeElement).toBe(button);
+  view.rerender(<Carousel label="Coleção">{items}</Carousel>);
+  expect(cancel).toHaveBeenCalledTimes(1);
+  expect(screen.getByRole('button', { name: 'Produto A' })).toBe(button);
+  document.documentElement.dataset.reducedMotion = 'true';
+  view.rerender(
+    <Carousel label="Coleção" expanded>
+      {items}
+    </Carousel>
+  );
+  expect(animate).toHaveBeenCalledTimes(2);
 });
 it('uses native scroll, exposes correct edges, supports keyboard and respects reduced motion', async () => {
   render(
