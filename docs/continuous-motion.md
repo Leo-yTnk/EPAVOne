@@ -1,5 +1,7 @@
 # Continuidade de movimento
 
+A revisão mais recente está na [auditoria de transições de estado](state-motion-audit.md), com as lacunas corrigidas no catálogo, na conta, no Planner, na administração e no progresso.
+
 Atualização: a revisão de [catálogo mobile e detalhes](mobile-catalog-review.md) substitui a expansão geométrica descrita abaixo por entrada sem escala e aprimora a chegada de apps carregados sob demanda. Os demais registros documentam a evolução anterior.
 
 A interface mantém o shell e os indicadores montados. Os destaques deslizam até a seleção; páginas entram na direção da posição dos apps, com 18px de deslocamento e acomodação de 1,5px, sem dissolver ou capturar o documento. Esta é uma ampliação deliberada do limite anterior de 6px, solicitada para tornar a continuidade perceptível. A rota e os controles ficam disponíveis imediatamente. O Writer mantém sua instância e o formulário ao alternar apps.

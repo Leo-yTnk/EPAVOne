@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'preact/hooks';
+import { useContentMotion } from '../../../design-system/behaviors/useContentMotion.js';
+import { useMemo, useRef, useState } from 'preact/hooks';
 import { Button, Card, EmptyState, ErrorState, Input } from '../../../design-system/components/index.js';
 import { CatalogLoading } from './CatalogLoading.jsx';
 import { CatalogSections } from './CatalogSections.jsx';
@@ -20,6 +21,13 @@ export function InsightsHomePage() {
   const groups = useMemo(
     () => discoverySections({ ...resource.data, structure: structure.data, query }),
     [resource.data, structure.data, query]
+  );
+  const resultsRef = useRef(null);
+  useContentMotion(
+    resultsRef,
+    JSON.stringify([resource.loading, Boolean(resource.error), groups.map((group) => [group.id, group.items.map((item) => item.id)])]),
+    0,
+    'y'
   );
   const categories = (resource.data?.categories || []).filter((category) =>
     resource.data.products.some((item) => item.category_id === category.id)
@@ -57,41 +65,43 @@ export function InsightsHomePage() {
           </nav>
         )}
       </Card>
-      {resource.loading ? (
-        <CatalogLoading label="Preparando suas sugestões…" />
-      ) : resource.error ? (
-        <ErrorState title="Não foi possível carregar as sugestões" description={resource.error} onAction={resource.retry} />
-      ) : (
-        <>
-          {structure.error && (
-            <ErrorState
-              title="Seções indisponíveis"
-              description="As categorias e sugestões continuam disponíveis."
-              onAction={structure.retry}
-            />
-          )}
-          {groups.length ? (
-            <CatalogSections
-              index={false}
-              groups={groups}
-              renderItem={(item) =>
-                item.catalogKind === 'recipes' ? (
-                  <RecipeCard key={`recipe-${item.id}`} recipe={item} onOpen={setRecipe} />
-                ) : (
-                  <ProductCard key={`product-${item.id}`} product={item} onOpen={setProduct} />
-                )
-              }
-            />
-          ) : (
-            <EmptyState
-              title={query ? 'Nenhum resultado encontrado' : 'Novas ideias em breve'}
-              description={query ? 'Tente outro nome ou categoria.' : 'As receitas e produtos publicados aparecerão aqui.'}
-              actionLabel={query ? 'Limpar busca' : undefined}
-              onAction={query ? () => setQuery('') : undefined}
-            />
-          )}
-        </>
-      )}
+      <div ref={resultsRef} className="insights-results-content">
+        {resource.loading ? (
+          <CatalogLoading label="Preparando suas sugestões…" />
+        ) : resource.error ? (
+          <ErrorState title="Não foi possível carregar as sugestões" description={resource.error} onAction={resource.retry} />
+        ) : (
+          <>
+            {structure.error && (
+              <ErrorState
+                title="Seções indisponíveis"
+                description="As categorias e sugestões continuam disponíveis."
+                onAction={structure.retry}
+              />
+            )}
+            {groups.length ? (
+              <CatalogSections
+                index={false}
+                groups={groups}
+                renderItem={(item) =>
+                  item.catalogKind === 'recipes' ? (
+                    <RecipeCard key={`recipe-${item.id}`} recipe={item} onOpen={setRecipe} />
+                  ) : (
+                    <ProductCard key={`product-${item.id}`} product={item} onOpen={setProduct} />
+                  )
+                }
+              />
+            ) : (
+              <EmptyState
+                title={query ? 'Nenhum resultado encontrado' : 'Novas ideias em breve'}
+                description={query ? 'Tente outro nome ou categoria.' : 'As receitas e produtos publicados aparecerão aqui.'}
+                actionLabel={query ? 'Limpar busca' : undefined}
+                onAction={query ? () => setQuery('') : undefined}
+              />
+            )}
+          </>
+        )}
+      </div>
       <Button as="a" href="#/writer" variant="ghost" size="sm" className="insights-discovery-writer">
         Montar pedido →
       </Button>

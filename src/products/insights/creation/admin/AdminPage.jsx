@@ -1,4 +1,5 @@
-import { useState } from 'preact/hooks';
+import { useRef, useState } from 'preact/hooks';
+import { useContentMotion } from '../../../../design-system/behaviors/useContentMotion.js';
 import { Alert, Button, Card, Icon, Select } from '../../../../design-system/components/index.js';
 import { EntityManager } from '../components/EntityManager.jsx';
 import { RequestsPage } from '../components/RequestsPage.jsx';
@@ -28,6 +29,13 @@ const descriptions = {
 };
 export function AdminPage({ profile }) {
   const [area, setArea] = useState('recipes');
+  const contentRef = useRef(null);
+  useContentMotion(
+    contentRef,
+    area,
+    areas.findIndex((item) => item.value === area),
+    'y'
+  );
   if (profile?.role !== 'admin')
     return (
       <Alert tone="danger" title="Acesso restrito">
@@ -63,19 +71,21 @@ export function AdminPage({ profile }) {
           <p>{descriptions[area]}</p>
         </div>
       </Card>
-      {['recipes', 'products', 'categories'].includes(area) ? (
-        <EntityManager key={area} type={area} scope="site" />
-      ) : area === 'requests' ? (
-        <RequestsPage admin />
-      ) : area === 'sections' ? (
-        <SectionsManager />
-      ) : area === 'duplicates' ? (
-        <DuplicateCheckPanel />
-      ) : area === 'import' ? (
-        <ImportPanel />
-      ) : (
-        <MaintenancePanel />
-      )}
+      <div ref={contentRef} className="creation-fields">
+        {['recipes', 'products', 'categories'].includes(area) ? (
+          <EntityManager key={area} type={area} scope="site" />
+        ) : area === 'requests' ? (
+          <RequestsPage admin />
+        ) : area === 'sections' ? (
+          <SectionsManager />
+        ) : area === 'duplicates' ? (
+          <DuplicateCheckPanel />
+        ) : area === 'import' ? (
+          <ImportPanel />
+        ) : (
+          <MaintenancePanel />
+        )}
+      </div>
     </section>
   );
 }

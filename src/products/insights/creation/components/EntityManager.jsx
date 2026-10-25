@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'preact/hooks';
+import { useContentMotion } from '../../../../design-system/behaviors/useContentMotion.js';
+import { useMemo, useRef, useState } from 'preact/hooks';
 import {
   Alert,
   Badge,
@@ -40,6 +41,17 @@ export function EntityManager({ type, scope = 'personal', onShare, onSubmit }) {
     [resource.data, query, filter, type]
   );
   const current = Math.min(page, Math.max(1, Math.ceil(items.length / pageSize)));
+  const resultsRef = useRef(null);
+  useContentMotion(
+    resultsRef,
+    JSON.stringify([
+      resource.loading,
+      Boolean(resource.error),
+      items.slice((current - 1) * pageSize, current * pageSize).map((item) => item.id)
+    ]),
+    0,
+    'y'
+  );
   const meta = entities[type];
   function saved() {
     setEditor(null);
@@ -128,72 +140,74 @@ export function EntityManager({ type, scope = 'personal', onShare, onSubmit }) {
           {error}
         </Alert>
       )}
-      {resource.loading ? (
-        <Spinner />
-      ) : resource.error ? (
-        <ErrorState description={resource.error} onAction={resource.reload} />
-      ) : !items.length ? (
-        <EmptyState
-          title={query || filter !== 'all' ? 'Nenhum resultado para estes filtros' : `Sua primeira ${meta.singular} começa aqui`}
-          description={
-            query || filter !== 'all'
-              ? 'Ajuste a busca ou volte a mostrar todos os itens.'
-              : 'Crie, salve na sua biblioteca e compartilhe quando estiver pronto.'
-          }
-          actionLabel={query || filter !== 'all' ? 'Limpar filtros' : `Criar ${meta.singular}`}
-          onAction={() => {
-            if (query || filter !== 'all') {
-              setQuery('');
-              setFilter('all');
-            } else setEditor({ item: null });
-          }}
-        />
-      ) : (
-        <>
-          <p className="insights-muted" role="status">
-            {items.length} {items.length === 1 ? 'item' : 'itens'} · Exibindo {(current - 1) * pageSize + 1}–
-            {Math.min(current * pageSize, items.length)}
-            {query ? ' para esta busca' : ''}.
-          </p>
-          <div className={`creation-list creation-gallery creation-gallery-${type}`}>
-            {items.slice((current - 1) * pageSize, current * pageSize).map((item) => (
-              <Card className="creation-row creation-content-card" key={item.id}>
-                <CreationThumbnail item={item} type={type} />
-                <div className="creation-card-copy">
-                  <h3>{item.name}</h3>
-                  <p className="insights-muted">
-                    {item.recipe_code || item.product_code || item.category_code} · {item.category?.name || item.type || ''}
-                  </p>
-                  <Badge>{statusLabels[item.status] || (item.active ? 'Ativo' : 'Inativo')}</Badge>
-                </div>
-                <div className="creation-row-actions">
-                  <Button variant="secondary" aria-label={`Editar ${item.name}`} onClick={() => setEditor({ item })}>
-                    <Icon name="writer" /> Editar
-                  </Button>
-                  <Menu
-                    label={`Ações de ${item.name}`}
-                    triggerLabel="Ações"
-                    items={[
-                      { label: 'Editar', onSelect: () => setEditor({ item }) },
-                      ...(type !== 'recipes'
-                        ? [{ label: item.active ? 'Desativar' : 'Ativar', disabled: busy, onSelect: () => toggle(item) }]
-                        : []),
-                      ...(scope === 'personal' && type === 'recipes' && onShare
-                        ? [{ label: 'Compartilhar', onSelect: () => onShare(item) }]
-                        : []),
-                      ...(scope === 'personal' && onSubmit
-                        ? [{ label: 'Solicitar publicação', onSelect: () => onSubmit(type, item) }]
-                        : []),
-                      { label: 'Excluir', onSelect: () => setDeleting(item) }
-                    ]}
-                  />
-                </div>
-              </Card>
-            ))}
-          </div>
-          {items.length > pageSize && <Pagination page={current} pageCount={Math.ceil(items.length / pageSize)} onChange={setPage} />}
-        </>
-      )}
+      <div ref={resultsRef} className="creation-fields">
+        {resource.loading ? (
+          <Spinner />
+        ) : resource.error ? (
+          <ErrorState description={resource.error} onAction={resource.reload} />
+        ) : !items.length ? (
+          <EmptyState
+            title={query || filter !== 'all' ? 'Nenhum resultado para estes filtros' : `Sua primeira ${meta.singular} começa aqui`}
+            description={
+              query || filter !== 'all'
+                ? 'Ajuste a busca ou volte a mostrar todos os itens.'
+                : 'Crie, salve na sua biblioteca e compartilhe quando estiver pronto.'
+            }
+            actionLabel={query || filter !== 'all' ? 'Limpar filtros' : `Criar ${meta.singular}`}
+            onAction={() => {
+              if (query || filter !== 'all') {
+                setQuery('');
+                setFilter('all');
+              } else setEditor({ item: null });
+            }}
+          />
+        ) : (
+          <>
+            <p className="insights-muted" role="status">
+              {items.length} {items.length === 1 ? 'item' : 'itens'} · Exibindo {(current - 1) * pageSize + 1}–
+              {Math.min(current * pageSize, items.length)}
+              {query ? ' para esta busca' : ''}.
+            </p>
+            <div className={`creation-list creation-gallery creation-gallery-${type}`}>
+              {items.slice((current - 1) * pageSize, current * pageSize).map((item) => (
+                <Card className="creation-row creation-content-card" key={item.id}>
+                  <CreationThumbnail item={item} type={type} />
+                  <div className="creation-card-copy">
+                    <h3>{item.name}</h3>
+                    <p className="insights-muted">
+                      {item.recipe_code || item.product_code || item.category_code} · {item.category?.name || item.type || ''}
+                    </p>
+                    <Badge>{statusLabels[item.status] || (item.active ? 'Ativo' : 'Inativo')}</Badge>
+                  </div>
+                  <div className="creation-row-actions">
+                    <Button variant="secondary" aria-label={`Editar ${item.name}`} onClick={() => setEditor({ item })}>
+                      <Icon name="writer" /> Editar
+                    </Button>
+                    <Menu
+                      label={`Ações de ${item.name}`}
+                      triggerLabel="Ações"
+                      items={[
+                        { label: 'Editar', onSelect: () => setEditor({ item }) },
+                        ...(type !== 'recipes'
+                          ? [{ label: item.active ? 'Desativar' : 'Ativar', disabled: busy, onSelect: () => toggle(item) }]
+                          : []),
+                        ...(scope === 'personal' && type === 'recipes' && onShare
+                          ? [{ label: 'Compartilhar', onSelect: () => onShare(item) }]
+                          : []),
+                        ...(scope === 'personal' && onSubmit
+                          ? [{ label: 'Solicitar publicação', onSelect: () => onSubmit(type, item) }]
+                          : []),
+                        { label: 'Excluir', onSelect: () => setDeleting(item) }
+                      ]}
+                    />
+                  </div>
+                </Card>
+              ))}
+            </div>
+            {items.length > pageSize && <Pagination page={current} pageCount={Math.ceil(items.length / pageSize)} onChange={setPage} />}
+          </>
+        )}
+      </div>
       {editor && <EntityEditor type={type} scope={scope} item={editor.item} onClose={() => setEditor(null)} onSaved={saved} />}
       {deleting && <DeleteDialog type={type} item={deleting} onClose={() => setDeleting(null)} onSaved={saved} />}
     </section>

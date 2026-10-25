@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/preact';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ProductCatalogPage } from '../src/products/insights/components/ProductCatalogPage.jsx';
 import { catalogService } from '../src/products/insights/services/catalogService.js';
 
@@ -21,6 +21,9 @@ const products = Array.from({ length: 25 }, (_, index) => ({
   promo_price_cents: index === 24 ? 1500 : null,
   promo_min_quantity: 2
 }));
+afterEach(() => {
+  delete Element.prototype.animate;
+});
 beforeEach(() => {
   vi.clearAllMocks();
   catalogService.loadCatalog.mockResolvedValue({
@@ -35,6 +38,27 @@ beforeEach(() => {
 });
 
 describe('Insights public catalog', () => {
+  it('animates changed result sets without moving the search or replaying for equivalent queries', async () => {
+    const animate = vi.fn(function () {
+      return { cancel: vi.fn() };
+    });
+    Element.prototype.animate = animate;
+    render(<ProductCatalogPage />);
+    await screen.findByText('25 produtos encontrados');
+    animate.mockClear();
+    const search = screen.getByLabelText('Buscar produto');
+    search.focus();
+    fireEvent.input(search, { target: { value: 'file frango' } });
+    expect(screen.getAllByRole('article')).toHaveLength(1);
+    expect(document.activeElement).toBe(search);
+    expect(animate.mock.instances.every((node) => node.className === 'insights-results-content')).toBe(true);
+    expect(animate).toHaveBeenCalledTimes(1);
+    fireEvent.input(search, { target: { value: 'file frango ' } });
+    expect(animate).toHaveBeenCalledTimes(1);
+    fireEvent.input(search, { target: { value: 'inexistente' } });
+    expect(screen.getByText('Nenhum produto encontrado')).toBeTruthy();
+    expect(animate).toHaveBeenCalledTimes(2);
+  });
   it('paginates, searches accents and codes, filters category and quantity prices, and resets pagination', async () => {
     render(<ProductCatalogPage />);
     await screen.findByText('25 produtos encontrados');

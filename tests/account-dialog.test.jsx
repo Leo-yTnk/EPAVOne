@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/preact';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AccountDialog } from '../src/app/account/AccountDialog.jsx';
 import { accountService } from '../src/shared/services/accountService.js';
 vi.mock('../src/shared/services/accountService.js', () => ({ accountService: { signIn: vi.fn(), signOut: vi.fn() } }));
@@ -11,7 +11,27 @@ vi.mock('../src/app/account/Turnstile.jsx', () => ({
   )
 }));
 beforeEach(() => vi.clearAllMocks());
+afterEach(() => {
+  delete Element.prototype.animate;
+});
 describe('account dialog', () => {
+  it('switches forms immediately, preserves entered identity and animates back in the reverse direction', () => {
+    const cancel = vi.fn();
+    const animate = vi.fn(() => ({ cancel }));
+    Element.prototype.animate = animate;
+    render(<AccountDialog account={{ initializing: false }} onClose={() => {}} />);
+    fireEvent.input(screen.getByLabelText('Credencial'), { target: { value: 'YCP-TEST-TEST' } });
+    expect(screen.getByRole('button', { name: 'Criar uma conta' }).type).toBe('button');
+    fireEvent.click(screen.getByRole('button', { name: 'Criar uma conta' }));
+    expect(screen.getByLabelText('Confirmar senha')).toBeTruthy();
+    expect(animate.mock.calls.at(-1)[0][0].transform).toBe('translateX(6px)');
+    expect(screen.getByRole('button', { name: 'Já tenho credencial' }).type).toBe('button');
+    fireEvent.click(screen.getByRole('button', { name: 'Já tenho credencial' }));
+    expect(screen.queryByLabelText('Confirmar senha')).toBeNull();
+    expect(screen.getByLabelText('Credencial').value).toBe('YCP-TEST-TEST');
+    expect(cancel).toHaveBeenCalled();
+    expect(animate.mock.calls.at(-1)[0][0].transform).toBe('translateX(-6px)');
+  });
   it('gates submission, handles failure and requires a fresh captcha after each attempt', async () => {
     accountService.signIn.mockRejectedValue(new Error('Confira sua credencial e senha.'));
     render(<AccountDialog account={{ initializing: false }} onClose={() => {}} />);

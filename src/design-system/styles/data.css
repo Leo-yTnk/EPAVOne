@@ -73,8 +73,10 @@ a.ds-card:active,.ds-card[data-interactive="true"]:active{transform:translateY(0
 .ds-progress{display:grid;gap:var(--space-2)}
 .ds-progress-head{display:flex;justify-content:space-between;gap:var(--space-3);font-size:.875rem;line-height:var(--leading-control)}
 .ds-progress-track{height:.5rem;overflow:hidden;border-radius:var(--radius-full);background:var(--surface-tertiary)}
-.ds-progress-fill{height:100%;width:var(--progress,0%);border-radius:inherit;background:var(--brand-700);transform-origin:left;animation:ds-progress-in var(--duration-slow) var(--ease-enter) both}
-@keyframes ds-progress-in{from{transform:scaleX(0);opacity:.5}to{transform:scaleX(1);opacity:1}}
+.ds-progress-fill{height:100%;width:100%;border-radius:inherit;background:var(--brand-700);transform-origin:left;transform:scaleX(var(--progress,0));transition:transform var(--duration-normal) var(--ease-standard)}
+@starting-style{.ds-progress-fill{transform:scaleX(0)}}
+html[data-reduced-motion='true'] .ds-progress-fill{transition:none}
+@media(prefers-reduced-motion:reduce){.ds-progress-fill{transition:none}}
 
 @media(prefers-reduced-motion:reduce){a.ds-card:hover,.ds-card[data-interactive="true"]:hover,.ds-chart-bar:hover{transform:none}.ds-chart-bar,.ds-progress-fill{animation:none}}
 

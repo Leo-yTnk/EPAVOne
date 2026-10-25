@@ -1,8 +1,9 @@
+import { useContentMotion } from '../../../design-system/behaviors/useContentMotion.js';
 import { CatalogChoices } from './CatalogChoices.jsx';
 import { CatalogLoading } from './CatalogLoading.jsx';
 import { CatalogSections } from './CatalogSections.jsx';
 import { browseCatalogGroups, orderedCatalogItems } from '../models/sections.js';
-import { useMemo, useState } from 'preact/hooks';
+import { useMemo, useRef, useState } from 'preact/hooks';
 import {
   Button,
   Card,
@@ -38,6 +39,13 @@ export function ProductCatalogPage({ initialCategory = '', initialSection = '', 
   const ordered = orderedCatalogItems(filtered, structure.data, 'products', 'products');
   const pageCount = Math.max(1, Math.ceil(filtered.length / CATALOG_PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
+  const resultsRef = useRef(null);
+  const resultKey = JSON.stringify([
+    resource.loading,
+    Boolean(resource.error),
+    ordered.slice((currentPage - 1) * CATALOG_PAGE_SIZE, currentPage * CATALOG_PAGE_SIZE).map((item) => item.id)
+  ]);
+  useContentMotion(resultsRef, resultKey, 0, 'y');
   function update(patch) {
     setFilters((current) => ({ ...current, ...patch }));
     setPage(1);
@@ -136,26 +144,28 @@ export function ProductCatalogPage({ initialCategory = '', initialSection = '', 
           )}
         </div>
       </Card>
-      {!filtered.length ? (
-        <EmptyState
-          title={resource.data.products.length ? 'Nenhum produto encontrado' : 'Catálogo vazio'}
-          description={
-            resource.data.products.length ? 'Tente outro nome ou ajuste os filtros.' : 'Não há produtos públicos ativos no momento.'
-          }
-          actionLabel={resource.data.products.length ? 'Limpar filtros' : undefined}
-          onAction={reset}
-        />
-      ) : (
-        <CatalogSections
-          groups={browseCatalogGroups(
-            ordered.slice((currentPage - 1) * CATALOG_PAGE_SIZE, currentPage * CATALOG_PAGE_SIZE),
-            structure.data,
-            'products',
-            'products'
-          )}
-          renderItem={(item) => <ProductCard key={item.id} product={item} onOpen={setSelected} />}
-        />
-      )}
+      <div ref={resultsRef} className="insights-results-content">
+        {!filtered.length ? (
+          <EmptyState
+            title={resource.data.products.length ? 'Nenhum produto encontrado' : 'Catálogo vazio'}
+            description={
+              resource.data.products.length ? 'Tente outro nome ou ajuste os filtros.' : 'Não há produtos públicos ativos no momento.'
+            }
+            actionLabel={resource.data.products.length ? 'Limpar filtros' : undefined}
+            onAction={reset}
+          />
+        ) : (
+          <CatalogSections
+            groups={browseCatalogGroups(
+              ordered.slice((currentPage - 1) * CATALOG_PAGE_SIZE, currentPage * CATALOG_PAGE_SIZE),
+              structure.data,
+              'products',
+              'products'
+            )}
+            renderItem={(item) => <ProductCard key={item.id} product={item} onOpen={setSelected} />}
+          />
+        )}
+      </div>
       {pageCount > 1 && <Pagination page={currentPage} pageCount={pageCount} onChange={setPage} label="Páginas do catálogo" />}
       {selected && <ProductDetails key={selected.id} product={selected} onClose={() => setSelected(null)} />}
     </section>

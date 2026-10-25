@@ -1,4 +1,5 @@
-import { useState } from 'preact/hooks';
+import { useRef, useState } from 'preact/hooks';
+import { useContentMotion } from '../../../../design-system/behaviors/useContentMotion.js';
 import { Alert, Button, Card, Select } from '../../../../design-system/components/index.js';
 import { creationService } from '../services/creationService.js';
 import { CreationThumbnail } from '../components/CreationThumbnail.jsx';
@@ -38,6 +39,8 @@ export function ImportDuplicateChoice({ entity, row, existing, value, onChange, 
   const [detail, setDetail] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const comparisonRef = useRef(null);
+  useContentMotion(comparisonRef, open ? (loading ? 'loading' : 'ready') : 'closed', 0, 'y');
   async function compare() {
     setOpen(!open);
     if (open || entity !== 'recipes' || detail || loading) return;
@@ -92,7 +95,7 @@ export function ImportDuplicateChoice({ entity, row, existing, value, onChange, 
         </Alert>
       )}
       {open && (
-        <div className="creation-duplicate-comparison">
+        <div ref={comparisonRef} className="creation-duplicate-comparison">
           {[
             ['Original', detail || existing],
             ['Importado', row]

@@ -2,6 +2,7 @@ import { useRef, useState } from 'preact/hooks';
 import { Alert, Button, Dialog, Input } from '../../design-system/components/index.js';
 import { accountService } from '../../shared/services/accountService.js';
 import { Turnstile } from './Turnstile.jsx';
+import { useContentMotion } from '../../design-system/behaviors/useContentMotion.js';
 import './account.css';
 
 export function AccountDialog({ account, onClose }) {
@@ -16,6 +17,9 @@ export function AccountDialog({ account, onClose }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const pending = useRef(false);
+  const contentRef = useRef(null);
+  const mode = result ? 'credential' : account.initializing ? 'loading' : account.session ? 'account' : signup ? 'signup' : 'login';
+  useContentMotion(contentRef, mode, signup ? 1 : 0);
   async function run(action) {
     if (pending.current) return;
     pending.current = true;
@@ -47,7 +51,7 @@ export function AccountDialog({ account, onClose }) {
       title={result ? 'Sua credencial' : account.session ? 'Sua conta' : signup ? 'Criar conta no EPAVOne' : 'Entrar no EPAVOne'}
       onClose={onClose}
     >
-      <div className="account-content">
+      <div ref={contentRef} className="account-content">
         {error && (
           <Alert tone="danger" title="Não foi possível concluir">
             {error}
@@ -142,6 +146,7 @@ export function AccountDialog({ account, onClose }) {
               {signup ? 'Criar conta' : 'Entrar'}
             </Button>
             <Button
+              type="button"
               variant="ghost"
               disabled={busy}
               onClick={() => {

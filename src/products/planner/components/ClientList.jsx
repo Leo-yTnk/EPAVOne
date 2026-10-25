@@ -1,3 +1,5 @@
+import { useRef } from 'preact/hooks';
+import { useContentMotion } from '../../../design-system/behaviors/useContentMotion.js';
 import { usePlannerView } from '../hooks/usePlannerView.js';
 import {
   Badge,
@@ -41,6 +43,8 @@ export function ClientList({ state, week, act, busy, onCreate }) {
     .map(({ customer }) => customer);
   const count = Math.max(1, Math.ceil(filtered.length / 8));
   const current = Math.min(page, count);
+  const resultsRef = useRef(null);
+  useContentMotion(resultsRef, JSON.stringify(filtered.slice((current - 1) * 8, current * 8).map((item) => item.id)), 0, 'y');
   function update(setter, value) {
     setter(value);
     setPage(1);
@@ -82,65 +86,67 @@ export function ClientList({ state, week, act, busy, onCreate }) {
           Novo cliente
         </Button>
       </div>
-      {!filtered.length && (
-        <EmptyState
-          title={state.customers.length ? 'Nenhum cliente com esses filtros' : 'Sua carteira começa aqui'}
-          description="Cadastre um cliente ou ajuste a busca para planejar sua semana."
-          actionLabel={state.customers.length ? 'Limpar filtros' : 'Novo cliente'}
-          onAction={
-            state.customers.length
-              ? () => {
-                  setQuery('');
-                  setSegment('');
-                  setFilter('');
-                }
-              : onCreate
-          }
-        />
-      )}
-      <div className="planner-client-grid">
-        {filtered.slice((current - 1) * 8, current * 8).map((customer) => (
-          <Card
-            key={customer.id}
-            as={ContextMenu}
-            className="planner-client"
-            label={`Atalhos de ${customer.name}`}
-            items={[
-              { label: 'Ver perfil e preparar conversa', icon: 'user', href: `#/planner/clientes/${customer.id}` },
-              {
-                label: 'Adicionar à semana',
-                icon: 'plus',
-                disabled: busy || week.queue.some((entry) => entry.customerId === customer.id),
-                onSelect: () => act({ type: 'add', customerId: customer.id, weekId: week.id }, 'Cliente adicionado à semana.')
-              },
-              { label: 'Ver fila da semana', icon: 'planner', href: '#/planner/semana' }
-            ]}
-          >
-            <div className="planner-section-head">
-              <Badge>{customer.segment}</Badge>
-              {customer.intent && <span className="planner-muted">Quer comprar</span>}
-            </div>
-            <Heading level={4}>
-              <a href={`#/planner/clientes/${customer.id}`}>{customer.name}</a>
-            </Heading>
-            <p className="planner-muted">
-              {customer.position || 'Posição não informada'} · contato: {dateLabel(lastInteraction(customer, state.interactions)?.date)}
-            </p>
-            <PriorityDetails customer={customer} state={state} />
-            <div className="ds-inline">
-              <Button as="a" size="sm" variant="secondary" href={`#/planner/clientes/${customer.id}`}>
-                Preparar cliente
-              </Button>
-              <Button
-                size="sm"
-                disabled={busy || week.queue.some((entry) => entry.customerId === customer.id)}
-                onClick={() => act({ type: 'add', customerId: customer.id, weekId: week.id }, 'Cliente adicionado à semana.')}
-              >
-                {week.queue.some((entry) => entry.customerId === customer.id) ? 'Na semana' : 'Adicionar à semana'}
-              </Button>
-            </div>
-          </Card>
-        ))}
+      <div ref={resultsRef}>
+        {!filtered.length && (
+          <EmptyState
+            title={state.customers.length ? 'Nenhum cliente com esses filtros' : 'Sua carteira começa aqui'}
+            description="Cadastre um cliente ou ajuste a busca para planejar sua semana."
+            actionLabel={state.customers.length ? 'Limpar filtros' : 'Novo cliente'}
+            onAction={
+              state.customers.length
+                ? () => {
+                    setQuery('');
+                    setSegment('');
+                    setFilter('');
+                  }
+                : onCreate
+            }
+          />
+        )}
+        <div className="planner-client-grid">
+          {filtered.slice((current - 1) * 8, current * 8).map((customer) => (
+            <Card
+              key={customer.id}
+              as={ContextMenu}
+              className="planner-client"
+              label={`Atalhos de ${customer.name}`}
+              items={[
+                { label: 'Ver perfil e preparar conversa', icon: 'user', href: `#/planner/clientes/${customer.id}` },
+                {
+                  label: 'Adicionar à semana',
+                  icon: 'plus',
+                  disabled: busy || week.queue.some((entry) => entry.customerId === customer.id),
+                  onSelect: () => act({ type: 'add', customerId: customer.id, weekId: week.id }, 'Cliente adicionado à semana.')
+                },
+                { label: 'Ver fila da semana', icon: 'planner', href: '#/planner/semana' }
+              ]}
+            >
+              <div className="planner-section-head">
+                <Badge>{customer.segment}</Badge>
+                {customer.intent && <span className="planner-muted">Quer comprar</span>}
+              </div>
+              <Heading level={4}>
+                <a href={`#/planner/clientes/${customer.id}`}>{customer.name}</a>
+              </Heading>
+              <p className="planner-muted">
+                {customer.position || 'Posição não informada'} · contato: {dateLabel(lastInteraction(customer, state.interactions)?.date)}
+              </p>
+              <PriorityDetails customer={customer} state={state} />
+              <div className="ds-inline">
+                <Button as="a" size="sm" variant="secondary" href={`#/planner/clientes/${customer.id}`}>
+                  Preparar cliente
+                </Button>
+                <Button
+                  size="sm"
+                  disabled={busy || week.queue.some((entry) => entry.customerId === customer.id)}
+                  onClick={() => act({ type: 'add', customerId: customer.id, weekId: week.id }, 'Cliente adicionado à semana.')}
+                >
+                  {week.queue.some((entry) => entry.customerId === customer.id) ? 'Na semana' : 'Adicionar à semana'}
+                </Button>
+              </div>
+            </Card>
+          ))}
+        </div>
       </div>
       {count > 1 && <Pagination page={current} pageCount={count} onChange={setPage} label="Páginas da carteira" />}
     </>

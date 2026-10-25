@@ -2,6 +2,7 @@ import { useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { useControlId } from '../behaviors/useControlId.js';
 import { observeSize } from '../behaviors/observeSize.js';
 import { reducedMotion } from '../behaviors/motion.js';
+import { useContentMotion } from '../behaviors/useContentMotion.js';
 import { Card } from './Card.jsx';
 import { IconButton } from './IconButton.jsx';
 
@@ -10,6 +11,7 @@ export function Carousel({ label, headingId, children, action, headingSurface = 
   const generatedId = useControlId();
   const titleId = headingId || generatedId;
   const ref = useRef(null);
+  useContentMotion(ref, expanded, 0, 'y');
   const [edges, setEdges] = useState({ start: true, end: true });
   useLayoutEffect(() => {
     const node = ref.current;
