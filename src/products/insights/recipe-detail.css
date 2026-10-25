@@ -8,9 +8,9 @@
 }
 .recipe-detail-hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
   gap: var(--space-6);
-  align-items: center;
+  align-items: start;
 }
 .recipe-detail-summary {
   display: grid;
@@ -23,7 +23,7 @@
   letter-spacing: 0.07em;
 }
 .recipe-detail-title {
-  font: 400 clamp(2.125rem, 3.8vw, 3rem)/var(--leading-heading) var(--font-display);
+  font: 400 clamp(1.875rem, 3vw, 2.5rem)/var(--leading-heading) var(--font-display);
   letter-spacing: -0.025em;
   overflow-wrap: anywhere;
   text-wrap: pretty;
@@ -34,7 +34,7 @@
 }
 .recipe-detail-hero > .insights-image.ds-card {
   --card-radius: max(0px, calc(var(--radius-xl) - var(--insights-detail-gutter, var(--space-5))));
-  aspect-ratio: 4/5;
+  aspect-ratio: 4/3;
   background: transparent;
 }
 .recipe-detail-hero .insights-image img {
@@ -75,6 +75,8 @@
   grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.25fr);
   gap: var(--space-7);
   align-items: start;
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border-subtle);
 }
 .recipe-detail-section {
   display: grid;
@@ -275,4 +277,8 @@
   .recipe-detail-fact dd {
     font-size: 1rem;
   }
+}
+
+@media (max-width: 48rem) {
+  .recipe-detail-body { padding-top: 0; border-top: 0; }
 }

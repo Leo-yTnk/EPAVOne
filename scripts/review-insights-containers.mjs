@@ -24,7 +24,7 @@ const product = {
   name: 'Frango Swift com embalagem econômica para compartilhar',
   category_id: 'c1',
   category,
-  image_url: 'https://fixtures.invalid/photo.svg',
+  image_url: 'https://fixtures.invalid/product-tall.svg',
   regular_price_cents: 2590,
   unit: 'pacote'
 };
@@ -68,7 +68,9 @@ try {
       await page.route('https://fixtures.invalid/**', (route) =>
         route.fulfill({
           contentType: 'image/svg+xml',
-          body: '<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400"><rect width="640" height="400" fill="#dfc7a5"/></svg>'
+          body: route.request().url().includes('product-tall')
+            ? '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="800"><rect width="400" height="800" fill="#dfc7a5"/></svg>'
+            : '<svg xmlns="http://www.w3.org/2000/svg" width="640" height="400"><rect width="640" height="400" fill="#dfc7a5"/></svg>'
         })
       );
       await page.route('**/rest/v1/**', (route) => {
@@ -79,7 +81,10 @@ try {
           table === 'recipes'
             ? recipes
             : table === 'products'
-              ? [product]
+              ? [
+                  product,
+                  { ...product, id: 'p2', name: 'Embalagem horizontal Swift', image_url: 'https://fixtures.invalid/product-wide.svg' }
+                ]
               : table === 'categories'
                 ? [category]
                 : table === 'recipe_ingredients'
@@ -108,7 +113,9 @@ try {
               contentLeft: image.left - rect.left,
               rightSpace: rect.right - image.right,
               width: rect.width,
-              overflow: card.scrollWidth > card.clientWidth
+              overflow: card.scrollWidth > card.clientWidth,
+              actionPadding: parseFloat(getComputedStyle(card.querySelector('.insights-card-action')).paddingLeft),
+              actionHeight: card.querySelector('.insights-card-action').getBoundingClientRect().height
             };
           });
       const allCards = page.locator('.insights-recipes-collection > article');
@@ -122,6 +129,7 @@ try {
       await page.waitForTimeout(100);
       const comfortable = await box();
       assert(!comfortable.overflow);
+      assert(comfortable.padding >= 16 && comfortable.actionPadding >= 12 && comfortable.actionHeight >= 44, JSON.stringify(comfortable));
       assert(Math.abs(comfortable.contentLeft - comfortable.rightSpace) <= 1, 'Photo gutters must be symmetric');
       await page.evaluate(() => {
         document.documentElement.dataset.density = 'compact';
@@ -176,6 +184,13 @@ try {
       assert(Math.abs(contentBefore.width - contentOpen.width) <= 1, 'Opening a dialog must not resize every catalog card');
       await dialog.getByRole('button', { name: `Ver produto ${product.name}`, exact: true }).click();
       await dialog.getByRole('heading', { name: product.name, exact: true }).waitFor();
+      const productImage = dialog.locator('.insights-product-overview > .insights-image img');
+      await productImage.evaluate((image) => image.decode());
+      assert.equal(await productImage.evaluate((image) => getComputedStyle(image).objectFit), 'contain');
+      assert(
+        await productImage.evaluate((image) => image.naturalHeight > image.naturalWidth),
+        'Portrait packaging fixture must be exercised'
+      );
       await dialog.getByRole('button', { name: '← Voltar à receita', exact: true }).click();
       await dialog.getByRole('heading', { name: recipes[0].name, exact: true }).waitFor();
       if ([390, 1440].includes(width)) await page.screenshot({ path: `${output}/detail-${width}-${theme}.png` });
@@ -207,6 +222,39 @@ try {
       assert.equal(await page.evaluate(() => window.__modalEntries.length), before);
       await page.keyboard.press('Escape');
       assert.equal(await page.locator('.ds-dialog-overlay').count(), 0);
+      await page.goto('http://127.0.0.1:5184/EPAVOne/#/insights/produtos');
+      await page.locator('.insights-product-card').first().waitFor();
+      await page.locator('.insights-product-card').nth(1).waitFor();
+      assert.equal(await page.locator('.insights-product-card').count(), 2);
+      for (const card of await page.locator('.insights-product-card').all()) {
+        const photo = card.locator('.insights-image img');
+        await photo.evaluate((image) => image.decode());
+        const fit = await photo.evaluate((image) => {
+          const style = getComputedStyle(image);
+          const rect = image.parentElement.getBoundingClientRect();
+          const card = image.closest('.insights-product-card');
+          const action = card.querySelector('.insights-card-action');
+          return {
+            fit: style.objectFit,
+            inset: parseFloat(style.paddingLeft),
+            square: Math.abs(rect.width - rect.height) < 1,
+            cardPadding: parseFloat(getComputedStyle(card).paddingLeft),
+            actionPadding: parseFloat(getComputedStyle(action).paddingLeft),
+            overflow: card.scrollWidth > card.clientWidth
+          };
+        });
+        assert(
+          fit.fit === 'contain' && fit.inset >= 4 && fit.square && !fit.overflow && fit.cardPadding >= 16 && fit.actionPadding >= 12,
+          JSON.stringify(fit)
+        );
+      }
+      const expand = page.getByRole('button', { name: /Ver todos de/ }).first();
+      if (await expand.count()) {
+        await expand.click();
+        assert(
+          await page.locator('.insights-product-card').evaluateAll((cards) => cards.every((card) => card.scrollWidth <= card.clientWidth))
+        );
+      }
       assert.deepEqual(errors, []);
       results.push({ width, theme, comfortable, compact, geometry, exit });
       await page.close();

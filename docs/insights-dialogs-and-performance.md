@@ -1,5 +1,7 @@
 # Diálogos, contêineres e microtravamentos — 25/10/2026
 
+O [refino posterior dos cards](insights-card-refinement.md) ajusta padding, botões, fotografia de produto e proporção da abertura da receita. As medições abaixo registram a etapa de desempenho anterior a esse refino visual.
+
 ## Resultado funcional
 
 Correções sobre a versão já publicada pelo PR #68 (`16460d12de5081746ceeb0489436281ab5fac4cb`). Nenhum processo de negócio, preço, importação ou banco de dados foi alterado.

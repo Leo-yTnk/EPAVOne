@@ -9,7 +9,7 @@
 }
 .insights-catalog-card.ds-card {
   --container-padding: var(--space-5);
-  --card-radius: var(--radius-lg);
+  --card-radius: var(--radius-xl);
   --catalog-image-radius: max(0px, calc(var(--card-radius) - var(--container-padding) - 1px));
   padding: var(--container-padding);
   gap: var(--space-4);
@@ -34,16 +34,21 @@
 .insights-catalog-card .insights-recipe-copy {
   gap: var(--space-3);
 }
-.insights-catalog-card .ds-btn {
+.insights-catalog-card .insights-card-action {
   justify-content: space-between;
   width: 100%;
   align-self: stretch;
   min-height: 2.75rem;
-  padding-inline: 0;
-  border: 0;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--border-default);
+  border-radius: var(--nested-radius);
+  background: var(--surface-secondary);
+  color: var(--text-brand);
   font-size: 0.8125rem;
 }
-.insights-catalog-card .ds-btn > span {
+.insights-catalog-card .insights-card-action > span {
+  width: 100%;
+  justify-content: space-between;
   gap: var(--space-3);
 }
 .insights-recipe-meta {
@@ -128,6 +133,7 @@
 }
 @media (max-width: 48rem) {
   .insights-catalog-card.ds-card {
+    --container-padding: var(--space-4);
     --card-radius: var(--radius-card);
   }
   .insights-catalog-section > .insights-section-heading h2 {
@@ -172,8 +178,6 @@
 
 /* Discovery shelves use compact, equally paced cards. Full collections stay available. */
 .insights-catalog-section .ds-carousel-track > .insights-catalog-card {
-  --container-padding: var(--space-4);
-  --card-radius: var(--radius-lg);
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
@@ -246,9 +250,6 @@
   .insights-catalog-section .ds-carousel[data-expanded='true'] .ds-carousel-track {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .insights-catalog-section .ds-carousel[data-expanded='true'] .insights-catalog-card {
-    --container-padding: var(--space-3);
-  }
   .insights-catalog-section .ds-carousel[data-expanded='true'] .insights-product-name {
     font-size: 0.875rem;
   }
@@ -276,4 +277,20 @@
 }
 .insights-catalog-section[data-category='true'] .insights-catalog-card .ds-badge {
   display: none;
+}
+
+/* Product packaging is shown whole on a neutral square photo stage. */
+.insights-catalog-card.insights-product-card > .insights-image.ds-card {
+  aspect-ratio: 1;
+}
+.insights-image.ds-card[data-image-fit='contain']:has(> img) {
+  background: var(--ref-color-paper-0);
+}
+.insights-image.ds-card[data-image-fit='contain'] > img {
+  object-fit: contain;
+  object-position: center;
+  padding: clamp(var(--space-1), 4%, var(--space-2));
+}
+@media (max-width: 48rem) {
+  .insights-catalog-card .insights-card-action { font-size: 0.75rem; }
 }

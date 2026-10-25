@@ -18,7 +18,13 @@ export const RecipeCard = memo(function RecipeCard({ recipe, onOpen, compact = f
           {recipe.servings && <span>{recipe.servings} porções</span>}
           {!compact && recipe.difficulty && <span>{recipe.difficulty}</span>}
         </p>
-        <Button variant="ghost" size="sm" onClick={() => onOpen(recipe)} aria-label={`Ver receita de ${recipe.name}`}>
+        <Button
+          variant="secondary"
+          size="sm"
+          className="insights-card-action"
+          onClick={() => onOpen(recipe)}
+          aria-label={`Ver receita de ${recipe.name}`}
+        >
           Ver receita <span aria-hidden="true">↗</span>
         </Button>
       </div>
