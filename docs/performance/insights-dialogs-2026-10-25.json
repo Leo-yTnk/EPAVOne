@@ -1,0 +1,2534 @@
+{
+  "metadata": {
+    "date": "2026-10-25",
+    "baselineCommit": "16460d12de5081746ceeb0489436281ab5fac4cb",
+    "candidateSourceSHA256": "bda389c7e5a185dd90484f686a2ad056715f39bf3b9e30dd3bb6ff0b757629bd",
+    "trials": 24,
+    "repeats": 3,
+    "detailRounds": 4,
+    "browser": "Chromium 149.0.7827.0 headless",
+    "fixtures": {
+      "recipes": 120,
+      "products": 48,
+      "images": false
+    },
+    "metric": "Main-thread TaskDuration, not total device CPU",
+    "rendering": "Headless/software environment; throttling simulates slower scheduling"
+  },
+  "summary": [
+    {
+      "width": 390,
+      "throttle": 1,
+      "baseline": {
+        "mainCorePercent": 19.905922101059254,
+        "mainTaskMs": 1569.11,
+        "detailMainMs": 620.102,
+        "scriptMs": 74.157,
+        "layoutMs": 120.041,
+        "styleMs": 176.821,
+        "frameP95": 16.799999999999272,
+        "slowFrames": 3,
+        "blockingMs": 43,
+        "idleMainMs": 22.89700000000039,
+        "heapMiB": 10.110702514648438,
+        "maxLongTaskMedianMs": 66,
+        "largestTaskAcrossTrialsMs": 72
+      },
+      "candidate": {
+        "mainCorePercent": 15.631521994519302,
+        "mainTaskMs": 1034.911,
+        "detailMainMs": 384.10999999999996,
+        "scriptMs": 28.932,
+        "layoutMs": 99.72999999999999,
+        "styleMs": 125.807,
+        "frameP95": 16.700000000000728,
+        "slowFrames": 2,
+        "blockingMs": 16,
+        "idleMainMs": 15.59200000000005,
+        "heapMiB": 4.787906646728516,
+        "maxLongTaskMedianMs": 66,
+        "largestTaskAcrossTrialsMs": 66
+      },
+      "additionalCorePoints": -3.8418413581799307,
+      "deltaRange": [
+        -4.323667444518414,
+        -3.581438257696183
+      ],
+      "cpuScore": 1,
+      "paired": [
+        {
+          "taskReductionPercent": 32.41852139905037,
+          "detailReductionPercent": 41.99825190049378
+        },
+        {
+          "taskReductionPercent": 34.25368521008725,
+          "detailReductionPercent": 25.639193958366
+        },
+        {
+          "taskReductionPercent": 31.85300841827503,
+          "detailReductionPercent": 36.60135700643619
+        }
+      ],
+      "taskReductionPercent": 32.41852139905037,
+      "detailReductionPercent": 36.60135700643619
+    },
+    {
+      "width": 390,
+      "throttle": 4,
+      "baseline": {
+        "mainCorePercent": 64.62582078855698,
+        "mainTaskMs": 6923.415999999999,
+        "detailMainMs": 2568.6099999999997,
+        "scriptMs": 333.433,
+        "layoutMs": 658.0899999999999,
+        "styleMs": 775.1250000000001,
+        "frameP95": 116.59999999999945,
+        "slowFrames": 27,
+        "blockingMs": 2504,
+        "idleMainMs": 45.76799999999892,
+        "heapMiB": 13.963020324707031,
+        "maxLongTaskMedianMs": 398,
+        "largestTaskAcrossTrialsMs": 406
+      },
+      "candidate": {
+        "mainCorePercent": 61.95650703095239,
+        "mainTaskMs": 5114.110000000001,
+        "detailMainMs": 1743.296,
+        "scriptMs": 132.96899999999997,
+        "layoutMs": 586.659,
+        "styleMs": 663.4,
+        "frameP95": 66.60000000000036,
+        "slowFrames": 24,
+        "blockingMs": 941,
+        "idleMainMs": 48.185000000000144,
+        "heapMiB": 11.895339965820312,
+        "maxLongTaskMedianMs": 318,
+        "largestTaskAcrossTrialsMs": 371
+      },
+      "additionalCorePoints": -3.550016679932277,
+      "deltaRange": [
+        -3.782251886662081,
+        -2.6693137576045913
+      ],
+      "cpuScore": 1,
+      "paired": [
+        {
+          "taskReductionPercent": 27.188612861505746,
+          "detailReductionPercent": 25.154506303256085
+        },
+        {
+          "taskReductionPercent": 28.332940583152443,
+          "detailReductionPercent": 27.70011758836809
+        },
+        {
+          "taskReductionPercent": 26.13314005687364,
+          "detailReductionPercent": 32.75008662272588
+        }
+      ],
+      "taskReductionPercent": 27.188612861505746,
+      "detailReductionPercent": 27.70011758836809
+    },
+    {
+      "width": 1440,
+      "throttle": 1,
+      "baseline": {
+        "mainCorePercent": 20.37211962505211,
+        "mainTaskMs": 1618.8590000000002,
+        "detailMainMs": 681.321,
+        "scriptMs": 78.79499999999999,
+        "layoutMs": 127.43300000000002,
+        "styleMs": 129.419,
+        "frameP95": 33.29999999999927,
+        "slowFrames": 2,
+        "blockingMs": 47,
+        "idleMainMs": 15.322999999999976,
+        "heapMiB": 12.119209289550781,
+        "maxLongTaskMedianMs": 74,
+        "largestTaskAcrossTrialsMs": 75
+      },
+      "candidate": {
+        "mainCorePercent": 18.275408452192647,
+        "mainTaskMs": 1217.4049999999997,
+        "detailMainMs": 464.25399999999996,
+        "scriptMs": 35.982,
+        "layoutMs": 106.63199999999999,
+        "styleMs": 103.621,
+        "frameP95": 33.29999999999973,
+        "slowFrames": 3,
+        "blockingMs": 8,
+        "idleMainMs": 16.37400000000011,
+        "heapMiB": 5.352039337158203,
+        "maxLongTaskMedianMs": 58,
+        "largestTaskAcrossTrialsMs": 70
+      },
+      "additionalCorePoints": -2.2156996473801946,
+      "deltaRange": [
+        -2.3342229752601753,
+        -2.0510472909687785
+      ],
+      "cpuScore": 1,
+      "paired": [
+        {
+          "taskReductionPercent": 24.62929267351941,
+          "detailReductionPercent": 27.637938747231406
+        },
+        {
+          "taskReductionPercent": 25.444773139600187,
+          "detailReductionPercent": 38.18772649015665
+        },
+        {
+          "taskReductionPercent": 25.094829191101187,
+          "detailReductionPercent": 31.8624996358865
+        }
+      ],
+      "taskReductionPercent": 25.094829191101187,
+      "detailReductionPercent": 31.8624996358865
+    },
+    {
+      "width": 1440,
+      "throttle": 4,
+      "baseline": {
+        "mainCorePercent": 68.09414208177319,
+        "mainTaskMs": 7761.160999999999,
+        "detailMainMs": 3067.575,
+        "scriptMs": 367.582,
+        "layoutMs": 646.0699999999999,
+        "styleMs": 597.974,
+        "frameP95": 116.60000000000036,
+        "slowFrames": 32,
+        "blockingMs": 2801,
+        "idleMainMs": 58.84400000000056,
+        "heapMiB": 13.040828704833984,
+        "maxLongTaskMedianMs": 361,
+        "largestTaskAcrossTrialsMs": 411
+      },
+      "candidate": {
+        "mainCorePercent": 65.82018369761306,
+        "mainTaskMs": 5749.984,
+        "detailMainMs": 2062.441,
+        "scriptMs": 177.183,
+        "layoutMs": 560.456,
+        "styleMs": 504.583,
+        "frameP95": 66.60000000000036,
+        "slowFrames": 27,
+        "blockingMs": 1429,
+        "idleMainMs": 45.67300000000074,
+        "heapMiB": 5.857021331787109,
+        "maxLongTaskMedianMs": 353,
+        "largestTaskAcrossTrialsMs": 461
+      },
+      "additionalCorePoints": -2.4927291844642383,
+      "deltaRange": [
+        -3.2153877079059896,
+        -0.3431666179550774
+      ],
+      "cpuScore": 1,
+      "paired": [
+        {
+          "taskReductionPercent": 25.913352396632394,
+          "detailReductionPercent": 32.766403429419015
+        },
+        {
+          "taskReductionPercent": 14.820466218292516,
+          "detailReductionPercent": 22.731103140793905
+        },
+        {
+          "taskReductionPercent": 28.596775003870277,
+          "detailReductionPercent": 39.43599958867872
+        }
+      ],
+      "taskReductionPercent": 25.913352396632394,
+      "detailReductionPercent": 32.766403429419015
+    }
+  ],
+  "raw": [
+    {
+      "width": 390,
+      "throttle": 1,
+      "repeat": 0,
+      "variant": "baseline",
+      "wall": 7.970416739,
+      "mainCorePercent": 19.212960252215485,
+      "mainTaskMs": 1531.3529999999998,
+      "detailMainMs": 620.102,
+      "scriptMs": 73.253,
+      "layoutMs": 114.24500000000002,
+      "styleMs": 159.908,
+      "frames": 467,
+      "frameP95": 16.799999999999272,
+      "slowFrames": 2,
+      "longTasks": 2,
+      "maxLongTaskMs": 60,
+      "tracedTasks": [
+        {
+          "duration": 55,
+          "phase": "search:inexistente"
+        },
+        {
+          "duration": 60,
+          "phase": "search:"
+        }
+      ],
+      "blockingMs": 15,
+      "idleMainMs": 18.28099999999999,
+      "heapMiB": 13.928028106689453,
+      "activeAnimations": 0,
+      "contentArrivals": 25
+    },
+    {
+      "width": 390,
+      "throttle": 1,
+      "repeat": 0,
+      "variant": "candidate",
+      "wall": 6.620666882999998,
+      "mainCorePercent": 15.631521994519302,
+      "mainTaskMs": 1034.911,
+      "detailMainMs": 359.6700000000001,
+      "scriptMs": 28.932,
+      "layoutMs": 99.72999999999999,
+      "styleMs": 121.40100000000001,
+      "frames": 391,
+      "frameP95": 16.700000000000728,
+      "slowFrames": 1,
+      "longTasks": 1,
+      "maxLongTaskMs": 66,
+      "tracedTasks": [
+        {
+          "duration": 66,
+          "phase": "search:"
+        }
+      ],
+      "blockingMs": 16,
+      "idleMainMs": 15.59200000000005,
+      "heapMiB": 4.787906646728516,
+      "activeAnimations": 0,
+      "contentArrivals": 14
+    },
+    {
+      "width": 390,
+      "throttle": 1,
+      "repeat": 1,
+      "variant": "candidate",
+      "wall": 6.620556669999998,
+      "mainCorePercent": 15.58225465654084,
+      "mainTaskMs": 1031.6319999999998,
+      "detailMainMs": 384.10999999999996,
+      "scriptMs": 28.137000000000004,
+      "layoutMs": 94.87199999999999,
+      "styleMs": 125.807,
+      "frames": 392,
+      "frameP95": 16.799999999999727,
+      "slowFrames": 2,
+      "longTasks": 1,
+      "maxLongTaskMs": 54,
+      "tracedTasks": [
+        {
+          "duration": 54,
+          "phase": "search:"
+        }
+      ],
+      "blockingMs": 4,
+      "idleMainMs": 13.002999999999876,
+      "heapMiB": 4.7785186767578125,
+      "activeAnimations": 0,
+      "contentArrivals": 14
+    },
+    {
+      "width": 390,
+      "throttle": 1,
+      "repeat": 1,
+      "variant": "baseline",
+      "wall": 7.882629058999999,
+      "mainCorePercent": 19.905922101059254,
+      "mainTaskMs": 1569.11,
+      "detailMainMs": 516.549,
+      "scriptMs": 74.157,
+      "layoutMs": 120.041,
+      "styleMs": 177.426,
+      "frames": 457,
+      "frameP95": 16.700000000000728,
+      "slowFrames": 4,
+      "longTasks": 4,
+      "maxLongTaskMs": 66,
+      "tracedTasks": [
+        {
+          "duration": 56,
+          "phase": "search:01"
+        },
+        {
+          "duration": 63,
+          "phase": "search:0"
+        },
+        {
+          "duration": 66,
+          "phase": "search:"
+        },
+        {
+          "duration": 58,
+          "phase": "search:"
+        }
+      ],
+      "blockingMs": 43,
+      "idleMainMs": 22.89700000000039,
+      "heapMiB": 10.110702514648438,
+      "activeAnimations": 0,
+      "contentArrivals": 25
+    },
+    {
+      "width": 390,
+      "throttle": 1,
+      "repeat": 2,
+      "variant": "baseline",
+      "wall": 8.020308450000003,
+      "mainCorePercent": 21.329391639544728,
+      "mainTaskMs": 1710.6830000000002,
+      "detailMainMs": 682.237,
+      "scriptMs": 80.92,
+      "layoutMs": 127.664,
+      "styleMs": 176.821,
+      "frames": 461,
+      "frameP95": 16.800000000000182,
+      "slowFrames": 3,
+      "longTasks": 4,
+      "maxLongTaskMs": 72,
+      "tracedTasks": [
+        {
+          "duration": 53,
+          "phase": "search:01"
+        },
+        {
+          "duration": 62,
+          "phase": "search:0"
+        },
+        {
+          "duration": 56,
+          "phase": "search:"
+        },
+        {
+          "duration": 72,
+          "phase": "search:"
+        }
+      ],
+      "blockingMs": 43,
+      "idleMainMs": 27.867999999999782,
+      "heapMiB": 4.527259826660156,
+      "activeAnimations": 0,
+      "contentArrivals": 25
+    },
+    {
+      "width": 390,
+      "throttle": 1,
+      "repeat": 2,
+      "variant": "candidate",
+      "wall": 6.666336800999997,
+      "mainCorePercent": 17.487550281364797,
+      "mainTaskMs": 1165.7790000000002,
+      "detailMainMs": 432.52899999999994,
+      "scriptMs": 32.438,
+      "layoutMs": 108.75000000000001,
+      "styleMs": 139.69799999999998,
+      "frames": 394,
+      "frameP95": 16.700000000000728,
+      "slowFrames": 2,
+      "longTasks": 2,
+      "maxLongTaskMs": 66,
+      "tracedTasks": [
+        {
+          "duration": 55,
+          "phase": "search:01"
+        },
+        {
+          "duration": 66,
+          "phase": "search:"
+        }
+      ],
+      "blockingMs": 21,
+      "idleMainMs": 25.19500000000008,
+      "heapMiB": 6.841300964355469,
+      "activeAnimations": 0,
+      "contentArrivals": 14
+    },
+    {
+      "width": 390,
+      "throttle": 4,
+      "repeat": 0,
+      "variant": "baseline",
+      "wall": 10.780825543999999,
+      "mainCorePercent": 64.12498719866124,
+      "mainTaskMs": 6913.203,
+      "detailMainMs": 2329.1929999999993,
+      "scriptMs": 353.45899999999995,
+      "layoutMs": 658.0899999999999,
+      "styleMs": 775.1250000000001,
+      "frames": 393,
+      "frameP95": 116.59999999999945,
+      "slowFrames": 27,
+      "longTasks": 41,
+      "maxLongTaskMs": 398,
+      "tracedTasks": [
+        {
+          "duration": 66,
+          "phase": "other"
+        },
+        {
+          "duration": 168,
+          "phase": "search:0"
+        },
+        {
+          "duration": 244,
+          "phase": "search:01"
+        },
+        {
+          "duration": 340,
+          "phase": "search:0"
+        },
+        {
+          "duration": 118,
+          "phase": "search:0"
+        },
+        {
+          "duration": 141,
+          "phase": "search:"
+        },
+        {
+          "duration": 73,
+          "phase": "search:1"
+        },
+        {
+          "duration": 293,
+          "phase": "search:"
+        },
+        {
+          "duration": 398,
+          "phase": "search:"
+        },
+        {
+          "duration": 121,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 128,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 92,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 61,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 126,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 83,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 82,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 80,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 55,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 88,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 86,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 52,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 68,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 92,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 82,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 88,
+          "phase": "carousel:0"
+        },
+        {
+          "duration": 81,
+          "phase": "carousel:0"
+        },
+        {
+          "duration": 92,
+          "phase": "carousel:1"
+        },
+        {
+          "duration": 82,
+          "phase": "carousel:2"
+        },
+        {
+          "duration": 91,
+          "phase": "carousel:2"
+        },
+        {
+          "duration": 82,
+          "phase": "carousel:3"
+        },
+        {
+          "duration": 90,
+          "phase": "carousel:3"
+        },
+        {
+          "duration": 75,
+          "phase": "carousel:3"
+        },
+        {
+          "duration": 93,
+          "phase": "carousel:4"
+        },
+        {
+          "duration": 85,
+          "phase": "carousel:4"
+        },
+        {
+          "duration": 88,
+          "phase": "carousel:5"
+        },
+        {
+          "duration": 83,
+          "phase": "carousel:6"
+        },
+        {
+          "duration": 89,
+          "phase": "carousel:6"
+        },
+        {
+          "duration": 66,
+          "phase": "carousel:7"
+        },
+        {
+          "duration": 94,
+          "phase": "carousel:7"
+        },
+        {
+          "duration": 80,
+          "phase": "carousel:7"
+        },
+        {
+          "duration": 58,
+          "phase": "account:5"
+        }
+      ],
+      "blockingMs": 2504,
+      "idleMainMs": 31.302000000000163,
+      "heapMiB": 14.021244049072266,
+      "activeAnimations": 0,
+      "contentArrivals": 25
+    },
+    {
+      "width": 390,
+      "throttle": 4,
+      "repeat": 0,
+      "variant": "candidate",
+      "wall": 8.30970111400001,
+      "mainCorePercent": 60.57497051872897,
+      "mainTaskMs": 5033.598999999999,
+      "detailMainMs": 1743.296,
+      "scriptMs": 132.96899999999997,
+      "layoutMs": 522.0469999999999,
+      "styleMs": 610.268,
+      "frames": 355,
+      "frameP95": 66.60000000000036,
+      "slowFrames": 24,
+      "longTasks": 23,
+      "maxLongTaskMs": 371,
+      "tracedTasks": [
+        {
+          "duration": 102,
+          "phase": "search:0"
+        },
+        {
+          "duration": 241,
+          "phase": "search:01"
+        },
+        {
+          "duration": 88,
+          "phase": "search:0"
+        },
+        {
+          "duration": 134,
+          "phase": "search:"
+        },
+        {
+          "duration": 62,
+          "phase": "search:1"
+        },
+        {
+          "duration": 371,
+          "phase": "search:"
+        },
+        {
+          "duration": 117,
+          "phase": "search:"
+        },
+        {
+          "duration": 61,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 70,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 53,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 51,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 69,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 70,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 101,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 56,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 59,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 52,
+          "phase": "carousel:0"
+        },
+        {
+          "duration": 51,
+          "phase": "carousel:1"
+        },
+        {
+          "duration": 66,
+          "phase": "carousel:1"
+        },
+        {
+          "duration": 52,
+          "phase": "carousel:3"
+        },
+        {
+          "duration": 54,
+          "phase": "carousel:3"
+        },
+        {
+          "duration": 56,
+          "phase": "carousel:4"
+        },
+        {
+          "duration": 55,
+          "phase": "carousel:5"
+        }
+      ],
+      "blockingMs": 941,
+      "idleMainMs": 28.149000000000868,
+      "heapMiB": 4.647674560546875,
+      "activeAnimations": 0,
+      "contentArrivals": 14
+    },
+    {
+      "width": 390,
+      "throttle": 4,
+      "repeat": 1,
+      "variant": "candidate",
+      "wall": 8.420899327000006,
+      "mainCorePercent": 64.17721896605683,
+      "mainTaskMs": 5404.299,
+      "detailMainMs": 1871.0059999999994,
+      "scriptMs": 146.01699999999997,
+      "layoutMs": 599.458,
+      "styleMs": 718.115,
+      "frames": 358,
+      "frameP95": 66.69999999999982,
+      "slowFrames": 24,
+      "longTasks": 34,
+      "maxLongTaskMs": 318,
+      "tracedTasks": [
+        {
+          "duration": 106,
+          "phase": "search:0"
+        },
+        {
+          "duration": 255,
+          "phase": "search:01"
+        },
+        {
+          "duration": 93,
+          "phase": "search:0"
+        },
+        {
+          "duration": 94,
+          "phase": "search:"
+        },
+        {
+          "duration": 52,
+          "phase": "search:1"
+        },
+        {
+          "duration": 318,
+          "phase": "search:"
+        },
+        {
+          "duration": 106,
+          "phase": "search:"
+        },
+        {
+          "duration": 63,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 53,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 58,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 65,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 50,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 57,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 57,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 87,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 57,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 126,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 76,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 55,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 53,
+          "phase": "carousel:0"
+        },
+        {
+          "duration": 50,
+          "phase": "carousel:0"
+        },
+        {
+          "duration": 53,
+          "phase": "carousel:0"
+        },
+        {
+          "duration": 55,
+          "phase": "carousel:1"
+        },
+        {
+          "duration": 68,
+          "phase": "carousel:1"
+        },
+        {
+          "duration": 56,
+          "phase": "carousel:2"
+        },
+        {
+          "duration": 56,
+          "phase": "carousel:3"
+        },
+        {
+          "duration": 52,
+          "phase": "carousel:3"
+        },
+        {
+          "duration": 61,
+          "phase": "carousel:3"
+        },
+        {
+          "duration": 63,
+          "phase": "carousel:5"
+        },
+        {
+          "duration": 64,
+          "phase": "carousel:5"
+        },
+        {
+          "duration": 59,
+          "phase": "carousel:5"
+        },
+        {
+          "duration": 51,
+          "phase": "carousel:6"
+        },
+        {
+          "duration": 81,
+          "phase": "carousel:6"
+        },
+        {
+          "duration": 62,
+          "phase": "carousel:7"
+        }
+      ],
+      "blockingMs": 1012,
+      "idleMainMs": 99.73999999999883,
+      "heapMiB": 12.526180267333984,
+      "activeAnimations": 0,
+      "contentArrivals": 14
+    },
+    {
+      "width": 390,
+      "throttle": 4,
+      "repeat": 1,
+      "variant": "baseline",
+      "wall": 11.096085512999998,
+      "mainCorePercent": 67.95947085271891,
+      "mainTaskMs": 7540.8409999999985,
+      "detailMainMs": 2587.841,
+      "scriptMs": 333.433,
+      "layoutMs": 713.337,
+      "styleMs": 901.6800000000001,
+      "frames": 387,
+      "frameP95": 100,
+      "slowFrames": 29,
+      "longTasks": 42,
+      "maxLongTaskMs": 406,
+      "tracedTasks": [
+        {
+          "duration": 121,
+          "phase": "other"
+        },
+        {
+          "duration": 227,
+          "phase": "search:0"
+        },
+        {
+          "duration": 330,
+          "phase": "search:01"
+        },
+        {
+          "duration": 369,
+          "phase": "search:0"
+        },
+        {
+          "duration": 149,
+          "phase": "search:0"
+        },
+        {
+          "duration": 152,
+          "phase": "search:"
+        },
+        {
+          "duration": 52,
+          "phase": "search:1"
+        },
+        {
+          "duration": 83,
+          "phase": "search:1"
+        },
+        {
+          "duration": 406,
+          "phase": "search:inexistente"
+        },
+        {
+          "duration": 354,
+          "phase": "search:"
+        },
+        {
+          "duration": 123,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 126,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 97,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 80,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 106,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 112,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 63,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 93,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 64,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 51,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 76,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 67,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 63,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 100,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 78,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 77,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 89,
+          "phase": "carousel:0"
+        },
+        {
+          "duration": 78,
+          "phase": "carousel:1"
+        },
+        {
+          "duration": 84,
+          "phase": "carousel:1"
+        },
+        {
+          "duration": 80,
+          "phase": "carousel:1"
+        },
+        {
+          "duration": 66,
+          "phase": "carousel:2"
+        },
+        {
+          "duration": 79,
+          "phase": "carousel:2"
+        },
+        {
+          "duration": 86,
+          "phase": "carousel:3"
+        },
+        {
+          "duration": 75,
+          "phase": "carousel:4"
+        },
+        {
+          "duration": 91,
+          "phase": "carousel:4"
+        },
+        {
+          "duration": 60,
+          "phase": "carousel:4"
+        },
+        {
+          "duration": 64,
+          "phase": "carousel:5"
+        },
+        {
+          "duration": 81,
+          "phase": "carousel:6"
+        },
+        {
+          "duration": 79,
+          "phase": "carousel:6"
+        },
+        {
+          "duration": 82,
+          "phase": "carousel:6"
+        },
+        {
+          "duration": 113,
+          "phase": "carousel:7"
+        },
+        {
+          "duration": 73,
+          "phase": "carousel:7"
+        }
+      ],
+      "blockingMs": 2799,
+      "idleMainMs": 45.76799999999892,
+      "heapMiB": 12.326522827148438,
+      "activeAnimations": 0,
+      "contentArrivals": 25
+    },
+    {
+      "width": 390,
+      "throttle": 4,
+      "repeat": 2,
+      "variant": "baseline",
+      "wall": 10.713080183000013,
+      "mainCorePercent": 64.62582078855698,
+      "mainTaskMs": 6923.415999999999,
+      "detailMainMs": 2568.6099999999997,
+      "scriptMs": 310.582,
+      "layoutMs": 617.6750000000001,
+      "styleMs": 725.2350000000001,
+      "frames": 400,
+      "frameP95": 116.60000000000036,
+      "slowFrames": 27,
+      "longTasks": 41,
+      "maxLongTaskMs": 376,
+      "tracedTasks": [
+        {
+          "duration": 88,
+          "phase": "other"
+        },
+        {
+          "duration": 165,
+          "phase": "search:0"
+        },
+        {
+          "duration": 262,
+          "phase": "search:0"
+        },
+        {
+          "duration": 291,
+          "phase": "search:0"
+        },
+        {
+          "duration": 109,
+          "phase": "search:"
+        },
+        {
+          "duration": 113,
+          "phase": "search:"
+        },
+        {
+          "duration": 74,
+          "phase": "search:1"
+        },
+        {
+          "duration": 304,
+          "phase": "search:"
+        },
+        {
+          "duration": 376,
+          "phase": "search:"
+        },
+        {
+          "duration": 117,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 148,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 79,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 58,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 97,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 92,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 58,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 114,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 98,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 57,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 110,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 65,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 62,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 78,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 66,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 65,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 82,
+          "phase": "carousel:0"
+        },
+        {
+          "duration": 65,
+          "phase": "carousel:1"
+        },
+        {
+          "duration": 80,
+          "phase": "carousel:1"
+        },
+        {
+          "duration": 62,
+          "phase": "carousel:1"
+        },
+        {
+          "duration": 75,
+          "phase": "carousel:2"
+        },
+        {
+          "duration": 68,
+          "phase": "carousel:2"
+        },
+        {
+          "duration": 71,
+          "phase": "carousel:3"
+        },
+        {
+          "duration": 59,
+          "phase": "carousel:4"
+        },
+        {
+          "duration": 63,
+          "phase": "carousel:4"
+        },
+        {
+          "duration": 61,
+          "phase": "carousel:4"
+        },
+        {
+          "duration": 68,
+          "phase": "carousel:5"
+        },
+        {
+          "duration": 64,
+          "phase": "carousel:6"
+        },
+        {
+          "duration": 72,
+          "phase": "carousel:6"
+        },
+        {
+          "duration": 87,
+          "phase": "carousel:7"
+        },
+        {
+          "duration": 82,
+          "phase": "carousel:7"
+        },
+        {
+          "duration": 50,
+          "phase": "carousel:7"
+        }
+      ],
+      "blockingMs": 2205,
+      "idleMainMs": 62.61399999999995,
+      "heapMiB": 13.963020324707031,
+      "activeAnimations": 0,
+      "contentArrivals": 25
+    },
+    {
+      "width": 390,
+      "throttle": 4,
+      "repeat": 2,
+      "variant": "candidate",
+      "wall": 8.254354942000006,
+      "mainCorePercent": 61.95650703095239,
+      "mainTaskMs": 5114.110000000001,
+      "detailMainMs": 1727.3880000000004,
+      "scriptMs": 125.33899999999998,
+      "layoutMs": 586.659,
+      "styleMs": 663.4,
+      "frames": 359,
+      "frameP95": 50.099999999999454,
+      "slowFrames": 24,
+      "longTasks": 28,
+      "maxLongTaskMs": 283,
+      "tracedTasks": [
+        {
+          "duration": 108,
+          "phase": "search:0"
+        },
+        {
+          "duration": 283,
+          "phase": "search:01"
+        },
+        {
+          "duration": 114,
+          "phase": "search:0"
+        },
+        {
+          "duration": 117,
+          "phase": "search:"
+        },
+        {
+          "duration": 56,
+          "phase": "search:1"
+        },
+        {
+          "duration": 279,
+          "phase": "search:"
+        },
+        {
+          "duration": 96,
+          "phase": "search:"
+        },
+        {
+          "duration": 60,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 51,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 50,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 74,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 53,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 51,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 54,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 122,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 59,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 52,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 62,
+          "phase": "carousel:0"
+        },
+        {
+          "duration": 57,
+          "phase": "carousel:0"
+        },
+        {
+          "duration": 74,
+          "phase": "carousel:1"
+        },
+        {
+          "duration": 54,
+          "phase": "carousel:1"
+        },
+        {
+          "duration": 51,
+          "phase": "carousel:3"
+        },
+        {
+          "duration": 57,
+          "phase": "carousel:4"
+        },
+        {
+          "duration": 63,
+          "phase": "carousel:4"
+        },
+        {
+          "duration": 57,
+          "phase": "carousel:5"
+        },
+        {
+          "duration": 58,
+          "phase": "carousel:6"
+        },
+        {
+          "duration": 54,
+          "phase": "carousel:6"
+        },
+        {
+          "duration": 62,
+          "phase": "carousel:6"
+        }
+      ],
+      "blockingMs": 928,
+      "idleMainMs": 48.185000000000144,
+      "heapMiB": 11.895339965820312,
+      "activeAnimations": 0,
+      "contentArrivals": 14
+    },
+    {
+      "width": 1440,
+      "throttle": 1,
+      "repeat": 0,
+      "variant": "baseline",
+      "wall": 7.9464074820000095,
+      "mainCorePercent": 20.326455743161425,
+      "mainTaskMs": 1615.2230000000002,
+      "detailMainMs": 641.5709999999999,
+      "scriptMs": 76.075,
+      "layoutMs": 127.43300000000002,
+      "styleMs": 129.419,
+      "frames": 442,
+      "frameP95": 33.29999999999927,
+      "slowFrames": 4,
+      "longTasks": 4,
+      "maxLongTaskMs": 75,
+      "tracedTasks": [
+        {
+          "duration": 58,
+          "phase": "search:01"
+        },
+        {
+          "duration": 75,
+          "phase": "search:0"
+        },
+        {
+          "duration": 60,
+          "phase": "search:"
+        },
+        {
+          "duration": 54,
+          "phase": "search:"
+        }
+      ],
+      "blockingMs": 47,
+      "idleMainMs": 15.055999999999958,
+      "heapMiB": 12.119209289550781,
+      "activeAnimations": 0,
+      "contentArrivals": 25
+    },
+    {
+      "width": 1440,
+      "throttle": 1,
+      "repeat": 0,
+      "variant": "candidate",
+      "wall": 6.661437982000003,
+      "mainCorePercent": 18.275408452192647,
+      "mainTaskMs": 1217.4049999999997,
+      "detailMainMs": 464.25399999999996,
+      "scriptMs": 33.412,
+      "layoutMs": 106.63199999999999,
+      "styleMs": 103.621,
+      "frames": 373,
+      "frameP95": 33.29999999999973,
+      "slowFrames": 3,
+      "longTasks": 1,
+      "maxLongTaskMs": 57,
+      "tracedTasks": [
+        {
+          "duration": 57,
+          "phase": "search:inexistente"
+        }
+      ],
+      "blockingMs": 7,
+      "idleMainMs": 24.009999999999863,
+      "heapMiB": 10.811836242675781,
+      "activeAnimations": 0,
+      "contentArrivals": 14
+    },
+    {
+      "width": 1440,
+      "throttle": 1,
+      "repeat": 1,
+      "variant": "candidate",
+      "wall": 6.647477870000002,
+      "mainCorePercent": 18.156419977671916,
+      "mainTaskMs": 1206.944,
+      "detailMainMs": 421.1399999999999,
+      "scriptMs": 36.751000000000005,
+      "layoutMs": 110.705,
+      "styleMs": 102.96399999999998,
+      "frames": 366,
+      "frameP95": 33.30000000000018,
+      "slowFrames": 3,
+      "longTasks": 1,
+      "maxLongTaskMs": 58,
+      "tracedTasks": [
+        {
+          "duration": 58,
+          "phase": "search:inexistente"
+        }
+      ],
+      "blockingMs": 8,
+      "idleMainMs": 16.37400000000011,
+      "heapMiB": 4.8350067138671875,
+      "activeAnimations": 0,
+      "contentArrivals": 14
+    },
+    {
+      "width": 1440,
+      "throttle": 1,
+      "repeat": 1,
+      "variant": "baseline",
+      "wall": 7.946443618999998,
+      "mainCorePercent": 20.37211962505211,
+      "mainTaskMs": 1618.8590000000002,
+      "detailMainMs": 681.321,
+      "scriptMs": 78.79499999999999,
+      "layoutMs": 121.641,
+      "styleMs": 124.18900000000001,
+      "frames": 441,
+      "frameP95": 33.29999999999927,
+      "slowFrames": 2,
+      "longTasks": 4,
+      "maxLongTaskMs": 68,
+      "tracedTasks": [
+        {
+          "duration": 52,
+          "phase": "search:0"
+        },
+        {
+          "duration": 65,
+          "phase": "search:0"
+        },
+        {
+          "duration": 58,
+          "phase": "search:inexistente"
+        },
+        {
+          "duration": 68,
+          "phase": "search:"
+        }
+      ],
+      "blockingMs": 43,
+      "idleMainMs": 15.322999999999976,
+      "heapMiB": 5.850067138671875,
+      "activeAnimations": 0,
+      "contentArrivals": 25
+    },
+    {
+      "width": 1440,
+      "throttle": 1,
+      "repeat": 2,
+      "variant": "baseline",
+      "wall": 7.9560562940000095,
+      "mainCorePercent": 21.60467367854446,
+      "mainTaskMs": 1718.8799999999999,
+      "detailMainMs": 720.9290000000002,
+      "scriptMs": 84.103,
+      "layoutMs": 135.486,
+      "styleMs": 134.80100000000002,
+      "frames": 430,
+      "frameP95": 33.30000000000018,
+      "slowFrames": 2,
+      "longTasks": 4,
+      "maxLongTaskMs": 74,
+      "tracedTasks": [
+        {
+          "duration": 57,
+          "phase": "search:01"
+        },
+        {
+          "duration": 66,
+          "phase": "search:0"
+        },
+        {
+          "duration": 65,
+          "phase": "search:inexistente"
+        },
+        {
+          "duration": 74,
+          "phase": "search:"
+        }
+      ],
+      "blockingMs": 62,
+      "idleMainMs": 24.92099999999997,
+      "heapMiB": 14.078449249267578,
+      "activeAnimations": 0,
+      "contentArrivals": 25
+    },
+    {
+      "width": 1440,
+      "throttle": 1,
+      "repeat": 2,
+      "variant": "candidate",
+      "wall": 6.681369417999988,
+      "mainCorePercent": 19.270450703284286,
+      "mainTaskMs": 1287.5299999999997,
+      "detailMainMs": 491.22299999999996,
+      "scriptMs": 35.982,
+      "layoutMs": 104.29,
+      "styleMs": 103.94099999999999,
+      "frames": 368,
+      "frameP95": 33.29999999999973,
+      "slowFrames": 6,
+      "longTasks": 2,
+      "maxLongTaskMs": 70,
+      "tracedTasks": [
+        {
+          "duration": 70,
+          "phase": "search:0"
+        },
+        {
+          "duration": 54,
+          "phase": "search:"
+        }
+      ],
+      "blockingMs": 24,
+      "idleMainMs": 13.586999999999794,
+      "heapMiB": 5.352039337158203,
+      "activeAnimations": 0,
+      "contentArrivals": 14
+    },
+    {
+      "width": 1440,
+      "throttle": 4,
+      "repeat": 0,
+      "variant": "baseline",
+      "wall": 11.36119171700001,
+      "mainCorePercent": 68.3129128820773,
+      "mainTaskMs": 7761.160999999999,
+      "detailMainMs": 3067.575,
+      "scriptMs": 367.582,
+      "layoutMs": 646.0699999999999,
+      "styleMs": 609.7060000000001,
+      "frames": 378,
+      "frameP95": 116.60000000000036,
+      "slowFrames": 32,
+      "longTasks": 36,
+      "maxLongTaskMs": 411,
+      "tracedTasks": [
+        {
+          "duration": 79,
+          "phase": "other"
+        },
+        {
+          "duration": 190,
+          "phase": "search:0"
+        },
+        {
+          "duration": 308,
+          "phase": "search:01"
+        },
+        {
+          "duration": 307,
+          "phase": "search:0"
+        },
+        {
+          "duration": 133,
+          "phase": "search:0"
+        },
+        {
+          "duration": 138,
+          "phase": "search:"
+        },
+        {
+          "duration": 54,
+          "phase": "search:1"
+        },
+        {
+          "duration": 92,
+          "phase": "search:1"
+        },
+        {
+          "duration": 411,
+          "phase": "search:"
+        },
+        {
+          "duration": 342,
+          "phase": "search:"
+        },
+        {
+          "duration": 171,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 168,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 103,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 112,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 120,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 91,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 80,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 126,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 186,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 111,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 81,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 115,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 90,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 94,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 67,
+          "phase": "carousel:0"
+        },
+        {
+          "duration": 53,
+          "phase": "carousel:1"
+        },
+        {
+          "duration": 89,
+          "phase": "carousel:1"
+        },
+        {
+          "duration": 85,
+          "phase": "carousel:2"
+        },
+        {
+          "duration": 84,
+          "phase": "carousel:3"
+        },
+        {
+          "duration": 92,
+          "phase": "carousel:4"
+        },
+        {
+          "duration": 53,
+          "phase": "carousel:5"
+        },
+        {
+          "duration": 100,
+          "phase": "carousel:5"
+        },
+        {
+          "duration": 80,
+          "phase": "carousel:6"
+        },
+        {
+          "duration": 76,
+          "phase": "carousel:7"
+        },
+        {
+          "duration": 65,
+          "phase": "carousel:7"
+        },
+        {
+          "duration": 55,
+          "phase": "account:5"
+        }
+      ],
+      "blockingMs": 2801,
+      "idleMainMs": 75.78200000000024,
+      "heapMiB": 8.047935485839844,
+      "activeAnimations": 0,
+      "contentArrivals": 25
+    },
+    {
+      "width": 1440,
+      "throttle": 4,
+      "repeat": 0,
+      "variant": "candidate",
+      "wall": 8.73589783100001,
+      "mainCorePercent": 65.82018369761306,
+      "mainTaskMs": 5749.984,
+      "detailMainMs": 2062.441,
+      "scriptMs": 177.183,
+      "layoutMs": 560.456,
+      "styleMs": 488.4669999999999,
+      "frames": 340,
+      "frameP95": 66.59999999999854,
+      "slowFrames": 29,
+      "longTasks": 23,
+      "maxLongTaskMs": 353,
+      "tracedTasks": [
+        {
+          "duration": 133,
+          "phase": "search:0"
+        },
+        {
+          "duration": 260,
+          "phase": "search:01"
+        },
+        {
+          "duration": 175,
+          "phase": "search:0"
+        },
+        {
+          "duration": 174,
+          "phase": "search:"
+        },
+        {
+          "duration": 79,
+          "phase": "search:1"
+        },
+        {
+          "duration": 353,
+          "phase": "search:inexistente"
+        },
+        {
+          "duration": 159,
+          "phase": "search:"
+        },
+        {
+          "duration": 90,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 100,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 63,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 107,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 88,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 104,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 78,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 89,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 63,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 58,
+          "phase": "carousel:0"
+        },
+        {
+          "duration": 71,
+          "phase": "carousel:1"
+        },
+        {
+          "duration": 53,
+          "phase": "carousel:3"
+        },
+        {
+          "duration": 52,
+          "phase": "carousel:4"
+        },
+        {
+          "duration": 54,
+          "phase": "carousel:5"
+        },
+        {
+          "duration": 54,
+          "phase": "carousel:6"
+        },
+        {
+          "duration": 58,
+          "phase": "carousel:7"
+        }
+      ],
+      "blockingMs": 1365,
+      "idleMainMs": 63.79700000000099,
+      "heapMiB": 7.603263854980469,
+      "activeAnimations": 0,
+      "contentArrivals": 14
+    },
+    {
+      "width": 1440,
+      "throttle": 4,
+      "repeat": 1,
+      "variant": "candidate",
+      "wall": 9.432638062999992,
+      "mainCorePercent": 67.35385114500397,
+      "mainTaskMs": 6353.245,
+      "detailMainMs": 2226.307000000001,
+      "scriptMs": 186.827,
+      "layoutMs": 667.3169999999999,
+      "styleMs": 542.8139999999999,
+      "frames": 347,
+      "frameP95": 66.60000000000036,
+      "slowFrames": 25,
+      "longTasks": 23,
+      "maxLongTaskMs": 461,
+      "tracedTasks": [
+        {
+          "duration": 216,
+          "phase": "search:0"
+        },
+        {
+          "duration": 50,
+          "phase": "search:01"
+        },
+        {
+          "duration": 362,
+          "phase": "search:01"
+        },
+        {
+          "duration": 194,
+          "phase": "search:0"
+        },
+        {
+          "duration": 184,
+          "phase": "search:"
+        },
+        {
+          "duration": 87,
+          "phase": "search:1"
+        },
+        {
+          "duration": 461,
+          "phase": "search:inexistente"
+        },
+        {
+          "duration": 256,
+          "phase": "search:"
+        },
+        {
+          "duration": 127,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 111,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 66,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 111,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 51,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 108,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 61,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 101,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 51,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 132,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 83,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 73,
+          "phase": "carousel:0"
+        },
+        {
+          "duration": 76,
+          "phase": "carousel:1"
+        },
+        {
+          "duration": 71,
+          "phase": "carousel:3"
+        },
+        {
+          "duration": 54,
+          "phase": "carousel:7"
+        }
+      ],
+      "blockingMs": 1936,
+      "idleMainMs": 45.67300000000074,
+      "heapMiB": 5.8172607421875,
+      "activeAnimations": 0,
+      "contentArrivals": 14
+    },
+    {
+      "width": 1440,
+      "throttle": 4,
+      "repeat": 1,
+      "variant": "baseline",
+      "wall": 11.017696563999984,
+      "mainCorePercent": 67.69701776295905,
+      "mainTaskMs": 7458.651999999999,
+      "detailMainMs": 2881.246,
+      "scriptMs": 352.09,
+      "layoutMs": 636.981,
+      "styleMs": 589.3399999999999,
+      "frames": 365,
+      "frameP95": 116.59999999999854,
+      "slowFrames": 29,
+      "longTasks": 38,
+      "maxLongTaskMs": 355,
+      "tracedTasks": [
+        {
+          "duration": 100,
+          "phase": "other"
+        },
+        {
+          "duration": 217,
+          "phase": "search:0"
+        },
+        {
+          "duration": 312,
+          "phase": "search:0"
+        },
+        {
+          "duration": 355,
+          "phase": "search:0"
+        },
+        {
+          "duration": 110,
+          "phase": "search:"
+        },
+        {
+          "duration": 131,
+          "phase": "search:"
+        },
+        {
+          "duration": 67,
+          "phase": "search:"
+        },
+        {
+          "duration": 101,
+          "phase": "search:1"
+        },
+        {
+          "duration": 327,
+          "phase": "search:inexistente"
+        },
+        {
+          "duration": 345,
+          "phase": "search:"
+        },
+        {
+          "duration": 185,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 138,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 118,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 110,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 115,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 90,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 99,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 143,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 81,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 102,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 97,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 59,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 78,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 51,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 101,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 99,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 55,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 89,
+          "phase": "carousel:0"
+        },
+        {
+          "duration": 72,
+          "phase": "carousel:1"
+        },
+        {
+          "duration": 85,
+          "phase": "carousel:2"
+        },
+        {
+          "duration": 101,
+          "phase": "carousel:3"
+        },
+        {
+          "duration": 68,
+          "phase": "carousel:4"
+        },
+        {
+          "duration": 78,
+          "phase": "carousel:5"
+        },
+        {
+          "duration": 59,
+          "phase": "carousel:5"
+        },
+        {
+          "duration": 80,
+          "phase": "carousel:6"
+        },
+        {
+          "duration": 88,
+          "phase": "carousel:7"
+        },
+        {
+          "duration": 62,
+          "phase": "carousel:7"
+        },
+        {
+          "duration": 53,
+          "phase": "account:5"
+        }
+      ],
+      "blockingMs": 2721,
+      "idleMainMs": 41.076000000000334,
+      "heapMiB": 16.99956512451172,
+      "activeAnimations": 0,
+      "contentArrivals": 25
+    },
+    {
+      "width": 1440,
+      "throttle": 4,
+      "repeat": 2,
+      "variant": "baseline",
+      "wall": 11.487712101000012,
+      "mainCorePercent": 68.09414208177319,
+      "mainTaskMs": 7822.459,
+      "detailMainMs": 3141.0969999999993,
+      "scriptMs": 387.26000000000005,
+      "layoutMs": 674.5800000000002,
+      "styleMs": 597.974,
+      "frames": 368,
+      "frameP95": 133.30000000000018,
+      "slowFrames": 34,
+      "longTasks": 39,
+      "maxLongTaskMs": 361,
+      "tracedTasks": [
+        {
+          "duration": 102,
+          "phase": "other"
+        },
+        {
+          "duration": 175,
+          "phase": "search:0"
+        },
+        {
+          "duration": 334,
+          "phase": "search:01"
+        },
+        {
+          "duration": 361,
+          "phase": "search:0"
+        },
+        {
+          "duration": 135,
+          "phase": "search:0"
+        },
+        {
+          "duration": 123,
+          "phase": "search:"
+        },
+        {
+          "duration": 60,
+          "phase": "search:1"
+        },
+        {
+          "duration": 85,
+          "phase": "search:1"
+        },
+        {
+          "duration": 288,
+          "phase": "search:"
+        },
+        {
+          "duration": 329,
+          "phase": "search:"
+        },
+        {
+          "duration": 211,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 132,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 84,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 113,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 189,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 103,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 93,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 124,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 107,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 96,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 136,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 85,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 90,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 56,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 89,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 99,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 67,
+          "phase": "carousel:0"
+        },
+        {
+          "duration": 95,
+          "phase": "carousel:1"
+        },
+        {
+          "duration": 74,
+          "phase": "carousel:2"
+        },
+        {
+          "duration": 113,
+          "phase": "carousel:3"
+        },
+        {
+          "duration": 100,
+          "phase": "carousel:4"
+        },
+        {
+          "duration": 70,
+          "phase": "carousel:4"
+        },
+        {
+          "duration": 109,
+          "phase": "carousel:5"
+        },
+        {
+          "duration": 53,
+          "phase": "carousel:6"
+        },
+        {
+          "duration": 65,
+          "phase": "carousel:6"
+        },
+        {
+          "duration": 55,
+          "phase": "carousel:7"
+        },
+        {
+          "duration": 107,
+          "phase": "carousel:7"
+        },
+        {
+          "duration": 75,
+          "phase": "carousel:7"
+        },
+        {
+          "duration": 58,
+          "phase": "account:5"
+        }
+      ],
+      "blockingMs": 2890,
+      "idleMainMs": 58.84400000000056,
+      "heapMiB": 13.040828704833984,
+      "activeAnimations": 0,
+      "contentArrivals": 25
+    },
+    {
+      "width": 1440,
+      "throttle": 4,
+      "repeat": 2,
+      "variant": "candidate",
+      "wall": 8.609117197000014,
+      "mainCorePercent": 64.8787543738672,
+      "mainTaskMs": 5585.487999999999,
+      "detailMainMs": 1902.374,
+      "scriptMs": 141.155,
+      "layoutMs": 547.6999999999999,
+      "styleMs": 504.583,
+      "frames": 324,
+      "frameP95": 66.60000000000036,
+      "slowFrames": 27,
+      "longTasks": 24,
+      "maxLongTaskMs": 334,
+      "tracedTasks": [
+        {
+          "duration": 138,
+          "phase": "search:0"
+        },
+        {
+          "duration": 50,
+          "phase": "search:010"
+        },
+        {
+          "duration": 268,
+          "phase": "search:01"
+        },
+        {
+          "duration": 151,
+          "phase": "search:0"
+        },
+        {
+          "duration": 206,
+          "phase": "search:"
+        },
+        {
+          "duration": 93,
+          "phase": "search:1"
+        },
+        {
+          "duration": 334,
+          "phase": "search:"
+        },
+        {
+          "duration": 152,
+          "phase": "search:"
+        },
+        {
+          "duration": 71,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 116,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 60,
+          "phase": "detail-open"
+        },
+        {
+          "duration": 94,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 116,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 109,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 58,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 114,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 59,
+          "phase": "detail-close"
+        },
+        {
+          "duration": 83,
+          "phase": "carousel:1"
+        },
+        {
+          "duration": 53,
+          "phase": "carousel:2"
+        },
+        {
+          "duration": 64,
+          "phase": "carousel:3"
+        },
+        {
+          "duration": 59,
+          "phase": "carousel:4"
+        },
+        {
+          "duration": 60,
+          "phase": "carousel:5"
+        },
+        {
+          "duration": 50,
+          "phase": "carousel:6"
+        },
+        {
+          "duration": 71,
+          "phase": "carousel:7"
+        }
+      ],
+      "blockingMs": 1429,
+      "idleMainMs": 30.034999999999812,
+      "heapMiB": 5.857021331787109,
+      "activeAnimations": 0,
+      "contentArrivals": 14
+    }
+  ]
+}

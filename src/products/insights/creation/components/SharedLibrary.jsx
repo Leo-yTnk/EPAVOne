@@ -1,5 +1,15 @@
 import { useState } from 'preact/hooks';
-import { Alert, Button, Card, EmptyState, ErrorState, Icon, Input, Spinner } from '../../../../design-system/components/index.js';
+import {
+  ModalPresence,
+  Alert,
+  Button,
+  Card,
+  EmptyState,
+  ErrorState,
+  Icon,
+  Input,
+  Spinner
+} from '../../../../design-system/components/index.js';
 import { collaborationService } from '../services/collaborationService.js';
 import { useCreationResource } from '../hooks/useCreationResource.js';
 import { CreationThumbnail } from './CreationThumbnail.jsx';
@@ -82,17 +92,19 @@ export function SharedLibrary() {
           ))}
         </div>
       )}
-      {recipe && <SharedRecipeDialog recipe={recipe} onClose={() => setRecipe(null)} />}
-      {copying && (
-        <CopyDialog
-          recipe={copying}
-          onClose={() => setCopying(null)}
-          onCopied={() => {
-            setCopying(null);
-            setMessage('Cópia criada em Minhas receitas.');
-          }}
-        />
-      )}
+      <ModalPresence>{recipe && <SharedRecipeDialog recipe={recipe} onClose={() => setRecipe(null)} />}</ModalPresence>
+      <ModalPresence>
+        {copying && (
+          <CopyDialog
+            recipe={copying}
+            onClose={() => setCopying(null)}
+            onCopied={() => {
+              setCopying(null);
+              setMessage('Cópia criada em Minhas receitas.');
+            }}
+          />
+        )}
+      </ModalPresence>
     </section>
   );
 }

@@ -1,6 +1,6 @@
 import { useContentMotion } from '../../../design-system/behaviors/useContentMotion.js';
 import { useMemo, useRef, useState } from 'preact/hooks';
-import { Button, Card, EmptyState, ErrorState, Input } from '../../../design-system/components/index.js';
+import { ModalPresence, Button, Card, EmptyState, ErrorState, Input } from '../../../design-system/components/index.js';
 import { CatalogLoading } from './CatalogLoading.jsx';
 import { CatalogSections } from './CatalogSections.jsx';
 import { ProductCard } from './ProductCard.jsx';
@@ -105,8 +105,8 @@ export function InsightsHomePage() {
       <Button as="a" href="#/writer" variant="ghost" size="sm" className="insights-discovery-writer">
         Montar pedido →
       </Button>
-      {recipe && <RecipeDialog recipe={recipe} onClose={() => setRecipe(null)} />}
-      {product && <ProductDetails product={product} onClose={() => setProduct(null)} />}
+      <ModalPresence>{recipe && <RecipeDialog recipe={recipe} onClose={() => setRecipe(null)} />}</ModalPresence>
+      <ModalPresence>{product && <ProductDetails product={product} onClose={() => setProduct(null)} />}</ModalPresence>
     </div>
   );
 }

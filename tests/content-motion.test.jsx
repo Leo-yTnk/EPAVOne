@@ -33,6 +33,36 @@ it('uses a gentle vertical arrival for results, skips identical results and canc
   window.dispatchEvent(new Event('resize'));
   expect(cancel).toHaveBeenCalledTimes(1);
 });
+it('updates rapidly changing results without restarting a running vertical arrival', () => {
+  const cancel = vi.fn();
+  const animation = { cancel, playState: 'running' };
+  const animate = vi.fn(() => animation);
+  Element.prototype.animate = animate;
+  const view = render(<Example current="all" axis="y" />);
+  view.rerender(<Example current="first" axis="y" />);
+  view.rerender(<Example current="second" axis="y" />);
+  expect(view.getByRole('button').textContent).toBe('second');
+  expect(animate).toHaveBeenCalledOnce();
+  expect(cancel).not.toHaveBeenCalled();
+  animation.onfinish();
+  expect(cancel).toHaveBeenCalledOnce();
+  animation.playState = 'finished';
+  view.rerender(<Example current="third" axis="y" />);
+  expect(animate).toHaveBeenCalledTimes(2);
+});
+it('avoids compositing a results block taller than two screens and animates smaller collections', () => {
+  const animate = vi.fn(() => ({ cancel: vi.fn() }));
+  Element.prototype.animate = animate;
+  const view = render(<Example current="all" axis="y" />);
+  const node = view.container.firstElementChild;
+  Object.defineProperty(node, 'scrollHeight', { configurable: true, value: window.innerHeight * 3 });
+  view.rerender(<Example current="large collection" axis="y" />);
+  expect(view.getByRole('button').textContent).toBe('large collection');
+  expect(animate).not.toHaveBeenCalled();
+  Object.defineProperty(node, 'scrollHeight', { configurable: true, value: 100 });
+  view.rerender(<Example current="small collection" axis="y" />);
+  expect(animate).toHaveBeenCalledOnce();
+});
 it('shows new controls immediately, reverses on back and cancels interrupted transitions', () => {
   const cancel = vi.fn();
   const animate = vi.fn(() => ({ cancel }));

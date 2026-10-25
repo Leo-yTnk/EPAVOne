@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'preact/hooks';
 import {
+  ModalPresence,
   Badge,
   Card,
   Button,
@@ -90,17 +91,19 @@ export function RequestsPage({ admin = false }) {
         </div>
       )}
       {rows.length > 20 && <Pagination page={current} pageCount={Math.ceil(rows.length / 20)} onChange={setPage} />}
-      {selected && (
-        <RequestDetails
-          request={selected}
-          admin={admin}
-          onClose={() => setSelected(null)}
-          onUpdated={() => {
-            setSelected(null);
-            resource.reload();
-          }}
-        />
-      )}
+      <ModalPresence>
+        {selected && (
+          <RequestDetails
+            request={selected}
+            admin={admin}
+            onClose={() => setSelected(null)}
+            onUpdated={() => {
+              setSelected(null);
+              resource.reload();
+            }}
+          />
+        )}
+      </ModalPresence>
     </section>
   );
 }

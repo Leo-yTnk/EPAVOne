@@ -6,7 +6,14 @@ export function observeSize(element, callback) {
   if (typeof ResizeObserver === 'undefined') return () => {};
   if (!observer)
     observer = new ResizeObserver((entries) => {
-      for (const entry of entries) subscribers.get(entry.target)?.(entry.contentRect);
+      // Consumers may return a write step. Read the entire batch before changing
+      // styles so a shelf of cards does not force a layout flush per stitch.
+      const writes = [];
+      for (const entry of entries) {
+        const write = subscribers.get(entry.target)?.(entry.contentRect);
+        if (typeof write === 'function') writes.push(write);
+      }
+      writes.forEach((write) => write());
     });
   subscribers.set(element, callback);
   observer.observe(element);

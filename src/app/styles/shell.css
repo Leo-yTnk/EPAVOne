@@ -381,7 +381,7 @@ body {
   border-radius: var(--radius-md);
 }
 html[data-density='compact'] .ds-card:not(.insights-image):not(.ds-selection-indicator) {
-  --container-padding: var(--space-5);
+  --card-padding: var(--space-5);
 }
 html[data-reduced-motion='true'] *,
 html[data-reduced-motion='true'] *::before,

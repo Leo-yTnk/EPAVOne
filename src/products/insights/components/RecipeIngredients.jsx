@@ -7,6 +7,7 @@ export function RecipeIngredients({ ingredients, onOpenProduct }) {
       {ingredients.map((item) => (
         <li key={item.id} className="recipe-product-row" data-dialog-origin>
           <CatalogImage
+            fit="contain"
             compactFallback
             stitched={false}
             url={item.product?.image_url}

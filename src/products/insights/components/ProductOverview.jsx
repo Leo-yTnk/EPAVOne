@@ -11,7 +11,7 @@ export function ProductOverview({ product, onOpenRecipe, titleId }) {
   return (
     <section className="insights-detail" aria-label={product.name}>
       <header className="insights-product-overview">
-        <CatalogImage stitched={false} url={product.image_url} name={product.name} />
+        <CatalogImage stitched={false} fit="contain" url={product.image_url} name={product.name} />
         <div className="insights-product-summary">
           <Badge>{product.category?.name || 'Outros produtos'}</Badge>
           <h2 id={titleId} className="insights-product-detail-title">

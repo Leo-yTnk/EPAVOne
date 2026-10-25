@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { Alert, Button, Card, Icon, NavItem, Spinner } from '../../../design-system/components/index.js';
+import { ModalPresence, Alert, Button, Card, Icon, NavItem, Spinner } from '../../../design-system/components/index.js';
 import { EntityManager } from './components/EntityManager.jsx';
 import { SharedLibrary } from './components/SharedLibrary.jsx';
 import { RequestsPage } from './components/RequestsPage.jsx';
@@ -134,8 +134,8 @@ export function CreationPage({ route, account, onOpenAccount }) {
           )}
         </div>
       </div>
-      {sharing && <ShareDialog recipe={sharing} onClose={() => setSharing(null)} />}
-      {submission && <SubmitDialog {...submission} onClose={() => setSubmission(null)} />}
+      <ModalPresence>{sharing && <ShareDialog recipe={sharing} onClose={() => setSharing(null)} />}</ModalPresence>
+      <ModalPresence>{submission && <SubmitDialog {...submission} onClose={() => setSubmission(null)} />}</ModalPresence>
     </section>
   );
 }

@@ -11,7 +11,7 @@ import { IntroductionPage } from './welcome/IntroductionPage.jsx';
 import { hasSeenIntroduction, completeIntroduction } from './welcome/introduction.js';
 import { HomePage } from '../products/home/HomePage.jsx';
 import { lazy, Suspense } from 'preact/compat';
-import { Spinner } from '../design-system/components/index.js';
+import { ModalPresence, Spinner } from '../design-system/components/index.js';
 import { applyPreferences, readPreferences } from './settings/preferences.js';
 
 const PlannerRoutes = lazy(() => import('../products/planner/PlannerRoutes.jsx').then((module) => ({ default: module.PlannerRoutes })));
@@ -136,11 +136,13 @@ export function App() {
           </Suspense>
         )}
       </div>
-      {accountOpen && (
-        <Suspense fallback={<Spinner label="Carregando conta" />}>
-          <AccountDialog account={account} onClose={() => setAccountOpen(false)} />
-        </Suspense>
-      )}
+      <ModalPresence>
+        {accountOpen && (
+          <Suspense fallback={<Spinner label="Carregando conta" />}>
+            <AccountDialog account={account} onClose={() => setAccountOpen(false)} />
+          </Suspense>
+        )}
+      </ModalPresence>
     </AppShell>
   );
 }

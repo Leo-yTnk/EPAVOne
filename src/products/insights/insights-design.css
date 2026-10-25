@@ -8,7 +8,7 @@
 .insights-page-context.ds-card,
 .insights-discovery-controls.ds-card,
 .insights-catalog-tools.ds-card {
-  --container-padding: var(--space-6);
+  --container-padding: var(--space-5);
   --card-radius: max(var(--radius-xl), calc(var(--radius-card) - var(--space-2)));
   display: grid;
   gap: var(--space-4);
@@ -105,8 +105,6 @@
   gap: var(--space-3);
 }
 .insights-catalog-section .ds-carousel-track > .insights-catalog-card {
-  --card-radius: calc(var(--radius-lg) + var(--space-1));
-  --container-padding: var(--space-4);
   gap: var(--space-3);
 }
 .insights-catalog-section .insights-product-copy,
@@ -157,7 +155,7 @@
   .insights-page-context.ds-card,
   .insights-discovery-controls.ds-card,
   .insights-catalog-tools.ds-card {
-    --container-padding: var(--space-5);
+    --container-padding: var(--space-4);
     gap: var(--space-4);
   }
   .insights-page-context h1 {
@@ -212,8 +210,6 @@
   min-width: 0;
 }
 .insights-recipes-collection > .insights-catalog-card {
-  --container-padding: var(--space-4);
-  --card-radius: calc(var(--radius-lg) + var(--space-1));
   gap: var(--space-3);
 }
 .insights-recipes-collection .insights-recipe-copy {
@@ -235,9 +231,6 @@
   .insights-recipes-collection {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--space-3);
-  }
-  .insights-recipes-collection > .insights-catalog-card {
-    --container-padding: var(--space-3);
   }
   .insights-recipes-collection .insights-product-name {
     font-size: 0.875rem;

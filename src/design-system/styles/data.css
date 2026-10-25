@@ -94,6 +94,9 @@ html[data-reduced-motion='true'] .ds-progress-fill{transition:none}
 /* Circles convey radio/loader semantics rather than surface geometry. */
 .ds-radio-control, .ds-radio-control::after, .ds-spinner,
 .ds-switch-thumb, .ds-skeleton-circle, .ds-chart-legend i { corner-shape: round; }
+/* A CSS-sized outline is available while a distant contour awaits observation. */
+.ds-stitch[data-stitch-ready='false'] rect { display: block; }
+.ds-stitch[data-stitch-ready='false'] path { display: none; }
 @media (max-width: 48rem) {
   :root { --card-padding: var(--space-5); }
 }

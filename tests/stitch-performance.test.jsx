@@ -27,14 +27,28 @@ describe('Shared card resize work', () => {
         </div>
       );
       const [a, b] = container.querySelectorAll('.ds-stitch');
+      const operations = [];
+      const originalStyle = window.getComputedStyle;
+      const reads = vi.spyOn(window, 'getComputedStyle').mockImplementation((...args) => {
+        operations.push('read');
+        return originalStyle(...args);
+      });
+      const originalWrite = a.style.setProperty.bind(a.style);
       const writes = vi.spyOn(a.style, 'setProperty');
+      writes.mockImplementation((...args) => {
+        operations.push('write');
+        return originalWrite(...args);
+      });
       expect(created).toHaveBeenCalledOnce();
       const entry = { target: a, contentRect: { width: 300, height: 180 } };
       notify([entry, { target: b, contentRect: { width: 200, height: 120 } }]);
       expect(a.style.getPropertyValue('--stitch-path-width')).toBe('298px');
       expect(b.style.getPropertyValue('--stitch-path-height')).toBe('118px');
+      expect(operations.slice(0, 4)).toEqual(['read', 'read', 'read', 'read']);
+      expect(operations[4]).toBe('write');
       notify([entry]);
       expect(writes).toHaveBeenCalledTimes(2);
+      expect(reads).toHaveBeenCalledTimes(4);
       rerender(
         <div>
           <Card key="a">A</Card>
@@ -46,6 +60,7 @@ describe('Shared card resize work', () => {
       expect(disconnect).toHaveBeenCalledOnce();
       expect(unobserve.mock.calls.some(([node]) => node === a)).toBe(true);
     } finally {
+      vi.restoreAllMocks();
       vi.unstubAllGlobals();
     }
   });

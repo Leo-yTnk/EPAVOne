@@ -1,6 +1,7 @@
 import { useContentMotion } from '../../../../design-system/behaviors/useContentMotion.js';
 import { useMemo, useRef, useState } from 'preact/hooks';
 import {
+  ModalPresence,
   Alert,
   Badge,
   Card,
@@ -208,8 +209,12 @@ export function EntityManager({ type, scope = 'personal', onShare, onSubmit }) {
           </>
         )}
       </div>
-      {editor && <EntityEditor type={type} scope={scope} item={editor.item} onClose={() => setEditor(null)} onSaved={saved} />}
-      {deleting && <DeleteDialog type={type} item={deleting} onClose={() => setDeleting(null)} onSaved={saved} />}
+      <ModalPresence>
+        {editor && <EntityEditor type={type} scope={scope} item={editor.item} onClose={() => setEditor(null)} onSaved={saved} />}
+      </ModalPresence>
+      <ModalPresence>
+        {deleting && <DeleteDialog type={type} item={deleting} onClose={() => setDeleting(null)} onSaved={saved} />}
+      </ModalPresence>
     </section>
   );
 }

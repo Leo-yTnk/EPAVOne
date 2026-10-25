@@ -4,6 +4,22 @@ import { Dialog } from '../src/design-system/components/Dialog.jsx';
 import { Select } from '../src/design-system/components/Select.jsx';
 
 describe('Dialog', () => {
+  it('preserves input focus when a parent supplies a new close callback', () => {
+    const view = render(
+      <Dialog open title="Editar" onClose={() => {}}>
+        <input aria-label="Nome" />
+      </Dialog>
+    );
+    const input = screen.getByRole('textbox');
+    input.focus();
+    view.rerender(
+      <Dialog open title="Editar" onClose={() => {}}>
+        <input aria-label="Nome" />
+      </Dialog>
+    );
+    expect(document.activeElement).toBe(input);
+    expect(document.body.classList.contains('ds-layer-open')).toBe(true);
+  });
   it('uses a portal, locks scroll and handles Escape', () => {
     const onClose = vi.fn();
     render(

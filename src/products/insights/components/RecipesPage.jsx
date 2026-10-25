@@ -4,6 +4,7 @@ import { CatalogLoading } from './CatalogLoading.jsx';
 import { orderedCatalogItems } from '../models/sections.js';
 import { useMemo, useRef, useState } from 'preact/hooks';
 import {
+  ModalPresence,
   Button,
   Card,
   Checkbox,
@@ -146,7 +147,7 @@ export function RecipesPage({ initialSection = '' }) {
           </div>
         )}
       </div>
-      {selected && <RecipeDialog key={selected.id} recipe={selected} onClose={() => setSelected(null)} />}
+      <ModalPresence>{selected && <RecipeDialog key={selected.id} recipe={selected} onClose={() => setSelected(null)} />}</ModalPresence>
     </section>
   );
 }

@@ -50,3 +50,4 @@ export { FilterDisclosure } from './FilterDisclosure.jsx';
 export { ContextMenu } from './ContextMenu.jsx';
 export { AppLogo } from './AppLogo.jsx';
 export { Carousel } from './Carousel.jsx';
+export { ModalPresence } from './ModalPresence.jsx';

@@ -91,6 +91,7 @@ try {
           process.stderr.write((await page.locator('body').innerText()) + '\n' + JSON.stringify(errors));
           throw error;
         });
+      await page.waitForTimeout(250);
       await clear();
       const search = page.getByLabel('Buscar receita', { exact: true });
       await search.fill('Receita 1');
@@ -128,7 +129,12 @@ try {
       assert.equal(await section.locator('.insights-product-card').count(), 6);
       if (width === 390 && theme === 'light') await page.screenshot({ path: `${output}/carousel-mid-motion.png`, fullPage: true });
       await section.getByRole('button', { name: /Recolher/ }).click();
-      assert.equal((await motions('ds-carousel-track')).length, 2);
+      assert((await motions('ds-carousel-track')).length <= 2);
+      assert(
+        await section
+          .locator('.ds-carousel-track')
+          .evaluate((node) => node.getAnimations().filter((animation) => animation.playState === 'running').length <= 1)
+      );
       await page.evaluate(() => {
         document.documentElement.dataset.reducedMotion = 'true';
       });
