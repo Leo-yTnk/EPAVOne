@@ -52,17 +52,20 @@
   gap: var(--space-3);
 }
 .insights-recipe-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2) var(--space-3);
+  display: block;
+  text-wrap: pretty;
 }
-.insights-recipe-meta > span {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--space-1);
+.insights-recipe-card .insights-card-action {
+  justify-content: center;
+  background: var(--button-bg-default);
+  border-color: transparent;
+  color: var(--button-content-default);
 }
-.insights-recipe-meta .ds-icon {
-  font-size: 0.75rem;
+.insights-recipe-card .insights-card-action:hover:not(:disabled) {
+  background: var(--button-bg-hover);
+}
+.insights-recipe-card .insights-card-action > span {
+  justify-content: center;
 }
 .insights-grid:has(> .insights-recipe-card) {
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
@@ -201,9 +204,6 @@
 .insights-catalog-section .insights-recipe-meta {
   font-size: 0.75rem;
   gap: var(--space-1) var(--space-2);
-}
-.insights-catalog-section .insights-recipe-meta > span:last-child:not(:first-child) {
-  color: var(--text-secondary);
 }
 .insights-catalog-section .insights-catalog-card .ds-btn {
   margin-top: auto;
