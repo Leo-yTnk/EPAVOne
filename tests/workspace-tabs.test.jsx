@@ -30,7 +30,7 @@ describe('App workspace tabs', () => {
   it('uses the same shell navigation for Planner and Insights, including deep routes', () => {
     const { rerender } = render(shell({ product: 'planner', segments: ['clientes', 'demo-1'] }));
     const nav = screen.getByRole('navigation', { name: 'Navegação do Planner' });
-    expect(within(nav).getAllByRole('link')).toHaveLength(5);
+    expect(within(nav).getAllByRole('link')).toHaveLength(6);
     expect(within(nav).getByRole('link', { name: 'Clientes' }).getAttribute('aria-current')).toBe('page');
     expect(within(nav).getByRole('link', { name: 'Oportunidades' }).getAttribute('href')).toBe('#/planner/oportunidades');
     rerender(shell({ product: 'planner', segments: ['atendimento', 'demo-1'] }));

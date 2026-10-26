@@ -20,7 +20,7 @@ export function OrderLine({ product, line, index, kitEnabled, readOnly, onChange
           {readOnly ? (
             <p>
               {line.quantity} {line.quantity === 1 ? 'unidade' : 'unidades'}
-              {line.kit ? ' · Kit' : ''}
+              {line.kit && line.quantity >= 2 ? ' · Kit' : ''}
             </p>
           ) : (
             <Input
@@ -33,12 +33,19 @@ export function OrderLine({ product, line, index, kitEnabled, readOnly, onChange
               label="Quantidade"
               aria-label={`Quantidade de ${line.name}`}
               value={line.quantity || ''}
-              onInput={(event) => onChange(line.name, { quantity: Number(event.currentTarget.value) })}
+              onInput={(event) => {
+                const quantity = Number(event.currentTarget.value);
+                onChange(line.name, { quantity, ...(quantity < 2 ? { kit: false } : {}) });
+              }}
             />
           )}
           {!readOnly && kitEnabled && (
-            <div className="writer-line-kit">
-              <Checkbox checked={Boolean(line.kit)} onChange={(event) => onChange(line.name, { kit: event.currentTarget.checked })}>
+            <div className="writer-line-kit" title={line.quantity < 2 ? 'Kit disponível a partir de 2 unidades' : undefined}>
+              <Checkbox
+                disabled={line.quantity < 2}
+                checked={Boolean(line.kit) && line.quantity >= 2}
+                onChange={(event) => onChange(line.name, { kit: event.currentTarget.checked })}
+              >
                 Kit
               </Checkbox>
             </div>

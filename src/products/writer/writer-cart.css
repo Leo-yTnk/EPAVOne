@@ -121,7 +121,8 @@
   grid-template-columns: minmax(0, 1fr);
 }
 .writer-cart.is-readonly .writer-cart-summary {
-  position: static;
+  position: relative;
+  top: auto;
 }
 .writer-cart.is-readonly .writer-line-controls {
   grid-template-columns: minmax(0, 1fr);
@@ -158,7 +159,8 @@
     grid-template-columns: minmax(0, 1fr);
   }
   .writer-cart-summary {
-    position: static;
+    position: relative;
+  top: auto;
   }
 }
 @media (max-width: 40rem) {

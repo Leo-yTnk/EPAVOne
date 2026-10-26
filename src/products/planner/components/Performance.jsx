@@ -14,8 +14,8 @@ export function Performance({ state, week }) {
         <Card className="planner-flow-card">
           <Heading level={3}>Vendas confirmadas no banco · semana selecionada</Heading>
           <p>
-            {history.length} vendas · {money(total)} · Ticket médio {history.length ? money(Math.round(total / history.length)) : '—'} · IPC{' '}
-            {history.length ? (units / history.length).toFixed(1) : '—'}
+            {history.length} vendas · {money(total)} · Ticket médio {history.length ? money(Math.round(total / history.length)) : '—'} ·
+            Índice histórico {history.length ? (units / history.length).toFixed(1) : '—'}
           </p>
           <p className="planner-muted">
             Inclui registros históricos e compras confirmadas no Planner, uma única vez por venda. O histórico antigo não informa clientes;
@@ -45,15 +45,15 @@ export function Performance({ state, week }) {
               )
             },
             { label: 'Ticket médio', value: metrics.ticket === null ? '—' : money(metrics.ticket) },
-            { label: 'IPC', value: metrics.ipc === null ? '—' : metrics.ipc.toFixed(1) },
+            { label: 'Unidades por compra (histórico)', value: metrics.ipc === null ? '—' : metrics.ipc.toFixed(1) },
             { label: 'Vendas registradas', value: money(metrics.revenue) },
             { label: 'Cobertura', value: <>{metrics.coverage}% da carteira</> }
           ]}
         />
         <p className="planner-muted">
           Atendimento = cliente distinto contatado; indisponíveis contam só como tentativa ({metrics.attempts}). Positivação = compradores
-          distintos / clientes contatados. Ticket e IPC = valor e unidades por compra registrada. Valores demonstrativos ou informados
-          manualmente, sem conciliação com pedidos.
+          distintos / clientes contatados. Ticket e unidades refletem os atendimentos antigos. O IPC por produtos distintos e a positivação
+          em clientes estão na aba Pedidos. Valores demonstrativos ou informados manualmente, sem conciliação com pedidos.
         </p>
         {metrics.unmeasured > 0 && <p>{metrics.unmeasured} compras sem valor/unidades não entram no ticket, IPC ou total.</p>}
       </Card>

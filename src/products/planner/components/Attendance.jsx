@@ -1,3 +1,4 @@
+import { newSale, salesTransfer } from '../../../shared/services/sales.js';
 import { useState } from 'preact/hooks';
 import { Alert, Badge, Button, Card, EmptyState, Heading, Input, Select, Textarea } from '../../../design-system/components/index.js';
 import { dateLabel, lastInteraction, OUTCOMES, today, weekStart } from '../models/planner.js';
@@ -39,6 +40,23 @@ export function Attendance({ state, week, customerId, act, busy }) {
   }
   async function finish(event) {
     event.preventDefault();
+    if (outcome === 'bought') {
+      const exported = context?.customerId === customer.id ? context?.summary?.saleDraft : null;
+      const draft = exported || newSale(customer.name);
+      if (!exported)
+        draft.lines = [
+          {
+            name: '',
+            code: '',
+            quantity: Number(units) || 1,
+            unitPrice: Number(amount.replace(',', '.')) / (Number(units) || 1),
+            kit: false
+          }
+        ];
+      salesTransfer.send(draft);
+      window.location.hash = '#/planner/pedidos';
+      return;
+    }
     const saved = await act(
       {
         type: 'outcome',
@@ -195,7 +213,7 @@ export function Attendance({ state, week, customerId, act, busy }) {
               onInput={(event) => setNote(event.currentTarget.value)}
             />
             <Button type="submit" loading={busy} disabled={!outcome}>
-              {outcome === 'bought' && state.sales ? 'Confirmar compra e registrar venda' : 'Salvar e próximo cliente'}
+              {outcome === 'bought' ? 'Conferir produtos e registrar venda' : 'Salvar e próximo cliente'}
             </Button>
           </form>
         </Card>

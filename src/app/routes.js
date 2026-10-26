@@ -29,6 +29,7 @@ export const INSIGHTS_NAV = [
 ];
 
 export const PLANNER_NAV = [
+  { label: 'Pedidos', href: '#/planner/pedidos', section: 'pedidos' },
   { label: 'Visão geral', href: '#/planner', section: '' },
   { label: 'Semana', href: '#/planner/semana', section: 'semana' },
   { label: 'Clientes', href: '#/planner/clientes', section: 'clientes' },

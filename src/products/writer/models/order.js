@@ -150,6 +150,7 @@ export function validateProducts(template, order) {
     if (!Number.isSafeInteger(line.quantity) || line.quantity <= 0 || line.quantity > 9999)
       errors.push(`Quantidade inválida: ${line.name}.`);
     if (seen.has(line.name)) errors.push(`Produto repetido no carrinho: ${line.name}.`);
+    if (line.kit && line.quantity < 2) errors.push(`Kit exige pelo menos 2 unidades: ${line.name}.`);
     if (line.kit && !template.kitOptions.includes('sim')) errors.push('O formulário não permite marcar kit.');
     seen.add(line.name);
   }
