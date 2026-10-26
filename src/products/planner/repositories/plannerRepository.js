@@ -18,6 +18,14 @@ export function validateSnapshot(state) {
     validateCustomer(customer);
     ids.add(customer.id);
   }
+  const removed = state.removedCustomerIds || [];
+  if (
+    !Array.isArray(removed) ||
+    removed.some((id) => typeof id !== 'string' || !id || ids.has(id)) ||
+    new Set(removed).size !== removed.length
+  )
+    throw new Error('Referências de clientes excluídos inválidas.');
+  const historyIds = new Set([...ids, ...removed]);
   for (const week of state.weeks)
     if (
       !validDay(week.id) ||
@@ -34,7 +42,7 @@ export function validateSnapshot(state) {
       throw new Error('Semana local inválida. Os dados existentes foram preservados.');
   if (new Set(state.weeks.map((week) => week.id)).size !== state.weeks.length) throw new Error('Semanas duplicadas.');
   for (const item of state.interactions)
-    if (!ids.has(item.customerId) || !validDay(item.date) || !OUTCOMES[item.outcome]) throw new Error('Histórico local inválido.');
+    if (!historyIds.has(item.customerId) || !validDay(item.date) || !OUTCOMES[item.outcome]) throw new Error('Histórico local inválido.');
   for (const item of state.commitments)
     if (!ids.has(item.customerId) || !validDay(item.due) || typeof item.text !== 'string' || typeof item.done !== 'boolean')
       throw new Error('Combinado local inválido.');

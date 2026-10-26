@@ -106,7 +106,15 @@ export function performance(state, week) {
     revenue: measured.reduce((sum, item) => sum + item.amountCents, 0),
     ticket: measured.length ? Math.round(measured.reduce((sum, item) => sum + item.amountCents, 0) / measured.length) : null,
     ipc: measured.length ? measured.reduce((sum, item) => sum + item.units, 0) / measured.length : null,
-    coverage: state.customers.length ? Math.round((customers / state.customers.length) * 100) : 0,
+    coverage: state.customers.length
+      ? Math.round(
+          (new Set(
+            contacted.filter((item) => state.customers.some((customer) => customer.id === item.customerId)).map((item) => item.customerId)
+          ).size /
+            state.customers.length) *
+            100
+        )
+      : 0,
     planned: week.queue.filter((entry) => entry.role === 'primary').length,
     done: week.queue.filter((entry) => entry.role === 'primary' && entry.outcome).length,
     measured: measured.length,

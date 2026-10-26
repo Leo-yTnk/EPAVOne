@@ -3,7 +3,7 @@ import { Badge, Button, Card, SummaryList, Checkbox, Heading, Input, Textarea } 
 import { dateLabel, lastInteraction, money, OUTCOMES, today } from '../models/planner.js';
 import { PriorityDetails } from './PriorityDetails.jsx';
 import { OfferList } from './OfferList.jsx';
-export function ClientProfile({ customer, state, week, act, busy, onEdit }) {
+export function ClientProfile({ customer, state, week, act, busy, onEdit, onDelete }) {
   const [preparation, setPreparation] = useState(customer.preparation);
   const [text, setText] = useState('');
   const [due, setDue] = useState(today());
@@ -23,9 +23,14 @@ export function ClientProfile({ customer, state, week, act, busy, onEdit }) {
         <Button as="a" href="#/planner/clientes" variant="ghost">
           ← Carteira
         </Button>
-        <Button variant="secondary" onClick={onEdit}>
-          Editar perfil
-        </Button>
+        <div className="ds-inline">
+          <Button variant="secondary" disabled={busy} onClick={onEdit}>
+            Editar perfil
+          </Button>
+          <Button variant="danger" disabled={busy} onClick={onDelete}>
+            Excluir cliente
+          </Button>
+        </div>
       </div>
       <Card className="planner-profile">
         <div>

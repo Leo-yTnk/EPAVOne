@@ -56,6 +56,15 @@ describe('Planner workspace and confirmed sales atomicity', () => {
     expect((await db.query('select revision from epav_planner_workspaces')).rows[0].revision).toBe(2);
     expect((await db.query('select * from sales')).rows).toHaveLength(1);
   });
+  it('removes a client profile while preserving confirmed sales and immutable interactions', async () => {
+    const old = (await db.query('select state from epav_planner_workspaces')).rows[0].state;
+    const withProfile = { ...old, customers: [{ id: 'deleted-client', name: 'Cliente' }] };
+    expect((await save(withProfile, 2)).rows[0].revision).toBe(3);
+    const removed = { ...old, customers: [], commitments: [], removedCustomerIds: ['deleted-client'] };
+    expect((await save(removed, 3)).rows[0].revision).toBe(4);
+    expect((await db.query('select * from sales')).rows).toHaveLength(1);
+    expect((await db.query('select state from epav_planner_workspaces')).rows[0].state.interactions).toEqual(old.interactions);
+  });
   it('isolates accounts, blocks direct writes, and rejects collision with another owners sale', async () => {
     await db.exec(`set request.user_id='${b}'`);
     expect((await db.query('select * from epav_planner_workspaces')).rows).toEqual([]);

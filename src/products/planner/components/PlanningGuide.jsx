@@ -25,8 +25,15 @@ export function PlanningGuide({ state, week }) {
         : pending.length
           ? 'Abordagens preparadas. Consulte o contexto antes de atender.'
           : 'Registre o resultado das conversas para acompanhar a evolução.',
-      href: unprepared ? `#/planner/clientes/${unprepared.customerId}` : '#/planner/desempenho',
+      href: unprepared ? `#/planner/clientes/${unprepared.customerId}` : pending.length ? '#/planner/atendimento' : '#/planner/desempenho',
       complete: week.queue.length > 0 && !unprepared
+    },
+    {
+      title: '4. Confirmar e acompanhar',
+      description:
+        'Prepare o pedido no Writer e confira o Excel. Depois da confirmação da compra, registre o resultado no atendimento para atualizar suas vendas.',
+      href: '#/planner/desempenho',
+      complete: week.queue.some((entry) => entry.outcome)
     }
   ];
   const next = !state.customers.length

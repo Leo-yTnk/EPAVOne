@@ -24,7 +24,13 @@ export function createPlannerService(repository = plannerRepository) {
       } else {
         if (!customer) throw new Error('Cliente não encontrado.');
         const entry = week.queue.find((item) => item.customerId === customer.id);
-        if (command.type === 'add') {
+        if (command.type === 'deleteCustomer') {
+          next.customers = next.customers.filter((item) => item.id !== customer.id);
+          next.commitments = next.commitments.filter((item) => item.customerId !== customer.id);
+          for (const plannedWeek of next.weeks) plannedWeek.queue = plannedWeek.queue.filter((item) => item.customerId !== customer.id);
+          if (next.interactions.some((item) => item.customerId === customer.id))
+            next.removedCustomerIds = [...(next.removedCustomerIds || []), customer.id];
+        } else if (command.type === 'add') {
           if (!entry) week.queue.push({ customerId: customer.id, role: 'primary', outcome: null });
         } else if (command.type === 'remove') {
           if (entry?.outcome) throw new Error('Um atendimento registrado permanece no planejamento para preservar o histórico.');
