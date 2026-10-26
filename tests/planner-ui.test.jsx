@@ -87,6 +87,32 @@ describe('Planner flow', () => {
     rerender(<PlannerRoutes route={{ segments: ['unknown'] }} service={serviceFor()} />);
     expect(screen.getByText('Essa área não existe.')).toBeTruthy();
   });
+  it('requires confirmation and keeps the profile when deletion fails', async () => {
+    const service = serviceFor();
+    const update = vi.spyOn(service, 'update').mockRejectedValueOnce(new Error('Sem conexão. Tente novamente.'));
+    render(<PlannerRoutes route={{ segments: ['clientes', 'demo-1'] }} service={service} />);
+    await screen.findByText('Editar perfil');
+    fireEvent.click(screen.getByText('Excluir cliente'));
+    expect(screen.getByRole('dialog').textContent).toContain('Bruna (exemplo)');
+    expect(update).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByText('Cancelar'));
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    fireEvent.click(screen.getByText('Excluir cliente'));
+    fireEvent.click(screen.getByText('Confirmar exclusão'));
+    await screen.findAllByText('Sem conexão. Tente novamente.');
+    expect(screen.getByRole('dialog')).toBeTruthy();
+    expect(screen.getByText('Editar perfil')).toBeTruthy();
+    fireEvent.click(screen.getByText('Confirmar exclusão'));
+    await waitFor(() => expect(window.location.hash).toBe('#/planner/clientes'));
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(update).toHaveBeenCalledTimes(2);
+  });
+  it('offers account access from demonstration mode', async () => {
+    const open = vi.fn();
+    render(<PlannerRoutes service={serviceFor()} onOpenAccount={open} />);
+    fireEvent.click(screen.getByText('Entrar para sincronizar'));
+    expect(open).toHaveBeenCalledOnce();
+  });
   it('records outcome and advances to the next pending customer', async () => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(new Date(NOW + 'T15:00:00Z'));

@@ -82,7 +82,12 @@ export function App() {
           </span>
         }
       >
-        <PlannerRoutes key={account.session?.user?.id || 'guest'} route={route} account={account} />
+        <PlannerRoutes
+          key={account.session?.user?.id || 'guest'}
+          route={route}
+          account={account}
+          onOpenAccount={() => setAccountOpen(true)}
+        />
       </Suspense>
     );
   if (route.product === 'writer') page = null;

@@ -79,8 +79,19 @@ export function createRemotePlannerRepository(client = authenticatedClient) {
         if (row?.revision !== revision + 1 || !equivalent(row.state, snapshot)) check(response);
         revision = row.revision;
       } else revision = check(response).revision;
-      const history = await sales(ownerId);
-      return { state: { ...snapshot, sales: history }, volatile: false, remote: true };
+      // The workspace and sales already committed atomically. A failed read must not
+      // report a failed write or encourage the user to repeat the command.
+      try {
+        const history = await sales(ownerId);
+        return { state: { ...snapshot, sales: history }, volatile: false, remote: true };
+      } catch {
+        return {
+          state: { ...snapshot, sales: state.sales || [] },
+          volatile: false,
+          remote: true,
+          syncWarning: 'A alteração foi salva, mas o resumo de vendas não pôde ser atualizado. Use Atualizar dados para tentar novamente.'
+        };
+      }
     }
   };
 }

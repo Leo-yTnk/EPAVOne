@@ -7,11 +7,13 @@ import { WeekPlan } from './components/WeekPlan.jsx';
 import { ClientList } from './components/ClientList.jsx';
 import { ClientProfile } from './components/ClientProfile.jsx';
 import { ClientEditor } from './components/ClientEditor.jsx';
+import { DeleteClientDialog } from './components/DeleteClientDialog.jsx';
 import { Opportunities } from './components/Opportunities.jsx';
 import { Performance } from './components/Performance.jsx';
 import { Attendance } from './components/Attendance.jsx';
 import { createRemotePlannerRepository } from './repositories/remotePlannerRepository.js';
 import { createPlannerService } from './services/plannerService.js';
+import { commercialContext } from '../../shared/services/commercialContext.js';
 import './planner.css';
 const info = {
   '': ['Uma boa semana começa pelas pessoas.', 'Decida quem atender, prepare a conversa e acompanhe os próximos passos.'],
@@ -21,7 +23,7 @@ const info = {
   desempenho: ['Aprender com cada conversa.', 'Compare o que foi planejado com o que aconteceu para decidir a próxima semana.'],
   atendimento: ['Uma conversa de cada vez.', 'O essencial à mão: contexto, sugestões e o próximo passo.']
 };
-export function PlannerRoutes({ route = { segments: [] }, service, account }) {
+export function PlannerRoutes({ route = { segments: [] }, service, account, onOpenAccount }) {
   const chosenService = useMemo(
     () => service || (account?.session ? createPlannerService(createRemotePlannerRepository()) : undefined),
     [service, account?.session?.user?.id]
@@ -36,6 +38,7 @@ export function PlannerRoutes({ route = { segments: [] }, service, account }) {
     }
   });
   const [editing, setEditing] = useState(null);
+  const [deleting, setDeleting] = useState(null);
   const section = route.segments[0] || '';
   const recognized = Object.hasOwn(info, section);
   const title = info[section] || ['Página não encontrada', 'Volte à visão geral do Planner.'];
@@ -77,10 +80,37 @@ export function PlannerRoutes({ route = { segments: [] }, service, account }) {
         <strong>{account?.session ? 'Seu planejamento' : 'Modo demonstração'}</strong>
         <span>
           {account?.session
-            ? 'Carteira e atendimentos da sua conta. Confirme uma compra somente após conferir o pedido; essa ação registra a venda no banco.'
+            ? 'Clientes, semanas e combinados salvos na sua conta e disponíveis em outros dispositivos. Registrar uma compra confirmada também salva a venda.'
             : 'Perfis e sugestões de exemplo. Entre para usar seu planejamento e histórico reais.'}
         </span>
+        {account?.session ? (
+          <div className="ds-inline">
+            <span role="status">
+              {resource.loading
+                ? 'Carregando sua conta…'
+                : resource.busy
+                  ? 'Salvando na conta…'
+                  : resource.error || resource.saveError || resource.syncWarning
+                    ? 'Sincronização indisponível'
+                    : 'Sincronizado com sua conta'}
+            </span>
+            <Button size="sm" variant="secondary" disabled={resource.loading || resource.busy} onClick={resource.reload}>
+              Atualizar dados
+            </Button>
+          </div>
+        ) : (
+          onOpenAccount && (
+            <Button size="sm" onClick={onOpenAccount}>
+              Entrar para sincronizar
+            </Button>
+          )
+        )}
       </div>
+      {resource.syncWarning && (
+        <Alert tone="warning" title="Planejamento salvo">
+          {resource.syncWarning}
+        </Alert>
+      )}
       {resource.volatile && (
         <Alert tone="warning" title="Armazenamento indisponível">
           Alterações disponíveis somente nesta sessão. O navegador não permitiu salvar localmente.
@@ -92,7 +122,7 @@ export function PlannerRoutes({ route = { segments: [] }, service, account }) {
         </p>
       )}
       <div id="planner-panel" role="region" aria-label="Conteúdo do Planner" className="planner-panel">
-        {resource.loading ? (
+        {resource.loading || account?.initializing ? (
           <div aria-label="Carregando planejamento" role="status" className="planner-loading">
             <Skeleton variant="title" />
             <Skeleton className="planner-loading-block" />
@@ -109,11 +139,17 @@ export function PlannerRoutes({ route = { segments: [] }, service, account }) {
           </>
         ) : section === 'clientes' && route.segments[1] ? (
           customer ? (
-            <ClientProfile key={`${customer.id}-${weekId}`} {...props} customer={customer} onEdit={() => setEditing(customer)} />
+            <ClientProfile
+              key={`${customer.id}-${weekId}`}
+              {...props}
+              customer={customer}
+              onEdit={() => setEditing(customer)}
+              onDelete={() => setDeleting(customer)}
+            />
           ) : (
             <ErrorState
               title="Cliente não encontrado"
-              description="Esse cliente não está na carteira deste navegador."
+              description="Esse cliente não está na carteira atual."
               actionLabel="Voltar à carteira"
               onAction={() => {
                 window.location.hash = '#/planner/clientes';
@@ -134,6 +170,23 @@ export function PlannerRoutes({ route = { segments: [] }, service, account }) {
           <Overview {...props} />
         )}
       </div>
+      <ModalPresence>
+        {deleting && (
+          <DeleteClientDialog
+            customer={deleting}
+            act={resource.act}
+            busy={resource.busy}
+            notice={resource.notice}
+            saveError={resource.saveError}
+            onClose={() => setDeleting(null)}
+            onDeleted={() => {
+              if (commercialContext.get()?.customerId === deleting.id) commercialContext.clear();
+              setDeleting(null);
+              window.location.hash = '#/planner/clientes';
+            }}
+          />
+        )}
+      </ModalPresence>
       <ModalPresence>
         {editing && (
           <ClientEditor

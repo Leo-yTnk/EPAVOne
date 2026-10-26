@@ -4,9 +4,13 @@ export function usePlanner(service = plannerService) {
   const [resource, setResource] = useState({ loading: true, state: null, error: '', volatile: false });
   const [busy, setBusy] = useState(false);
   const [notice, setNotice] = useState('');
+  const [saveError, setSaveError] = useState(false);
   const locked = useRef(false);
   const mounted = useRef(true);
   async function reload() {
+    if (locked.current) return;
+    setSaveError(false);
+    setNotice('');
     setResource((current) => ({ ...current, loading: true, error: '' }));
     try {
       const result = await service.load();
@@ -27,6 +31,7 @@ export function usePlanner(service = plannerService) {
     locked.current = true;
     setBusy(true);
     setNotice('');
+    setSaveError(false);
     try {
       const result = await service.update(resource.state, command);
       if (mounted.current) {
@@ -35,12 +40,15 @@ export function usePlanner(service = plannerService) {
       }
       return true;
     } catch (error) {
-      if (mounted.current) setNotice(error.message);
+      if (mounted.current) {
+        setNotice(error.message);
+        setSaveError(true);
+      }
       return false;
     } finally {
       locked.current = false;
       if (mounted.current) setBusy(false);
     }
   }
-  return { ...resource, busy, notice, act, reload };
+  return { ...resource, busy, notice, saveError, act, reload };
 }
