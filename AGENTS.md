@@ -13,6 +13,9 @@
 ## Component rules
 
 - Reuse exports from `src/design-system/components/index.js`.
+- Product page headings use `PageHeader`; repeated section headings, field grids, action groups and data summaries use the shared composition components. Home greetings and reading-detail titles may keep their task-specific composition.
+- Product CSS owns content layout, not the typography or control geometry of shared primitives. Add a documented DS variant instead of restyling Button/Input/PageHeader in an app.
+- `src/design-system/styles/tokens.css` is the token source of truth. After changing it, run `npm run tokens:export`; never edit the generated catalog by hand.
 - Never recreate Button, Input, Select, Card, Alert, Tabs, Dialog, Drawer, Toast or other DS components with classes inside a page.
 - Never use a native `<select>`; use `Select`.
 - Every card surface must use `<Card>`; Card is stitched by default.

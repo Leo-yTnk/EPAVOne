@@ -1,0 +1,26 @@
+{
+  "before": {
+    "js": {
+      "bytes": 679232,
+      "gzip_bytes": 208024,
+      "files": 15
+    },
+    "css": {
+      "bytes": 142678,
+      "gzip_bytes": 25648,
+      "files": 7
+    }
+  },
+  "after": {
+    "js": {
+      "bytes": 678033,
+      "gzip_bytes": 209228,
+      "files": 17
+    },
+    "css": {
+      "bytes": 142112,
+      "gzip_bytes": 25726,
+      "files": 7
+    }
+  }
+}

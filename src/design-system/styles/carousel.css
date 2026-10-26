@@ -9,11 +9,7 @@
   justify-content: space-between;
   gap: var(--space-3);
 }
-.ds-carousel-heading h2 {
-  color: var(--text-primary);
-  font: 700 1.25rem/var(--leading-heading-small) var(--font-heading);
-  letter-spacing: -0.025em;
-}
+
 .ds-carousel-actions,
 .ds-carousel-controls {
   display: flex;
@@ -55,16 +51,14 @@
   .ds-carousel {
     --carousel-item-width: min(72vw, 14rem);
   }
-  .ds-carousel-heading h2 {
-    font-size: 1.125rem;
-  }
+
   .ds-carousel-heading {
     align-items: start;
   }
   .ds-carousel-actions {
     flex-wrap: wrap;
     justify-content: flex-end;
-    max-width: 45%;
+    max-width: 100%;
   }
   .ds-carousel-track {
     scrollbar-width: none;
@@ -73,3 +67,5 @@
     display: none;
   }
 }
+
+.ds-carousel-heading > .ds-section-header { width: 100%; align-items: center; }

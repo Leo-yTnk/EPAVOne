@@ -10,7 +10,7 @@
   gap: var(--space-4);
 }
 .settings-section {
-  --container-padding: var(--space-6);
+  --card-padding: var(--panel-padding);
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.25fr);
   column-gap: var(--space-7);
@@ -58,7 +58,7 @@
 }
 .settings-controls .ds-switch > span:last-child {
   flex: 1;
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
 }
 .settings-actions {
   display: flex;
@@ -83,7 +83,7 @@
   align-items: center;
   gap: var(--space-2);
   color: var(--text-secondary);
-  font-size: 0.8125rem;
+  font-size: var(--text-caption);
   min-height: 1.25rem;
 }
 .settings-save-status::before {
@@ -101,7 +101,7 @@ html[data-show-grid='false'] body {
 }
 @media (max-width: 48rem) {
   .settings-section {
-    --container-padding: var(--space-5);
+    --card-padding: var(--panel-padding-compact);
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-5);
   }

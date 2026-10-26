@@ -3,7 +3,7 @@ import { TemplateFeedback } from './components/TemplateFeedback.jsx';
 import { PlannerHandoff } from './components/PlannerHandoff.jsx';
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import { useForegroundInterval } from '../../design-system/behaviors/useForegroundInterval.js';
-import { Alert, AppLogo, PageHeader, Spinner } from '../../design-system/components/index.js';
+import { Alert, PageHeader, Spinner } from '../../design-system/components/index.js';
 import { sessionTemplate, restoreTemplateFile } from './services/sessionTemplate.js';
 import { saoPauloDay, validateOrder, validateCustomer, validateProducts, validateDelivery } from './models/order.js';
 import { importTemplate } from './services/templateService.js';
@@ -170,7 +170,7 @@ export function WriterRoutes({ active = true }) {
   return (
     <section className="product-page writer-page">
       <PageHeader
-        eyebrow={<AppLogo product="writer" wordmark />}
+        product="writer"
         title="Do atendimento ao pedido."
         description="Cliente, produtos, entrega e conferência. Um passo de cada vez, com as fórmulas do Excel preservadas."
       />

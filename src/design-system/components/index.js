@@ -51,3 +51,7 @@ export { ContextMenu } from './ContextMenu.jsx';
 export { AppLogo } from './AppLogo.jsx';
 export { Carousel } from './Carousel.jsx';
 export { ModalPresence } from './ModalPresence.jsx';
+export { SectionHeader } from './SectionHeader.jsx';
+export { FieldGrid } from './FieldGrid.jsx';
+export { ActionGroup } from './ActionGroup.jsx';
+export { SummaryList } from './SummaryList.jsx';

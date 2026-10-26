@@ -21,7 +21,7 @@
 }
 .planner-muted {
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   line-height: var(--leading-body);
 }
 .planner-week-selector {
@@ -33,7 +33,7 @@
   align-items: baseline;
   gap: var(--space-3);
   color: var(--text-secondary);
-  font-size: 0.8125rem;
+  font-size: var(--text-caption);
 }
 .planner-demo-note strong {
   color: var(--text-brand);
@@ -77,7 +77,7 @@
   gap: var(--space-4);
 }
 .planner-hero {
-  --container-padding: var(--space-6);
+  --card-padding: var(--panel-padding);
   padding: var(--container-padding);
 }
 .planner-hero-next {
@@ -90,7 +90,7 @@
 }
 .planner-priority {
   color: var(--text-secondary);
-  font-size: 0.8125rem;
+  font-size: var(--text-caption);
 }
 .planner-priority summary {
   display: flex;
@@ -160,34 +160,10 @@
   gap: var(--space-1);
 }
 .planner-simple-list a {
-  font-weight: 650;
+  font-weight: var(--weight-label);
 }
-.planner-facts,
-.planner-metrics {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: var(--space-4);
-  margin: 0;
-}
-.planner-facts dt,
-.planner-metrics dt {
-  font-size: 0.8125rem;
-  color: var(--text-secondary);
-  margin-bottom: var(--space-2);
-}
-.planner-facts dd,
-.planner-metrics dd {
-  margin: 0;
-  font-weight: 650;
-}
-.planner-metrics {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  row-gap: var(--space-6);
-  padding-block: var(--space-3);
-}
-.planner-metrics dd {
-  font: 700 var(--heading-3)/var(--leading-heading-small) var(--font-heading);
-}
+
+
 .planner-goal-form {
   display: grid;
   gap: var(--space-3);
@@ -218,7 +194,7 @@
 }
 .planner-timeline time {
   color: var(--text-brand);
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
 }
 .planner-timeline li > div {
   display: grid;
@@ -237,8 +213,8 @@
   min-width: 0;
 }
 .planner-form legend {
-  font-weight: 650;
-  font-size: 0.875rem;
+  font-weight: var(--weight-label);
+  font-size: var(--text-sm);
   margin-bottom: var(--space-3);
 }
 .planner-checks {
@@ -248,7 +224,7 @@
 }
 .planner-notice {
   color: var(--text-brand);
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
 }
 .planner-panel {
   animation: planner-enter var(--duration-fast) var(--ease-enter);
@@ -294,16 +270,14 @@
     width: fit-content;
   }
   .planner-hero {
-    --container-padding: var(--space-6);
+    --card-padding: var(--panel-padding);
     padding: var(--container-padding);
   }
   .planner-demo-note {
     flex-direction: column;
     gap: var(--space-1);
   }
-  .planner-metrics {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+
   .planner-queue-controls {
     padding-left: 0;
   }
@@ -362,7 +336,7 @@
 
 .planner-guide-step {
   gap: var(--space-4);
-  --container-padding: var(--space-6);
+  --card-padding: var(--panel-padding);
   padding: var(--container-padding);
 }
 .planner-guide-step h4 {

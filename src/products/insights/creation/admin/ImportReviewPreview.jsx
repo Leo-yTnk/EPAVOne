@@ -1,4 +1,4 @@
-import { Badge, Card, Link, Tabs } from '../../../../design-system/components/index.js';
+import { Badge, Card, Link, Tabs, SectionHeader } from '../../../../design-system/components/index.js';
 import { CreationThumbnail } from '../components/CreationThumbnail.jsx';
 import { ImportDuplicateChoice } from './ImportDuplicateChoice.jsx';
 import { importGroups } from './importReview.js';
@@ -6,10 +6,12 @@ export function ImportReviewPreview({ payload, review, group, setGroup, choices,
   const replacementCount = Object.values(choices).filter((value) => value === 'imported').length;
   return (
     <Card className="creation-fields creation-editor-section">
-      <div className="creation-section-heading">
-        <h3 className="creation-section-title">Prévia por entidade</h3>
-        <p>Confira os dados e os vínculos antes de confirmar.</p>
-      </div>
+      <SectionHeader
+        as="h3"
+        size="sm"
+        title={<>Prévia por entidade</>}
+        description={<>Confira os dados e os vínculos antes de confirmar.</>}
+      />
       <div className="creation-toolbar" role="status">
         <Badge>{review.totals.new} novos</Badge>
         <Badge>{review.totals.ignored + (payload.skipped || 0) - replacementCount} mantidos</Badge>

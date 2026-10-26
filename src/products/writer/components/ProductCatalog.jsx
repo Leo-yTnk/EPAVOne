@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from 'preact/hooks';
-import { Button, Dialog, EmptyState, Input } from '../../../design-system/components/index.js';
+import { Button, Dialog, SectionHeader, EmptyState, Input } from '../../../design-system/components/index.js';
 import { normalize } from '../models/order.js';
 import { ProductOption } from './ProductOption.jsx';
 const PAGE_SIZE = 24;
@@ -22,16 +22,13 @@ export function ProductCatalog({ products, lines, onAdd }) {
   const currentPage = Math.min(page, Math.max(0, pageCount - 1));
   return (
     <section aria-labelledby="writer-catalog-title" className="writer-catalog">
-      <div className="writer-catalog-heading">
-        <div>
-          <span className="ds-overline">2 · Produtos</span>
-          <h2 id="writer-catalog-title" className="ds-heading-h3">
-            Monte o pedido
-          </h2>
-          <p className="writer-muted">Escolha um produto e ajuste a quantidade na lista do carrinho.</p>
-        </div>
-        <Button onClick={() => setOpen(true)}>Adicionar produto</Button>
-      </div>
+      <SectionHeader
+        id="writer-catalog-title"
+        eyebrow="2 · Produtos"
+        title="Monte o pedido"
+        description="Escolha um produto e ajuste a quantidade na lista do carrinho."
+        actions={<Button onClick={() => setOpen(true)}>Adicionar produto</Button>}
+      />
       {open && (
         <Dialog open={open} title="Selecionar produto" size="lg" onClose={close}>
           <div className="writer-picker-search">

@@ -13,7 +13,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "check:architecture": "node scripts/check-architecture.mjs",
-    "verify": "npm run lint && npm run check:architecture && npm run test && npm run build"
+    "verify": "npm run lint && npm run check:architecture && npm run check:tokens && npm run test && npm run build",
+    "tokens:export": "node scripts/export-design-tokens.mjs",
+    "check:tokens": "node scripts/export-design-tokens.mjs --check"
   },
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^7.3.1",

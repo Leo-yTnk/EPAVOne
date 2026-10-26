@@ -12,7 +12,7 @@
  .ds-filter-fields{display:none;margin-top:var(--space-3)}
  .ds-filter-disclosure[data-open="true"] .ds-filter-fields{display:grid;grid-template-columns:1fr;gap:var(--space-3);animation:ds-filter-in var(--duration-normal) var(--ease-enter)}
  .ds-filter-fields .ds-checkbox{min-height:2.75rem}
- .ds-input,.ds-textarea{font-size:1rem}
+ .ds-input,.ds-textarea{font-size:var(--text-md)}
  .ds-btn,.ds-select-trigger,.ds-icon-button{min-height:2.75rem}
  .ds-toast-region{bottom:calc(5rem + env(safe-area-inset-bottom))}
 }

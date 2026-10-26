@@ -1,5 +1,15 @@
 import { useState } from 'preact/hooks';
-import { ModalPresence, Alert, Button, Card, Icon, NavItem, Spinner } from '../../../design-system/components/index.js';
+import {
+  ModalPresence,
+  Alert,
+  Button,
+  Card,
+  Icon,
+  PageHeader,
+  SectionHeader,
+  NavItem,
+  Spinner
+} from '../../../design-system/components/index.js';
 import { EntityManager } from './components/EntityManager.jsx';
 import { SharedLibrary } from './components/SharedLibrary.jsx';
 import { RequestsPage } from './components/RequestsPage.jsx';
@@ -9,7 +19,6 @@ import { AdminPage } from './admin/AdminPage.jsx';
 import './creation.css';
 import '../insights-design.css';
 import './creation-design.css';
-import { InsightsPageHeader } from '../components/InsightsPageHeader.jsx';
 const sections = [
   { value: 'receitas', label: 'Minhas receitas', type: 'recipes' },
   { value: 'produtos', label: 'Meus produtos', type: 'products' },
@@ -24,7 +33,8 @@ export function CreationPage({ route, account, onOpenAccount }) {
   if (!account?.session)
     return (
       <section className="creation-welcome">
-        <InsightsPageHeader
+        <PageHeader
+          product="insights"
           title="Seu espaço de criação"
           description="Entre com a credencial YCP para acessar suas receitas, produtos e categorias."
         />
@@ -71,7 +81,8 @@ export function CreationPage({ route, account, onOpenAccount }) {
   const section = available.find((x) => x.value === route.segments[1]) || sections[0];
   return (
     <section className="creation-fields" key={account.session.user.id}>
-      <InsightsPageHeader
+      <PageHeader
+        product="insights"
         title="Modo de criação"
         description="Crie e organize sua biblioteca. Seus conteúdos pessoais continuam vinculados à sua conta."
       />
@@ -106,18 +117,18 @@ export function CreationPage({ route, account, onOpenAccount }) {
           </div>
         </Card>
         <div className="creation-workspace-content">
-          <div className="creation-workspace-heading">
-            <h2>{section.label}</h2>
-            <p className="insights-muted">
-              {section.type
+          <SectionHeader
+            title={section.label}
+            description={
+              section.type
                 ? 'Organize seus conteúdos, edite os detalhes e acompanhe suas publicações.'
                 : section.value === 'admin'
                   ? 'Gerencie o catálogo público, suas seções e a manutenção dos preços.'
                   : section.value === 'compartilhadas'
                     ? 'Encontre as receitas recebidas e gerencie o acesso à sua biblioteca.'
-                    : 'Acompanhe o retorno das suas solicitações de publicação.'}
-            </p>
-          </div>
+                    : 'Acompanhe o retorno das suas solicitações de publicação.'
+            }
+          />
           {section.type ? (
             <EntityManager
               key={section.type}

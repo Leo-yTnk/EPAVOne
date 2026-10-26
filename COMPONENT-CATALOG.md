@@ -118,7 +118,7 @@ Uma ação visualmente habilitada deve produzir comportamento ou feedback.
 
 ## Card contract
 
-Não existe Card sem stitched na v1.
+Cards independentes são stitched por padrão; imagens e diálogos de leitura do Insights podem usar a exceção funcional sem costura.
 
 ```jsx
 <Card>...</Card>
@@ -160,3 +160,13 @@ Movimento compartilhado: pressão com retorno elástico, indicadores com mola, r
 
 
 Geometria contínua: `CardStitch` alterna path SVG n=4 e rect arredondado conforme o suporte CSS a squircle. Configurações usam cabeçalho e controles agrupados, mantendo o Card canônico. [Espaçamento e introdução](docs/squircle-review/README.md).
+
+## Linguagem compartilhada entre apps
+
+O contrato atualizado de tokens, composição, densidade, formulários e evidências está em [Linguagem visual compartilhada](docs/design-system/README.md).
+
+Novos componentes públicos: `SectionHeader`, `FieldGrid`, `ActionGroup` e `SummaryList`. `PageHeader` agora compõe o Card canônico e aceita `product`, ações e conteúdo opcional. `Card` expõe padding compacto/denso; `Button` expõe tamanho compacto, largura total, raio interno e alinhamento entre extremos.
+
+`Input` e `Textarea` geram IDs quando ausentes, usam rótulos explícitos e vinculam ajuda/erro por `aria-describedby`. `Select` também vincula sua ajuda ao gatilho. O estado inválido acompanha a presença do erro.
+
+`FoundationPreview` compara os mesmos componentes em quatro paletas no Component Lab, sem adicionar uma rota pública.

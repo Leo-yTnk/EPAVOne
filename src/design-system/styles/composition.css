@@ -1,0 +1,183 @@
+/* Shared composition contracts. Product CSS owns content layout, never the primitives. */
+.ds-page-header {
+  display: grid;
+  gap: var(--space-4);
+  min-width: 0;
+}
+.ds-page-header-main {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: var(--space-5);
+  min-width: 0;
+}
+.ds-page-header-copy {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.ds-page-header-copy > .ds-overline {
+  color: var(--text-brand);
+}
+.ds-page-title {
+  font: var(--weight-regular) var(--page-title-size)/var(--leading-heading) var(--font-display);
+  letter-spacing: var(--tracking-heading);
+  text-wrap: pretty;
+}
+.ds-page-header-copy p {
+  color: var(--text-secondary);
+  max-width: var(--content-measure);
+  font-size: var(--text-sm);
+}
+.ds-page-header-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  max-width: 100%;
+  min-width: 0;
+  flex-shrink: 0;
+}
+.ds-page-header-content {
+  min-width: 0;
+  display: grid;
+  gap: var(--space-4);
+}
+.ds-section-header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  min-width: 0;
+}
+.ds-section-header-copy {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.ds-section-title {
+  font: var(--weight-heading) var(--section-title-size)/var(--leading-heading-small) var(--font-heading);
+  letter-spacing: var(--tracking-heading);
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+  text-wrap: pretty;
+}
+.ds-section-header-copy > .ds-overline {
+  color: var(--text-brand);
+}
+.ds-section-header-copy > p {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+  max-width: var(--content-measure);
+}
+.ds-section-header-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.ds-field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--layout-field-gap);
+  align-items: start;
+  min-width: 0;
+}
+.ds-field-grid[data-columns='3'] {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.ds-field-grid > * {
+  min-width: 0;
+}
+.ds-action-group {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  min-width: 0;
+}
+.ds-action-group[data-align='start'] {
+  justify-content: flex-start;
+}
+.ds-action-group > .ds-btn {
+  max-width: 100%;
+}
+@media (max-width: 48rem) {
+  .ds-page-header-main {
+    flex-direction: column;
+    gap: var(--space-4);
+  }
+  .ds-page-header-actions {
+    width: 100%;
+  }
+  .ds-page-header-actions > * {
+    width: 100%;
+  }
+  .ds-section-header {
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 40rem) {
+  .ds-field-grid,
+  .ds-field-grid[data-columns='3'] {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ds-action-group {
+    gap: var(--space-2);
+  }
+}
+
+.ds-summary-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+  margin: 0;
+  min-width: 0;
+}
+.ds-summary-list > div {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  min-width: 0;
+}
+.ds-summary-list dt {
+  color: var(--text-secondary);
+  font-size: var(--text-caption);
+}
+.ds-summary-list dd {
+  margin: 0;
+  font-weight: var(--weight-label);
+  color: var(--text-primary);
+  overflow-wrap: anywhere;
+}
+.ds-summary-list.is-emphasized {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-5);
+}
+.ds-summary-list.is-emphasized dd {
+  font: var(--weight-heading) var(--heading-3)/var(--leading-heading-small) var(--font-heading);
+  font-variant-numeric: tabular-nums;
+}
+.ds-summary-list[data-layout='rows'] {
+  grid-template-columns: minmax(0, 1fr);
+}
+.ds-summary-list[data-layout='rows'] > div {
+  grid-template-columns: minmax(8rem, 0.45fr) minmax(0, 1fr);
+  gap: var(--space-4);
+}
+@media (max-width: 40rem) {
+  .ds-summary-list.is-emphasized {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ds-summary-list[data-layout='rows'] > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-1);
+  }
+}
+
+.ds-section-header-sm {
+  --section-title-size: var(--text-lg);
+}

@@ -1,4 +1,4 @@
-import { Card, DataTable, Heading } from '../../../design-system/components/index.js';
+import { Card, SummaryList, DataTable, Heading } from '../../../design-system/components/index.js';
 import { dateLabel, money, performance, shiftDay } from '../models/planner.js';
 export function Performance({ state, week }) {
   const metrics = performance(state, week);
@@ -25,36 +25,31 @@ export function Performance({ state, week }) {
       )}
       <Card className="planner-flow-card">
         <Heading level={3}>O que suas conversas produziram</Heading>
-        <dl className="planner-metrics">
-          <div>
-            <dt>Atendimentos</dt>
-            <dd>
-              {metrics.attended} / {week.goal}
-            </dd>
-          </div>
-          <div>
-            <dt>Positivação</dt>
-            <dd>
-              {metrics.buyers} clientes · {metrics.conversion}%
-            </dd>
-          </div>
-          <div>
-            <dt>Ticket médio</dt>
-            <dd>{metrics.ticket === null ? '—' : money(metrics.ticket)}</dd>
-          </div>
-          <div>
-            <dt>IPC</dt>
-            <dd>{metrics.ipc === null ? '—' : metrics.ipc.toFixed(1)}</dd>
-          </div>
-          <div>
-            <dt>Vendas registradas</dt>
-            <dd>{money(metrics.revenue)}</dd>
-          </div>
-          <div>
-            <dt>Cobertura</dt>
-            <dd>{metrics.coverage}% da carteira</dd>
-          </div>
-        </dl>
+        <SummaryList
+          emphasis
+          items={[
+            {
+              label: 'Atendimentos',
+              value: (
+                <>
+                  {metrics.attended} / {week.goal}
+                </>
+              )
+            },
+            {
+              label: 'Positivação',
+              value: (
+                <>
+                  {metrics.buyers} clientes · {metrics.conversion}%
+                </>
+              )
+            },
+            { label: 'Ticket médio', value: metrics.ticket === null ? '—' : money(metrics.ticket) },
+            { label: 'IPC', value: metrics.ipc === null ? '—' : metrics.ipc.toFixed(1) },
+            { label: 'Vendas registradas', value: money(metrics.revenue) },
+            { label: 'Cobertura', value: <>{metrics.coverage}% da carteira</> }
+          ]}
+        />
         <p className="planner-muted">
           Atendimento = cliente distinto contatado; indisponíveis contam só como tentativa ({metrics.attempts}). Positivação = compradores
           distintos / clientes contatados. Ticket e IPC = valor e unidades por compra registrada. Valores demonstrativos ou informados

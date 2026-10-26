@@ -11,4 +11,4 @@
 .ds-app-logo-lg img { width: 2.75rem; height: 2.75rem; }
 .ds-app-wordmark { font: 700 1rem/var(--leading-control) var(--font-heading); letter-spacing: -0.025em; }
 .ds-app-wordmark > span { color: var(--text-brand); }
-.ds-app-logo-lg .ds-app-wordmark { font-size: 1.125rem; }
+.ds-app-logo-lg .ds-app-wordmark { font-size: var(--text-lg); }

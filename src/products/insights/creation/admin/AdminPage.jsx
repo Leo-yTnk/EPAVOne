@@ -1,6 +1,6 @@
 import { useRef, useState } from 'preact/hooks';
 import { useContentMotion } from '../../../../design-system/behaviors/useContentMotion.js';
-import { Alert, Button, Card, Icon, Select } from '../../../../design-system/components/index.js';
+import { Alert, Button, Card, Icon, Select, SectionHeader } from '../../../../design-system/components/index.js';
 import { EntityManager } from '../components/EntityManager.jsx';
 import { RequestsPage } from '../components/RequestsPage.jsx';
 import { SectionsManager } from './SectionsManager.jsx';
@@ -45,12 +45,16 @@ export function AdminPage({ profile }) {
   return (
     <section className="creation-fields creation-admin-workspace">
       <Card as="header" className="creation-admin-header creation-fields">
-        <div className="creation-section-heading">
-          <h3 className="creation-section-title">
-            <Icon name="settings" /> Catálogo e publicação
-          </h3>
-          <p>Revise o conteúdo, organize a vitrine e acompanhe os preços.</p>
-        </div>
+        <SectionHeader
+          as="h3"
+          size="sm"
+          title={
+            <>
+              <Icon name="settings" /> Catálogo e publicação
+            </>
+          }
+          description="Revise o conteúdo, organize a vitrine e acompanhe os preços."
+        />
         <div className="creation-toolbar">
           <Button variant="secondary" onClick={() => setArea('import')}>
             Importar Excel do catálogo

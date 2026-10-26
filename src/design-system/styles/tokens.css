@@ -62,12 +62,48 @@
   --border-subtle: var(--ref-color-paper-200);
   --border-default: #d5c9c0;
   --border-strong: #b8aaa0;
-  --border-focus: var(--ref-color-info-500);
+  --border-control: #9a897d;
+  --border-control-hover: var(--text-secondary);
+  --border-focus: var(--brand-700);
   --border-brand: var(--brand-500);
   --button-bg-default: var(--brand-700);
   --button-bg-hover: var(--brand-900);
   --button-content-default: #fff;
   --navigation-item-hover-bg: var(--surface-hover);
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.125rem;
+  --text-caption: 0.8125rem;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-label: 650;
+  --weight-heading: 700;
+  --tracking-heading: -0.025em;
+  --page-title-size: clamp(1.875rem, 3vw, 2.5rem);
+  --section-title-size: clamp(1.125rem, 1.8vw, 1.375rem);
+  --content-measure: 42rem;
+  --layout-page-gap: var(--space-5);
+  --layout-section-gap: var(--space-6);
+  --layout-field-gap: var(--space-4);
+  --layout-card-gap: var(--space-4);
+  --panel-padding: var(--space-6);
+  --panel-padding-compact: var(--space-5);
+  --panel-padding-dense: var(--space-4);
+  --radius-field: var(--radius-md);
+  --radius-dialog: var(--radius-2xl);
+  --radius-popover: var(--radius-lg);
+  --control-padding-inline: var(--space-3);
+  --control-padding-block: var(--space-2);
+  --control-font-size: var(--text-sm);
+  --touch-target: 2.75rem;
+  --surface-info: color-mix(in srgb, var(--ref-color-info-500) 7%, var(--surface-primary));
+  --surface-success: color-mix(in srgb, var(--ref-color-success-500) 7%, var(--surface-primary));
+  --surface-warning: color-mix(in srgb, var(--ref-color-warning-500) 8%, var(--surface-primary));
+  --surface-danger: color-mix(in srgb, var(--ref-color-danger-500) 7%, var(--surface-primary));
+  --surface-overlay: rgba(0, 0, 0, .38);
+  --opacity-disabled: .52;
 
   --font-display: 'DM Serif Display', Georgia, serif;
   --font-heading: 'Inter Tight', 'Inter', system-ui, sans-serif;
@@ -107,7 +143,7 @@
   --radius-navigation: var(--radius-full);
   --radius-card: 3rem;
   --card-radius: var(--radius-card);
-  --card-padding: var(--space-6);
+  --card-padding: var(--panel-padding);
   --card-stitch-inset: 0.5rem;
   --card-stitch-color: var(--border-subtle);
   --card-stitch-width: 0.125rem;
@@ -142,7 +178,7 @@
   --press-scale: 0.985;
   --motion-distance-sm: 0.25rem;
   --motion-distance-md: 0.375rem;
-  --focus-ring: 0 0 0 0.1875rem rgba(52, 83, 178, 0.24);
+  --focus-ring: 0 0 0 0.1875rem color-mix(in srgb, var(--border-focus) 24%, transparent);
   --chart-grid-color: color-mix(in srgb, var(--text-secondary) 12%, transparent);
 }
 
@@ -188,6 +224,8 @@
   --border-subtle: #3a332f;
   --border-default: #514740;
   --border-strong: #756861;
+  --border-control: #756861;
+  --border-focus: var(--brand-300);
   --text-brand: var(--brand-300);
   --shadow-sm: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.16);
   --shadow-md: 0 0.375rem 1.5rem rgba(0, 0, 0, 0.24);
@@ -213,6 +251,8 @@
   --surface-hover: color-mix(in srgb, var(--brand-500) var(--hover-brand-strength), var(--surface-primary));
   --text-brand: var(--brand-700);
   --border-brand: var(--brand-500);
+  --border-focus: var(--brand-700);
+  --focus-ring: 0 0 0 0.1875rem color-mix(in srgb, var(--border-focus) 24%, transparent);
   --button-bg-default: var(--brand-700);
   --button-bg-hover: var(--brand-900);
   --navigation-item-hover-bg: var(--surface-hover);
@@ -220,12 +260,12 @@
 [data-theme='dark'][data-product],
 [data-theme='dark'] [data-product] {
   --text-brand: var(--brand-300);
+  --border-focus: var(--brand-300);
+  --focus-ring: 0 0 0 0.1875rem color-mix(in srgb, var(--border-focus) 24%, transparent);
   --surface-selected: color-mix(in srgb, var(--brand-500) 20%, #211d1b);
 }
 
 [data-theme='dark'] {
-  --border-focus: #aebef5;
-  --focus-ring: 0 0 0 0.1875rem rgba(174, 190, 245, 0.24);
   --text-info: #aebef5;
   --text-success: #9ad4a6;
   --text-warning: #e6c36d;
@@ -235,4 +275,18 @@
 
 @media (max-width: 48rem) {
   :root { --radius-card: 1.75rem; --radius-xl: 1.75rem; --radius-2xl: 2rem; --radius-lg: 1.25rem; }
+}
+
+/* Density changes shared spacing, preserving the same interaction targets. */
+html[data-density='compact'] {
+  --panel-padding: var(--space-5);
+  --panel-padding-compact: var(--space-4);
+  --layout-section-gap: var(--space-5);
+}
+@media (max-width: 48rem) {
+  :root {
+    --panel-padding: var(--space-5);
+    --panel-padding-compact: var(--space-4);
+    --layout-section-gap: var(--space-5);
+  }
 }

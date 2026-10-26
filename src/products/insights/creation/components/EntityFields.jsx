@@ -1,4 +1,4 @@
-import { Card, Checkbox, Input, Select, Textarea } from '../../../../design-system/components/index.js';
+import { Card, Checkbox, Input, Select, Textarea, SectionHeader, FieldGrid } from '../../../../design-system/components/index.js';
 import { categoryTypes } from '../models/editor.js';
 import { IngredientsEditor } from './IngredientsEditor.jsx';
 export function EntityFields({ type, scope, item, values, vocabulary, change, disabled }) {
@@ -34,10 +34,12 @@ export function EntityFields({ type, scope, item, values, vocabulary, change, di
         aria-label="Identificação"
         className="creation-fields creation-editor-section creation-identification"
       >
-        <div className="creation-section-heading">
-          <h3 className="creation-section-title">Identificação</h3>
-          <p>Dê um nome ao conteúdo e organize sua apresentação na biblioteca.</p>
-        </div>
+        <SectionHeader
+          as="h3"
+          size="sm"
+          title="Identificação"
+          description="Dê um nome ao conteúdo e organize sua apresentação na biblioteca."
+        />
         <Input label="Nome" maxLength={120} required value={values.name} onInput={input('name')} disabled={disabled} />
         {type === 'categories' ? (
           <Select
@@ -70,11 +72,13 @@ export function EntityFields({ type, scope, item, values, vocabulary, change, di
       </Card>
       {type === 'products' && (
         <Card as="section" role="group" aria-label="Preço e unidade" className="creation-fields creation-editor-section">
-          <div className="creation-section-heading">
-            <h3 className="creation-section-title">Preço e unidade</h3>
-            <p>Informe o valor e a unidade usados para apresentar o produto.</p>
-          </div>
-          <div className="creation-columns">
+          <SectionHeader
+            as="h3"
+            size="sm"
+            title="Preço e unidade"
+            description="Informe o valor e a unidade usados para apresentar o produto."
+          />
+          <FieldGrid>
             <Input
               label="Preço (R$)"
               type="number"
@@ -102,17 +106,19 @@ export function EntityFields({ type, scope, item, values, vocabulary, change, di
                 disabled={disabled}
               />
             )}
-          </div>
+          </FieldGrid>
         </Card>
       )}
       {type === 'recipes' && (
         <>
           <Card as="section" role="group" aria-label="Preparo e rendimento" className="creation-fields creation-editor-section">
-            <div className="creation-section-heading">
-              <h3 className="creation-section-title">Preparo e rendimento</h3>
-              <p>Defina o tempo, as porções e a dificuldade da receita.</p>
-            </div>
-            <div className="creation-columns creation-recipe-facts">
+            <SectionHeader
+              as="h3"
+              size="sm"
+              title="Preparo e rendimento"
+              description="Defina o tempo, as porções e a dificuldade da receita."
+            />
+            <FieldGrid columns={3}>
               <Input
                 label="Preparo (minutos)"
                 type="number"
@@ -138,13 +144,10 @@ export function EntityFields({ type, scope, item, values, vocabulary, change, di
                 onChange={(difficulty) => change({ difficulty })}
                 disabled={disabled}
               />
-            </div>
+            </FieldGrid>
           </Card>
           <Card as="section" role="group" aria-label="Ingredientes" className="creation-fields creation-editor-section">
-            <div className="creation-section-heading">
-              <h3 className="creation-section-title">Ingredientes</h3>
-              <p>Escolha os produtos e a quantidade necessária de cada um.</p>
-            </div>
+            <SectionHeader as="h3" size="sm" title="Ingredientes" description="Escolha os produtos e a quantidade necessária de cada um." />
             <IngredientsEditor
               values={values.ingredients}
               products={vocabulary.products}
@@ -153,10 +156,12 @@ export function EntityFields({ type, scope, item, values, vocabulary, change, di
             />
           </Card>
           <Card as="section" role="group" aria-label="Etapas e dicas" className="creation-fields creation-editor-section">
-            <div className="creation-section-heading">
-              <h3 className="creation-section-title">Etapas e dicas</h3>
-              <p>Descreva o preparo em ordem e acrescente orientações úteis.</p>
-            </div>
+            <SectionHeader
+              as="h3"
+              size="sm"
+              title="Etapas e dicas"
+              description="Descreva o preparo em ordem e acrescente orientações úteis."
+            />
             <Textarea
               label="Modo de preparo — uma etapa por linha"
               value={values.instructions}
@@ -175,10 +180,7 @@ export function EntityFields({ type, scope, item, values, vocabulary, change, di
           </Card>
           {scope === 'site' && (
             <Card as="section" role="group" aria-label="Publicação" className="creation-fields creation-editor-section">
-              <div className="creation-section-heading">
-                <h3 className="creation-section-title">Publicação</h3>
-                <p>Escolha como a receita aparece no catálogo público.</p>
-              </div>
+              <SectionHeader as="h3" size="sm" title="Publicação" description="Escolha como a receita aparece no catálogo público." />
               <Select
                 label="Publicação"
                 value={values.status}
@@ -199,10 +201,7 @@ export function EntityFields({ type, scope, item, values, vocabulary, change, di
       )}
       {type !== 'categories' && sections.length > 0 && (
         <Card as="section" role="group" aria-label="Seções" className="creation-fields">
-          <div className="creation-section-heading">
-            <h3 className="creation-section-title">Seções</h3>
-            <p>Escolha em quais seções este conteúdo deve aparecer.</p>
-          </div>
+          <SectionHeader as="h3" size="sm" title="Seções" description="Escolha em quais seções este conteúdo deve aparecer." />
           {sections.map((section) => (
             <Checkbox
               key={section.id}

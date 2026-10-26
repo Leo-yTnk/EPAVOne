@@ -1,4 +1,4 @@
-import { Card, Input, Select } from '../../../design-system/components/index.js';
+import { Card, Input, Select, SectionHeader, FieldGrid } from '../../../design-system/components/index.js';
 import { deliveryLimits, normalize } from '../models/order.js';
 const options = (values) => [{ value: '', label: 'Selecione…' }, ...values.map((value) => ({ value, label: value }))];
 
@@ -10,9 +10,8 @@ export function DeliveryDetails({ template, order, today, onChange }) {
   const bounds = deliveryLimits(template, order.method, today);
   return (
     <Card className="writer-details">
-      <span className="ds-overline">3 · Entrega e pagamento</span>
-      <h2 className="ds-heading-h3">Como o cliente recebe?</h2>
-      <div className="writer-fields">
+      <SectionHeader eyebrow="3 · Entrega e pagamento" title="Como o cliente recebe?" />
+      <FieldGrid>
         <Select
           label="Entrega ou retirada · obrigatória"
           options={options(template.methods)}
@@ -44,7 +43,7 @@ export function DeliveryDetails({ template, order, today, onChange }) {
           value={order.payment}
           onChange={(payment) => onChange({ payment })}
         />
-      </div>
+      </FieldGrid>
       {normalize(order.method) === 'entrega em casa' && (
         <p>
           <strong>Endereço cadastrado:</strong> {client?.address || 'Ausente na base do formulário. Atualize o cadastro antes de exportar.'}

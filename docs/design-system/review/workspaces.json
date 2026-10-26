@@ -1,0 +1,678 @@
+{
+  "fixtureServices": true,
+  "liveWrites": false,
+  "matrix": [
+    {
+      "name": "creation-receitas",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-produtos",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-categorias",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-admin",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-sections",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-import",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-duplicates",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-maintenance",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "editor-recipes",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "editor-products",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "editor-categories",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "component-lab",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-receitas",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-produtos",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-categorias",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-admin",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-sections",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-import",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-duplicates",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-maintenance",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "editor-recipes",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "editor-products",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "editor-categories",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "component-lab",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-receitas",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-produtos",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-categorias",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-admin",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-sections",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-import",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-duplicates",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-maintenance",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "editor-recipes",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "editor-products",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "editor-categories",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "component-lab",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-receitas",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-produtos",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-categorias",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-admin",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-sections",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-import",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-duplicates",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-maintenance",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "editor-recipes",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "editor-products",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "editor-categories",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "component-lab",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-receitas",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-produtos",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-categorias",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-admin",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-sections",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-import",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-duplicates",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-maintenance",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "editor-recipes",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "editor-products",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "editor-categories",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "component-lab",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-receitas",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-produtos",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-categorias",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-admin",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-sections",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-import",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-duplicates",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-maintenance",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "editor-recipes",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "editor-products",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "editor-categories",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "component-lab",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-receitas",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-produtos",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-categorias",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-admin",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-sections",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-import",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-duplicates",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-maintenance",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "editor-recipes",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "editor-products",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "editor-categories",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "component-lab",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-receitas",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-produtos",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-categorias",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "creation-admin",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-sections",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-import",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-duplicates",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "admin-maintenance",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "editor-recipes",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "editor-products",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "editor-categories",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    },
+    {
+      "name": "component-lab",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "errors": []
+    }
+  ]
+}

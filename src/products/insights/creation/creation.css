@@ -52,7 +52,7 @@
   border-bottom: 1px solid var(--border-subtle);
 }
 .creation-row h3 {
-  font-size: 1rem;
+  font-size: var(--text-md);
   overflow-wrap: anywhere;
 }
 .creation-row > div {
@@ -73,7 +73,7 @@
 }
 .creation-code {
   overflow-wrap: anywhere;
-  font-size: 1rem;
+  font-size: var(--text-md);
   user-select: all;
 }
 .creation-history {
@@ -83,7 +83,7 @@
 .creation-history pre {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
 }
 @media (max-width: 48rem) {
   .creation-fields {
@@ -104,7 +104,7 @@
   }
   .creation-row > .ds-btn {
     max-width: 8rem;
-    font-size: 0.75rem;
+    font-size: var(--text-xs);
   }
   .creation-ingredient {
     grid-template-columns: minmax(0, 1fr) 3rem;
@@ -146,14 +146,8 @@
 .creation-workspace-nav .ds-btn {
   text-decoration: none;
 }
-.creation-workspace-heading {
-  display: grid;
-  gap: var(--space-2);
-  padding-top: var(--space-2);
-}
-.creation-workspace-heading h2 {
-  font: 400 1.5rem/var(--leading-heading) var(--font-display);
-}
+
+
 .creation-fields > .ds-field:has(button[aria-label^='Área de criação']) {
   max-width: 24rem;
 }
@@ -198,11 +192,9 @@
   gap: var(--space-4);
   min-width: 0;
 }
-.creation-workspace-heading {
-  padding-top: 0;
-}
+
 .creation-library {
-  --container-padding: var(--space-6);
+  --card-padding: var(--panel-padding);
   box-shadow: none;
 }
 .creation-library .creation-toolbar > .ds-field {
@@ -236,14 +228,9 @@
   display: grid;
   gap: var(--space-4);
 }
-.creation-section-title {
-  margin: 0;
-  grid-column: 1 / -1;
-  font: 400 clamp(1.25rem, 2vw, 1.5rem) / var(--leading-heading) var(--font-display);
-  color: var(--text-brand);
-}
+
 .creation-fields .creation-editor-section {
-  --container-padding: var(--space-5);
+  --card-padding: var(--panel-padding-compact);
   padding: var(--container-padding);
   border-radius: var(--radius-lg);
 }
@@ -275,13 +262,13 @@
 }
 @media (max-width: 48rem) {
   .creation-library {
-    --container-padding: var(--space-5);
+    --card-padding: var(--panel-padding-compact);
   }
   .creation-row {
     grid-template-columns: minmax(0, 1fr) auto;
   }
   .creation-fields .creation-editor-section {
-    --container-padding: var(--space-5);
+    --card-padding: var(--panel-padding-compact);
     padding: var(--container-padding);
   }
   .creation-library .creation-toolbar > .ds-btn {
@@ -307,7 +294,7 @@
 .creation-introduction {
   display: grid;
   gap: var(--space-4);
-  --container-padding: var(--space-6);
+  --card-padding: var(--panel-padding);
   padding: var(--container-padding);
   box-shadow: none;
 }
@@ -334,14 +321,14 @@
   font-size: 0.9375rem;
 }
 .creation-introduction-features p {
-  font-size: 0.8125rem;
+  font-size: var(--text-caption);
   color: var(--text-secondary);
 }
 .creation-list {
   gap: var(--space-3);
 }
 .creation-row.ds-card {
-  --container-padding: var(--space-5);
+  --card-padding: var(--panel-padding-compact);
   padding: var(--container-padding);
   border: 1px solid var(--border-subtle);
   --card-radius: var(--radius-2xl);
@@ -358,7 +345,7 @@
 }
 @media (max-width: 40rem) {
   .creation-introduction {
-    --container-padding: var(--space-5);
+    --card-padding: var(--panel-padding-compact);
     padding: var(--container-padding);
   }
   .creation-introduction-features {
@@ -371,18 +358,18 @@
   display: grid;
   gap: var(--space-2);
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
 }
 .creation-editor-intro p {
   margin: 0;
 }
 .creation-save-status {
   color: var(--text-brand);
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
 }
 .creation-fields .creation-editor-section.ds-card {
   border: 1px solid var(--border-subtle);
-  --container-padding: var(--space-6);
+  --card-padding: var(--panel-padding);
   padding: var(--container-padding);
   background: var(--surface-secondary);
   --card-radius: var(--radius-xl);
@@ -397,7 +384,7 @@
 }
 .creation-actions > span {
   margin-right: auto;
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
 }
 .creation-library-overview {
   display: grid;
@@ -406,7 +393,7 @@
   align-items: center;
 }
 .creation-library-overview p {
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   margin-block: var(--space-2) 0;
   color: var(--text-secondary);
 }
@@ -431,7 +418,7 @@
 }
 @media (max-width: 48rem) {
   .creation-fields .creation-editor-section.ds-card {
-    --container-padding: var(--space-5);
+    --card-padding: var(--panel-padding-compact);
     padding: var(--container-padding);
   }
   .creation-row.ds-card {
@@ -473,17 +460,10 @@
   z-index: 3;
 }
 
-.creation-section-heading {
-  display: grid;
-  grid-column: 1 / -1;
-  gap: var(--space-2);
-  padding-bottom: var(--space-4);
-  border-bottom: 1px solid var(--border-subtle);
-}
 .creation-section-heading p {
   margin: 0;
   color: var(--text-secondary);
-  font-size: 0.8125rem;
+  font-size: var(--text-caption);
   line-height: var(--leading-body-compact);
 }
 
@@ -509,7 +489,7 @@
 .creation-import-row p {
   margin: 0;
   color: var(--text-secondary);
-  font-size: 0.8125rem;
+  font-size: var(--text-caption);
 }
 .creation-preview-layout {
   display: grid;
@@ -573,7 +553,7 @@
 }
 .creation-card-copy p {
   margin: 0;
-  font-size: 0.8125rem;
+  font-size: var(--text-caption);
 }
 .creation-content-card .creation-row-actions {
   grid-column: 1 / -1;
@@ -612,7 +592,7 @@
 }
 .creation-operation,
 .creation-admin-header {
-  --container-padding: var(--space-6);
+  --card-padding: var(--panel-padding);
   padding: var(--container-padding);
   box-shadow: none;
 }
@@ -638,7 +618,7 @@
   grid-template-columns: 1fr;
 }
 .creation-editor-preview .creation-content-preview {
-  --container-padding: var(--space-5);
+  --card-padding: var(--panel-padding-compact);
   padding: var(--container-padding);
 }
 .creation-editor-preview ul,
@@ -656,13 +636,10 @@
 }
 .creation-import-row {
   align-content: start;
-  --container-padding: var(--space-5);
+  --card-padding: var(--panel-padding-compact);
   padding: var(--container-padding);
 }
-.creation-workspace-heading h2 {
-  color: var(--text-brand);
-  font-size: clamp(1.75rem, 3vw, 2.25rem);
-}
+
 @media (max-width: 48rem) {
   .creation-editor-layout.has-preview,
   .creation-import-preview {
@@ -691,7 +668,7 @@
   }
   .creation-operation,
   .creation-admin-header {
-    --container-padding: var(--space-5);
+    --card-padding: var(--panel-padding-compact);
     padding: var(--container-padding);
   }
 }
@@ -716,12 +693,12 @@
 }
 .creation-duplicate-comparison dt {
   color: var(--text-secondary);
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
 }
 .creation-duplicate-comparison dd {
   margin: 0;
   overflow-wrap: anywhere;
-  font-size: 0.8125rem;
+  font-size: var(--text-caption);
 }
 .creation-import-row:has(.creation-duplicate-choice) {
   grid-column: 1 / -1;
@@ -733,7 +710,7 @@
 }
 
 .creation-library-controls.ds-card {
-  --container-padding: var(--space-5);
+  --card-padding: var(--panel-padding-compact);
   padding: var(--container-padding);
   box-shadow: none;
 }
@@ -742,7 +719,7 @@
   grid-template-columns: minmax(12rem, 1fr) minmax(0, 2fr);
   gap: var(--space-5);
   align-items: center;
-  --container-padding: var(--space-5);
+  --card-padding: var(--panel-padding-compact);
   padding: var(--container-padding);
   box-shadow: none;
 }
@@ -757,7 +734,7 @@
 }
 .creation-admin-context p {
   margin: 0;
-  font-size: 0.8125rem;
+  font-size: var(--text-caption);
   color: var(--text-secondary);
 }
 .creation-operation > .ds-btn {
@@ -787,21 +764,16 @@
   min-width: 9rem;
 }
 .creation-content-card.ds-card {
-  --container-padding: var(--space-5);
+  --card-padding: var(--panel-padding-compact);
   padding: var(--container-padding);
 }
-.creation-workspace-heading h2 {
-  font-size: clamp(1.5rem, 2.5vw, 1.875rem);
-}
+
 .creation-operation,
 .creation-admin-header {
-  --container-padding: var(--space-5);
+  --card-padding: var(--panel-padding-compact);
   padding: var(--container-padding);
 }
-.creation-section-heading {
-  padding-bottom: var(--space-2);
-  border-bottom: 0;
-}
+
 .creation-admin-header .creation-section-heading {
   gap: var(--space-1);
 }
@@ -833,7 +805,7 @@
 }
 .creation-workspace-nav.ds-card,
 .navigation-vertical .creation-workspace-nav.ds-card {
-  --container-padding: var(--space-5);
+  --card-padding: var(--panel-padding-compact);
   position: relative;
   top: auto;
   display: flex;
@@ -853,14 +825,8 @@
   padding: var(--space-3);
   border-radius: var(--nested-radius);
 }
-.creation-workspace-heading {
-  gap: var(--space-2);
-  max-width: 48rem;
-}
-.creation-workspace-heading p {
-  font-size: 0.875rem;
-  line-height: var(--leading-body);
-}
+
+
 .creation-gallery {
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
   gap: var(--space-4);
@@ -868,7 +834,7 @@
 .creation-content-card.ds-card {
   grid-template-columns: 6rem minmax(0, 1fr);
   grid-template-rows: 1fr auto;
-  --container-padding: var(--space-5);
+  --card-padding: var(--panel-padding-compact);
   padding: var(--container-padding);
   gap: var(--space-3);
   --card-radius: var(--radius-xl);
@@ -886,10 +852,10 @@
 }
 .creation-gallery .creation-row-actions .ds-btn {
   min-height: var(--control-sm);
-  font-size: 0.8125rem;
+  font-size: var(--text-caption);
 }
 .creation-library-controls.ds-card {
-  --container-padding: var(--space-6);
+  --card-padding: var(--panel-padding);
   padding: var(--container-padding);
   gap: var(--space-4);
   background: var(--surface-secondary);
@@ -909,7 +875,7 @@
 }
 .creation-admin-header,
 .creation-admin-navigation {
-  --container-padding: var(--space-6);
+  --card-padding: var(--panel-padding);
   padding: var(--container-padding);
   gap: var(--space-4);
   align-content: start;
@@ -920,27 +886,22 @@
 }
 .creation-admin-context h3 {
   font-family: var(--font-heading);
-  font-weight: 650;
+  font-weight: var(--weight-label);
 }
-.creation-section-title {
-  display: flex;
-  align-items: center;
-  gap: var(--space-2);
-  font-size: clamp(1.25rem, 2vw, 1.5rem);
-}
+
 .creation-section-heading p,
 .creation-admin-context p,
 .creation-card-copy p {
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   line-height: var(--leading-body);
 }
 .creation-operation {
-  --container-padding: var(--space-6);
+  --card-padding: var(--panel-padding);
   padding: var(--container-padding);
   gap: var(--space-4);
 }
 .creation-fields .creation-editor-section.ds-card {
-  --container-padding: var(--space-6);
+  --card-padding: var(--panel-padding);
   padding: var(--container-padding);
   gap: var(--space-4);
 }
@@ -953,12 +914,12 @@
   padding: var(--space-3) var(--space-2);
 }
 .creation-import-row {
-  --container-padding: var(--space-5);
+  --card-padding: var(--panel-padding-compact);
   padding: var(--container-padding);
   gap: var(--space-3);
 }
 .creation-history pre {
-  font-size: 0.8125rem;
+  font-size: var(--text-caption);
   line-height: var(--leading-body);
 }
 @media (max-width: 64rem) {
@@ -987,14 +948,14 @@
   .creation-admin-header,
   .creation-admin-navigation,
   .creation-operation {
-    --container-padding: var(--space-5);
+    --card-padding: var(--panel-padding-compact);
     padding: var(--container-padding);
   }
   .creation-fields .creation-editor-section.ds-card {
-    --container-padding: var(--space-5);
+    --card-padding: var(--panel-padding-compact);
   }
   .creation-card-copy h3 {
-    font-size: 1.125rem;
+    font-size: var(--text-lg);
   }
 }
 

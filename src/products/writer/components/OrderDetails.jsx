@@ -1,4 +1,4 @@
-import { Card, Input, Select } from '../../../design-system/components/index.js';
+import { Card, SummaryList, Input, Select, SectionHeader, FieldGrid } from '../../../design-system/components/index.js';
 import { orderCpf } from '../models/order.js';
 function options(values) {
   return [{ value: '', label: 'Selecione…' }, ...values.map((value) => ({ value, label: value }))];
@@ -13,9 +13,8 @@ export function OrderDetails({ template, order, onChange }) {
   }
   return (
     <Card className="writer-details">
-      <span className="ds-overline">1 · Cliente</span>
-      <h2 className="ds-heading-h3">Para quem é o pedido?</h2>
-      <div className="writer-fields">
+      <SectionHeader eyebrow="1 · Cliente" title="Para quem é o pedido?" />
+      <FieldGrid>
         <Select
           label="Sala · obrigatória"
           options={options(template.rooms)}
@@ -38,31 +37,29 @@ export function OrderDetails({ template, order, onChange }) {
           value={order.client}
           onChange={chooseClient}
         />
-      </div>
+      </FieldGrid>
       {(client || student) && (
-        <dl className="writer-derived">
-          {student && (
-            <>
-              <dt>E-mail escolar</dt>
-              <dd>{student.email || 'Ausente na base'}</dd>
-            </>
-          )}
-          {client && (
-            <>
-              <dt>E-mail do cliente</dt>
-              <dd>{client.email || 'Ausente na base'}</dd>
-              <dt>Nascimento</dt>
-              <dd>
-                {typeof client.birth === 'number'
-                  ? new Date(Date.UTC(1899, 11, 30) + client.birth * 86400000).toLocaleDateString('pt-BR', { timeZone: 'UTC' })
-                  : 'Ausente na base'}
-              </dd>
-            </>
-          )}
-        </dl>
+        <SummaryList
+          layout="rows"
+          items={[
+            ...(student ? [{ label: 'E-mail escolar', value: student.email || 'Ausente na base' }] : []),
+            ...(client
+              ? [
+                  { label: 'E-mail do cliente', value: client.email || 'Ausente na base' },
+                  {
+                    label: 'Nascimento',
+                    value:
+                      typeof client.birth === 'number'
+                        ? new Date(Date.UTC(1899, 11, 30) + client.birth * 86400000).toLocaleDateString('pt-BR', { timeZone: 'UTC' })
+                        : 'Ausente na base'
+                  }
+                ]
+              : [])
+          ]}
+        />
       )}
       {client && (
-        <div className="writer-fields">
+        <FieldGrid>
           <Input
             id="writer-cpf"
             label="CPF do cliente · obrigatório"
@@ -81,7 +78,7 @@ export function OrderDetails({ template, order, onChange }) {
             value={order.phone}
             onInput={(event) => onChange({ phone: event.currentTarget.value })}
           />
-        </div>
+        </FieldGrid>
       )}
       <p className="writer-muted">
         E-mail e nascimento vêm do cadastro do formulário. O CPF pode ser corrigido aqui, sem alterar os dados originais da base.
