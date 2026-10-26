@@ -534,3 +534,9 @@
 .writer-upload > [hidden] { display: none; }
 .writer-upload.is-attached .ds-section-header-copy { gap: var(--space-2); }
 .writer-attachment-actions > .ds-action-group { display: flex; gap: var(--space-2); }
+.writer-connections, .writer-recipe-rows { display: grid; gap: var(--space-4); }
+.writer-connections .ds-inline { min-width: 0; flex-wrap: wrap; }
+.writer-connections strong { overflow-wrap: anywhere; }
+.writer-recipe-row { display: grid; gap: var(--space-3); padding-block: var(--space-4); border-bottom: 1px solid var(--border-default); }
+.writer-model-notes, .writer-stage-notes { color: var(--text-secondary); font-size: var(--text-sm); }
+.writer-model-notes summary, .writer-stage-notes summary { cursor: pointer; padding-block: var(--space-2); }

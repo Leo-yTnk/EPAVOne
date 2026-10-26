@@ -7,6 +7,7 @@ export function createPlannerService(repository = plannerRepository) {
       const next = structuredClone(state);
       const customer = next.customers.find((item) => item.id === command.customerId);
       const weekId = command.weekId || weekStart();
+      if (!validDay(weekId) || weekStart(weekId) !== weekId) throw new Error('Selecione uma semana de planejamento válida.');
       let week = next.weeks.find((item) => item.id === weekId);
       if (!week) {
         week = emptyWeek(weekId);
@@ -15,6 +16,8 @@ export function createPlannerService(repository = plannerRepository) {
       if (command.type === 'customer') {
         validateCustomer(command.customer);
         const existing = next.customers.findIndex((item) => item.id === command.customer.id);
+        if (existing < 0 && command.customer.id)
+          throw new Error('Esse cliente não está mais na carteira. Atualize os dados antes de editar.');
         if (existing < 0) next.customers.push({ ...command.customer, id: crypto.randomUUID() });
         else next.customers[existing] = command.customer;
       } else if (command.type === 'goal') {
@@ -39,6 +42,7 @@ export function createPlannerService(repository = plannerRepository) {
           if (!entry || entry.outcome) throw new Error('Não é possível alterar esse atendimento.');
           entry.role = entry.role === 'primary' ? 'reserve' : 'primary';
         } else if (command.type === 'move') {
+          if (!entry || ![-1, 1].includes(command.direction)) throw new Error('Não foi possível mover esse atendimento. Atualize a fila.');
           const index = week.queue.indexOf(entry);
           const target = index + command.direction;
           if (index >= 0 && target >= 0 && target < week.queue.length)

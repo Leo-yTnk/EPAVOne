@@ -54,7 +54,7 @@ export function PlannerRoutes({ route = { segments: [] }, service, account, onOp
       /* Selection remains available in memory. */
     }
   }
-  const props = { state: resource.state, week, act: resource.act, busy: resource.busy };
+  const props = { state: resource.state, week, act: resource.act, busy: resource.busy || resource.refreshing };
   const customer = resource.state?.customers.find((item) => item.id === route.segments[1]);
   return (
     <section className="product-page planner-page">
@@ -88,13 +88,20 @@ export function PlannerRoutes({ route = { segments: [] }, service, account, onOp
             <span role="status">
               {resource.loading
                 ? 'Carregando sua conta…'
-                : resource.busy
-                  ? 'Salvando na conta…'
-                  : resource.error || resource.saveError || resource.syncWarning
-                    ? 'Sincronização indisponível'
-                    : 'Sincronizado com sua conta'}
+                : resource.refreshing
+                  ? 'Atualizando dados…'
+                  : resource.busy
+                    ? 'Salvando na conta…'
+                    : resource.error || resource.saveError || resource.syncWarning
+                      ? 'Sincronização indisponível'
+                      : 'Sincronizado com sua conta'}
             </span>
-            <Button size="sm" variant="secondary" disabled={resource.loading || resource.busy} onClick={resource.reload}>
+            <Button
+              size="sm"
+              variant="secondary"
+              disabled={resource.loading || resource.busy || resource.refreshing}
+              onClick={resource.reload}
+            >
               Atualizar dados
             </Button>
           </div>
@@ -107,7 +114,7 @@ export function PlannerRoutes({ route = { segments: [] }, service, account, onOp
         )}
       </div>
       {resource.syncWarning && (
-        <Alert tone="warning" title="Planejamento salvo">
+        <Alert tone="warning" title="Sincronização parcial">
           {resource.syncWarning}
         </Alert>
       )}
@@ -117,7 +124,7 @@ export function PlannerRoutes({ route = { segments: [] }, service, account, onOp
         </Alert>
       )}
       {resource.notice && (
-        <p className="planner-notice" role="status">
+        <p className="planner-notice" role={resource.saveError ? 'alert' : 'status'}>
           {resource.notice}
         </p>
       )}

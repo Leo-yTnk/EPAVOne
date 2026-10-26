@@ -1,0 +1,72 @@
+{
+  "products": [
+    {
+      "name": "Bacalhau Desfiado Dessalgado Swift 500g",
+      "code": "615551",
+      "unit": "PC",
+      "price": 48.57241379310349
+    },
+    {
+      "name": "Lasanha à Bolonhesa Swift 600g",
+      "code": "615963",
+      "unit": "PC",
+      "price": 15.21034482758619
+    },
+    {
+      "name": "Petit Gateau de Chocolate Swift 240g",
+      "code": "616281",
+      "unit": "PC",
+      "price": 27.2793103448276
+    },
+    {
+      "name": "Filezinho Sassami Temperado Swift 1Kg",
+      "code": "617599",
+      "unit": "PC",
+      "price": 22.58965517241379
+    },
+    {
+      "name": "Mix de Frutas Vermelhas Swift 300g",
+      "code": "617907",
+      "unit": "PC",
+      "price": 16.89999999999999
+    },
+    {
+      "name": "Frango Karaague Empanado Swift 700g",
+      "code": "621600",
+      "unit": "PC",
+      "price": 32.90000000000002
+    }
+  ],
+  "insights": [
+    {
+      "name": "Petit Gateau de Chocolate Swift 240g",
+      "product_code": "YPR-1400",
+      "unit": "pacote"
+    },
+    {
+      "name": "Filezinho Sassami Temperado Swift 1Kg",
+      "product_code": "YPR-0919",
+      "unit": "pacote"
+    },
+    {
+      "name": "Frango Karaague Empanado Swift 700g",
+      "product_code": "YPR-1402",
+      "unit": "pacote"
+    },
+    {
+      "name": "Bacalhau Desfiado Dessalgado Swift 500g",
+      "product_code": "YPR-0946",
+      "unit": "pacote"
+    },
+    {
+      "name": "Lasanha à Bolonhesa Swift 600g",
+      "product_code": "YPR-0975",
+      "unit": "pacote"
+    },
+    {
+      "name": "Mix de Frutas Vermelhas Swift 1,02kg",
+      "product_code": "YPR-1375",
+      "unit": "pacote"
+    }
+  ]
+}

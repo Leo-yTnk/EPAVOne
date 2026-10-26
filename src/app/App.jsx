@@ -1,3 +1,4 @@
+import { useWeeklyOrderRestore } from './useWeeklyOrderRestore.js';
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { useRouteMotion } from './useRouteMotion.js';
 import { usePressFeedback } from '../design-system/behaviors/usePressFeedback.js';
@@ -22,6 +23,7 @@ const AccountDialog = lazy(() => import('./account/AccountDialog.jsx').then((mod
 
 export function App() {
   const route = useHashRoute();
+  useWeeklyOrderRestore(route.product);
   const [introductionSeen, setIntroductionSeen] = useState(hasSeenIntroduction);
   const showIntroduction = route.product === 'home' && (!introductionSeen || route.raw === 'welcome');
   const finishIntroduction = () => {
@@ -116,8 +118,8 @@ export function App() {
       account={account}
       onOpenAccount={() => setAccountOpen(true)}
     >
-      {['insights', 'writer'].includes(route.product) && <CommercialReturn />}
-      <div ref={pageRef} key={routeKey} className="route-frame">
+      {route.product === 'insights' && <CommercialReturn />}
+      <div ref={pageRef} key={route.product === 'planner' ? 'planner' : routeKey} className="route-frame">
         <Suspense
           fallback={
             <span data-route-loading>

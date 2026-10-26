@@ -1,5 +1,6 @@
+import { weeklyOrder } from '../../../shared/services/weeklyOrder.js';
 import '../recipe-detail.css';
-import { Icon, ErrorState, Spinner } from '../../../design-system/components/index.js';
+import { Button, Icon, ErrorState, Spinner } from '../../../design-system/components/index.js';
 import { catalogService } from '../services/catalogService.js';
 import { useCatalogResource } from '../hooks/useCatalogResource.js';
 import { RecipeIngredients } from './RecipeIngredients.jsx';
@@ -53,7 +54,18 @@ export function RecipeDetails({ recipe, onOpenProduct, titleId }) {
           ) : resource.error ? (
             <ErrorState title="Ingredientes indisponíveis" description={resource.error} onAction={resource.retry} />
           ) : resource.data.length ? (
-            <RecipeIngredients ingredients={resource.data} onOpenProduct={onOpenProduct} />
+            <>
+              <Button
+                variant="secondary"
+                onClick={() => {
+                  weeklyOrder.requestRecipe(recipe, resource.data);
+                  window.location.hash = '#/writer';
+                }}
+              >
+                Criar pedido com a receita inteira
+              </Button>
+              <RecipeIngredients ingredients={resource.data} onOpenProduct={onOpenProduct} />
+            </>
           ) : (
             <p>Não há ingredientes cadastrados.</p>
           )}

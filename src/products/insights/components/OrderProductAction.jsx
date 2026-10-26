@@ -13,11 +13,13 @@ export function OrderProductAction({ product }) {
       <p>
         {!current
           ? 'Carregue o Excel da semana no Writer para conferir disponibilidade e preço.'
-          : single
+          : single && Number.isFinite(single.price) && single.price > 0
             ? `${single.name} · ${new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(single.price)} no Excel. Confira a embalagem antes de adicionar.`
-            : match.candidates.length
-              ? 'Mais de uma apresentação encontrada. Escolha no Writer.'
-              : 'Sem correspondência segura no Excel. Procure a apresentação correta no Writer.'}
+            : single
+              ? 'Produto correspondente encontrado, mas sem preço válido no Excel. Confira o formulário antes de incluir.'
+              : match.candidates.length
+                ? 'Mais de uma apresentação encontrada. Escolha no Writer.'
+                : 'Sem correspondência segura no Excel. Procure a apresentação correta no Writer.'}
       </p>
       {match && <p>{match.explanation}</p>}
       <Button

@@ -7,8 +7,8 @@ export function useWeeklyTemplate() {
   const [restoring, setRestoring] = useState(true);
   const [storageWarning, setStorageWarning] = useState('');
   useEffect(() => {
-    weeklyOrder.attach(template);
-  }, [template]);
+    if (!restoring) weeklyOrder.attach(template);
+  }, [template, restoring]);
   useEffect(() => {
     let current = true;
     sessionTemplate
