@@ -1,3 +1,4 @@
+import { OrderProductAction } from './OrderProductAction.jsx';
 import { Badge, Button, Icon, EmptyState, ErrorState, Spinner } from '../../../design-system/components/index.js';
 import { catalogService } from '../services/catalogService.js';
 import { useCatalogResource } from '../hooks/useCatalogResource.js';
@@ -19,6 +20,7 @@ export function ProductOverview({ product, onOpenRecipe, titleId }) {
           </h2>
           {product.product_code && <p className="insights-muted">Código {product.product_code}</p>}
           <ProductPrice product={product} />
+          <OrderProductAction key={product.id} product={product} />
           {link && (
             <Button as="a" href={link} target="_blank" rel="noopener noreferrer" variant="secondary" size="sm">
               Consultar na Swift ↗

@@ -17,9 +17,13 @@ export function usePlannerHandoff() {
       setLinkedId(context?.id || null);
       setStep(0);
     },
-    reset: () => setLinkedId(null),
-    exported: () => {
-      if (linkedId) commercialContext.exported(linkedId);
+    reset: () => {
+      commercialContext.invalidate(linkedId);
+      setLinkedId(null);
+    },
+    changed: () => commercialContext.invalidate(linkedId),
+    exported: (summary) => {
+      if (linkedId) commercialContext.exported(linkedId, summary);
     }
   };
 }

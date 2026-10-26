@@ -7,7 +7,14 @@ export function CommercialReturn() {
   return (
     <Alert tone="info" title={`Atendimento de ${context.customerName}`}>
       <div className="ds-inline">
-        <span>O planejamento continua salvo.</span>
+        <span>
+          {context.orderStatus === 'exported'
+            ? 'Formulário gerado. Confira e envie ao suporte.'
+            : 'Continue a seleção e confira o pedido atualizado.'}
+        </span>
+        <Button as="a" size="sm" variant="secondary" href="#/writer">
+          Continuar pedido
+        </Button>
         <Button as="a" size="sm" variant="secondary" href={context.returnTo}>
           Voltar ao Planner
         </Button>

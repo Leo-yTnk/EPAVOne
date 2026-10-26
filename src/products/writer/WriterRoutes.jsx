@@ -1,10 +1,13 @@
+import { useWeeklyTemplate } from './services/useWeeklyTemplate.js';
+import { orderSummary } from '../../shared/services/orderMatching.js';
+import { InsightsProductHandoff } from './components/InsightsProductHandoff.jsx';
 import { usePlannerHandoff } from './services/usePlannerHandoff.js';
 import { TemplateFeedback } from './components/TemplateFeedback.jsx';
 import { PlannerHandoff } from './components/PlannerHandoff.jsx';
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import { useForegroundInterval } from '../../design-system/behaviors/useForegroundInterval.js';
 import { Alert, PageHeader, Spinner } from '../../design-system/components/index.js';
-import { sessionTemplate, restoreTemplateFile } from './services/sessionTemplate.js';
+import { sessionTemplate } from './services/sessionTemplate.js';
 import { saoPauloDay, validateOrder, validateCustomer, validateProducts, validateDelivery } from './models/order.js';
 import { importTemplate } from './services/templateService.js';
 import { downloadExport, exportOrder } from './services/exportService.js';
@@ -16,7 +19,7 @@ import './writer.css';
 const emptyOrder = () => ({ room: '', student: '', client: '', phone: '', method: '', store: '', date: '', payment: '', lines: [] });
 export function WriterRoutes({ active = true }) {
   const handoff = usePlannerHandoff();
-  const [template, setTemplate] = useState(null);
+  const { template, setTemplate, restoring, storageWarning, setStorageWarning } = useWeeklyTemplate();
   const [order, setOrder] = useState(emptyOrder);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
@@ -25,28 +28,6 @@ export function WriterRoutes({ active = true }) {
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState('forward');
   const [exportError, setExportError] = useState('');
-  const [restoring, setRestoring] = useState(true);
-  const [storageWarning, setStorageWarning] = useState('');
-  useEffect(() => {
-    let current = true;
-    sessionTemplate
-      .load()
-      .then(async (attachment) => {
-        if (!attachment) return;
-        const restored = await importTemplate(restoreTemplateFile(attachment));
-        if (current) setTemplate(restored);
-      })
-      .catch((failure) => {
-        if (current)
-          setStorageWarning(`Não foi possível restaurar o Excel desta sessão. ${failure.message || 'Carregue o arquivo novamente.'}`);
-      })
-      .finally(() => {
-        if (current) setRestoring(false);
-      });
-    return () => {
-      current = false;
-    };
-  }, []);
   useEffect(() => {
     if (active && template && !document.activeElement?.closest('[role="tablist"]')) {
       const current = document.getElementById('writer-current-step');
@@ -111,6 +92,7 @@ export function WriterRoutes({ active = true }) {
     }
   }
   function change(fields) {
+    handoff.changed();
     if (
       (Object.hasOwn(fields, 'client') && fields.client !== order.client) ||
       (Object.hasOwn(fields, 'room') && fields.room !== order.room)
@@ -121,6 +103,7 @@ export function WriterRoutes({ active = true }) {
     setOrder((current) => ({ ...current, ...fields }));
   }
   function add(name) {
+    handoff.changed();
     setSuccess('');
     setOrder((current) => ({
       ...current,
@@ -139,7 +122,7 @@ export function WriterRoutes({ active = true }) {
     try {
       const output = await exportOrder(template, order);
       downloadExport(output);
-      handoff.exported();
+      handoff.exported(orderSummary(template, order));
       setSuccess(`${output.count} ${output.count === 1 ? 'formulário pronto' : 'formulários prontos'} para conferência no Excel.`);
     } catch (failure) {
       setExportError(failure.message);
@@ -187,6 +170,12 @@ export function WriterRoutes({ active = true }) {
           onApply={(client) => handoff.apply(client, order, change, setStep)}
         />
       )}
+      <InsightsProductHandoff
+        template={template}
+        onAdd={add}
+        busy={busy || restoring}
+        expired={expired || (template && today < template.period.start)}
+      />
       <TemplateFeedback template={restoring ? null : template} expired={expired} storageWarning={storageWarning} />
       {template && !expired && !restoring && (
         <>
