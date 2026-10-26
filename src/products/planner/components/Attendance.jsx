@@ -114,7 +114,27 @@ export function Attendance({ state, week, customerId, act, busy }) {
           </div>
           {context?.customerId === customer.id && context.orderStatus === 'exported' && (
             <Alert tone="info" title="Formulário gerado no Writer">
-              Confirme a compra e registre o resultado abaixo. A exportação não confirma envio ou venda.
+              <p>Confirme a compra e registre o resultado abaixo. A exportação não confirma envio ou venda.</p>
+              {context.weekId === week.id && context.summary && (
+                <>
+                  <p>
+                    {context.summary.client} · {context.summary.units} unidades ·{' '}
+                    {new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(context.summary.amountCents / 100)} ·{' '}
+                    {context.summary.filename}
+                  </p>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => {
+                      setOutcome('bought');
+                      setAmount((context.summary.amountCents / 100).toFixed(2));
+                      setUnits(String(context.summary.units));
+                    }}
+                  >
+                    Usar valores do pedido conferido
+                  </Button>
+                </>
+              )}
             </Alert>
           )}
         </Card>

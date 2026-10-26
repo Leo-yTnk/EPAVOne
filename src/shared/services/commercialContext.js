@@ -8,13 +8,19 @@ export const commercialContext = {
     return () => listeners.delete(listener);
   },
   begin(context) {
-    current = { ...context, id: crypto.randomUUID(), orderStatus: 'pending' };
+    const same = current && context.customerId === current.customerId && context.weekId === current.weekId;
+    current = same ? { ...current, ...context } : { ...context, id: crypto.randomUUID(), orderStatus: 'pending' };
     listeners.forEach((listener) => listener(current));
     return current;
   },
-  exported(contextId) {
+  invalidate(contextId) {
+    if (current?.id !== contextId || current.orderStatus !== 'exported') return;
+    current = { ...current, orderStatus: 'pending', summary: null };
+    listeners.forEach((listener) => listener(current));
+  },
+  exported(contextId, summary) {
     if (current?.id !== contextId) return;
-    current = { ...current, orderStatus: 'exported' };
+    current = { ...current, orderStatus: 'exported', summary };
     listeners.forEach((listener) => listener(current));
   },
   clear() {
