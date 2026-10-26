@@ -1,0 +1,203 @@
+/* Cart and product geometry has one owner, including the compact review layout. */
+.writer-cart {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(18rem, 21rem);
+  align-items: start;
+  gap: var(--space-5);
+  min-width: 0;
+}
+.writer-cart-products,
+.writer-cart-summary,
+.writer-cart-list > li {
+  min-width: 0;
+}
+.writer-cart-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-4);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.writer-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: 'details total' 'footer footer';
+  gap: var(--space-4) var(--space-5);
+  align-items: start;
+  min-width: 0;
+  color: var(--text-primary);
+}
+.writer-line-details {
+  grid-area: details;
+  min-width: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+.writer-line h3,
+.writer-product-option h3 {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  line-height: var(--leading-body-compact);
+  overflow-wrap: anywhere;
+}
+.writer-product-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+}
+.writer-line-total {
+  grid-area: total;
+  display: grid;
+  gap: var(--space-1);
+  text-align: right;
+}
+.writer-line-total .writer-price {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.writer-line-footer {
+  grid-area: footer;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-subtle);
+}
+.writer-line-controls {
+  display: grid;
+  grid-template-columns: minmax(5rem, 7rem) auto;
+  gap: var(--space-4);
+  align-items: end;
+  justify-content: start;
+}
+.writer-line-controls p {
+  margin: 0;
+}
+.writer-line-controls .ds-field {
+  min-width: 0;
+}
+.writer-cart-summary {
+  display: grid;
+  gap: var(--space-4);
+  align-content: start;
+  position: sticky;
+  top: 8rem;
+}
+.writer-cart-total {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: var(--space-3);
+  padding-block: var(--space-4);
+  border-block: 1px solid var(--border-subtle);
+}
+.writer-cart-total strong {
+  font-size: var(--heading-4);
+  color: var(--text-brand);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.writer-cart-summary p {
+  margin: 0;
+}
+.writer-cart-note {
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--border-subtle);
+}
+.writer-validation {
+  color: var(--text-secondary);
+  font-size: var(--text-sm);
+}
+.writer-validation ul {
+  padding-left: var(--space-4);
+  display: grid;
+  gap: var(--space-2);
+}
+.writer-cart.is-readonly {
+  grid-template-columns: minmax(0, 1fr);
+}
+.writer-cart.is-readonly .writer-cart-summary {
+  position: static;
+}
+.writer-cart.is-readonly .writer-line-controls {
+  grid-template-columns: minmax(0, 1fr);
+}
+.writer-catalog-list {
+  gap: var(--space-3);
+}
+.writer-product-option {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: 'description price' 'action action';
+  gap: var(--space-4);
+  align-items: start;
+  color: var(--text-primary);
+}
+.writer-product-description {
+  grid-area: description;
+  min-width: 0;
+  display: grid;
+  gap: var(--space-2);
+}
+.writer-option-price {
+  grid-area: price;
+  display: grid;
+  gap: var(--space-1);
+  text-align: right;
+}
+.writer-product-option > .ds-btn {
+  grid-area: action;
+  justify-self: end;
+}
+@media (max-width: 64rem) {
+  .writer-cart {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .writer-cart-summary {
+    position: static;
+  }
+}
+@media (max-width: 40rem) {
+  .writer-line,
+  .writer-product-option {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-3);
+  }
+  .writer-line {
+    grid-template-areas: 'details' 'total' 'footer';
+  }
+  .writer-product-option {
+    grid-template-areas: 'description' 'price' 'action';
+  }
+  .writer-line-total,
+  .writer-option-price {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: baseline;
+    text-align: left;
+    gap: var(--space-2);
+  }
+  .writer-line-controls {
+    grid-template-columns: minmax(4.5rem, 6rem) auto;
+    gap: var(--space-3);
+  }
+  .writer-product-option > .ds-btn {
+    justify-self: stretch;
+  }
+}
+
+.writer-line-kit {
+  display: grid;
+  align-items: center;
+  min-height: var(--control-md);
+}
+
+.writer-cart-metrics {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+}
