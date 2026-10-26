@@ -16,6 +16,7 @@ import { CheckoutContent } from './components/CheckoutContent.jsx';
 import { CheckoutProgress, CHECKOUT_STEPS } from './components/CheckoutProgress.jsx';
 import { CheckoutActions } from './components/CheckoutActions.jsx';
 import './writer.css';
+import './writer-cart.css';
 const emptyOrder = () => ({ room: '', student: '', client: '', phone: '', method: '', store: '', date: '', payment: '', lines: [] });
 export function WriterRoutes({ active = true }) {
   const handoff = usePlannerHandoff();

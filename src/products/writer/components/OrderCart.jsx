@@ -1,6 +1,6 @@
 import { useMemo } from 'preact/hooks';
 import { OrderLine } from './OrderLine.jsx';
-import { Alert, Button, Card, EmptyState, SectionHeader } from '../../../design-system/components/index.js';
+import { Alert, Button, Card, EmptyState, SectionHeader, SummaryList } from '../../../design-system/components/index.js';
 const money = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 export function OrderCart({ template, lines, onChange, onRemove, errors = [], busy, onExport, success, readOnly = false }) {
   const productsByName = useMemo(() => new Map(template.products.map((product) => [product.name, product])), [template.products]);
@@ -37,11 +37,15 @@ export function OrderCart({ template, lines, onChange, onRemove, errors = [], bu
           <span>Total dos produtos</span>
           <strong>{money.format(total)}</strong>
         </div>
-        <p className="writer-muted">
-          {lines.length} {lines.length === 1 ? 'produto distinto' : 'produtos distintos'} · {files || 0}{' '}
-          {files === 1 ? 'arquivo Excel' : 'arquivos Excel'}. Até 12 produtos por arquivo. Frete conforme o formulário, separado deste
-          subtotal.
-        </p>
+        <SummaryList
+          className="writer-cart-metrics"
+          items={[
+            { label: 'Produtos', value: lines.length },
+            { label: 'Unidades', value: lines.reduce((sum, line) => sum + Number(line.quantity), 0) },
+            { label: 'Arquivos', value: files || 0 }
+          ]}
+        />
+        <p className="writer-muted writer-cart-note">Até 12 produtos por arquivo. Frete separado, conforme o formulário.</p>
         {files > 1 && (
           <Alert title="Pedido dividido automaticamente">
             Você receberá um ZIP com {files} formulários. A fórmula original do número de pedido será preservada e poderá produzir o mesmo
