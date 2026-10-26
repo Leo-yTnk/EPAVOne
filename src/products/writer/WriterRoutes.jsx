@@ -1,5 +1,4 @@
 import { useWeeklyTemplate } from './services/useWeeklyTemplate.js';
-import { orderSummary } from '../../shared/services/orderMatching.js';
 import { WriterConnections } from './components/WriterConnections.jsx';
 import { mergeOrderLines } from '../../shared/services/recipeOrder.js';
 import { usePlannerHandoff } from './services/usePlannerHandoff.js';
@@ -10,7 +9,8 @@ import { Alert, PageHeader, Spinner } from '../../design-system/components/index
 import { sessionTemplate } from './services/sessionTemplate.js';
 import { saoPauloDay, validateOrder, validateCustomer, validateProducts, validateDelivery } from './models/order.js';
 import { importTemplate } from './services/templateService.js';
-import { downloadExport, exportOrder } from './services/exportService.js';
+import { useWriterExport } from './services/useWriterExport.js';
+import { SaleRegistrationAction } from './components/SaleRegistrationAction.jsx';
 import { WeeklyUpload } from './components/WeeklyUpload.jsx';
 import { CheckoutContent } from './components/CheckoutContent.jsx';
 import { CheckoutProgress, CHECKOUT_STEPS } from './components/CheckoutProgress.jsx';
@@ -28,7 +28,7 @@ export function WriterRoutes({ active = true }) {
   const [today, setToday] = useState(saoPauloDay);
   const [step, setStep] = useState(0);
   const [direction, setDirection] = useState('forward');
-  const [exportError, setExportError] = useState('');
+  const exportFlow = useWriterExport({ template, order, handoff, setBusy, setSuccess });
   useEffect(() => {
     if (active && template && !document.activeElement?.closest('[role="tablist"]')) {
       const current = document.getElementById('writer-current-step');
@@ -46,11 +46,12 @@ export function WriterRoutes({ active = true }) {
     setBusy(true);
     setError('');
     setSuccess('');
-    setExportError('');
+    exportFlow.clear();
     try {
       const nextTemplate = await importTemplate(file);
       setTemplate(nextTemplate);
       setOrder(emptyOrder());
+      exportFlow.reset();
       handoff.reset();
       setStep(0);
       try {
@@ -81,10 +82,11 @@ export function WriterRoutes({ active = true }) {
       await sessionTemplate.remove();
       setTemplate(null);
       setOrder(emptyOrder());
+      exportFlow.reset();
       handoff.reset();
       setStep(0);
       setSuccess('');
-      setExportError('');
+      exportFlow.clear();
       setStorageWarning('');
     } catch {
       setError('Não foi possível remover o arquivo salvo. Tente novamente; seu pedido foi preservado.');
@@ -97,14 +99,17 @@ export function WriterRoutes({ active = true }) {
     if (
       (Object.hasOwn(fields, 'client') && fields.client !== order.client) ||
       (Object.hasOwn(fields, 'room') && fields.room !== order.room)
-    )
+    ) {
       handoff.reset();
+      exportFlow.reset();
+    }
     setSuccess('');
-    setExportError('');
+    exportFlow.clear();
     setOrder((current) => ({ ...current, ...fields }));
   }
   function add(name) {
     handoff.changed();
+    exportFlow.clear();
     setSuccess('');
     setOrder((current) => ({
       ...current,
@@ -115,21 +120,6 @@ export function WriterRoutes({ active = true }) {
   }
   function updateLine(name, fields) {
     change({ lines: order.lines.map((line) => (line.name === name ? { ...line, ...fields } : line)) });
-  }
-  async function download() {
-    setBusy(true);
-    setExportError('');
-    setSuccess('');
-    try {
-      const output = await exportOrder(template, order);
-      downloadExport(output);
-      handoff.exported(orderSummary(template, order));
-      setSuccess(`${output.count} ${output.count === 1 ? 'formulário pronto' : 'formulários prontos'} para conferência no Excel.`);
-    } catch (failure) {
-      setExportError(failure.message);
-    } finally {
-      setBusy(false);
-    }
   }
   const errors = useMemo(() => (template ? validateOrder(template, order, today) : []), [template, order, today]);
   const expired = template && today > template.period.end;
@@ -206,15 +196,27 @@ export function WriterRoutes({ active = true }) {
               updateLine={updateLine}
               errors={errors}
               busy={busy}
-              download={download}
+              download={exportFlow.download}
               success={success}
               navigate={navigate}
             />
           </div>
-          {exportError && (
+          {exportFlow.error && (
             <Alert tone="danger" title="Não foi possível gerar o pedido">
-              {exportError} Seu pedido continua nesta sessão. Tente baixar novamente.
+              {exportFlow.error} Seu pedido continua nesta sessão. Tente baixar novamente.
             </Alert>
+          )}
+          {step === 3 && (
+            <SaleRegistrationAction
+              draft={exportFlow.draft}
+              onNew={() => {
+                setOrder({ ...emptyOrder(), room: order.room, student: order.student });
+                exportFlow.reset();
+                handoff.reset();
+                setSuccess('');
+                setStep(0);
+              }}
+            />
           )}
           <CheckoutActions step={step} errors={step < 3 ? stageErrors[step] : []} busy={busy} onNavigate={navigate} />
         </>

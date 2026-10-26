@@ -1,9 +1,29 @@
-import { Card, SummaryList, Input, Select, SectionHeader, FieldGrid } from '../../../design-system/components/index.js';
+import { useEffect, useState } from 'preact/hooks';
+import { studentDefaults } from '../services/studentDefaults.js';
+import { StudentDefaultDialog } from './StudentDefaultDialog.jsx';
+import { Button, Card, SummaryList, Input, Select, SectionHeader, FieldGrid } from '../../../design-system/components/index.js';
 import { orderCpf } from '../models/order.js';
 function options(values) {
   return [{ value: '', label: 'Selecione…' }, ...values.map((value) => ({ value, label: value }))];
 }
 export function OrderDetails({ template, order, onChange }) {
+  const [preference, setPreference] = useState(null);
+  const [saved, setSaved] = useState(studentDefaults.read);
+  useEffect(() => {
+    const value = studentDefaults.read();
+    if (
+      value &&
+      !order.student &&
+      !order.client &&
+      template.rooms.includes(value.room) &&
+      template.students.some((item) => item.name === value.student && item.room === value.room)
+    )
+      onChange({ student: value.student, room: value.room });
+  }, [template]);
+  function chooseStudent(name) {
+    onChange({ student: name });
+    if (name && (saved?.student !== name || saved?.room !== order.room)) setPreference({ student: name, room: order.room });
+  }
   const client = template.clients.find((item) => item.name === order.client && item.room === order.room);
   const student = template.students.find((item) => item.name === order.student);
   const availableClients = template.clients.filter((item) => item.room === order.room);
@@ -26,7 +46,7 @@ export function OrderDetails({ template, order, onChange }) {
           disabled={!order.room}
           options={options(template.students.filter((item) => item.room === order.room).map((item) => item.name))}
           value={order.student}
-          onChange={(name) => onChange({ student: name })}
+          onChange={chooseStudent}
         />
         <Select
           label="Cliente · obrigatório"
@@ -38,6 +58,31 @@ export function OrderDetails({ template, order, onChange }) {
           onChange={chooseClient}
         />
       </FieldGrid>
+      {saved && (
+        <Button
+          size="sm"
+          variant="ghost"
+          onClick={() => {
+            try {
+              studentDefaults.remove();
+              setSaved(null);
+            } catch {
+              setPreference({ student: order.student, room: order.room });
+            }
+          }}
+        >
+          Limpar aluno e sala padrão
+        </Button>
+      )}
+      {preference && (
+        <StudentDefaultDialog
+          value={preference}
+          onClose={() => {
+            setPreference(null);
+            setSaved(studentDefaults.read());
+          }}
+        />
+      )}
       {(client || student) && (
         <SummaryList
           layout="rows"

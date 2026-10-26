@@ -1,3 +1,4 @@
+import { SalesPage } from './sales/SalesPage.jsx';
 import { useMemo, useState } from 'preact/hooks';
 import { ModalPresence, Alert, Button, ErrorState, Heading, PageHeader, Select, Skeleton } from '../../design-system/components/index.js';
 import { dateLabel, emptyWeek, shiftDay, weekStart, validDay } from './models/planner.js';
@@ -16,6 +17,7 @@ import { createPlannerService } from './services/plannerService.js';
 import { commercialContext } from '../../shared/services/commercialContext.js';
 import './planner.css';
 const info = {
+  pedidos: ['Cada venda conta.', 'Pedidos, indicadores e histórico da sua conta.'],
   '': ['Uma boa semana começa pelas pessoas.', 'Decida quem atender, prepare a conversa e acompanhe os próximos passos.'],
   semana: ['Sua semana, com intenção.', 'Organize titulares e reservas, respeitando a janela de atendimento.'],
   clientes: ['Conhecer melhor. Atender melhor.', 'Contexto, preferências e combinados para construir um relacionamento.'],
@@ -63,73 +65,79 @@ export function PlannerRoutes({ route = { segments: [] }, service, account, onOp
         title={title[0]}
         description={title[1]}
         actions={
-          <div className="planner-week-selector">
-            <Select
-              label="Semana de planejamento"
-              value={weekId}
-              options={options.map((id) => ({
-                value: id,
-                label: `${dateLabel(id)} – ${dateLabel(shiftDay(id, 6))}${id === weekStart() ? ' · atual' : ''}`
-              }))}
-              onChange={chooseWeek}
-            />
-          </div>
+          section !== 'pedidos' ? (
+            <div className="planner-week-selector">
+              <Select
+                label="Semana de planejamento"
+                value={weekId}
+                options={options.map((id) => ({
+                  value: id,
+                  label: `${dateLabel(id)} – ${dateLabel(shiftDay(id, 6))}${id === weekStart() ? ' · atual' : ''}`
+                }))}
+                onChange={chooseWeek}
+              />
+            </div>
+          ) : undefined
         }
       />
-      <div className="planner-demo-note">
-        <strong>{account?.session ? 'Seu planejamento' : 'Modo demonstração'}</strong>
-        <span>
-          {account?.session
-            ? 'Clientes, semanas e combinados salvos na sua conta e disponíveis em outros dispositivos. Registrar uma compra confirmada também salva a venda.'
-            : 'Perfis e sugestões de exemplo. Entre para usar seu planejamento e histórico reais.'}
-        </span>
-        {account?.session ? (
-          <div className="ds-inline">
-            <span role="status">
-              {resource.loading
-                ? 'Carregando sua conta…'
-                : resource.refreshing
-                  ? 'Atualizando dados…'
-                  : resource.busy
-                    ? 'Salvando na conta…'
-                    : resource.error || resource.saveError || resource.syncWarning
-                      ? 'Sincronização indisponível'
-                      : 'Sincronizado com sua conta'}
-            </span>
-            <Button
-              size="sm"
-              variant="secondary"
-              disabled={resource.loading || resource.busy || resource.refreshing}
-              onClick={resource.reload}
-            >
-              Atualizar dados
-            </Button>
-          </div>
-        ) : (
-          onOpenAccount && (
-            <Button size="sm" onClick={onOpenAccount}>
-              Entrar para sincronizar
-            </Button>
-          )
-        )}
-      </div>
-      {resource.syncWarning && (
+      {section !== 'pedidos' && (
+        <div className="planner-demo-note">
+          <strong>{account?.session ? 'Seu planejamento' : 'Modo demonstração'}</strong>
+          <span>
+            {account?.session
+              ? 'Clientes, semanas e combinados salvos na sua conta e disponíveis em outros dispositivos. Registrar uma compra confirmada também salva a venda.'
+              : 'Perfis e sugestões de exemplo. Entre para usar seu planejamento e histórico reais.'}
+          </span>
+          {account?.session ? (
+            <div className="ds-inline">
+              <span role="status">
+                {resource.loading
+                  ? 'Carregando sua conta…'
+                  : resource.refreshing
+                    ? 'Atualizando dados…'
+                    : resource.busy
+                      ? 'Salvando na conta…'
+                      : resource.error || resource.saveError || resource.syncWarning
+                        ? 'Sincronização indisponível'
+                        : 'Sincronizado com sua conta'}
+              </span>
+              <Button
+                size="sm"
+                variant="secondary"
+                disabled={resource.loading || resource.busy || resource.refreshing}
+                onClick={resource.reload}
+              >
+                Atualizar dados
+              </Button>
+            </div>
+          ) : (
+            onOpenAccount && (
+              <Button size="sm" onClick={onOpenAccount}>
+                Entrar para sincronizar
+              </Button>
+            )
+          )}
+        </div>
+      )}
+      {section !== 'pedidos' && resource.syncWarning && (
         <Alert tone="warning" title="Sincronização parcial">
           {resource.syncWarning}
         </Alert>
       )}
-      {resource.volatile && (
+      {section !== 'pedidos' && resource.volatile && (
         <Alert tone="warning" title="Armazenamento indisponível">
           Alterações disponíveis somente nesta sessão. O navegador não permitiu salvar localmente.
         </Alert>
       )}
-      {resource.notice && (
+      {section !== 'pedidos' && resource.notice && (
         <p className="planner-notice" role={resource.saveError ? 'alert' : 'status'}>
           {resource.notice}
         </p>
       )}
       <div id="planner-panel" role="region" aria-label="Conteúdo do Planner" className="planner-panel">
-        {resource.loading || account?.initializing ? (
+        {section === 'pedidos' ? (
+          <SalesPage key={account?.session?.user?.id || 'guest'} account={account} onOpenAccount={onOpenAccount} />
+        ) : resource.loading || account?.initializing ? (
           <div aria-label="Carregando planejamento" role="status" className="planner-loading">
             <Skeleton variant="title" />
             <Skeleton className="planner-loading-block" />
