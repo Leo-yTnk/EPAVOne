@@ -2,7 +2,7 @@
 
 Superfícies usam cantos contínuos (`corner-shape: squircle`) e raios semânticos finitos. `border-radius` define a extensão da curva e permanece como fallback arredondado nos navegadores sem suporte. Ações seguem a mesma família; o header e seus indicadores preservam cápsulas arredondadas com raio máximo. Costuras SVG usam uma superelipse n=4 quando suportada. Raios internos próximos às bordas descontam padding e borda, sem mínimo arbitrário. [Contrato e validação](docs/squircle-review/README.md).
 
-> Fundação para iniciar a migração do EPAVInsights. A versão só vira **1.0** depois do fluxo piloto real.
+> Base compartilhada aplicada a One, Insights, Planner e Writer. [Contratos atuais, análise e evidências](docs/design-system/README.md). A homologação com dados e contas reais continua necessária antes de declarar a versão 1.0.
 
 ## 1. Princípios do produto
 
@@ -288,7 +288,7 @@ ds-card
 ds-stitched-card
 ```
 
-Não existe variante pública de Card sem stitched.
+Cards independentes são costurados por padrão. As imagens do catálogo e os diálogos de leitura do Insights usam a exceção funcional sem costura já prevista nas regras do projeto.
 
 MetricCard, DataTable e ChartContainer compõem Card.
 

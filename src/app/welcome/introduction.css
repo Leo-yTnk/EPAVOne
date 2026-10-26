@@ -68,7 +68,7 @@
 }
 .introduction-footnote {
   text-align: center;
-  font-size: 0.8125rem;
+  font-size: var(--text-caption);
 }
 @media (max-width: 48rem) {
   .introduction-page {

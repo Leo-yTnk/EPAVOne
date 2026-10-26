@@ -1,4 +1,4 @@
-import { Badge, Button, Card, Heading, Progress } from '../../../design-system/components/index.js';
+import { Badge, Button, Card, Heading, Progress, SectionHeader } from '../../../design-system/components/index.js';
 import { dateLabel, daysSince, lastInteraction, performance, priority, recommendations, today, weekStart } from '../models/planner.js';
 import { PlanningGuide } from './PlanningGuide.jsx';
 export function Overview({ state, week, busy, act }) {
@@ -54,12 +54,14 @@ export function Overview({ state, week, busy, act }) {
       </Card>
       <div className="planner-two-columns">
         <Card className="planner-flow-card">
-          <div className="planner-section-head">
-            <Heading level={3}>Próximas conversas</Heading>
-            <Button as="a" href="#/planner/semana" size="sm" variant="ghost">
-              Ver fila
-            </Button>
-          </div>
+          <SectionHeader
+            title="Próximas conversas"
+            actions={
+              <Button as="a" href="#/planner/semana" size="sm" variant="ghost">
+                Ver fila
+              </Button>
+            }
+          />
           {!next.length && <p className="planner-muted">Adicione clientes à semana para começar.</p>}
           <ol className="planner-simple-list">
             {next.slice(0, 4).map((entry, index) => {
@@ -79,8 +81,7 @@ export function Overview({ state, week, busy, act }) {
           </ol>
         </Card>
         <Card className="planner-flow-card">
-          <Heading level={3}>Vale retomar o contato</Heading>
-          <p className="planner-muted">Combinados vencendo, clientes sem contato ou distantes há 21 dias.</p>
+          <SectionHeader title="Vale retomar o contato" description="Combinados vencendo, clientes sem contato ou distantes há 21 dias." />
           <ul className="planner-simple-list">
             {attention.map((customer) => (
               <li key={customer.id}>
@@ -95,12 +96,14 @@ export function Overview({ state, week, busy, act }) {
         </Card>
       </div>
       <Card className="planner-flow-card">
-        <div className="planner-section-head">
-          <Heading level={3}>Amplie a cobertura</Heading>
-          <Button as="a" href="#/planner/oportunidades" size="sm" variant="ghost">
-            Ver oportunidades
-          </Button>
-        </div>
+        <SectionHeader
+          title="Amplie a cobertura"
+          actions={
+            <Button as="a" href="#/planner/oportunidades" size="sm" variant="ghost">
+              Ver oportunidades
+            </Button>
+          }
+        />
         <p className="planner-muted">Clientes com sugestões compatíveis que ainda não entraram na semana.</p>
         <div className="planner-opportunity-list">
           {opportunities.map((customer) => (

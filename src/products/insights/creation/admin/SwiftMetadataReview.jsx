@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { Alert, Button, Card, Checkbox, ErrorState, Link, Spinner } from '../../../../design-system/components/index.js';
+import { Alert, Button, Card, Checkbox, ErrorState, Link, Spinner, SectionHeader } from '../../../../design-system/components/index.js';
 import { CreationThumbnail } from '../components/CreationThumbnail.jsx';
 import { adminService } from '../services/adminService.js';
 import { useCreationResource } from '../hooks/useCreationResource.js';
@@ -27,10 +27,12 @@ export function SwiftMetadataReview() {
   }
   return (
     <Card className="creation-fields creation-editor-section">
-      <div className="creation-section-heading">
-        <h3 className="creation-section-title">Revisar dados da Swift</h3>
-        <p>Nome e imagem só mudam depois da sua revisão. Categorias continuam sob sua edição.</p>
-      </div>
+      <SectionHeader
+        as="h3"
+        size="sm"
+        title={<>Revisar dados da Swift</>}
+        description={<>Nome e imagem só mudam depois da sua revisão. Categorias continuam sob sua edição.</>}
+      />
       <p>
         A disponibilidade na Swift não confirma a oferta no formulário semanal do EPAV. O CEP solicitado pode não ser confirmado pela
         página; confira os preços antes do atendimento.

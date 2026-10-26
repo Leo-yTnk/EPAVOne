@@ -1,15 +1,17 @@
 import { useState } from 'preact/hooks';
-import { Alert, Card } from '../../../../design-system/components/index.js';
+import { Alert, Card, SectionHeader } from '../../../../design-system/components/index.js';
 import { lines } from '../models/editor.js';
 export function ContentPreview({ type, values, vocabulary }) {
   const [failedImage, setFailedImage] = useState('');
   const validImage = /^https?:\/\/[^\s]+$/i.test(values.imageUrl);
   return (
     <Card as="section" className="creation-fields creation-content-preview" aria-label="Prévia do conteúdo">
-      <div className="creation-section-heading">
-        <h3 className="creation-section-title">Prévia do conteúdo</h3>
-        <p>Confira como os dados se apresentam antes de salvar.</p>
-      </div>
+      <SectionHeader
+        as="h3"
+        size="sm"
+        title={<>Prévia do conteúdo</>}
+        description={<>Confira como os dados se apresentam antes de salvar.</>}
+      />
       <div className="creation-preview-layout">
         {validImage && failedImage !== values.imageUrl ? (
           <img

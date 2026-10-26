@@ -1,5 +1,15 @@
 import { useState } from 'preact/hooks';
-import { Alert, Button, Checkbox, Dialog, Input, Select, Textarea } from '../../../design-system/components/index.js';
+import {
+  Alert,
+  Button,
+  Checkbox,
+  Dialog,
+  Input,
+  Select,
+  Textarea,
+  FieldGrid,
+  ActionGroup
+} from '../../../design-system/components/index.js';
 import { INTERESTS, SEGMENTS } from '../models/planner.js';
 export function ClientEditor({ customer, onClose, act, busy, notice }) {
   const [draft, setDraft] = useState(
@@ -54,7 +64,7 @@ export function ClientEditor({ customer, onClose, act, busy, notice }) {
           maxLength={160}
           onInput={(event) => change({ name: event.currentTarget.value })}
         />
-        <div className="planner-two-columns">
+        <FieldGrid>
           <Select
             label="Segmento"
             value={draft.segment}
@@ -69,8 +79,8 @@ export function ClientEditor({ customer, onClose, act, busy, notice }) {
             placeholder="Mesa, cadeira ou referência"
             onInput={(event) => change({ position: event.currentTarget.value })}
           />
-        </div>
-        <div className="planner-two-columns">
+        </FieldGrid>
+        <FieldGrid>
           <Input
             id="planner-frequency"
             label="Frequência de contato (dias)"
@@ -94,7 +104,7 @@ export function ClientEditor({ customer, onClose, act, busy, notice }) {
               })
             }
           />
-        </div>
+        </FieldGrid>
         <Checkbox checked={draft.intent} onChange={(event) => change({ intent: event.currentTarget.checked })}>
           Registrou intenção de compra
         </Checkbox>
@@ -139,14 +149,14 @@ export function ClientEditor({ customer, onClose, act, busy, notice }) {
           maxLength={4000}
           onInput={(event) => change({ preparation: event.currentTarget.value })}
         />
-        <div className="ds-inline">
+        <ActionGroup>
           <Button type="submit" loading={busy}>
             Salvar perfil
           </Button>
           <Button variant="ghost" type="button" onClick={onClose}>
             Cancelar
           </Button>
-        </div>
+        </ActionGroup>
       </form>
     </Dialog>
   );

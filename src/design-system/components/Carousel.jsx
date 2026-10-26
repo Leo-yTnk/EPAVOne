@@ -4,6 +4,7 @@ import { observeSize } from '../behaviors/observeSize.js';
 import { reducedMotion } from '../behaviors/motion.js';
 import { useContentMotion } from '../behaviors/useContentMotion.js';
 import { Card } from './Card.jsx';
+import { SectionHeader } from './SectionHeader.jsx';
 import { IconButton } from './IconButton.jsx';
 
 // Native touch/trackpad scrolling: no drag handlers, cloning, autoplay or per-item observers.
@@ -42,20 +43,25 @@ export function Carousel({ label, headingId, children, action, headingSurface = 
   return (
     <div className={`ds-carousel ${className}`} data-expanded={expanded}>
       <Header {...(headingSurface ? { as: 'header' } : {})} className="ds-carousel-heading">
-        <h2 id={titleId}>{label}</h2>
-        <div className="ds-carousel-actions">
-          {action}
-          {!expanded && !(edges.start && edges.end) && (
-            <div className="ds-carousel-controls">
-              <IconButton size="sm" label={`Itens anteriores de ${label}`} disabled={edges.start} onClick={() => move(-1)}>
-                ←
-              </IconButton>
-              <IconButton size="sm" label={`Próximos itens de ${label}`} disabled={edges.end} onClick={() => move(1)}>
-                →
-              </IconButton>
+        <SectionHeader
+          id={titleId}
+          title={label}
+          actions={
+            <div className="ds-carousel-actions">
+              {action}
+              {!expanded && !(edges.start && edges.end) && (
+                <div className="ds-carousel-controls">
+                  <IconButton size="sm" label={`Itens anteriores de ${label}`} disabled={edges.start} onClick={() => move(-1)}>
+                    ←
+                  </IconButton>
+                  <IconButton size="sm" label={`Próximos itens de ${label}`} disabled={edges.end} onClick={() => move(1)}>
+                    →
+                  </IconButton>
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          }
+        />
       </Header>
       <div
         ref={ref}

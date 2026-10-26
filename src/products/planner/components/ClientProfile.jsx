@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { Badge, Button, Card, Checkbox, Heading, Input, Textarea } from '../../../design-system/components/index.js';
+import { Badge, Button, Card, SummaryList, Checkbox, Heading, Input, Textarea } from '../../../design-system/components/index.js';
 import { dateLabel, lastInteraction, money, OUTCOMES, today } from '../models/planner.js';
 import { PriorityDetails } from './PriorityDetails.jsx';
 import { OfferList } from './OfferList.jsx';
@@ -42,43 +42,30 @@ export function ClientProfile({ customer, state, week, act, busy, onEdit }) {
         </div>
         <div>
           <PriorityDetails customer={customer} state={state} />
-          <dl className="planner-facts">
-            <div>
-              <dt>Último contato</dt>
-              <dd>{dateLabel(lastInteraction(customer, state.interactions)?.date)}</dd>
-            </div>
-            <div>
-              <dt>Última compra</dt>
-              <dd>{dateLabel(purchases[0]?.date)}</dd>
-            </div>
-            <div>
-              <dt>Compras registradas</dt>
-              <dd>{purchases.length}</dd>
-            </div>
-            <div>
-              <dt>Ticket médio conhecido</dt>
-              <dd>
-                {measured.length
+          <SummaryList
+            items={[
+              { label: 'Último contato', value: dateLabel(lastInteraction(customer, state.interactions)?.date) },
+              { label: 'Última compra', value: dateLabel(purchases[0]?.date) },
+              { label: 'Compras registradas', value: purchases.length },
+              {
+                label: 'Ticket médio conhecido',
+                value: measured.length
                   ? money(Math.round(measured.reduce((sum, item) => sum + item.amountCents, 0) / measured.length))
-                  : 'Sem valores registrados'}
-              </dd>
-            </div>
-          </dl>
+                  : 'Sem valores registrados'
+              }
+            ]}
+          />
         </div>
       </Card>
       <div className="planner-two-columns">
         <Card className="planner-flow-card">
           <Heading level={3}>Preparar a conversa</Heading>
-          <dl className="planner-facts">
-            <div>
-              <dt>Preferências</dt>
-              <dd>{customer.preferences.join(', ') || 'Ainda não informadas'}</dd>
-            </div>
-            <div>
-              <dt>Restrições</dt>
-              <dd>{customer.restrictions.join(', ') || 'Nenhuma registrada · confirme com o cliente'}</dd>
-            </div>
-          </dl>
+          <SummaryList
+            items={[
+              { label: 'Preferências', value: customer.preferences.join(', ') || 'Ainda não informadas' },
+              { label: 'Restrições', value: customer.restrictions.join(', ') || 'Nenhuma registrada · confirme com o cliente' }
+            ]}
+          />
           <p className="planner-muted">Sugestão: pergunte sobre a rotina, confirme restrições e relacione um principal a um complemento.</p>
           <Textarea
             id="planner-preparation"

@@ -5,7 +5,7 @@ import { ProductPrice } from './ProductPrice.jsx';
 
 export const ProductCard = memo(function ProductCard({ product, onOpen }) {
   return (
-    <Card data-dialog-origin className="insights-product insights-product-card insights-catalog-card">
+    <Card padding="compact" data-dialog-origin className="insights-product insights-product-card insights-catalog-card">
       <CatalogImage stitched={false} fit="contain" url={product.image_url} name={product.name} />
       <div className="insights-product-copy">
         <Badge>{product.category?.name || 'Outros produtos'}</Badge>
@@ -13,7 +13,10 @@ export const ProductCard = memo(function ProductCard({ product, onOpen }) {
         <ProductPrice product={product} />
         <Button
           variant="secondary"
-          size="sm"
+          size="compact"
+          fullWidth
+          radius="nested"
+          align="between"
           className="insights-card-action"
           onClick={() => onOpen(product)}
           aria-label={`Ver detalhes de ${product.name}`}

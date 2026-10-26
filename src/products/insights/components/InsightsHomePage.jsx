@@ -1,6 +1,6 @@
 import { useContentMotion } from '../../../design-system/behaviors/useContentMotion.js';
 import { useMemo, useRef, useState } from 'preact/hooks';
-import { ModalPresence, Button, Card, EmptyState, ErrorState, Input } from '../../../design-system/components/index.js';
+import { ModalPresence, Button, EmptyState, ErrorState, Input, PageHeader } from '../../../design-system/components/index.js';
 import { CatalogLoading } from './CatalogLoading.jsx';
 import { CatalogSections } from './CatalogSections.jsx';
 import { ProductCard } from './ProductCard.jsx';
@@ -34,11 +34,10 @@ export function InsightsHomePage() {
   );
   return (
     <div className="insights-home insights-discovery">
-      <Card as="section" className="insights-discovery-controls" aria-label="Descobrir receitas e produtos">
-        <header className="insights-discovery-header">
-          <div>
-            <h1>O que vamos preparar?</h1>
-          </div>
+      <PageHeader
+        product="insights"
+        title="O que vamos preparar?"
+        actions={
           <nav aria-label="Explorar o Insights" className="insights-discovery-nav">
             <Button as="a" href="#/insights/receitas" variant="secondary" size="sm">
               Todas as receitas
@@ -47,7 +46,8 @@ export function InsightsHomePage() {
               Consultar produtos
             </Button>
           </nav>
-        </header>
+        }
+      >
         <Input
           label="Buscar no Insights"
           type="search"
@@ -64,7 +64,7 @@ export function InsightsHomePage() {
             ))}
           </nav>
         )}
-      </Card>
+      </PageHeader>
       <div ref={resultsRef} className="insights-results-content">
         {resource.loading ? (
           <CatalogLoading label="Preparando suas sugestões…" />

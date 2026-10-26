@@ -1,0 +1,2048 @@
+{
+  "fixtureCatalog": true,
+  "productionAcceptance": false,
+  "matrix": [
+    {
+      "route": "home",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": null
+    },
+    {
+      "route": "welcome",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": null
+    },
+    {
+      "route": "insights",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "insights/receitas",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "insights/produtos",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "insights/criacao",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/semana",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/clientes",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/oportunidades",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/desempenho",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/atendimento",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "writer",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "settings",
+      "width": 320,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "home",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": null
+    },
+    {
+      "route": "welcome",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": null
+    },
+    {
+      "route": "insights",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "insights/receitas",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "insights/produtos",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "insights/criacao",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/semana",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/clientes",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/oportunidades",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/desempenho",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/atendimento",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "writer",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "settings",
+      "width": 320,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "home",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": null
+    },
+    {
+      "route": "welcome",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": null
+    },
+    {
+      "route": "insights",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "insights/receitas",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "insights/produtos",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "insights/criacao",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/semana",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/clientes",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/oportunidades",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/desempenho",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/atendimento",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "writer",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "settings",
+      "width": 390,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "home",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": null
+    },
+    {
+      "route": "welcome",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": null
+    },
+    {
+      "route": "insights",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "insights/receitas",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "insights/produtos",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "insights/criacao",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/semana",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/clientes",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/oportunidades",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/desempenho",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/atendimento",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "writer",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "settings",
+      "width": 390,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "home",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": null
+    },
+    {
+      "route": "welcome",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": null
+    },
+    {
+      "route": "insights",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "insights/receitas",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "insights/produtos",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "insights/criacao",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/semana",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/clientes",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/oportunidades",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/desempenho",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/atendimento",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "writer",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "settings",
+      "width": 768,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "home",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": null
+    },
+    {
+      "route": "welcome",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": null
+    },
+    {
+      "route": "insights",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "insights/receitas",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "insights/produtos",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "insights/criacao",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/semana",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/clientes",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/oportunidades",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/desempenho",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/atendimento",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "writer",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "settings",
+      "width": 768,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "home",
+      "width": 1024,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": null
+    },
+    {
+      "route": "welcome",
+      "width": 1024,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": null
+    },
+    {
+      "route": "insights",
+      "width": 1024,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30.72px",
+        "leading": "33.1776px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "insights/receitas",
+      "width": 1024,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30.72px",
+        "leading": "33.1776px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "insights/produtos",
+      "width": 1024,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30.72px",
+        "leading": "33.1776px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "insights/criacao",
+      "width": 1024,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30.72px",
+        "leading": "33.1776px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner",
+      "width": 1024,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30.72px",
+        "leading": "33.1776px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner/semana",
+      "width": 1024,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30.72px",
+        "leading": "33.1776px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner/clientes",
+      "width": 1024,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30.72px",
+        "leading": "33.1776px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner/oportunidades",
+      "width": 1024,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30.72px",
+        "leading": "33.1776px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner/desempenho",
+      "width": 1024,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30.72px",
+        "leading": "33.1776px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner/atendimento",
+      "width": 1024,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30.72px",
+        "leading": "33.1776px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "writer",
+      "width": 1024,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30.72px",
+        "leading": "33.1776px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "settings",
+      "width": 1024,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30.72px",
+        "leading": "33.1776px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "home",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": null
+    },
+    {
+      "route": "welcome",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": null
+    },
+    {
+      "route": "insights",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30.72px",
+        "leading": "33.1776px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "insights/receitas",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30.72px",
+        "leading": "33.1776px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "insights/produtos",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30.72px",
+        "leading": "33.1776px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "insights/criacao",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30.72px",
+        "leading": "33.1776px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30.72px",
+        "leading": "33.1776px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner/semana",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30.72px",
+        "leading": "33.1776px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner/clientes",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30.72px",
+        "leading": "33.1776px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner/oportunidades",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30.72px",
+        "leading": "33.1776px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner/desempenho",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30.72px",
+        "leading": "33.1776px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner/atendimento",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30.72px",
+        "leading": "33.1776px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "writer",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30.72px",
+        "leading": "33.1776px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "settings",
+      "width": 1024,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30.72px",
+        "leading": "33.1776px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "home",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": null
+    },
+    {
+      "route": "welcome",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": null
+    },
+    {
+      "route": "insights",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "insights/receitas",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "insights/produtos",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "insights/criacao",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner/semana",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner/clientes",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner/oportunidades",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner/desempenho",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner/atendimento",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "writer",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "settings",
+      "width": 1440,
+      "theme": "light",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "home",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": null
+    },
+    {
+      "route": "welcome",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": null
+    },
+    {
+      "route": "insights",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "insights/receitas",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "insights/produtos",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "insights/criacao",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner/semana",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner/clientes",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner/oportunidades",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner/desempenho",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner/atendimento",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "writer",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "settings",
+      "width": 1440,
+      "theme": "dark",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "24px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "insights/receitas",
+      "width": 320,
+      "theme": "dark",
+      "preferences": "compact-large-reduced-vertical",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "planner/clientes",
+      "width": 320,
+      "theme": "dark",
+      "preferences": "compact-large-reduced-vertical",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "writer",
+      "width": 320,
+      "theme": "dark",
+      "preferences": "compact-large-reduced-vertical",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "30px",
+        "leading": "32.4px",
+        "padding": "16px",
+        "radius": "28px"
+      }
+    },
+    {
+      "route": "settings",
+      "width": 320,
+      "theme": "dark",
+      "preferences": "compact-large-reduced-vertical",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "33.75px",
+        "leading": "36.45px",
+        "padding": "18px",
+        "radius": "31.5px"
+      }
+    },
+    {
+      "route": "insights/receitas",
+      "width": 1440,
+      "theme": "dark",
+      "preferences": "compact-large-reduced-vertical",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "16px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "planner/clientes",
+      "width": 1440,
+      "theme": "dark",
+      "preferences": "compact-large-reduced-vertical",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "16px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "writer",
+      "width": 1440,
+      "theme": "dark",
+      "preferences": "compact-large-reduced-vertical",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "40px",
+        "leading": "43.2px",
+        "padding": "16px",
+        "radius": "48px"
+      }
+    },
+    {
+      "route": "settings",
+      "width": 1440,
+      "theme": "dark",
+      "preferences": "compact-large-reduced-vertical",
+      "overflow": -15,
+      "clippedHeaders": 0,
+      "title": {
+        "font": "\"DM Serif Display\", Georgia, serif",
+        "size": "43.2px",
+        "leading": "46.656px",
+        "padding": "18px",
+        "radius": "54px"
+      }
+    }
+  ],
+  "flows": [
+    {
+      "flow": "insights/receitas/detail-focus-return",
+      "width": 390,
+      "theme": "light"
+    },
+    {
+      "flow": "insights/produtos/detail-focus-return",
+      "width": 390,
+      "theme": "light"
+    },
+    {
+      "flow": "client-editor-select-portal",
+      "width": 390,
+      "theme": "light"
+    },
+    {
+      "flow": "writer-upload-client-products-delivery-review-download",
+      "width": 390,
+      "theme": "light"
+    },
+    {
+      "flow": "insights/receitas/detail-focus-return",
+      "width": 390,
+      "theme": "dark"
+    },
+    {
+      "flow": "insights/produtos/detail-focus-return",
+      "width": 390,
+      "theme": "dark"
+    },
+    {
+      "flow": "client-editor-select-portal",
+      "width": 390,
+      "theme": "dark"
+    },
+    {
+      "flow": "writer-upload-client-products-delivery-review-download",
+      "width": 390,
+      "theme": "dark"
+    },
+    {
+      "flow": "insights/receitas/detail-focus-return",
+      "width": 1440,
+      "theme": "light"
+    },
+    {
+      "flow": "insights/produtos/detail-focus-return",
+      "width": 1440,
+      "theme": "light"
+    },
+    {
+      "flow": "client-editor-select-portal",
+      "width": 1440,
+      "theme": "light"
+    },
+    {
+      "flow": "writer-upload-client-products-delivery-review-download",
+      "width": 1440,
+      "theme": "light"
+    },
+    {
+      "flow": "insights/receitas/detail-focus-return",
+      "width": 1440,
+      "theme": "dark"
+    },
+    {
+      "flow": "insights/produtos/detail-focus-return",
+      "width": 1440,
+      "theme": "dark"
+    },
+    {
+      "flow": "client-editor-select-portal",
+      "width": 1440,
+      "theme": "dark"
+    },
+    {
+      "flow": "writer-upload-client-products-delivery-review-download",
+      "width": 1440,
+      "theme": "dark"
+    }
+  ]
+}

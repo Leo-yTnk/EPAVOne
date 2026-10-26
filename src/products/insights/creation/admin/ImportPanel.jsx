@@ -1,5 +1,14 @@
 import { useRef, useState } from 'preact/hooks';
-import { Alert, Button, Card, Checkbox, ErrorState, FileInput, Spinner } from '../../../../design-system/components/index.js';
+import {
+  Alert,
+  Button,
+  Card,
+  Checkbox,
+  ErrorState,
+  FileInput,
+  Spinner,
+  SectionHeader
+} from '../../../../design-system/components/index.js';
 import { importReplacementChoices } from './catalogDuplicates.js';
 import { ImportReviewPreview } from './ImportReviewPreview.jsx';
 import { adminService } from '../services/adminService.js';
@@ -96,10 +105,12 @@ export function ImportPanel() {
   return (
     <section className="creation-fields" aria-label="Importação do catálogo">
       <Card className="creation-fields creation-editor-section">
-        <div className="creation-section-heading">
-          <h3 className="creation-section-title">Adicionar a partir do Excel</h3>
-          <p>Traga produtos, receitas, categorias e seções para o catálogo público.</p>
-        </div>
+        <SectionHeader
+          as="h3"
+          size="sm"
+          title={<>Adicionar a partir do Excel</>}
+          description={<>Traga produtos, receitas, categorias e seções para o catálogo público.</>}
+        />
         <p>
           Use as seis abas do modelo Yourcipe. Nas abas sem registros, mantenha somente os cabeçalhos. Este arquivo é o catálogo, separado
           do formulário de pedidos.

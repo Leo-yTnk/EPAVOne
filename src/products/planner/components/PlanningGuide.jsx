@@ -1,4 +1,4 @@
-import { Button, Card, Heading, Icon } from '../../../design-system/components/index.js';
+import { Button, Card, Icon, SectionHeader } from '../../../design-system/components/index.js';
 import { weekStart } from '../models/planner.js';
 
 export function PlanningGuide({ state, week }) {
@@ -38,19 +38,26 @@ export function PlanningGuide({ state, week }) {
         : { label: current && pending.length ? 'Abrir fila de atendimento' : 'Revisar planejamento', href: '#/planner/semana' };
   return (
     <section className="planner-guide" aria-label="Como usar o Planner">
-      <div className="planner-section-head">
-        <Heading level={3}>Por onde começar</Heading>
-        <Button as="a" href={next.href} size="sm">
-          {next.label}
-        </Button>
-      </div>
+      <SectionHeader
+        title="Por onde começar"
+        actions={
+          <Button as="a" href={next.href} size="sm">
+            {next.label}
+          </Button>
+        }
+      />
       <div className="planner-guide-steps">
         {steps.map((step) => (
           <Card key={step.title} className="planner-guide-step">
-            <Heading level={4}>
-              <Icon name={step.complete ? 'check' : 'next'} /> {step.title}
-            </Heading>
-            <p className="planner-muted">{step.description}</p>
+            <SectionHeader
+              as="h3"
+              title={
+                <>
+                  <Icon name={step.complete ? 'check' : 'next'} /> {step.title}
+                </>
+              }
+              description={step.description}
+            />
             <Button as="a" variant="ghost" size="sm" href={step.href}>
               Abrir etapa
             </Button>

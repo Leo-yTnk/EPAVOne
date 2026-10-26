@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'preact/hooks';
-import { Alert, Button, Card, Checkbox, Icon, Input, Progress } from '../../../../design-system/components/index.js';
+import { Alert, Button, Card, Checkbox, Icon, Input, Progress, SectionHeader } from '../../../../design-system/components/index.js';
 import { adminService, catalogPriceSync } from '../services/adminService.js';
 import { SwiftMetadataReview } from './SwiftMetadataReview.jsx';
 export function MaintenancePanel() {
@@ -59,12 +59,16 @@ export function MaintenancePanel() {
   return (
     <section className="creation-fields">
       <Card as="section" className="creation-fields creation-operation">
-        <div className="creation-section-heading">
-          <h3 className="creation-section-title">
-            <Icon name="product" /> Preços Swift
-          </h3>
-          <p>Consulte preços e acompanhe a execução sem iniciar lotes repetidos.</p>
-        </div>
+        <SectionHeader
+          as="h3"
+          size="sm"
+          title={
+            <>
+              <Icon name="product" /> Preços Swift
+            </>
+          }
+          description={<>Consulte preços e acompanhe a execução sem iniciar lotes repetidos.</>}
+        />
         <p>O último preço confirmado é preservado se a consulta falhar. Confira o resultado antes de repetir.</p>
         <Button loading={syncing} disabled={busy || syncing} onClick={sync}>
           {progress.phase === 'paused' ? 'Retomar atualização' : 'Atualizar preços públicos'}
@@ -123,10 +127,12 @@ export function MaintenancePanel() {
       </Card>
       <SwiftMetadataReview key={revision} />
       <Card as="section" className="creation-fields creation-operation">
-        <div className="creation-section-heading">
-          <h3 className="creation-section-title">Manutenção permanente</h3>
-          <p>Faça um backup antes de excluir. Estas ações afetam o catálogo público e seus vínculos.</p>
-        </div>
+        <SectionHeader
+          as="h3"
+          size="sm"
+          title={<>Manutenção permanente</>}
+          description={<>Faça um backup antes de excluir. Estas ações afetam o catálogo público e seus vínculos.</>}
+        />
         <div className="creation-toolbar">
           <Button variant="secondary" disabled={busy || syncing} onClick={() => choose('inactive')}>
             Excluir itens públicos inativos

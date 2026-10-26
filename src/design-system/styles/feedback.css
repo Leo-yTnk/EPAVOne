@@ -2,11 +2,11 @@
   display:grid;grid-template-columns:auto minmax(0,1fr);gap:var(--space-3);padding:var(--space-4);border:1px solid var(--border-default);border-radius:var(--radius-lg);
   background:var(--surface-primary);animation:ds-feedback-in var(--duration-normal) var(--ease-enter) both
 }
-.ds-alert p{color:var(--text-secondary);font-size:.875rem;line-height:var(--leading-body)}
-.ds-alert.is-info{background:color-mix(in srgb,var(--ref-color-info-500) 7%,var(--surface-primary))}
-.ds-alert.is-success{background:color-mix(in srgb,var(--ref-color-success-500) 7%,var(--surface-primary))}
-.ds-alert.is-warning{background:color-mix(in srgb,var(--ref-color-warning-500) 8%,var(--surface-primary))}
-.ds-alert.is-danger{background:color-mix(in srgb,var(--ref-color-danger-500) 7%,var(--surface-primary))}
+.ds-alert p{color:var(--text-secondary);font-size:var(--text-sm);line-height:var(--leading-body)}
+.ds-alert.is-info{background:var(--surface-info)}
+.ds-alert.is-success{background:var(--surface-success)}
+.ds-alert.is-warning{background:var(--surface-warning)}
+.ds-alert.is-danger{background:var(--surface-danger)}
 
 .ds-state{
   display:grid;justify-items:center;gap:var(--space-3);padding:var(--space-7) var(--space-5);text-align:center;border:1px dashed var(--border-default);border-radius:var(--radius-xl);background:var(--surface-primary)
@@ -21,12 +21,12 @@
 .ds-skeleton-line{height:.875rem}.ds-skeleton-title{height:1.5rem;width:58%}.ds-skeleton-circle{width:2.5rem;height:2.5rem;border-radius:50%}
 
 .ds-dialog-overlay,.ds-drawer-overlay{
-  position:fixed;inset:0;width:100vw;z-index:var(--z-overlay);display:grid;background:rgba(0,0,0,.38);
+  position:fixed;inset:0;width:100vw;z-index:var(--z-overlay);display:grid;background:var(--surface-overlay);
   animation:ds-overlay-in var(--duration-normal) var(--ease-standard) both
 }
 .ds-dialog-overlay{place-items:center}
 .ds-dialog,.ds-drawer{
-  --card-radius:var(--radius-2xl);position:relative;border-radius:var(--card-radius);background:var(--surface-primary);box-shadow:var(--shadow-lg);--container-padding:var(--space-6);padding:var(--container-padding);overflow:auto;min-width:0;
+  --card-radius:var(--radius-dialog);position:relative;border-radius:var(--card-radius);background:var(--surface-primary);box-shadow:var(--shadow-lg);--container-padding:var(--space-6);padding:var(--container-padding);overflow:auto;min-width:0;
   border:1px solid var(--border-subtle)
 }
 .ds-dialog{display:flex;flex-direction:column;overflow:hidden;width:min(90vw,32rem);max-height:90vh;max-height:90dvh;transform-origin:center 30%;animation:ds-dialog-in var(--duration-slow) var(--ease-enter) both}
@@ -98,7 +98,7 @@
   justify-items: start;
   gap: var(--space-3);
   color: var(--text-secondary);
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   line-height: var(--leading-body);
   overflow-wrap: anywhere;
 }
@@ -113,10 +113,10 @@
   background: var(--surface-primary);
 }
 .ds-alert.is-info .ds-alert-icon {
-  color: var(--ref-color-info-500);
+  color: var(--text-info);
 }
 .ds-alert.is-success .ds-alert-icon {
-  color: var(--ref-color-success-500);
+  color: var(--text-success);
 }
 .ds-alert.is-warning .ds-alert-icon {
   color: var(--text-primary);
@@ -127,7 +127,7 @@
 .ds-toast-content {
   display: grid;
   gap: var(--space-1);
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
 }
 .ds-state {
   gap: var(--space-4);
@@ -136,7 +136,7 @@
   font: 650 1.125rem/var(--leading-heading-small) var(--font-heading);
 }
 .ds-state p {
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
 }
 
 /* Closing is visual only: the original action, focus and scroll unlock are immediate. */

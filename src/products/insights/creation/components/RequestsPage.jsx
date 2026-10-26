@@ -9,7 +9,8 @@ import {
   Input,
   Pagination,
   Select,
-  Spinner
+  Spinner,
+  SectionHeader
 } from '../../../../design-system/components/index.js';
 import { collaborationService } from '../services/collaborationService.js';
 import { useCreationResource } from '../hooks/useCreationResource.js';
@@ -34,14 +35,16 @@ export function RequestsPage({ admin = false }) {
   return (
     <section className="creation-fields">
       <Card className="creation-fields creation-operation">
-        <div className="creation-section-heading">
-          <h3 className="creation-section-title">{admin ? 'Fila de revisão' : 'Acompanhe suas publicações'}</h3>
-          <p>
-            {admin
+        <SectionHeader
+          as="h3"
+          size="sm"
+          title={admin ? 'Fila de revisão' : 'Acompanhe suas publicações'}
+          description={
+            admin
               ? 'Abra uma solicitação para avaliar o conteúdo e registrar sua decisão.'
-              : 'Consulte o retorno da avaliação e os ajustes solicitados para cada conteúdo.'}
-          </p>
-        </div>
+              : 'Consulte o retorno da avaliação e os ajustes solicitados para cada conteúdo.'
+          }
+        />
         <div className="creation-toolbar">
           <Input
             label="Buscar solicitações"

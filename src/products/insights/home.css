@@ -1,18 +1,9 @@
 .insights-home.insights-discovery {
   gap: var(--space-6);
 }
-.insights-discovery-header {
-  display: grid;
-  gap: var(--space-4);
-}
-.insights-discovery-header .ds-overline {
-  color: var(--text-brand);
-}
-.insights-discovery-header h1 {
-  margin-top: 0;
-  font: 400 clamp(1.875rem, 3.5vw, 2.75rem)/var(--leading-heading) var(--font-display);
-  letter-spacing: -0.025em;
-}
+
+
+
 .insights-discovery-nav {
   display: flex;
   gap: var(--space-2);
@@ -49,7 +40,5 @@
     flex: none;
     white-space: nowrap;
   }
-  .insights-discovery-header h1 {
-    font-size: 1.875rem;
-  }
+
 }

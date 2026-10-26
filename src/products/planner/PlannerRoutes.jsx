@@ -1,15 +1,5 @@
 import { useMemo, useState } from 'preact/hooks';
-import {
-  ModalPresence,
-  Alert,
-  Button,
-  ErrorState,
-  Heading,
-  AppLogo,
-  PageHeader,
-  Select,
-  Skeleton
-} from '../../design-system/components/index.js';
+import { ModalPresence, Alert, Button, ErrorState, Heading, PageHeader, Select, Skeleton } from '../../design-system/components/index.js';
 import { dateLabel, emptyWeek, shiftDay, weekStart, validDay } from './models/planner.js';
 import { usePlanner } from './hooks/usePlanner.js';
 import { Overview } from './components/Overview.jsx';
@@ -66,7 +56,7 @@ export function PlannerRoutes({ route = { segments: [] }, service, account }) {
   return (
     <section className="product-page planner-page">
       <PageHeader
-        eyebrow={<AppLogo product="planner" wordmark />}
+        product="planner"
         title={title[0]}
         description={title[1]}
         actions={

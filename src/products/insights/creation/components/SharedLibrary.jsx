@@ -8,7 +8,8 @@ import {
   ErrorState,
   Icon,
   Input,
-  Spinner
+  Spinner,
+  SectionHeader
 } from '../../../../design-system/components/index.js';
 import { collaborationService } from '../services/collaborationService.js';
 import { useCreationResource } from '../hooks/useCreationResource.js';
@@ -47,10 +48,12 @@ export function SharedLibrary() {
   return (
     <section className="creation-fields">
       <Card as="section" className="creation-fields creation-operation">
-        <div className="creation-section-heading">
-          <h3 className="creation-section-title">Receba uma ideia para sua próxima venda</h3>
-          <p>Resgate o código de outro vendedor. Você pode consultar a receita ou criar sua própria cópia.</p>
-        </div>
+        <SectionHeader
+          as="h3"
+          size="sm"
+          title={<>Receba uma ideia para sua próxima venda</>}
+          description={<>Resgate o código de outro vendedor. Você pode consultar a receita ou criar sua própria cópia.</>}
+        />
         <form className="creation-toolbar" onSubmit={redeem}>
           <Input label="Código compartilhado" value={code} onInput={(e) => setCode(e.currentTarget.value)} required autoComplete="off" />
           <Button type="submit" loading={busy}>

@@ -1,9 +1,30 @@
 import { cx } from '../../shared/utils/cx.js';
+import { useControlId } from '../behaviors/useControlId.js';
 
-export function Textarea({ label, helper, error, success=false, id, className='', ...props }) {
-  return <label className="ds-field" htmlFor={id}>
-    <span className="ds-input-label">{label}</span>
-    <textarea id={id} className={cx('ds-textarea',error&&'is-error',success&&'is-success',className)} {...props}/>
-    {error ? <span className="ds-input-error">{error}</span> : helper ? <span className="ds-input-helper">{helper}</span> : null}
-  </label>;
+export function Textarea({ label, helper, error, success = false, id, className = '', 'aria-describedby': describedBy, ...props }) {
+  const generatedId = useControlId();
+  const controlId = id || generatedId;
+  const messageId = controlId + '-message';
+  const description = [describedBy, (error || helper) && messageId].filter(Boolean).join(' ') || undefined;
+  return (
+    <div className="ds-field">
+      {label && (
+        <label className="ds-input-label" htmlFor={controlId}>
+          {label}
+        </label>
+      )}
+      <textarea
+        id={controlId}
+        className={cx('ds-textarea', error && 'is-error', success && 'is-success', className)}
+        aria-describedby={description}
+        aria-invalid={error ? 'true' : undefined}
+        {...props}
+      />
+      {(error || helper) && (
+        <span id={messageId} className={error ? 'ds-input-error' : 'ds-input-helper'}>
+          {error || helper}
+        </span>
+      )}
+    </div>
+  );
 }

@@ -20,7 +20,7 @@
   flex-wrap: nowrap;
   position: sticky;
   background: var(--surface-primary);
-  --container-padding: var(--space-4);
+  --card-padding: var(--panel-padding-dense);
   padding: var(--container-padding);
   gap: var(--space-2);
   top: 6rem;
@@ -31,30 +31,17 @@
   padding: var(--space-3);
   gap: var(--space-3);
   min-height: 3rem;
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
   border-radius: min(var(--radius-md), var(--nested-radius));
 }
-.creation-workspace-heading {
-  display: grid;
-  gap: var(--space-2);
-  padding: var(--space-2) var(--space-1);
-}
-.creation-workspace-heading h2 {
-  font-family: var(--font-heading);
-  font-size: 1.5rem;
-  font-weight: 700;
-  line-height: var(--leading-heading-small);
-  color: var(--text-primary);
-}
-.creation-workspace-heading p {
-  max-width: 42rem;
-  font-size: 0.875rem;
-}
+
+
+
 .creation-workspace-content .creation-operation,
 .creation-workspace-content .creation-admin-header,
 .creation-workspace-content .creation-admin-navigation,
 .creation-editor-section.ds-card {
-  --container-padding: var(--space-5);
+  --card-padding: var(--panel-padding-compact);
   padding: var(--container-padding);
   gap: var(--space-4);
 }
@@ -68,18 +55,8 @@
 .creation-admin-context {
   padding-left: var(--space-4);
 }
-.creation-section-heading {
-  gap: var(--space-2);
-}
-.creation-section-title {
-  font-family: var(--font-heading);
-  font-size: 1.125rem;
-  font-weight: 700;
-  line-height: var(--leading-heading-small);
-}
-.creation-section-title .ds-icon {
-  color: var(--text-brand);
-}
+
+
 .creation-list {
   gap: var(--space-3);
 }
@@ -90,7 +67,7 @@
 }
 .creation-row h3 {
   font-weight: 700;
-  font-size: 1rem;
+  font-size: var(--text-md);
 }
 .creation-toolbar {
   gap: var(--space-3);
@@ -102,7 +79,7 @@
   gap: var(--space-4);
 }
 .creation-editor-section h3 {
-  font-size: 1.125rem;
+  font-size: var(--text-lg);
 }
 .creation-import-preview,
 .creation-import-row,
@@ -110,7 +87,7 @@
   gap: var(--space-4);
 }
 .creation-introduction.ds-card {
-  --container-padding: var(--space-6);
+  --card-padding: var(--panel-padding);
   padding: var(--container-padding);
   gap: var(--space-5);
 }
@@ -145,11 +122,9 @@
   .creation-row {
     padding: var(--space-4);
   }
-  .creation-workspace-heading h2 {
-    font-size: 1.25rem;
-  }
+
   .creation-introduction.ds-card {
-    --container-padding: var(--space-5);
+    --card-padding: var(--panel-padding-compact);
   }
   .creation-introduction-features {
     grid-template-columns: 1fr;

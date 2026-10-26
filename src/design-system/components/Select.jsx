@@ -113,6 +113,7 @@ export function Select({ label, options: allOptions, value, onChange, disabled =
         className="ds-select-trigger"
         type="button"
         aria-haspopup="listbox"
+        aria-describedby={helper ? autoId + '-helper' : undefined}
         aria-expanded={open}
         aria-controls={open ? menuId : undefined}
         aria-activedescendant={open ? autoId + '-option-' + highlighted : undefined}
@@ -126,7 +127,11 @@ export function Select({ label, options: allOptions, value, onChange, disabled =
           ⌄
         </span>
       </button>
-      {helper && <span className="ds-input-helper">{helper}</span>}
+      {helper && (
+        <span id={autoId + '-helper'} className="ds-input-helper">
+          {helper}
+        </span>
+      )}
       {open && (
         <Portal>
           <div

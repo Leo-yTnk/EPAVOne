@@ -1,6 +1,7 @@
 import { useState } from 'preact/hooks';
 import {
   Badge,
+  SectionHeader,
   Button,
   Card,
   ContextMenu,
@@ -56,12 +57,14 @@ export function WeekPlan({ state, week, busy, act }) {
           </Button>
         </form>
       </Card>
-      <div className="planner-section-head">
-        <Heading level={3}>Sua fila de atendimento</Heading>
-        <Button as="a" variant="secondary" href="#/planner/clientes">
-          Escolher clientes
-        </Button>
-      </div>
+      <SectionHeader
+        title="Sua fila de atendimento"
+        actions={
+          <Button as="a" variant="secondary" href="#/planner/clientes">
+            Escolher clientes
+          </Button>
+        }
+      />
       {!week.queue.length && (
         <EmptyState
           title="Planeje sua primeira conversa"

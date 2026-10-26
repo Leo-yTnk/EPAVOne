@@ -1,5 +1,5 @@
 import { useState } from 'preact/hooks';
-import { Alert, Badge, Button, Card, Icon } from '../../../../design-system/components/index.js';
+import { Alert, Badge, Button, Card, Icon, SectionHeader } from '../../../../design-system/components/index.js';
 import { adminService } from '../services/adminService.js';
 import { findCatalogDuplicates } from './catalogDuplicates.js';
 import { CreationThumbnail } from '../components/CreationThumbnail.jsx';
@@ -24,10 +24,12 @@ export function DuplicateCheckPanel() {
   return (
     <section className="creation-fields">
       <Card className="creation-fields creation-operation">
-        <div className="creation-section-heading">
-          <h3 className="creation-section-title">Verificar duplicatas</h3>
-          <p>Compare nomes, páginas e SKUs do catálogo completo, incluindo os itens inativos.</p>
-        </div>
+        <SectionHeader
+          as="h3"
+          size="sm"
+          title={<>Verificar duplicatas</>}
+          description={<>Compare nomes, páginas e SKUs do catálogo completo, incluindo os itens inativos.</>}
+        />
         <Button loading={busy} onClick={check}>
           <Icon name="search" /> Verificar catálogo
         </Button>

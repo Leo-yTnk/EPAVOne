@@ -1,6 +1,6 @@
 import { useMemo } from 'preact/hooks';
 import { OrderLine } from './OrderLine.jsx';
-import { Alert, Button, Card, EmptyState } from '../../../design-system/components/index.js';
+import { Alert, Button, Card, EmptyState, SectionHeader } from '../../../design-system/components/index.js';
 const money = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 export function OrderCart({ template, lines, onChange, onRemove, errors = [], busy, onExport, success, readOnly = false }) {
   const productsByName = useMemo(() => new Map(template.products.map((product) => [product.name, product])), [template.products]);
@@ -32,8 +32,7 @@ export function OrderCart({ template, lines, onChange, onRemove, errors = [], bu
         </ol>
       </div>
       <Card className="writer-cart-summary">
-        <span className="ds-overline">Resumo do pedido</span>
-        <h2 className="ds-heading-h3">Seu carrinho</h2>
+        <SectionHeader eyebrow="Resumo do pedido" title="Seu carrinho" />
         <div className="writer-cart-total">
           <span>Total dos produtos</span>
           <strong>{money.format(total)}</strong>

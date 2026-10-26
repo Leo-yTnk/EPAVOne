@@ -1,18 +1,18 @@
 .ds-field{display:grid;gap:.375rem;min-width:0}
-.ds-input-label{font-size:.875rem;font-weight:650;line-height:var(--leading-control)}
+.ds-input-label{font-size:var(--text-sm);font-weight:var(--weight-label);line-height:var(--leading-control)}
 .ds-input,.ds-select-trigger,.ds-textarea{
-  width:100%;border:1px solid var(--border-default);border-radius:var(--radius-md);background:var(--surface-primary);color:var(--text-primary);
+  width:100%;border:1px solid var(--border-control);font-size:var(--text-md);border-radius:var(--radius-field);background:var(--surface-primary);color:var(--text-primary);
   line-height:var(--leading-control);
   transition:border-color var(--duration-normal) var(--ease-standard),box-shadow var(--duration-normal) var(--ease-standard),background-color var(--duration-normal) var(--ease-standard),transform var(--duration-fast) var(--ease-emphasized)
 }
-.ds-input,.ds-select-trigger{min-height:var(--control-md);padding:0 var(--space-3)}
+.ds-input,.ds-select-trigger{min-height:var(--control-md);padding:var(--control-padding-block) var(--control-padding-inline)}
 .ds-textarea{min-height:7rem;padding:var(--space-3);resize:vertical;line-height:var(--leading-body)}
-.ds-input:hover:not(:disabled),.ds-select-trigger:hover:not(:disabled),.ds-textarea:hover:not(:disabled){border-color:var(--border-strong)}
+.ds-input:hover:not(:disabled),.ds-select-trigger:hover:not(:disabled),.ds-textarea:hover:not(:disabled){border-color:var(--border-control-hover)}
 .ds-input:focus,.ds-textarea:focus,.ds-select-trigger[aria-expanded="true"]{border-color:var(--border-focus);box-shadow:var(--focus-ring);outline:0}
-.ds-input:disabled,.ds-textarea:disabled,.ds-select-trigger:disabled{opacity:.55;cursor:not-allowed}
+.ds-input:disabled,.ds-textarea:disabled,.ds-select-trigger:disabled{opacity:var(--opacity-disabled);cursor:not-allowed}
 .ds-input.is-error,.ds-textarea.is-error{border-color:var(--ref-color-danger-500)}
 .ds-input.is-success,.ds-textarea.is-success{border-color:var(--ref-color-success-500)}
-.ds-input-helper,.ds-input-error{font-size:.75rem;line-height:var(--leading-body-compact);color:var(--text-secondary)}
+.ds-input-helper,.ds-input-error{font-size:var(--text-xs);line-height:var(--leading-body-compact);color:var(--text-secondary)}
 .ds-input-error{color:var(--text-danger)}
 
 .ds-selectbox{position:relative;min-width:0}
@@ -21,7 +21,7 @@
 .ds-select-trigger[aria-expanded="true"] .ds-select-trigger-icon{transform:rotate(180deg);color:var(--text-brand)}
 .ds-select-menu{max-height:var(--layer-max-height,18rem);overflow:auto;padding:var(--space-1)}
 .ds-option{
-  width:100%;min-height:var(--control-sm);display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);padding:0 var(--space-3);
+  width:100%;min-height:var(--control-sm);display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);padding:var(--control-padding-block) var(--control-padding-inline);
   border-radius:var(--radius-sm);background:transparent;color:var(--text-primary);font-weight:500;line-height:var(--leading-control);text-align:left;cursor:pointer;
   transition:background-color var(--duration-fast) var(--ease-standard),color var(--duration-fast) var(--ease-standard),transform var(--duration-fast) var(--ease-emphasized)
 }
@@ -63,7 +63,7 @@
 .ds-file-control{display:flex;align-items:center;gap:var(--space-3);min-width:0;padding:var(--space-3);border:1px dashed var(--border-default);border-radius:var(--radius-lg);background:var(--surface-secondary)}
 .ds-file-field{position:relative}
 .ds-file-native{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
-.ds-file-name{min-width:0;overflow-wrap:anywhere;color:var(--text-secondary);font-size:.875rem}
+.ds-file-name{min-width:0;overflow-wrap:anywhere;color:var(--text-secondary);font-size:var(--text-sm)}
 @media(max-width:40rem){.ds-file-control{flex-direction:column;align-items:stretch}}
 
 .ds-input,.ds-textarea{min-width:0}
@@ -78,8 +78,10 @@
 
 .ds-input-helper,
 .ds-input-error {
-  font-size: 0.8125rem;
+  font-size: var(--text-caption);
 }
 .ds-input-label {
   font-family: var(--font-sans);
 }
+
+.ds-input::placeholder, .ds-textarea::placeholder { color: var(--text-tertiary); opacity: 1; }

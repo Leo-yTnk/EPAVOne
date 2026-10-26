@@ -7,7 +7,6 @@ import './insights.css';
 import './catalog-cards.css';
 import './detail-sheet.css';
 import './insights-design.css';
-import { InsightsPageHeader } from './components/InsightsPageHeader.jsx';
 const CreationPage = lazy(() => import('./creation/CreationPage.jsx').then((module) => ({ default: module.CreationPage })));
 
 const sections = {
@@ -39,7 +38,7 @@ export function InsightsRoutes({ route, account, onOpenAccount }) {
           ]}
         />
       )}
-      {info && <InsightsPageHeader title={info.title} />}
+      {info && <PageHeader product="insights" title={info.title} />}
       {home ? (
         <InsightsHomePage />
       ) : section === 'receitas' ? (

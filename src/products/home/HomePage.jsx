@@ -2,7 +2,7 @@ import './home.css';
 import { useState } from 'preact/hooks';
 import { useForegroundInterval } from '../../design-system/behaviors/useForegroundInterval.js';
 import { getDayPeriod } from './dayPeriod.js';
-import { Button, Card, Heading, Text, Icon, AppLogo } from '../../design-system/components/index.js';
+import { Button, Card, Heading, Text, Icon, AppLogo, SectionHeader } from '../../design-system/components/index.js';
 
 const apps = [
   {
@@ -89,12 +89,11 @@ export function HomePage({ preferences = {} }) {
         )}
       </section>
       <section className="home-tools" aria-labelledby="one-apps-title">
-        <div className="one-section-heading">
-          <Heading as="h2" id="one-apps-title" level={3}>
-            Por onde vamos começar?
-          </Heading>
-          <Text size="sm">Inspire no Insights, organize no Planner e prepare no Writer.</Text>
-        </div>
+        <SectionHeader
+          id="one-apps-title"
+          title="Por onde vamos começar?"
+          description="Inspire no Insights, organize no Planner e prepare no Writer."
+        />
         <ol className="product-flow">
           {apps.map((app, index) => (
             <Card as="li" key={app.name} className="product-flow-step" data-product={app.theme}>

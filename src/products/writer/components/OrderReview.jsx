@@ -1,33 +1,38 @@
-import { Button, Card } from '../../../design-system/components/index.js';
+import { Button, Card, SummaryList, SectionHeader, ActionGroup } from '../../../design-system/components/index.js';
 import { orderCpf, exportCpf, validCpf } from '../models/order.js';
 export function OrderReview({ template, order, onNavigate, busy }) {
   const cpf = orderCpf(template, order);
   return (
     <Card className="writer-details">
-      <span className="ds-overline">4 · Conferência</span>
-      <h2 className="ds-heading-h3">Confira antes de gerar o Excel</h2>
-      <dl className="writer-derived">
-        <dt>Cliente</dt>
-        <dd>{order.client}</dd>
-        <dt>CPF no Excel</dt>
-        <dd>{validCpf(cpf) ? exportCpf(cpf) : 'Confira o CPF'}</dd>
-        <dt>Telefone</dt>
-        <dd>{order.phone}</dd>
-        <dt>Aluno e turma</dt>
-        <dd>
-          {order.student} · {order.room}
-        </dd>
-        <dt>Entrega</dt>
-        <dd>
-          {order.method}
-          {order.store ? ` · ${order.store}` : ''}
-        </dd>
-        <dt>Data</dt>
-        <dd>{order.date.split('-').reverse().join('/')}</dd>
-        <dt>Pagamento</dt>
-        <dd>{order.payment}</dd>
-      </dl>
-      <div className="writer-step-buttons">
+      <SectionHeader eyebrow="4 · Conferência" title="Confira antes de gerar o Excel" />
+      <SummaryList
+        layout="rows"
+        items={[
+          { label: 'Cliente', value: order.client },
+          { label: 'CPF no Excel', value: validCpf(cpf) ? exportCpf(cpf) : 'Confira o CPF' },
+          { label: 'Telefone', value: order.phone },
+          {
+            label: 'Aluno e turma',
+            value: (
+              <>
+                {order.student} · {order.room}
+              </>
+            )
+          },
+          {
+            label: 'Entrega',
+            value: (
+              <>
+                {order.method}
+                {order.store ? ` · ${order.store}` : ''}
+              </>
+            )
+          },
+          { label: 'Data', value: order.date.split('-').reverse().join('/') },
+          { label: 'Pagamento', value: order.payment }
+        ]}
+      />
+      <ActionGroup align="start">
         <Button type="button" variant="secondary" disabled={busy} onClick={() => onNavigate(0)}>
           Editar cliente
         </Button>
@@ -37,7 +42,7 @@ export function OrderReview({ template, order, onNavigate, busy }) {
         <Button type="button" variant="secondary" disabled={busy} onClick={() => onNavigate(2)}>
           Editar entrega
         </Button>
-      </div>
+      </ActionGroup>
     </Card>
   );
 }

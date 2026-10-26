@@ -8,7 +8,7 @@
   max-width: 100%;
 }
 .insights-catalog-card.ds-card {
-  --container-padding: var(--space-5);
+  --card-padding: var(--panel-padding-compact);
   --card-radius: var(--radius-xl);
   --catalog-image-radius: max(0px, calc(var(--card-radius) - var(--container-padding) - 1px));
   padding: var(--container-padding);
@@ -28,44 +28,11 @@
   background: transparent;
   border: 0;
   padding: 0;
-  font-size: 0.6875rem;
+  font-size: var(--text-xs);
 }
 .insights-catalog-card .insights-product-copy,
 .insights-catalog-card .insights-recipe-copy {
   gap: var(--space-3);
-}
-.insights-catalog-card .insights-card-action {
-  justify-content: space-between;
-  width: 100%;
-  align-self: stretch;
-  min-height: 2.5rem;
-  padding: 0.375rem var(--space-3);
-  border: 1px solid var(--border-default);
-  border-radius: var(--nested-radius);
-  background: var(--surface-secondary);
-  color: var(--text-brand);
-  font-size: 0.8125rem;
-}
-.insights-catalog-card .insights-card-action > span {
-  width: 100%;
-  justify-content: space-between;
-  gap: var(--space-3);
-}
-.insights-recipe-meta {
-  display: block;
-  text-wrap: pretty;
-}
-.insights-recipe-card .insights-card-action {
-  justify-content: center;
-  background: var(--button-bg-default);
-  border-color: transparent;
-  color: var(--button-content-default);
-}
-.insights-recipe-card .insights-card-action:hover:not(:disabled) {
-  background: var(--button-bg-hover);
-}
-.insights-recipe-card .insights-card-action > span {
-  justify-content: center;
 }
 .insights-grid:has(> .insights-recipe-card) {
   grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
@@ -77,19 +44,19 @@
   aspect-ratio: 16/10;
 }
 .insights-catalog-card .insights-price strong {
-  font-size: 1.125rem;
+  font-size: var(--text-lg);
 }
 .insights-catalog-card .insights-price p > span {
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
 }
 .insights-catalog-card .insights-price small {
-  font-size: 0.6875rem;
+  font-size: var(--text-xs);
 }
 .insights-catalog-card .insights-promotion {
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
 }
 .insights-catalog-card .insights-promotion strong {
-  font-size: 0.875rem;
+  font-size: var(--text-sm);
 }
 
 .insights-results-content {
@@ -113,7 +80,7 @@
     aspect-ratio: 1;
   }
   .insights-grid .insights-product-card .insights-product-name {
-    font-size: 1rem;
+    font-size: var(--text-md);
   }
   .insights-product-card .insights-product-copy {
     gap: var(--space-2);
@@ -125,7 +92,7 @@
     margin-top: 0;
   }
   .insights-catalog-card .insights-image-fallback {
-    font-size: 0.6875rem;
+    font-size: var(--text-xs);
   }
 }
 @container insights-catalog (max-width: 22rem) {
@@ -136,14 +103,14 @@
 }
 @media (max-width: 48rem) {
   .insights-catalog-card.ds-card {
-    --container-padding: var(--space-4);
+    --card-padding: var(--panel-padding-dense);
     --card-radius: var(--radius-card);
   }
   .insights-catalog-section > .insights-section-heading h2 {
     font-size: 1.25rem;
   }
   .insights-section-heading > .insights-muted {
-    font-size: 0.75rem;
+    font-size: var(--text-xs);
   }
   .insights-section-number {
     display: none;
@@ -157,13 +124,13 @@
   .insights-section-index a {
     flex: none;
     border-radius: var(--radius-full);
-    font-size: 0.75rem;
+    font-size: var(--text-xs);
   }
   .insights-section-index a span {
     display: none;
   }
   .insights-choices.ds-card {
-    --container-padding: var(--space-5);
+    --card-padding: var(--panel-padding-compact);
   }
   .insights-choices-heading p {
     display: none;
@@ -202,7 +169,7 @@
   gap: var(--space-2);
 }
 .insights-catalog-section .insights-recipe-meta {
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   gap: var(--space-1) var(--space-2);
 }
 .insights-catalog-section .insights-catalog-card .ds-btn {
@@ -217,7 +184,7 @@
 .insights-catalog-section .ds-carousel-actions > .ds-btn {
   min-height: 2.75rem;
   padding-inline: var(--space-2);
-  font-size: 0.75rem;
+  font-size: var(--text-xs);
   white-space: nowrap;
 }
 .insights-catalog-sections {
@@ -251,13 +218,13 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
   .insights-catalog-section .ds-carousel[data-expanded='true'] .insights-product-name {
-    font-size: 0.875rem;
+    font-size: var(--text-sm);
   }
   .insights-catalog-section .ds-carousel[data-expanded='true'] .insights-price p > span {
     display: block;
   }
   .insights-catalog-section .ds-carousel[data-expanded='true'] .insights-recipe-meta {
-    font-size: 0.6875rem;
+    font-size: var(--text-xs);
   }
 }
 .insights-catalog-section .ds-carousel-track:has(> :only-child) {
@@ -292,5 +259,7 @@
   padding: clamp(var(--space-1), 4%, var(--space-2));
 }
 @media (max-width: 48rem) {
-  .insights-catalog-card .insights-card-action { font-size: 0.75rem; }
+  .insights-catalog-card .insights-card-action { font-size: var(--text-xs); }
 }
+
+.insights-recipe-meta { display: block; text-wrap: pretty; }
