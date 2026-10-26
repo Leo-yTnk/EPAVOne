@@ -12,12 +12,16 @@ export function TemplateFeedback({ template, expired, storageWarning }) {
           Carregue o pedido da semana atual para continuar. A exportação está bloqueada.
         </Alert>
       )}
-      {!expired &&
-        template?.warnings.map((warning) => (
-          <Alert key={warning} tone="warning" title="Atenção ao modelo recebido">
-            {warning}
-          </Alert>
-        ))}
+      {!expired && template?.warnings?.length > 0 && (
+        <details className="writer-model-notes">
+          <summary>Detalhes do formulário ({template.warnings.length})</summary>
+          <ul>
+            {template.warnings.map((warning) => (
+              <li key={warning}>{warning}</li>
+            ))}
+          </ul>
+        </details>
+      )}
     </>
   );
 }

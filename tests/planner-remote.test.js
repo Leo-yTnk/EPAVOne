@@ -76,4 +76,11 @@ describe('Planner Supabase repository', () => {
     second.advanceRevision();
     await expect(second.repository.save({ ...state, offers: [] })).rejects.toThrow('outra sessão');
   });
+  it('loads the workspace even when the independent sales summary fails', async () => {
+    const { repository, failSales, snapshot } = setup();
+    failSales();
+    const result = await repository.load('2026-10-07');
+    expect(result.state.customers).toEqual(snapshot.customers);
+    expect(result.syncWarning).toContain('histórico de vendas');
+  });
 });

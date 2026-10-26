@@ -1,9 +1,9 @@
 import { useWeeklyTemplate } from './services/useWeeklyTemplate.js';
 import { orderSummary } from '../../shared/services/orderMatching.js';
-import { InsightsProductHandoff } from './components/InsightsProductHandoff.jsx';
+import { WriterConnections } from './components/WriterConnections.jsx';
+import { mergeOrderLines } from '../../shared/services/recipeOrder.js';
 import { usePlannerHandoff } from './services/usePlannerHandoff.js';
 import { TemplateFeedback } from './components/TemplateFeedback.jsx';
-import { PlannerHandoff } from './components/PlannerHandoff.jsx';
 import { useEffect, useMemo, useState } from 'preact/hooks';
 import { useForegroundInterval } from '../../design-system/behaviors/useForegroundInterval.js';
 import { Alert, PageHeader, Spinner } from '../../design-system/components/index.js';
@@ -162,19 +162,14 @@ export function WriterRoutes({ active = true }) {
       ) : (
         <WeeklyUpload template={template} busy={busy} error={error} onUpload={upload} onRemove={removeTemplate} />
       )}
-      {handoff.context && (
-        <PlannerHandoff
-          context={handoff.context}
-          template={template}
-          busy={busy}
-          onApply={(client) => handoff.apply(client, order, change, setStep)}
-        />
-      )}
-      <InsightsProductHandoff
+      <WriterConnections
+        handoff={handoff}
         template={template}
-        onAdd={add}
         busy={busy || restoring}
         expired={expired || (template && today < template.period.start)}
+        onApply={(client) => handoff.apply(client, order, change, setStep)}
+        onAdd={add}
+        onAddRecipe={(lines) => change({ lines: mergeOrderLines(order.lines, lines) })}
       />
       <TemplateFeedback template={restoring ? null : template} expired={expired} storageWarning={storageWarning} />
       {template && !expired && !restoring && (

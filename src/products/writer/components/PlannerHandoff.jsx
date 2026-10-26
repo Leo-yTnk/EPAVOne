@@ -1,16 +1,17 @@
 import { matchClients } from '../../../shared/services/orderMatching.js';
 import { useState } from 'preact/hooks';
 import { Alert, Button, Dialog, Select } from '../../../design-system/components/index.js';
-export function PlannerHandoff({ context, template, onApply, busy }) {
+export function PlannerHandoff({ context, template, onApply, busy, compact = false }) {
   const [open, setOpen] = useState(false);
   const [selected, setSelected] = useState('');
   const match = matchClients(context.customerName, template?.clients || []);
   const client = selected ? template?.clients[Number(selected) - 1] : null;
+  const Surface = compact ? 'div' : Alert;
   return (
     <>
-      <Alert tone="info" title="Cliente vindo do Planner">
+      <Surface {...(compact ? {} : { tone: 'info', title: 'Cliente vindo do Planner' })}>
         <div className="ds-inline">
-          <span>{context.customerName} · associe ao cadastro do Excel antes de preencher o pedido.</span>
+          <span>{context.customerName}</span>
           <Button
             size="sm"
             variant="secondary"
@@ -24,7 +25,7 @@ export function PlannerHandoff({ context, template, onApply, busy }) {
           </Button>
           {!template && <span>Carregue o Excel para continuar.</span>}
         </div>
-      </Alert>
+      </Surface>
       <Dialog
         open={open}
         title="Associar cliente ao Excel"

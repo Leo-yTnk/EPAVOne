@@ -85,7 +85,7 @@ describe('Planner flow', () => {
     const { rerender } = render(<PlannerRoutes route={{ segments: ['clientes', 'missing'] }} service={serviceFor()} />);
     await screen.findByText('Cliente não encontrado');
     rerender(<PlannerRoutes route={{ segments: ['unknown'] }} service={serviceFor()} />);
-    expect(screen.getByText('Essa área não existe.')).toBeTruthy();
+    expect(await screen.findByText('Essa área não existe.')).toBeTruthy();
   });
   it('requires confirmation and keeps the profile when deletion fails', async () => {
     const service = serviceFor();

@@ -22,6 +22,7 @@ function check(result) {
 export function createRemotePlannerRepository(client = authenticatedClient) {
   let revision = 0;
   let ownerId;
+  let historyCache = [];
   const equivalent = (a, b) => {
     const canonical = (value) =>
       Array.isArray(value)
@@ -59,14 +60,23 @@ export function createRemotePlannerRepository(client = authenticatedClient) {
   }
   return {
     async load(now) {
-      ownerId = await identity();
-      const [row, history] = await Promise.all([
-        client.from('epav_planner_workspaces').select('state,revision').eq('owner_id', ownerId).maybeSingle().then(check),
-        sales(ownerId)
-      ]);
+      const nextOwner = await identity();
+      if (ownerId !== nextOwner) historyCache = [];
+      ownerId = nextOwner;
+      const row = check(await client.from('epav_planner_workspaces').select('state,revision').eq('owner_id', ownerId).maybeSingle());
       revision = row?.revision || 0;
       const state = validateSnapshot(row?.state || empty(now));
-      return { state: { ...state, sales: history }, volatile: false, remote: true };
+      try {
+        historyCache = await sales(ownerId);
+        return { state: { ...state, sales: historyCache }, volatile: false, remote: true };
+      } catch {
+        return {
+          state: { ...state, sales: historyCache },
+          volatile: false,
+          remote: true,
+          syncWarning: 'Planejamento carregado. O histórico de vendas está indisponível; use Atualizar dados para tentar novamente.'
+        };
+      }
     },
     async save(state) {
       if ((await identity()) !== ownerId) throw new Error('A conta mudou. Recarregue o Planner.');
@@ -83,6 +93,7 @@ export function createRemotePlannerRepository(client = authenticatedClient) {
       // report a failed write or encourage the user to repeat the command.
       try {
         const history = await sales(ownerId);
+        historyCache = history;
         return { state: { ...snapshot, sales: history }, volatile: false, remote: true };
       } catch {
         return {

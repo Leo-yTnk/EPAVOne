@@ -70,7 +70,9 @@ function incompatible(a, b) {
   return false;
 }
 export function matchProduct(product, products) {
-  const identity = code(product.product_code || product.code);
+  // YPR is an internal catalog identifier, not a Swift SKU.
+  const raw = code(product.product_code || product.code);
+  const identity = /^YPR[-_]/.test(raw) ? '' : raw;
   const source = productSignature(product.name);
   const byCode = identity ? products.filter((item) => code(item.code) === identity) : [];
   const candidates = byCode.filter((item) => !incompatible(source, productSignature(item.name)));

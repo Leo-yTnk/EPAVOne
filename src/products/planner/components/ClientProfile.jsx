@@ -15,7 +15,7 @@ export function ClientProfile({ customer, state, week, act, busy, onEdit, onDele
   const returnTo = `#/planner/clientes/${customer.id}`;
   async function commit(event) {
     event.preventDefault();
-    if (await act({ type: 'commitment', customerId: customer.id, text, due }, 'Combinado registrado.')) setText('');
+    if (await act({ type: 'commitment', customerId: customer.id, text, due, weekId: week.id }, 'Combinado registrado.')) setText('');
   }
   return (
     <>
@@ -84,7 +84,7 @@ export function ClientProfile({ customer, state, week, act, busy, onEdit, onDele
             <Button
               loading={busy}
               disabled={preparation === customer.preparation}
-              onClick={() => act({ type: 'customer', customer: { ...customer, preparation } }, 'Abordagem salva.')}
+              onClick={() => act({ type: 'customer', customer: { ...customer, preparation }, weekId: week.id }, 'Abordagem salva.')}
             >
               Salvar preparação
             </Button>
@@ -112,7 +112,9 @@ export function ClientProfile({ customer, state, week, act, busy, onEdit, onDele
                   <Checkbox
                     disabled={busy}
                     checked={item.done}
-                    onChange={() => act({ type: 'resolve', customerId: customer.id, id: item.id }, 'Combinado atualizado.')}
+                    onChange={() =>
+                      act({ type: 'resolve', customerId: customer.id, id: item.id, weekId: week.id }, 'Combinado atualizado.')
+                    }
                   >
                     {item.text} · {dateLabel(item.due)}
                   </Checkbox>
