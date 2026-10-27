@@ -39,7 +39,7 @@ describe('Mobile and tablet sidebar', () => {
     expect(screen.queryByRole('tablist')).toBeNull();
     expect(screen.getByRole('region', { name: 'Planner' })).not.toBeNull();
     expect(
-      screen.getByRole('link', { name: 'Configurações' }).closest('.workspace-utilities').querySelector('[aria-label="Criar"]')
+      screen.getByRole('link', { name: 'Configurações' }).closest('.workspace-utilities').querySelector('[aria-label="Novo"]')
     ).not.toBeNull();
     trigger.focus();
     fireEvent.click(trigger);

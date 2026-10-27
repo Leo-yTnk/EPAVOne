@@ -18,7 +18,7 @@ export const tutorialSteps = [
     copy: 'A barra superior mantém seus apps e as principais ações sempre por perto.',
     items: [
       ['Troque de app', 'Escolha One, Insights, Planner ou Writer. No celular, toque no nome do app ou em Navegação para abrir o painel.'],
-      ['Use o botão Criar', 'Prepare um pedido, cadastre um cliente, registre uma venda ou crie receitas, produtos e categorias.'],
+      ['Use o botão Novo', 'Prepare um pedido, cadastre um cliente, registre uma venda ou crie receitas, produtos e categorias.'],
       [
         'Entre nas Configurações',
         'O ícone de engrenagem reúne sua conta, tema, navegação e acessibilidade. Entre na conta para usar sua carteira real e sua biblioteca.'
@@ -32,7 +32,7 @@ export const tutorialSteps = [
     title: 'Comece conhecendo quem você atende.',
     copy: 'No Planner, a página Clientes reúne sua carteira e o contexto de cada conversa.',
     items: [
-      ['Cadastre', 'Use Criar → Cadastrar cliente. Informe o nome e complete segmento, posição física e frequência de contato.'],
+      ['Cadastre', 'Use Novo → Cadastrar cliente. Informe o nome e complete segmento, posição física e frequência de contato.'],
       ['Prepare', 'Registre preferências, restrições, intenção de compra e observações. Use o perfil para preparar a abordagem.'],
       ['Mantenha atualizado', 'Abra o perfil para editar os dados. A exclusão pede confirmação; confira o cliente antes de confirmar.']
     ],
@@ -71,7 +71,7 @@ export const tutorialSteps = [
     title: 'Guarde e compartilhe suas próprias ideias.',
     copy: 'Entre na conta para usar Criação, sua biblioteca pessoal dentro do Insights.',
     items: [
-      ['Crie', 'Use Criar → Criar receita, produto ou categoria. Preencha os campos do editor e salve.'],
+      ['Crie', 'Use Novo → Criar receita, produto ou categoria. Preencha os campos do editor e salve.'],
       ['Organize', 'Encontre o conteúdo nas abas Minhas receitas, Meus produtos e Minhas categorias para revisar e editar.'],
       [
         'Compartilhe',
@@ -84,7 +84,7 @@ export const tutorialSteps = [
     app: 'writer',
     topic: 'Formulário semanal',
     title: 'Anexe o Excel certo para começar.',
-    copy: 'Abra o Writer por Criar → Preparar pedido. O formulário enviado pelo EPAV é a base do preenchimento.',
+    copy: 'Abra o Writer por Novo → Preparar pedido. O formulário enviado pelo EPAV é a base do preenchimento.',
     items: [
       ['Anexe', 'Selecione o Excel da semana e aguarde a leitura. Se houver erro, leia o aviso e confira o arquivo.'],
       [
@@ -120,7 +120,7 @@ export const tutorialSteps = [
         'Depois do download, use a opção de registrar como venda. Confira os dados e salve no Planner, em Resultados → Pedidos.'
       ]
     ],
-    tip: 'Também é possível usar Criar → Registrar venda para informar produtos e valores manualmente, sem depender de um Excel.'
+    tip: 'Também é possível usar Novo → Registrar venda para informar produtos e valores manualmente, sem depender de um Excel.'
   },
   {
     app: 'planner',
