@@ -16,6 +16,7 @@ export function parseHash(hash = window.location.hash) {
   let paths = product === 'home' ? [] : segments.slice(1);
   if (product === 'planner') {
     if (paths[0] === 'oportunidades') paths = ['clientes', 'oportunidades', ...paths.slice(1)];
+    if (paths[0] === 'pedidos') paths = ['resultados', 'pedidos', ...paths.slice(1)];
     if (paths[0] === 'desempenho') paths = ['resultados', ...paths.slice(1)];
     if (paths[0] === 'atendimento') paths = ['semana', 'atender', ...paths.slice(1)];
   }
@@ -28,16 +29,15 @@ export function routeHash(product, segments = []) {
 }
 
 export const INSIGHTS_NAV = [
-  { label: 'Home', href: '#/insights', section: '' },
-  { label: 'Receitas', href: '#/insights/receitas', section: 'receitas' },
-  { label: 'Produtos', href: '#/insights/produtos', section: 'produtos' },
-  { label: 'Criação', href: '#/insights/criacao/receitas', section: 'criacao' }
+  { label: 'Home', icon: 'home', href: '#/insights', section: '' },
+  { label: 'Receitas', icon: 'recipe', href: '#/insights/receitas', section: 'receitas' },
+  { label: 'Produtos', icon: 'product', href: '#/insights/produtos', section: 'produtos' },
+  { label: 'Criação', icon: 'writer', href: '#/insights/criacao/receitas', section: 'criacao' }
 ];
 
 export const PLANNER_NAV = [
-  { label: 'Pedidos', href: '#/planner/pedidos', section: 'pedidos' },
-  { label: 'Início', href: '#/planner', section: '' },
-  { label: 'Clientes', href: '#/planner/clientes', section: 'clientes' },
-  { label: 'Semana', href: '#/planner/semana', section: 'semana' },
-  { label: 'Resultados', href: '#/planner/resultados', section: 'resultados' }
+  { label: 'Início', icon: 'home', href: '#/planner', section: '' },
+  { label: 'Clientes', icon: 'user', href: '#/planner/clientes', section: 'clientes' },
+  { label: 'Semana', icon: 'planner', href: '#/planner/semana', section: 'semana' },
+  { label: 'Resultados', icon: 'results', href: '#/planner/resultados', section: 'resultados' }
 ];

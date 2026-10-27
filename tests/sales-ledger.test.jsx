@@ -85,7 +85,7 @@ it('transfers a downloaded order for explicit registration without writing to th
   expect(salesTransfer.get()).toBeNull();
   fireEvent.click(screen.getByText('Registrar como venda no Planner'));
   expect(salesTransfer.get()).toEqual(order);
-  expect(window.location.hash).toBe('#/planner/pedidos');
+  expect(window.location.hash).toBe('#/planner/resultados/pedidos');
 });
 it('keeps the full exported order details in a small JSON snapshot without workbook bytes', () => {
   const order = {

@@ -29,7 +29,8 @@ export function MobileNavigation({ open, onClose, onSelectApp, sectionNav, activ
           <span className="ds-overline">{PRODUCT_META[product].label}</span>
           {sectionNav.map((item) => (
             <NavItem key={item.href} href={item.href} active={activeSection === item.section} onClick={onClose}>
-              {item.label}
+              <Icon name={item.icon} size="1rem" />
+              <span>{item.label}</span>
             </NavItem>
           ))}
         </nav>

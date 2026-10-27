@@ -1,4 +1,6 @@
 import {
+  faChartLine,
+  faReceipt,
   faClock,
   faGauge,
   faHouse,
@@ -31,6 +33,8 @@ import {
   faBars
 } from '@fortawesome/free-solid-svg-icons';
 const icons = {
+  results: faChartLine,
+  orders: faReceipt,
   menu: faBars,
   clock: faClock,
   difficulty: faGauge,
