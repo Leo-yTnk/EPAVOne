@@ -166,7 +166,7 @@ try {
     results.push({ view: 'Published Pages', blocked: error.message.split('\n')[0] });
   }
   fs.writeFileSync(`${output}/results.json`, JSON.stringify(results, null, 2));
-  console.log(JSON.stringify(results));
+  process.stdout.write(`${JSON.stringify(results)}\n`);
 } finally {
   await browser?.close();
   server.kill();

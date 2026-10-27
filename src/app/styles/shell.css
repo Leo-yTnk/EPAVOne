@@ -449,7 +449,7 @@ html[data-reduced-motion='true'] .mobile-context-label { animation: none; }
 }
 
 .workspace-utilities {
-  --container-padding: 1px;
+  --container-padding: var(--space-1);
   display: flex;
   align-items: center;
   flex: none;

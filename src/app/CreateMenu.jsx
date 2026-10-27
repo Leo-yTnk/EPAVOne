@@ -3,11 +3,11 @@ import { Icon, Menu } from '../design-system/components/index.js';
 export function CreateMenu() {
   return (
     <Menu
-      label="Criar"
-      variant="secondary"
+      label="Novo"
+      variant="primary"
       triggerLabel={
         <>
-          <Icon name="plus" /> <span>Criar</span>
+          <Icon name="plus" /> <span>Novo</span>
         </>
       }
       items={[

@@ -4,9 +4,9 @@ import { CreateMenu } from '../src/app/CreateMenu.jsx';
 
 it('provides keyboard-accessible shortcuts to the real workflows in a portal', () => {
   const view = render(<CreateMenu />);
-  const trigger = screen.getByRole('button', { name: 'Criar' });
+  const trigger = screen.getByRole('button', { name: 'Novo' });
   fireEvent.click(trigger);
-  const menu = screen.getByRole('menu', { name: 'Criar' });
+  const menu = screen.getByRole('menu', { name: 'Novo' });
   expect(view.container.contains(menu)).toBe(false);
   const links = [
     ['Preparar pedido', '#/writer'],
