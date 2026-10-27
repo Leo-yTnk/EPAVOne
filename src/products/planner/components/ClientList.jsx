@@ -21,7 +21,7 @@ import { OfferList } from './OfferList.jsx';
 
 export function ClientList({ state, week, act, busy, onCreate, opportunities = false }) {
   const [view, setView] = usePlannerView('clients', { query: '', segment: '', filter: '', page: 1, campaign: '' });
-  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(() => Boolean(view.segment || view.filter));
   const [expanded, setExpanded] = useState(null);
   const filtered = useMemo(() => selectClients(state, week, { ...view, opportunities }), [state, week, view, opportunities]);
   const count = Math.max(1, Math.ceil(filtered.length / 8));
@@ -68,7 +68,7 @@ export function ClientList({ state, week, act, busy, onCreate, opportunities = f
             Filtros{activeFilters ? ' · ativos' : ''}
           </Button>
         </div>
-        {(filtersOpen || activeFilters) && (
+        {filtersOpen && (
           <FieldGrid id="planner-filters">
             <Select
               label="Segmento"

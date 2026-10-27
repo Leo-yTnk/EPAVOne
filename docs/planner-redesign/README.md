@@ -1,5 +1,7 @@
 # EPAVPlanner — redesenho do espaço de trabalho
 
+> Revisão adicional: [correções, 457 testes e screenshots atualizados](../planner-review-followup/README.md). Os números abaixo documentam a implementação inicial.
+
 ## Base e referências
 
 Implementação em `feat/planner-workspace-redesign`, partindo de `main` no commit `fa112338f5de6bc3c5bf8807bed59fd3b8eb3b74` (PR #75). O repositório Yourcipe-EPAV é o legado; as referências corretas estão em **Leo-yTnk/EPAVOne**.

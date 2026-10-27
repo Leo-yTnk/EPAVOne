@@ -143,8 +143,10 @@ await page.getByLabel('Buscar na carteira').fill('Cliente de revisão');
 await page.getByRole('link', { name: 'Cliente de revisão', exact: true }).click();
 await page.getByText('Editar perfil', { exact: true }).click();
 await page.getByLabel('Contexto do cliente').fill('Atendimento de teste sem gravação remota.');
+await page.getByLabel('Abordagem preparada', { exact: true }).fill('Abordagem atualizada pelo perfil.');
 await page.getByText('Salvar perfil', { exact: true }).click();
 await page.getByText('Perfil salvo.', { exact: true }).first().waitFor();
+assert.equal(await page.getByLabel('Sua abordagem', { exact: true }).inputValue(), 'Abordagem atualizada pelo perfil.');
 await page.reload();
 await page.getByText('Atendimento de teste sem gravação remota.', { exact: true }).first().waitFor();
 await page.getByRole('tab', { name: 'Combinados', exact: true }).click();
@@ -200,6 +202,8 @@ await page.getByText('Abordagem salva.', { exact: true }).waitFor();
 await page.getByRole('button', { name: 'Organizar Pedro (exemplo)', exact: true }).click();
 await page.getByRole('menuitem', { name: 'Remover da semana', exact: true }).click();
 await page.getByText('Cliente removido da fila.', { exact: true }).waitFor();
+await page.getByText('Cliente fora desta semana', { exact: true }).waitFor();
+await inspect('cliente-fora-da-fila-390', true);
 flows.push('goal-inline-add-reserve-reorder-prepare-remove');
 // Record without leaving Week, and verify exactly one persisted interaction.
 await open('semana/atender/demo-1');
@@ -265,6 +269,7 @@ for (const scenario of ['empty', 'many']) {
   for (const route of ['', 'semana', 'resultados']) {
     await open(route);
     await inspect(scenario + '-' + (route || 'inicio'));
+    if (scenario === 'empty' && route === 'semana') assert.equal(await page.locator('.planner-queue').count(), 0);
   }
 }
 await page.evaluate(() => localStorage.setItem('epavone-planner-demo-v1', '{bad'));

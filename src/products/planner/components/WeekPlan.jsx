@@ -1,4 +1,5 @@
 import { useState } from 'preact/hooks';
+import { usePlannerDraft } from '../hooks/usePlannerDraft.js';
 import {
   ActionGroup,
   Button,
@@ -18,12 +19,12 @@ import { WeekQueue } from './WeekQueue.jsx';
 import { WeekClientPicker } from './WeekClientPicker.jsx';
 
 export function WeekPlan({ state, week, busy, act, mode = 'planejar', customerId }) {
-  const [goal, setGoal] = useState(week.goal);
+  const [goal, setGoal, goalConflict] = usePlannerDraft(String(week.goal));
   const [adding, setAdding] = useState(false);
   const metrics = performance(state, week);
   const queue = orderedQueue(week);
   const prepared = queue.filter((entry) => state.customers.find((c) => c.id === entry.customerId)?.preparation.trim()).length;
-  const entry = queue.find((item) => item.customerId === customerId) || queue.find((item) => !item.outcome);
+  const entry = customerId ? queue.find((item) => item.customerId === customerId) : queue.find((item) => !item.outcome);
   const customer = state.customers.find((item) => item.id === entry?.customerId);
   const stage = mode === 'atender' ? 'atender' : mode === 'concluir' ? 'concluir' : 'planejar';
   const current = week.id === weekStart();
@@ -55,6 +56,14 @@ export function WeekPlan({ state, week, busy, act, mode = 'planejar', customerId
                 act({ type: 'goal', weekId: week.id, value: Number(goal) }, 'Meta atualizada.');
               }}
             >
+              {goalConflict && (
+                <p className="planner-muted">
+                  A meta salva mudou para {week.goal}. Seu rascunho foi mantido.{' '}
+                  <Button size="sm" variant="ghost" onClick={() => setGoal(String(week.goal))}>
+                    Usar meta salva
+                  </Button>
+                </p>
+              )}
               <Input
                 id="planner-goal"
                 label="Meta de atendimentos"
@@ -101,7 +110,7 @@ export function WeekPlan({ state, week, busy, act, mode = 'planejar', customerId
             }
           />
           {adding && <WeekClientPicker state={state} week={week} act={act} busy={busy} />}
-          {!queue.length && (
+          {!queue.length && !customerId && (
             <EmptyState
               title="Planeje sua primeira conversa"
               description="Escolha os clientes aqui mesmo. Depois, organize titulares e reservas."
@@ -109,33 +118,45 @@ export function WeekPlan({ state, week, busy, act, mode = 'planejar', customerId
               onAction={() => setAdding(true)}
             />
           )}
-          <div className={customer ? `planner-week-workspace${mode === 'preparar' ? ' is-preparing' : ''}` : 'planner-flow-card'}>
-            <WeekQueue state={state} week={week} busy={busy} act={act} customerId={customer?.id} />
-            {customer && (
-              <div className="planner-flow-card">
-                <SectionHeader
-                  title={customer.name}
-                  size="sm"
-                  actions={
-                    <Button as="a" size="sm" variant="ghost" href={`#/planner/clientes/${customer.id}`}>
-                      Ver perfil
-                    </Button>
-                  }
-                />
-                <ClientPreparation key={customer.id} customer={customer} state={state} week={week} act={act} busy={busy} />
-                {current && !entry.outcome && (
-                  <div>
-                    <Button as="a" href={attendanceLink(customer.id)}>
-                      Atender {customer.name}
-                    </Button>
-                  </div>
-                )}
-                <p className="planner-muted">
-                  Selecione um nome na fila para preparar a conversa. A ordem de atendimento mantém titulares antes das reservas.
-                </p>
-              </div>
-            )}
-          </div>
+          {customerId && !entry && (
+            <EmptyState
+              title="Cliente fora desta semana"
+              description="Esse cliente não está na fila selecionada. Volte ao planejamento para escolher uma conversa."
+              actionLabel="Ver fila da semana"
+              onAction={() => {
+                window.location.hash = '#/planner/semana';
+              }}
+            />
+          )}
+          {queue.length > 0 && (
+            <div className={customer ? `planner-week-workspace${mode === 'preparar' ? ' is-preparing' : ''}` : 'planner-flow-card'}>
+              <WeekQueue state={state} week={week} busy={busy} act={act} customerId={customer?.id} />
+              {customer && (
+                <div className="planner-flow-card">
+                  <SectionHeader
+                    title={customer.name}
+                    size="sm"
+                    actions={
+                      <Button as="a" size="sm" variant="ghost" href={`#/planner/clientes/${customer.id}`}>
+                        Ver perfil
+                      </Button>
+                    }
+                  />
+                  <ClientPreparation key={customer.id} customer={customer} state={state} week={week} act={act} busy={busy} />
+                  {current && !entry.outcome && (
+                    <div>
+                      <Button as="a" href={attendanceLink(customer.id)}>
+                        Atender {customer.name}
+                      </Button>
+                    </div>
+                  )}
+                  <p className="planner-muted">
+                    Selecione um nome na fila para preparar a conversa. A ordem de atendimento mantém titulares antes das reservas.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
         </>
       )}
       {stage === 'atender' && (
