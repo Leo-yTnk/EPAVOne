@@ -106,3 +106,7 @@ REVIEW_BROWSER=/caminho/chromium node scripts/review-design-workspaces.mjs
 `REVIEW_PLAYWRIGHT` pode apontar para o pacote do ambiente. `REVIEW_CATALOG_FIXTURE` permite usar fotografias e registros locais de catálogo em vez dos exemplos textuais. `REVIEW_OUTPUT` define a pasta de resultados. Nenhum desses dados de teste integra o catálogo público.
 
 A revisão cobre geometria e execução nas rotas, preferências, fluxos de catálogo, diálogos, cadastro, etapas do pedido e áreas administrativas. Não equivale à homologação de uma conta real, de dados reais de produção ou de todos os leitores de tela e navegadores. O merge e a publicação permanecem uma etapa separada da implementação revisada.
+
+## Composição do Planner
+
+O redesenho do Planner reutiliza esta fundação. `Tabs size="compact"` é a única variante nova: reduz apenas o padding horizontal pelos tokens existentes e mantém o alvo de toque. Não muda as abas sem a prop. A fila, os perfis e os filtros são composição de produto; não há outra escala, paleta ou primitiva local. [Diagnóstico, evidências e limites](../planner-redesign/README.md).

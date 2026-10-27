@@ -1,11 +1,24 @@
 import { newSale, salesTransfer } from '../../../shared/services/sales.js';
 import { useState } from 'preact/hooks';
-import { Alert, Badge, Button, Card, EmptyState, Heading, Input, Select, Textarea } from '../../../design-system/components/index.js';
+import {
+  Alert,
+  Badge,
+  Button,
+  Card,
+  EmptyState,
+  Heading,
+  FieldGrid,
+  SectionHeader,
+  SummaryList,
+  Input,
+  Select,
+  Textarea
+} from '../../../design-system/components/index.js';
 import { dateLabel, lastInteraction, OUTCOMES, today, weekStart } from '../models/planner.js';
 import { commercialContext } from '../../../shared/services/commercialContext.js';
 import { useCommercialContext } from '../../../shared/services/useCommercialContext.js';
 import { OfferList } from './OfferList.jsx';
-export function Attendance({ state, week, customerId, act, busy }) {
+export function Attendance({ state, week, customerId, act, busy, embedded = false, onAdvance }) {
   const [outcome, setOutcome] = useState('');
   const [note, setNote] = useState('');
   const [amount, setAmount] = useState('');
@@ -34,7 +47,7 @@ export function Attendance({ state, week, customerId, act, busy }) {
       />
     );
   const pending = state.commitments.filter((item) => item.customerId === customer.id && !item.done);
-  const returnTo = `#/planner/atendimento/${customer.id}`;
+  const returnTo = embedded ? `#/planner/semana/atender/${customer.id}` : `#/planner/atendimento/${customer.id}`;
   function handoff() {
     commercialContext.begin({ customerId: customer.id, customerName: customer.name, weekId: week.id, returnTo });
   }
@@ -73,13 +86,14 @@ export function Attendance({ state, week, customerId, act, busy }) {
     if (!saved) return;
     const next = queue.find((item) => !item.outcome && item.customerId !== customer.id);
     commercialContext.clear();
-    window.location.hash = next ? `#/planner/atendimento/${next.customerId}` : '#/planner/semana';
+    if (onAdvance) onAdvance(next?.customerId);
+    else window.location.hash = next ? `#/planner/atendimento/${next.customerId}` : '#/planner/semana';
   }
   return (
     <>
       <div className="planner-section-head">
         <Button as="a" variant="ghost" href="#/planner/semana">
-          ← Voltar à fila
+          ← Voltar ao planejamento
         </Button>
         <Badge>
           Cliente {queue.indexOf(entry) + 1} de {queue.length} · {entry.role === 'reserve' ? 'Reserva' : 'Titular'}
@@ -91,24 +105,17 @@ export function Attendance({ state, week, customerId, act, busy }) {
           <Heading display="small">{customer.name}</Heading>
           <p>{customer.context || 'Pergunte sobre a rotina e confirme as preferências.'}</p>
         </div>
-        <dl className="planner-facts">
-          <div>
-            <dt>Último contato</dt>
-            <dd>{dateLabel(lastInteraction(customer, state.interactions)?.date)}</dd>
-          </div>
-          <div>
-            <dt>Restrições</dt>
-            <dd>{customer.restrictions.join(', ') || 'Confirme antes de oferecer'}</dd>
-          </div>
-          <div>
-            <dt>Preferências</dt>
-            <dd>{customer.preferences.join(', ') || 'Ainda não informadas'}</dd>
-          </div>
-        </dl>
+        <SummaryList
+          items={[
+            { label: 'Último contato', value: dateLabel(lastInteraction(customer, state.interactions)?.date) },
+            { label: 'Restrições', value: customer.restrictions.join(', ') || 'Confirme antes de oferecer' },
+            { label: 'Preferências', value: customer.preferences.join(', ') || 'Ainda não informadas' }
+          ]}
+        />
       </Card>
       <div className="planner-two-columns">
         <Card className="planner-flow-card">
-          <Heading level={3}>Conversa preparada</Heading>
+          <SectionHeader title="Conversa preparada" />
           <p>{customer.preparation || 'Preparação pendente: comece perguntando o que o cliente precisa nesta semana.'}</p>
           <Heading level={5}>Combinados</Heading>
           {pending.length ? (
@@ -157,7 +164,7 @@ export function Attendance({ state, week, customerId, act, busy }) {
           )}
         </Card>
         <Card className="planner-flow-card">
-          <Heading level={3}>Registrar e seguir</Heading>
+          <SectionHeader title="Registrar e seguir" />
           <form className="planner-form" onSubmit={finish}>
             <Select
               label="Resultado do atendimento"
@@ -169,7 +176,7 @@ export function Attendance({ state, week, customerId, act, busy }) {
               onChange={setOutcome}
             />
             {outcome === 'bought' && (
-              <div className="planner-two-columns">
+              <FieldGrid>
                 <Input
                   id="planner-sale-amount"
                   label="Valor da compra (R$)"
@@ -190,7 +197,7 @@ export function Attendance({ state, week, customerId, act, busy }) {
                   value={units}
                   onInput={(event) => setUnits(event.currentTarget.value)}
                 />
-              </div>
+              </FieldGrid>
             )}
             {outcome === 'later' && (
               <Input
@@ -218,11 +225,14 @@ export function Attendance({ state, week, customerId, act, busy }) {
           </form>
         </Card>
       </div>
-      <Card className="planner-flow-card">
-        <Heading level={3}>Ideias para oferecer</Heading>
-        <p className="planner-muted">Consulte o produto no Insights e retorne à mesma conversa.</p>
-        <OfferList customer={customer} state={state} weekId={week.id} returnTo={returnTo} />
-      </Card>
+      <details className="planner-details">
+        <summary>Ideias para oferecer</summary>
+        <Card className="planner-flow-card">
+          <SectionHeader title="Sugestões compatíveis" />
+          <p className="planner-muted">Consulte o produto no Insights e retorne à mesma conversa.</p>
+          <OfferList customer={customer} state={state} weekId={week.id} returnTo={returnTo} />
+        </Card>
+      </details>
     </>
   );
 }

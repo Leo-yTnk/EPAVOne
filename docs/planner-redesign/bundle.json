@@ -1,0 +1,12 @@
+{
+  "before": {
+    "raw": 863977,
+    "gzip": 250803
+  },
+  "after": {
+    "raw": 868192,
+    "gzip": 251640
+  },
+  "gzipDelta": 837,
+  "gzipPercent": 0.33
+}

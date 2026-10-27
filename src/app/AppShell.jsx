@@ -59,7 +59,7 @@ export function AppShell({ route, preferences, account, onOpenAccount, onToggleT
           clientes: 'user',
           semana: 'planner',
           oportunidades: 'insights',
-          desempenho: 'difficulty',
+          resultados: 'difficulty',
           receitas: 'recipe',
           produtos: 'product',
           criacao: 'writer'

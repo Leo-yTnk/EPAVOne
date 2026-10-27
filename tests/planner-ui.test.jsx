@@ -43,7 +43,7 @@ describe('Planner flow', () => {
     fireEvent.click(screen.getByText('Tentar novamente'));
     await waitFor(() => expect(resolve).toBeTruthy());
     resolve({ state: demoData(NOW), volatile: false });
-    await screen.findByText('O próximo passo tem nome.');
+    await screen.findByText('Sua semana');
     expect(screen.getByText('Modo demonstração')).toBeTruthy();
   });
   it('searches accent-insensitively, shows empty and resets filters', async () => {

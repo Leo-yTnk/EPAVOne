@@ -1,0 +1,137 @@
+{
+  "environment": "Chromium headless, dev builds, mobile 390 px, 200 local demo customers, 20 searches per run, 3 runs per condition; timings include two requestAnimationFrames and do not measure total device CPU.",
+  "results": [
+    {
+      "version": "before",
+      "rate": 1,
+      "run": 0,
+      "searches": 20,
+      "taskMs": 412,
+      "scriptMs": 5,
+      "layoutMs": 15,
+      "medianTwoFramesMs": 33,
+      "p95TwoFramesMs": 34
+    },
+    {
+      "version": "before",
+      "rate": 1,
+      "run": 1,
+      "searches": 20,
+      "taskMs": 348,
+      "scriptMs": 3,
+      "layoutMs": 13,
+      "medianTwoFramesMs": 33,
+      "p95TwoFramesMs": 33
+    },
+    {
+      "version": "before",
+      "rate": 1,
+      "run": 2,
+      "searches": 20,
+      "taskMs": 447,
+      "scriptMs": 3,
+      "layoutMs": 13,
+      "medianTwoFramesMs": 33,
+      "p95TwoFramesMs": 40
+    },
+    {
+      "version": "before",
+      "rate": 4,
+      "run": 0,
+      "searches": 20,
+      "taskMs": 2024,
+      "scriptMs": 15,
+      "layoutMs": 65,
+      "medianTwoFramesMs": 101,
+      "p95TwoFramesMs": 134
+    },
+    {
+      "version": "before",
+      "rate": 4,
+      "run": 1,
+      "searches": 20,
+      "taskMs": 2140,
+      "scriptMs": 13,
+      "layoutMs": 67,
+      "medianTwoFramesMs": 116,
+      "p95TwoFramesMs": 135
+    },
+    {
+      "version": "before",
+      "rate": 4,
+      "run": 2,
+      "searches": 20,
+      "taskMs": 2017,
+      "scriptMs": 22,
+      "layoutMs": 75,
+      "medianTwoFramesMs": 106,
+      "p95TwoFramesMs": 134
+    },
+    {
+      "version": "after",
+      "rate": 1,
+      "run": 0,
+      "searches": 20,
+      "taskMs": 367,
+      "scriptMs": 5,
+      "layoutMs": 16,
+      "medianTwoFramesMs": 33,
+      "p95TwoFramesMs": 34
+    },
+    {
+      "version": "after",
+      "rate": 1,
+      "run": 1,
+      "searches": 20,
+      "taskMs": 423,
+      "scriptMs": 4,
+      "layoutMs": 15,
+      "medianTwoFramesMs": 33,
+      "p95TwoFramesMs": 36
+    },
+    {
+      "version": "after",
+      "rate": 1,
+      "run": 2,
+      "searches": 20,
+      "taskMs": 366,
+      "scriptMs": 5,
+      "layoutMs": 15,
+      "medianTwoFramesMs": 33,
+      "p95TwoFramesMs": 34
+    },
+    {
+      "version": "after",
+      "rate": 4,
+      "run": 0,
+      "searches": 20,
+      "taskMs": 1792,
+      "scriptMs": 21,
+      "layoutMs": 69,
+      "medianTwoFramesMs": 100,
+      "p95TwoFramesMs": 118
+    },
+    {
+      "version": "after",
+      "rate": 4,
+      "run": 1,
+      "searches": 20,
+      "taskMs": 1833,
+      "scriptMs": 21,
+      "layoutMs": 75,
+      "medianTwoFramesMs": 100,
+      "p95TwoFramesMs": 136
+    },
+    {
+      "version": "after",
+      "rate": 4,
+      "run": 2,
+      "searches": 20,
+      "taskMs": 2312,
+      "scriptMs": 14,
+      "layoutMs": 67,
+      "medianTwoFramesMs": 117,
+      "p95TwoFramesMs": 170
+    }
+  ]
+}

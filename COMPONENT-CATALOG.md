@@ -170,3 +170,5 @@ Novos componentes públicos: `SectionHeader`, `FieldGrid`, `ActionGroup` e `Summ
 `Input` e `Textarea` geram IDs quando ausentes, usam rótulos explícitos e vinculam ajuda/erro por `aria-describedby`. `Select` também vincula sua ajuda ao gatilho. O estado inválido acompanha a presença do erro.
 
 `FoundationPreview` compara os mesmos componentes em quatro paletas no Component Lab, sem adicionar uma rota pública.
+
+`Tabs` aceita `size="compact"` para fluxos curtos em espaços estreitos. A variante usa `--space-3` no eixo horizontal e preserva alvo mínimo de `--touch-target`, teclado, indicador e movimento reduzido. O padrão dos demais consumidores permanece igual.

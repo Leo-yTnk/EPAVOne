@@ -11,7 +11,7 @@ import {
   ActionGroup
 } from '../../../design-system/components/index.js';
 import { INTERESTS, SEGMENTS } from '../models/planner.js';
-export function ClientEditor({ customer, onClose, act, busy, notice }) {
+export function ClientEditor({ customer, onClose, act, busy, notice, saveError }) {
   const [draft, setDraft] = useState(
     customer || {
       id: '',
@@ -46,7 +46,7 @@ export function ClientEditor({ customer, onClose, act, busy, notice }) {
   return (
     <Dialog open title={customer ? 'Editar perfil' : 'Novo cliente'} onClose={onClose} size="lg">
       <form className="planner-form" onSubmit={save}>
-        {attempted && notice && (
+        {attempted && saveError && notice && (
           <Alert tone="danger" title="Não foi possível salvar">
             {notice}
           </Alert>

@@ -13,7 +13,13 @@ export function parseHash(hash = window.location.hash) {
   if (segments[0] === 'settings') return { product: 'settings', segments: [], raw };
 
   const product = Object.hasOwn(PRODUCT_META, segments[0]) ? segments[0] : 'home';
-  return { product, segments: product === 'home' ? [] : segments.slice(1), raw };
+  let paths = product === 'home' ? [] : segments.slice(1);
+  if (product === 'planner') {
+    if (paths[0] === 'oportunidades') paths = ['clientes', 'oportunidades', ...paths.slice(1)];
+    if (paths[0] === 'desempenho') paths = ['resultados', ...paths.slice(1)];
+    if (paths[0] === 'atendimento') paths = ['semana', 'atender', ...paths.slice(1)];
+  }
+  return { product, segments: paths, raw: product === 'planner' ? ['planner', ...paths].join('/') : raw };
 }
 
 export function routeHash(product, segments = []) {
@@ -30,9 +36,8 @@ export const INSIGHTS_NAV = [
 
 export const PLANNER_NAV = [
   { label: 'Pedidos', href: '#/planner/pedidos', section: 'pedidos' },
-  { label: 'Visão geral', href: '#/planner', section: '' },
-  { label: 'Semana', href: '#/planner/semana', section: 'semana' },
+  { label: 'Início', href: '#/planner', section: '' },
   { label: 'Clientes', href: '#/planner/clientes', section: 'clientes' },
-  { label: 'Oportunidades', href: '#/planner/oportunidades', section: 'oportunidades' },
-  { label: 'Desempenho', href: '#/planner/desempenho', section: 'desempenho' }
+  { label: 'Semana', href: '#/planner/semana', section: 'semana' },
+  { label: 'Resultados', href: '#/planner/resultados', section: 'resultados' }
 ];

@@ -1,92 +1,116 @@
-import { useRef } from 'preact/hooks';
+import { useMemo, useRef, useState } from 'preact/hooks';
 import { useContentMotion } from '../../../design-system/behaviors/useContentMotion.js';
 import { usePlannerView } from '../hooks/usePlannerView.js';
 import {
+  ActionGroup,
   Badge,
   Button,
   Card,
-  ContextMenu,
   EmptyState,
-  Heading,
+  FieldGrid,
   Input,
+  Menu,
   Pagination,
-  Select
+  SectionHeader,
+  Select,
+  Tabs
 } from '../../../design-system/components/index.js';
-import { dateLabel, lastInteraction, priority, SEGMENTS } from '../models/planner.js';
-import { PriorityDetails } from './PriorityDetails.jsx';
-export function ClientList({ state, week, act, busy, onCreate }) {
-  const [view, setView] = usePlannerView('clients', { query: '', segment: '', filter: '', page: 1 });
-  const { query, segment, filter, page } = view;
-  const setQuery = (query) => setView({ query });
-  const setSegment = (segment) => setView({ segment });
-  const setFilter = (filter) => setView({ filter });
-  const setPage = (page) => setView({ page });
-  const fold = (text) =>
-    text
-      .normalize('NFD')
-      .replace(/\p{Diacritic}/gu, '')
-      .toLowerCase();
-  const filtered = state.customers
-    .filter(
-      (customer) =>
-        fold([customer.name, customer.position, ...customer.tags].join(' ')).includes(fold(query)) &&
-        (!segment || customer.segment === segment) &&
-        (!filter ||
-          (filter === 'intent'
-            ? customer.intent
-            : filter === 'new'
-              ? !lastInteraction(customer, state.interactions)
-              : !customer.preparation.trim()))
-    )
-    .map((customer) => ({ customer, score: priority(customer, state).score }))
-    .sort((a, b) => b.score - a.score || a.customer.name.localeCompare(b.customer.name))
-    .map(({ customer }) => customer);
+import { dateLabel, lastInteraction, recommendations, SEGMENTS } from '../models/planner.js';
+import { selectClients } from '../models/workspace.js';
+import { OfferList } from './OfferList.jsx';
+
+export function ClientList({ state, week, act, busy, onCreate, opportunities = false }) {
+  const [view, setView] = usePlannerView('clients', { query: '', segment: '', filter: '', page: 1, campaign: '' });
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [expanded, setExpanded] = useState(null);
+  const filtered = useMemo(() => selectClients(state, week, { ...view, opportunities }), [state, week, view, opportunities]);
   const count = Math.max(1, Math.ceil(filtered.length / 8));
-  const current = Math.min(page, count);
+  const current = Math.min(view.page, count);
+  const shown = filtered.slice((current - 1) * 8, current * 8);
   const resultsRef = useRef(null);
-  useContentMotion(resultsRef, JSON.stringify(filtered.slice((current - 1) * 8, current * 8).map((item) => item.id)), 0, 'y');
-  function update(setter, value) {
-    setter(value);
-    setPage(1);
-  }
+  useContentMotion(resultsRef, JSON.stringify(shown.map((item) => item.id)), 0, 'y');
+  const update = (patch) => setView({ ...patch, page: 1 });
+  const activeFilters = Boolean(view.segment || view.filter);
   return (
     <>
-      <div className="planner-toolbar">
-        <Input
-          id="planner-search"
-          label="Buscar na carteira"
-          type="search"
-          placeholder="Nome, posição ou tag"
-          value={query}
-          onInput={(event) => update(setQuery, event.currentTarget.value)}
+      <Card className="planner-flow-card">
+        <SectionHeader
+          title="Sua carteira"
+          description={`${state.customers.length} clientes · preferências, conversas e próximos passos`}
+          actions={<Button onClick={onCreate}>Novo cliente</Button>}
         />
-        <Select
-          label="Segmento"
-          value={segment}
-          options={[{ value: '', label: 'Todos os segmentos' }, ...SEGMENTS.map((value) => ({ value, label: value }))]}
-          onChange={(value) => update(setSegment, value)}
-        />
-        <Select
-          label="Situação"
-          value={filter}
-          options={[
-            { value: '', label: 'Todos os clientes' },
-            { value: 'intent', label: 'Intenção de compra' },
-            { value: 'new', label: 'Sem contato' },
-            { value: 'unprepared', label: 'Preparação pendente' }
+        <Tabs
+          label="Visualização da carteira"
+          value={opportunities ? 'opportunities' : 'all'}
+          onChange={(value) => {
+            window.location.hash = value === 'all' ? '#/planner/clientes' : '#/planner/clientes/oportunidades';
+          }}
+          items={[
+            { value: 'all', label: 'Todos os clientes' },
+            { value: 'opportunities', label: 'Oportunidades' }
           ]}
-          onChange={(value) => update(setFilter, value)}
         />
-      </div>
-      <div className="planner-section-head">
-        <p role="status" className="planner-muted">
-          {filtered.length} de {state.customers.length} clientes · ordenados por prioridade
-        </p>
-        <Button variant="secondary" onClick={onCreate}>
-          Novo cliente
-        </Button>
-      </div>
-      <div ref={resultsRef}>
+        <div className="planner-search-row">
+          <Input
+            id="planner-search"
+            label="Buscar na carteira"
+            type="search"
+            placeholder="Nome, posição ou tag"
+            value={view.query}
+            onInput={(event) => update({ query: event.currentTarget.value })}
+          />
+          <Button
+            variant="secondary"
+            aria-expanded={filtersOpen}
+            aria-controls="planner-filters"
+            onClick={() => setFiltersOpen(!filtersOpen)}
+          >
+            Filtros{activeFilters ? ' · ativos' : ''}
+          </Button>
+        </div>
+        {(filtersOpen || activeFilters) && (
+          <FieldGrid id="planner-filters">
+            <Select
+              label="Segmento"
+              value={view.segment}
+              options={[{ value: '', label: 'Todos os segmentos' }, ...SEGMENTS.map((value) => ({ value, label: value }))]}
+              onChange={(segment) => update({ segment })}
+            />
+            <Select
+              label="Situação"
+              value={view.filter}
+              options={[
+                { value: '', label: 'Todos os clientes' },
+                { value: 'intent', label: 'Intenção de compra' },
+                { value: 'new', label: 'Sem contato' },
+                { value: 'unprepared', label: 'Preparação pendente' },
+                { value: 'due', label: 'Combinados até hoje' },
+                { value: 'unplanned', label: 'Fora da semana' }
+              ]}
+              onChange={(filter) => update({ filter })}
+            />
+          </FieldGrid>
+        )}
+        {opportunities && (
+          <>
+            <Select
+              label="Campanha ou oportunidade"
+              value={view.campaign}
+              onChange={(campaign) => update({ campaign })}
+              options={[
+                { value: '', label: 'Todas as sugestões compatíveis' },
+                { value: 'contact', label: 'Sem contato há 21 dias ou mais' },
+                ...state.offers.map((offer) => ({ value: offer.id, label: offer.title }))
+              ]}
+            />
+            <p className="planner-muted">Ideias de abordagem, sem confirmação de promoção ou estoque. Restrições são respeitadas.</p>
+          </>
+        )}
+      </Card>
+      <p className="planner-muted" role="status">
+        {filtered.length} de {state.customers.length} clientes · ordenados por prioridade
+      </p>
+      <div ref={resultsRef} className="planner-client-list">
         {!filtered.length && (
           <EmptyState
             title={state.customers.length ? 'Nenhum cliente com esses filtros' : 'Sua carteira começa aqui'}
@@ -95,60 +119,80 @@ export function ClientList({ state, week, act, busy, onCreate }) {
             onAction={
               state.customers.length
                 ? () => {
-                    setQuery('');
-                    setSegment('');
-                    setFilter('');
+                    update({ query: '', segment: '', filter: '', campaign: '' });
+                    if (opportunities) window.location.hash = '#/planner/clientes';
                   }
                 : onCreate
             }
           />
         )}
-        <div className="planner-client-grid">
-          {filtered.slice((current - 1) * 8, current * 8).map((customer) => (
-            <Card
-              key={customer.id}
-              as={ContextMenu}
-              className="planner-client"
-              label={`Atalhos de ${customer.name}`}
-              items={[
-                { label: 'Ver perfil e preparar conversa', icon: 'user', href: `#/planner/clientes/${customer.id}` },
-                {
-                  label: 'Adicionar à semana',
-                  icon: 'plus',
-                  disabled: busy || week.queue.some((entry) => entry.customerId === customer.id),
-                  onSelect: () => act({ type: 'add', customerId: customer.id, weekId: week.id }, 'Cliente adicionado à semana.')
-                },
-                { label: 'Ver fila da semana', icon: 'planner', href: '#/planner/semana' }
-              ]}
-            >
-              <div className="planner-section-head">
-                <Badge>{customer.segment}</Badge>
-                {customer.intent && <span className="planner-muted">Quer comprar</span>}
+        {shown.map((customer) => {
+          const planned = week.queue.some((entry) => entry.customerId === customer.id);
+          const ideas = recommendations(customer, state.offers).filter(
+            (offer) => !view.campaign || view.campaign === 'contact' || offer.id === view.campaign
+          );
+          return (
+            <Card key={customer.id} padding="compact" className="planner-client">
+              <div className="planner-client-row">
+                <div className="planner-client-identity">
+                  <SectionHeader
+                    size="sm"
+                    as="h3"
+                    title={<a href={`#/planner/clientes/${customer.id}`}>{customer.name}</a>}
+                    description={`${customer.position || 'Posição não informada'} · ${customer.segment}`}
+                  />
+                  <p className="planner-muted">Último contato: {dateLabel(lastInteraction(customer, state.interactions)?.date)}</p>
+                </div>
+                <div className="planner-client-context">
+                  <Badge>{customer.intent ? 'Quer comprar' : customer.preparation.trim() ? 'Abordagem pronta' : 'Conhecer melhor'}</Badge>
+                  {opportunities && (
+                    <p className="planner-muted">{view.campaign === 'contact' ? 'Retomar relacionamento' : ideas[0]?.title}</p>
+                  )}
+                </div>
+                <ActionGroup>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    disabled={busy || planned}
+                    onClick={() => act({ type: 'add', customerId: customer.id, weekId: week.id }, 'Cliente adicionado à semana.')}
+                  >
+                    {planned ? 'Na semana' : 'Adicionar à semana'}
+                  </Button>
+                  <Menu
+                    label={`Ações de ${customer.name}`}
+                    triggerLabel="Mais"
+                    items={[
+                      { label: 'Ver perfil e preparar conversa', href: `#/planner/clientes/${customer.id}` },
+                      { label: 'Ver fila da semana', href: '#/planner/semana' }
+                    ]}
+                  />
+                </ActionGroup>
               </div>
-              <Heading level={4}>
-                <a href={`#/planner/clientes/${customer.id}`}>{customer.name}</a>
-              </Heading>
-              <p className="planner-muted">
-                {customer.position || 'Posição não informada'} · contato: {dateLabel(lastInteraction(customer, state.interactions)?.date)}
-              </p>
-              <PriorityDetails customer={customer} state={state} />
-              <div className="ds-inline">
-                <Button as="a" size="sm" variant="secondary" href={`#/planner/clientes/${customer.id}`}>
-                  Preparar cliente
-                </Button>
-                <Button
-                  size="sm"
-                  disabled={busy || week.queue.some((entry) => entry.customerId === customer.id)}
-                  onClick={() => act({ type: 'add', customerId: customer.id, weekId: week.id }, 'Cliente adicionado à semana.')}
-                >
-                  {week.queue.some((entry) => entry.customerId === customer.id) ? 'Na semana' : 'Adicionar à semana'}
-                </Button>
-              </div>
+              {opportunities && (
+                <>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    aria-expanded={expanded === customer.id}
+                    onClick={() => setExpanded(expanded === customer.id ? null : customer.id)}
+                  >
+                    {expanded === customer.id ? 'Recolher sugestões' : 'Ver sugestões compatíveis'}
+                  </Button>
+                  {expanded === customer.id && (
+                    <OfferList
+                      customer={customer}
+                      state={{ ...state, offers: state.offers.filter((offer) => ideas.some((idea) => idea.id === offer.id)) }}
+                      weekId={week.id}
+                      returnTo="#/planner/clientes/oportunidades"
+                    />
+                  )}
+                </>
+              )}
             </Card>
-          ))}
-        </div>
+          );
+        })}
       </div>
-      {count > 1 && <Pagination page={current} pageCount={count} onChange={setPage} label="Páginas da carteira" />}
+      {count > 1 && <Pagination page={current} pageCount={count} onChange={(page) => setView({ page })} label="Páginas da carteira" />}
     </>
   );
 }
