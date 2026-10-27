@@ -65,6 +65,7 @@ beforeAll(async () => {
     create table product_categories(product_id uuid references products,category_id uuid references categories,sort_order integer,primary key(product_id,category_id));
     alter table recipe_categories add primary key(recipe_id,category_id);`);
   await db.exec(readFileSync(new URL('../supabase/048_catalog_backup.sql', import.meta.url), 'utf8'));
+  await db.exec(readFileSync(new URL('../supabase/049_catalog_import_runtime.sql', import.meta.url), 'utf8'));
   await db.exec("set role authenticated; set request.uid='10000000-0000-0000-0000-000000000001'; set request.admin='true';");
 }, 30000);
 afterAll(async () => db?.close());
@@ -388,3 +389,79 @@ it('keeps indexed import identities consistent and imports a realistic recipe ba
   expect(imported.rows[0].result.recipes.added).toBe(100);
   expect((await call([], [], recipes)).rows[0].result.recipes.ignored).toBe(100);
 }, 30000);
+it('imports a large six-sheet catalog with section links and preserves it on repetition', async () => {
+  const recipes = Array.from({ length: 1000 }, (_, i) => ({
+    name: `Bulk recipe ${i}`,
+    category: 'Familia',
+    prep_time: 20,
+    servings: 2,
+    difficulty: 'Fácil',
+    instructions: ['Prepare'],
+    ingredients: [{ product: 'Fraldinha', quantity: 1 }],
+    sections: []
+  }));
+  const sections = ['home', 'recipes'].map((page) => ({ page, name: `Bulk ${page}`, sort_order: 0, active: true }));
+  const links = sections.flatMap((section) =>
+    recipes.map((recipe, i) => ({ page: section.page, section: section.name, recipe: recipe.name, sort_order: i }))
+  );
+  const start = performance.now();
+  const imported = await call([], [], recipes, sections, links);
+  console.log(`Large catalog import: ${Math.round(performance.now() - start)} ms`);
+  expect(imported.rows[0].result.recipes.added).toBe(1000);
+  expect(imported.rows[0].result.recipe_sections.added).toBe(2000);
+  const repeated = await call([], [], recipes, sections, links);
+  expect(repeated.rows[0].result.recipes.ignored).toBe(1000);
+  expect(repeated.rows[0].result.recipe_sections.ignored).toBe(2000);
+}, 30000);
+
+it('scopes the extended API budget and short lock wait to both import entry points', async () => {
+  const rows = (
+    await db.query(
+      "select proname,proconfig from pg_proc where oid in ('public.admin_add_public_catalog(jsonb,jsonb,jsonb,jsonb,jsonb,jsonb)'::regprocedure,'public.admin_import_reviewed_catalog(jsonb,jsonb)'::regprocedure)"
+    )
+  ).rows;
+  expect(rows).toHaveLength(2);
+  for (const row of rows) {
+    expect(row.proconfig).toContain('statement_timeout=55s');
+    expect(row.proconfig).toContain('lock_timeout=3s');
+    expect(row.proconfig).toContain('search_path=""');
+  }
+  // PostgREST hoists the function timeout before execution. Direct SQL callers
+  // do not emulate that behavior; assert metadata, never claim an HTTP timing test.
+  const backup = (await db.query("select proconfig from pg_proc where oid='public.admin_export_catalog_backup()'::regprocedure")).rows[0];
+  expect(backup.proconfig).not.toContain('statement_timeout=55s');
+});
+
+it('resolves product aliases for recipe ingredients and bulk section links in the same transaction', async () => {
+  const importedName = 'Fraldinha com nome editorial diferente';
+  const payloadProduct = { ...item(importedName), swift_sku: null, swift_product_url: 'https://www.swift.com.br/detail/fraldinha' };
+  const recipe = {
+    name: 'Alias recipe',
+    category: 'Familia',
+    prep_time: 10,
+    servings: 1,
+    difficulty: 'Fácil',
+    instructions: ['Prepare'],
+    ingredients: [{ product: importedName, quantity: 1 }],
+    sections: []
+  };
+  const sections = [{ page: 'products', name: 'Alias products', sort_order: 1, active: true }];
+  const link = { page: 'products', section: 'Alias products', product: importedName, sort_order: 4 };
+  const imported = await call([], [payloadProduct], [recipe], sections, [], [link]);
+  expect(imported.rows[0].result.products.ignored).toBe(1);
+  expect(imported.rows[0].result.product_sections.added).toBe(1);
+  const product = (await db.query("select id from products where name='Fraldinha'")).rows[0];
+  const ingredient = (
+    await db.query("select i.product_id from recipe_ingredients i join recipes r on r.id=i.recipe_id where r.name='Alias recipe'")
+  ).rows[0];
+  expect(ingredient.product_id).toBe(product.id);
+  const repeated = await call([], [payloadProduct], [recipe], sections, [], [{ ...link, sort_order: 99 }]);
+  expect(repeated.rows[0].result.product_sections.ignored).toBe(1);
+  expect(
+    (
+      await db.query(
+        "select l.sort_order from catalog_section_products l join catalog_sections s on s.id=l.section_id where s.name='Alias products'"
+      )
+    ).rows[0].sort_order
+  ).toBe(4);
+});
