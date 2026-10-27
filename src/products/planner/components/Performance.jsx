@@ -1,98 +1,147 @@
-import { Card, SummaryList, DataTable, Heading } from '../../../design-system/components/index.js';
-import { dateLabel, money, performance, shiftDay } from '../models/planner.js';
+import {
+  Button,
+  Card,
+  ChartContainer,
+  DataTable,
+  EmptyState,
+  MetricCard,
+  Progress,
+  SectionHeader
+} from '../../../design-system/components/index.js';
+import { dateLabel, OUTCOMES, performance } from '../models/planner.js';
+
 export function Performance({ state, week }) {
   const metrics = performance(state, week);
   const rows = [...state.weeks]
     .sort((a, b) => b.id.localeCompare(a.id))
     .map((item) => ({ id: item.id, week: dateLabel(item.id), goal: item.goal, ...performance(state, item) }));
-  const history = (state.sales || []).filter((sale) => sale.sale_date >= week.id && sale.sale_date <= shiftDay(week.id, 6));
-  const total = history.reduce((sum, sale) => sum + Math.round(Number(sale.value) * 100), 0);
-  const units = history.reduce((sum, sale) => sum + sale.ipc, 0);
+  const history = state.interactions.filter((item) => item.weekId === week.id).sort((a, b) => b.date.localeCompare(a.date));
+  const evolution = [...rows].reverse().slice(-8);
+  const scale = Math.max(1, ...evolution.map((item) => Math.max(item.attended, item.goal)));
+  const pending = state.commitments.filter((item) => !item.done).length;
   return (
     <>
-      {state.sales && (
-        <Card className="planner-flow-card">
-          <Heading level={3}>Vendas confirmadas no banco · semana selecionada</Heading>
-          <p>
-            {history.length} vendas · {money(total)} · Ticket médio {history.length ? money(Math.round(total / history.length)) : '—'} ·
-            Índice histórico {history.length ? (units / history.length).toFixed(1) : '—'}
-          </p>
-          <p className="planner-muted">
-            Inclui registros históricos e compras confirmadas no Planner, uma única vez por venda. O histórico antigo não informa clientes;
-            não permite calcular positivação. Exportar no Writer não registra venda.
-          </p>
-        </Card>
-      )}
-      <Card className="planner-flow-card">
-        <Heading level={3}>O que suas conversas produziram</Heading>
-        <SummaryList
-          emphasis
-          items={[
-            {
-              label: 'Atendimentos',
-              value: (
-                <>
-                  {metrics.attended} / {week.goal}
-                </>
-              )
-            },
-            {
-              label: 'Positivação',
-              value: (
-                <>
-                  {metrics.buyers} clientes · {metrics.conversion}%
-                </>
-              )
-            },
-            { label: 'Ticket médio', value: metrics.ticket === null ? '—' : money(metrics.ticket) },
-            { label: 'Unidades por compra (histórico)', value: metrics.ipc === null ? '—' : metrics.ipc.toFixed(1) },
-            { label: 'Vendas registradas', value: money(metrics.revenue) },
-            { label: 'Cobertura', value: <>{metrics.coverage}% da carteira</> }
-          ]}
+      <div className="planner-results-metrics">
+        <MetricCard label="Clientes contatados" value={metrics.attended} trend={`Meta: ${week.goal} · ${metrics.attempts} tentativas`} />
+        <MetricCard
+          label="Conversão de atendimento"
+          value={metrics.attended ? `${metrics.conversion}%` : '—'}
+          trend={`${metrics.buyers} compradores / ${metrics.attended} contatados`}
         />
-        <p className="planner-muted">
-          Atendimento = cliente distinto contatado; indisponíveis contam só como tentativa ({metrics.attempts}). Positivação = compradores
-          distintos / clientes contatados. Ticket e unidades refletem os atendimentos antigos. O IPC por produtos distintos e a positivação
-          em clientes estão na aba Pedidos. Valores demonstrativos ou informados manualmente, sem conciliação com pedidos.
-        </p>
-        {metrics.unmeasured > 0 && <p>{metrics.unmeasured} compras sem valor/unidades não entram no ticket, IPC ou total.</p>}
-      </Card>
-      <Card className="planner-flow-card">
-        <Heading level={3}>Aprendizados para a próxima janela</Heading>
-        <ul className="planner-learnings">
-          <li>
-            {metrics.attended < week.goal
-              ? `Faltam ${week.goal - metrics.attended} contatos para a meta. Confira a preparação dos titulares antes de ampliar a fila.`
-              : 'Meta de contatos alcançada. Reserve tempo para cumprir os combinados.'}
-          </li>
-          <li>
-            {metrics.attended && !metrics.buyers
-              ? 'Houve contatos sem compra: reveja o contexto e registre objeções antes de repetir a oferta.'
-              : metrics.buyers
-                ? 'Houve compras: confirme os pedidos no Writer e registre o que motivou a decisão.'
-                : 'Ainda não há resultados desta semana. Registre conversas para obter aprendizados.'}
-          </li>
-          <li>
-            {metrics.coverage < 50
-              ? 'A cobertura ainda está abaixo da metade da carteira. Inclua um cliente sem contato recente.'
-              : 'Boa cobertura da carteira. Priorize a qualidade da conversa e os retornos combinados.'}
-          </li>
-        </ul>
-      </Card>
-      <Heading level={3}>Planejado × realizado · evolução semanal</Heading>
+        <MetricCard
+          label="Cobertura da carteira"
+          value={state.customers.length ? `${metrics.coverage}%` : '—'}
+          trend={`${state.customers.length} clientes na carteira atual`}
+        />
+      </div>
+      <div className="planner-two-columns">
+        <Card className="planner-flow-card">
+          <SectionHeader title="Meta e próximo passo" />
+          <Progress
+            label="Atendimentos realizados"
+            value={metrics.attended}
+            max={week.goal}
+            formatValue={() => `${metrics.attended} / ${week.goal}`}
+          />
+          <p>
+            {metrics.attended >= week.goal
+              ? 'Meta de contatos alcançada. Revise os combinados antes de planejar a próxima semana.'
+              : `Faltam ${week.goal - metrics.attended} contatos para alcançar a meta.`}
+          </p>
+          <p className="planner-muted">{pending} combinados em aberto na carteira.</p>
+          <div>
+            <Button as="a" href="#/planner/semana">
+              Revisar semana
+            </Button>
+          </div>
+        </Card>
+        <Card className="planner-flow-card">
+          <SectionHeader title="O que vale aprender" />
+          <ul className="planner-learnings">
+            <li>
+              {metrics.attended && !metrics.buyers
+                ? 'Houve contatos sem compra. Revise as objeções antes de repetir a oferta.'
+                : metrics.buyers
+                  ? 'Confira no histórico o que ajudou cada cliente a decidir.'
+                  : 'Registre as conversas para começar a identificar aprendizados.'}
+            </li>
+            <li>
+              {metrics.coverage < 50
+                ? 'Inclua um cliente sem contato recente para ampliar a cobertura.'
+                : 'Mantenha o acompanhamento e respeite a frequência de cada cliente.'}
+            </li>
+          </ul>
+          <p className="planner-muted">Vendas, faturamento, ticket médio, IPC e positivação de vendas ficam em Pedidos.</p>
+          <Button as="a" href="#/planner/pedidos" variant="ghost" size="sm">
+            Ver indicadores de vendas
+          </Button>
+        </Card>
+      </div>
+      {state.interactions.length > 0 && (
+        <ChartContainer
+          title="Evolução de clientes contatados"
+          subtitle="Até 8 semanas registradas · compare as metas na tabela abaixo"
+          legend="Contatados"
+          data={evolution.map((item) => ({
+            label: item.week,
+            height: (item.attended / scale) * 100,
+            value: `${item.week}: ${item.attended} contatados; meta ${item.goal}`
+          }))}
+        />
+      )}
+      <SectionHeader
+        title="Planejado e realizado"
+        description="Contatos distintos por semana. Indisponíveis contam como tentativa, sem aumentar os contatos."
+      />
       <DataTable
-        caption="Evolução semanal de atendimentos e vendas"
+        caption="Evolução semanal de atendimentos"
         columns={[
           { key: 'week', label: 'Semana' },
           { key: 'planned', label: 'Titulares', numeric: true },
           { key: 'done', label: 'Concluídos', numeric: true },
           { key: 'attended', label: 'Contatados', numeric: true },
           { key: 'goal', label: 'Meta', numeric: true },
-          { key: 'buyers', label: 'Compradores', numeric: true },
-          { key: 'revenue', label: 'Vendas', numeric: true, render: (row) => money(row.revenue) }
+          { key: 'buyers', label: 'Compradores', numeric: true }
         ]}
         rows={rows}
       />
+      <Card className="planner-flow-card">
+        <SectionHeader title="Histórico da semana" />
+        {history.length ? (
+          <ol className="planner-timeline">
+            {history.map((item) => (
+              <li key={item.id}>
+                <time dateTime={item.date}>{dateLabel(item.date)}</time>
+                <div>
+                  <strong>
+                    {state.customers.find((customer) => customer.id === item.customerId)?.name || 'Cliente removido da carteira'}
+                  </strong>
+                  <p>
+                    {OUTCOMES[item.outcome]} · {item.note || 'Sem observação adicional.'}
+                  </p>
+                  {state.customers.some((customer) => customer.id === item.customerId) && (
+                    <a href={`#/planner/clientes/${item.customerId}/historico`}>Ver histórico do cliente</a>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ol>
+        ) : (
+          <EmptyState
+            title="Sem conversas registradas nesta semana"
+            description="O histórico aparece após salvar o resultado de um atendimento."
+          />
+        )}
+      </Card>
+      <details className="planner-details">
+        <summary>Como os indicadores são calculados</summary>
+        <p className="planner-muted">
+          Contatados = clientes distintos com resultado diferente de indisponível. Conversão = compradores distintos ÷ contatados nesta
+          semana. Cobertura = clientes atuais contatados ÷ carteira atual. Compras históricas refletem registros de atendimento; para vendas
+          confirmadas consulte Pedidos. Sem atendimentos, a conversão é exibida como —. No modo demonstração todos os registros são
+          exemplos.
+        </p>
+      </details>
     </>
   );
 }

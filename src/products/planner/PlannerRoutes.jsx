@@ -9,21 +9,17 @@ import { ClientList } from './components/ClientList.jsx';
 import { ClientProfile } from './components/ClientProfile.jsx';
 import { ClientEditor } from './components/ClientEditor.jsx';
 import { DeleteClientDialog } from './components/DeleteClientDialog.jsx';
-import { Opportunities } from './components/Opportunities.jsx';
 import { Performance } from './components/Performance.jsx';
-import { Attendance } from './components/Attendance.jsx';
 import { createRemotePlannerRepository } from './repositories/remotePlannerRepository.js';
 import { createPlannerService } from './services/plannerService.js';
 import { commercialContext } from '../../shared/services/commercialContext.js';
 import './planner.css';
 const info = {
   pedidos: ['Cada venda conta.', 'Pedidos, indicadores e histórico da sua conta.'],
-  '': ['Uma boa semana começa pelas pessoas.', 'Decida quem atender, prepare a conversa e acompanhe os próximos passos.'],
-  semana: ['Sua semana, com intenção.', 'Organize titulares e reservas, respeitando a janela de atendimento.'],
-  clientes: ['Conhecer melhor. Atender melhor.', 'Contexto, preferências e combinados para construir um relacionamento.'],
-  oportunidades: ['A oferta certa começa no contexto.', 'Relacione ideias e campanhas aos clientes, respeitando suas restrições.'],
-  desempenho: ['Aprender com cada conversa.', 'Compare o que foi planejado com o que aconteceu para decidir a próxima semana.'],
-  atendimento: ['Uma conversa de cada vez.', 'O essencial à mão: contexto, sugestões e o próximo passo.']
+  '': ['Início', 'Seu próximo passo, os contatos e os combinados da semana.'],
+  semana: ['Semana', 'Planejar, atender e concluir no mesmo lugar.'],
+  clientes: ['Clientes', 'Conheça as pessoas e encontre a próxima conversa.'],
+  resultados: ['Resultados', 'Acompanhe seus atendimentos e aprenda com cada conversa.']
 };
 export function PlannerRoutes({ route = { segments: [] }, service, account, onOpenAccount }) {
   const chosenService = useMemo(
@@ -43,7 +39,7 @@ export function PlannerRoutes({ route = { segments: [] }, service, account, onOp
   const [deleting, setDeleting] = useState(null);
   const section = route.segments[0] || '';
   const recognized = Object.hasOwn(info, section);
-  const title = info[section] || ['Página não encontrada', 'Volte à visão geral do Planner.'];
+  const title = info[section] || ['Página não encontrada', 'Volte ao início do Planner.'];
   const week = resource.state?.weeks.find((item) => item.id === weekId) || emptyWeek(weekId);
   const options = [...new Set([...(resource.state?.weeks || []).map((item) => item.id), weekStart(), shiftDay(weekStart(), 7), weekId])]
     .sort()
@@ -58,6 +54,7 @@ export function PlannerRoutes({ route = { segments: [] }, service, account, onOp
   }
   const props = { state: resource.state, week, act: resource.act, busy: resource.busy || resource.refreshing };
   const customer = resource.state?.customers.find((item) => item.id === route.segments[1]);
+  const clientProfile = section === 'clientes' && route.segments[1] && route.segments[1] !== 'oportunidades';
   return (
     <section className="product-page planner-page">
       <PageHeader
@@ -83,11 +80,7 @@ export function PlannerRoutes({ route = { segments: [] }, service, account, onOp
       {section !== 'pedidos' && (
         <div className="planner-demo-note">
           <strong>{account?.session ? 'Seu planejamento' : 'Modo demonstração'}</strong>
-          <span>
-            {account?.session
-              ? 'Clientes, semanas e combinados salvos na sua conta e disponíveis em outros dispositivos. Registrar uma compra confirmada também salva a venda.'
-              : 'Perfis e sugestões de exemplo. Entre para usar seu planejamento e histórico reais.'}
-          </span>
+          <span>{account?.session ? 'Planejamento salvo na sua conta.' : 'Dados de exemplo. Entre para usar sua carteira real.'}</span>
           {account?.session ? (
             <div className="ds-inline">
               <span role="status">
@@ -149,15 +142,16 @@ export function PlannerRoutes({ route = { segments: [] }, service, account, onOp
           <>
             <Heading level={3}>Essa área não existe.</Heading>
             <Button as="a" href="#/planner">
-              Visão geral
+              Início
             </Button>
           </>
-        ) : section === 'clientes' && route.segments[1] ? (
+        ) : clientProfile ? (
           customer ? (
             <ClientProfile
               key={`${customer.id}-${weekId}`}
               {...props}
               customer={customer}
+              tab={route.segments[2]}
               onEdit={() => setEditing(customer)}
               onDelete={() => setDeleting(customer)}
             />
@@ -172,15 +166,11 @@ export function PlannerRoutes({ route = { segments: [] }, service, account, onOp
             />
           )
         ) : section === 'clientes' ? (
-          <ClientList {...props} onCreate={() => setEditing('new')} />
+          <ClientList {...props} opportunities={route.segments[1] === 'oportunidades'} onCreate={() => setEditing('new')} />
         ) : section === 'semana' ? (
-          <WeekPlan key={weekId} {...props} />
-        ) : section === 'oportunidades' ? (
-          <Opportunities {...props} />
-        ) : section === 'desempenho' ? (
+          <WeekPlan key={weekId} {...props} mode={route.segments[1]} customerId={route.segments[2]} />
+        ) : section === 'resultados' ? (
           <Performance {...props} />
-        ) : section === 'atendimento' ? (
-          <Attendance key={`${route.segments[1] || 'next'}-${weekId}`} {...props} customerId={route.segments[1]} />
         ) : (
           <Overview {...props} />
         )}
@@ -209,6 +199,7 @@ export function PlannerRoutes({ route = { segments: [] }, service, account, onOp
             act={resource.act}
             busy={resource.busy}
             notice={resource.notice}
+            saveError={resource.saveError}
             onClose={() => setEditing(null)}
           />
         )}

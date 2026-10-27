@@ -8,6 +8,7 @@ export function Tabs({
   onChange,
   label = 'Abas',
   className = '',
+  size,
   id,
   orientation = 'horizontal',
   stitchedIndicator = false
@@ -38,7 +39,7 @@ export function Tabs({
     <div
       ref={containerRef}
       id={id}
-      className={cx('ds-tabs', className)}
+      className={cx('ds-tabs', size === 'compact' && 'ds-tabs-compact', className)}
       role="tablist"
       aria-orientation={orientation}
       aria-label={label}

@@ -1,0 +1,7 @@
+{
+  "gzip": 251988,
+  "deltaVsInitialPR": 348,
+  "deltaVsMain": 1185,
+  "method": "Only JS/CSS emitted by the final Vite build; ignored stale files are excluded.",
+  "emittedFiles": 28
+}

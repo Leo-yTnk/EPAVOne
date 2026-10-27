@@ -30,13 +30,14 @@ describe('App workspace tabs', () => {
   it('uses the same shell navigation for Planner and Insights, including deep routes', () => {
     const { rerender } = render(shell({ product: 'planner', segments: ['clientes', 'demo-1'] }));
     const nav = screen.getByRole('navigation', { name: 'Navegação do Planner' });
-    expect(within(nav).getAllByRole('link')).toHaveLength(6);
+    expect(within(nav).getAllByRole('link')).toHaveLength(5);
     expect(within(nav).getByRole('link', { name: 'Clientes' }).getAttribute('aria-current')).toBe('page');
-    expect(within(nav).getByRole('link', { name: 'Oportunidades' }).getAttribute('href')).toBe('#/planner/oportunidades');
+    expect(within(nav).getByRole('link', { name: 'Resultados' }).getAttribute('href')).toBe('#/planner/resultados');
+    expect(within(nav).queryByRole('link', { name: 'Oportunidades' })).toBeNull();
     rerender(shell({ product: 'planner', segments: ['atendimento', 'demo-1'] }));
     expect(within(nav).getByRole('link', { name: 'Semana' }).getAttribute('aria-current')).toBe('page');
     rerender(shell({ product: 'planner', segments: [] }));
-    expect(within(nav).getByRole('link', { name: 'Visão geral' }).getAttribute('aria-current')).toBe('page');
+    expect(within(nav).getByRole('link', { name: 'Início' }).getAttribute('aria-current')).toBe('page');
     rerender(shell({ product: 'insights', segments: ['produtos'] }));
     const insights = screen.getByRole('navigation', { name: 'Navegação do Insights' });
     expect(insights).toBe(nav);

@@ -1,55 +1,63 @@
-import { Badge, Button, Card, Heading, Progress, SectionHeader } from '../../../design-system/components/index.js';
-import { dateLabel, daysSince, lastInteraction, performance, priority, recommendations, today, weekStart } from '../models/planner.js';
-import { PlanningGuide } from './PlanningGuide.jsx';
-export function Overview({ state, week, busy, act }) {
+import { Badge, Button, Card, EmptyState, Heading, Progress, SectionHeader, SummaryList } from '../../../design-system/components/index.js';
+import { dateLabel, performance, today } from '../models/planner.js';
+import { attendanceLink, contactDue, nextAction, orderedQueue, pendingCommitments, preparationLink } from '../models/workspace.js';
+
+export function Overview({ state, week }) {
   const metrics = performance(state, week);
-  const next = week.queue.filter((entry) => !entry.outcome).sort((a, b) => Number(a.role === 'reserve') - Number(b.role === 'reserve'));
-  const attention = state.customers
-    .filter((customer) => {
-      const elapsed = daysSince(lastInteraction(customer, state.interactions)?.date, today());
-      return (
-        elapsed === null ||
-        elapsed >= 21 ||
-        state.commitments.some((item) => item.customerId === customer.id && !item.done && item.due <= today())
-      );
-    })
+  const action = nextAction(state, week);
+  const next = orderedQueue(week)
+    .filter((entry) => !entry.outcome)
     .slice(0, 4);
-  const planned = new Set(week.queue.map((entry) => entry.customerId));
-  const opportunities = state.customers
-    .filter((customer) => !planned.has(customer.id) && recommendations(customer, state.offers).length)
-    .map((customer) => ({ customer, score: priority(customer, state).score }))
-    .sort((a, b) => b.score - a.score)
-    .map(({ customer }) => customer)
-    .slice(0, 3);
+  const pending = pendingCommitments(state);
+  const due = pending.filter((item) => item.due <= today());
+  const attention = state.customers.filter((customer) => contactDue(customer, state)).slice(0, 3);
+  const hour = Number(
+    new Intl.DateTimeFormat('en-GB', { hour: '2-digit', hourCycle: 'h23', timeZone: 'America/Sao_Paulo' }).format(new Date())
+  );
   return (
     <>
-      <PlanningGuide state={state} week={week} />
       <Card className="planner-hero">
         <div>
-          <span className="ds-overline">Quinta-feira · 9h30–10h30</span>
-          <Heading display="small">O próximo passo tem nome.</Heading>
-          <p className="planner-muted">Prepare o contexto, escute o cliente e transforme uma boa conversa em uma venda bem preenchida.</p>
+          <span className="ds-overline">{hour < 12 ? 'Bom dia' : hour < 18 ? 'Boa tarde' : 'Boa noite'} · seu próximo passo</span>
+          <Heading display="small">{action.title}</Heading>
+          <p className="planner-muted">{action.description}</p>
+          <div>
+            <Button as="a" href={action.href}>
+              {action.label}
+            </Button>
+          </div>
+          {!state.customers.length && (
+            <p className="planner-muted">Depois: escolha quem atender na Semana e registre o resultado da conversa.</p>
+          )}
+        </div>
+        <div>
+          <SectionHeader
+            size="sm"
+            title="Sua semana"
+            actions={
+              <Button as="a" size="sm" variant="ghost" href="#/planner/semana">
+                Organizar
+              </Button>
+            }
+          />
           <Progress
-            label="Meta da semana"
+            label="Meta de atendimentos"
             value={metrics.attended}
             max={week.goal}
-            formatValue={() => `${metrics.attended} de ${week.goal} atendimentos`}
+            formatValue={() => `${metrics.attended} de ${week.goal}`}
           />
-        </div>
-        <div className="planner-hero-next">
-          <Badge>{next.length ? 'Próximo da fila' : week.queue.length ? 'Fila concluída' : 'Semana ainda sem clientes'}</Badge>
-          <Heading level={3}>
-            {next.length ? state.customers.find((item) => item.id === next[0].customerId)?.name : 'Escolha sua próxima conversa'}
-          </Heading>
-          <p className="planner-muted">
-            {next.length} clientes aguardando · {metrics.buyers} clientes compraram
-          </p>
-          <Button as="a" href={next.length && week.id === weekStart() ? `#/planner/atendimento/${next[0].customerId}` : '#/planner/semana'}>
-            {next.length && week.id === weekStart() ? 'Iniciar atendimento' : 'Revisar semana'}
-          </Button>
-          {week.id !== weekStart() && (
-            <p className="planner-muted">Você está revisando outra semana. Resultados são registrados apenas na semana atual.</p>
-          )}
+          <SummaryList
+            items={[
+              { label: 'Na fila', value: week.queue.filter((item) => !item.outcome).length },
+              {
+                label: 'Preparados',
+                value: week.queue.filter(
+                  (entry) => !entry.outcome && state.customers.find((c) => c.id === entry.customerId)?.preparation.trim()
+                ).length
+              },
+              { label: 'Retornos até hoje', value: due.length }
+            ]}
+          />
         </div>
       </Card>
       <div className="planner-two-columns">
@@ -57,77 +65,83 @@ export function Overview({ state, week, busy, act }) {
           <SectionHeader
             title="Próximas conversas"
             actions={
-              <Button as="a" href="#/planner/semana" size="sm" variant="ghost">
-                Ver fila
+              <Button as="a" href="#/planner/semana" variant="ghost" size="sm">
+                Ver semana
               </Button>
             }
           />
-          {!next.length && <p className="planner-muted">Adicione clientes à semana para começar.</p>}
-          <ol className="planner-simple-list">
-            {next.slice(0, 4).map((entry, index) => {
-              const customer = state.customers.find((item) => item.id === entry.customerId);
-              return (
-                <li key={customer.id}>
-                  <span className="planner-position">{index + 1}</span>
-                  <div>
-                    <a href={`#/planner/clientes/${customer.id}`}>{customer.name}</a>
-                    <p className="planner-muted">
-                      {entry.role === 'reserve' ? 'Reserva' : 'Titular'} · {customer.preparation ? 'Preparado' : 'Preparação pendente'}
-                    </p>
-                  </div>
-                </li>
-              );
-            })}
-          </ol>
+          {next.length ? (
+            <ol className="planner-simple-list">
+              {next.map((entry, index) => {
+                const customer = state.customers.find((item) => item.id === entry.customerId);
+                return (
+                  <li key={customer.id}>
+                    <span className="planner-position">{index + 1}</span>
+                    <div>
+                      <a href={customer.preparation.trim() ? attendanceLink(customer.id) : preparationLink(customer.id)}>{customer.name}</a>
+                      <p className="planner-muted">
+                        {entry.role === 'reserve' ? 'Reserva' : 'Titular'} ·{' '}
+                        {customer.preparation.trim() ? 'Abordagem pronta' : 'Preparar conversa'}
+                      </p>
+                    </div>
+                  </li>
+                );
+              })}
+            </ol>
+          ) : (
+            <EmptyState
+              title="Sua próxima conversa começa aqui"
+              description="Escolha clientes na carteira para montar a fila."
+              actionLabel="Escolher clientes"
+              onAction={() => {
+                window.location.hash = '#/planner/clientes';
+              }}
+            />
+          )}
         </Card>
         <Card className="planner-flow-card">
-          <SectionHeader title="Vale retomar o contato" description="Combinados vencendo, clientes sem contato ou distantes há 21 dias." />
+          <SectionHeader
+            title="Combinados e retornos"
+            actions={due.length ? <Badge tone="warning">{due.length} até hoje</Badge> : undefined}
+          />
           <ul className="planner-simple-list">
-            {attention.map((customer) => (
-              <li key={customer.id}>
+            {pending.slice(0, 4).map((item) => (
+              <li key={item.id}>
                 <div>
-                  <a href={`#/planner/clientes/${customer.id}`}>{customer.name}</a>
-                  <p className="planner-muted">Último contato: {dateLabel(lastInteraction(customer, state.interactions)?.date)}</p>
+                  <a href={`#/planner/clientes/${item.customerId}/combinados`}>
+                    {state.customers.find((c) => c.id === item.customerId)?.name}
+                  </a>
+                  <p>{item.text}</p>
+                  <p className="planner-muted">
+                    {dateLabel(item.due)}
+                    {item.due < today() ? ' · Pendente' : ''}
+                  </p>
                 </div>
               </li>
             ))}
           </ul>
-          {!attention.length && <p>Todos os contatos estão em dia.</p>}
+          {!pending.length && <p className="planner-muted">Nenhum combinado em aberto. Os próximos retornos aparecerão aqui.</p>}
         </Card>
       </div>
       <Card className="planner-flow-card">
         <SectionHeader
-          title="Amplie a cobertura"
+          title="Vale retomar o contato"
+          description="Pela frequência desejada de cada cliente."
           actions={
-            <Button as="a" href="#/planner/oportunidades" size="sm" variant="ghost">
-              Ver oportunidades
+            <Button as="a" variant="ghost" size="sm" href="#/planner/clientes/oportunidades">
+              Explorar oportunidades
             </Button>
           }
         />
-        <p className="planner-muted">Clientes com sugestões compatíveis que ainda não entraram na semana.</p>
-        <div className="planner-opportunity-list">
-          {opportunities.map((customer) => (
-            <div key={customer.id} className="planner-offer">
-              <div>
-                <a href={`#/planner/clientes/${customer.id}`}>
-                  <strong>{customer.name}</strong>
-                </a>
-                <p className="planner-muted">{recommendations(customer, state.offers)[0].reason}</p>
-              </div>
-              <Button
-                size="sm"
-                variant="secondary"
-                disabled={busy}
-                onClick={() => act({ type: 'add', weekId: week.id, customerId: customer.id }, 'Cliente adicionado à semana.')}
-              >
-                Adicionar à semana
-              </Button>
+        <div className="planner-contact-strip">
+          {attention.map((customer) => (
+            <div key={customer.id}>
+              <a href={`#/planner/clientes/${customer.id}`}>{customer.name}</a>
+              <p className="planner-muted">{customer.intent ? 'Intenção de compra registrada' : 'Converse para atualizar o contexto'}</p>
             </div>
           ))}
         </div>
-        {!opportunities.length && (
-          <p className="planner-muted">Clientes compatíveis já estão planejados. Consulte a carteira para ampliar a preparação.</p>
-        )}
+        {!attention.length && <p className="planner-muted">Contatos em dia.</p>}
       </Card>
     </>
   );

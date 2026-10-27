@@ -1,173 +1,230 @@
 import { useState } from 'preact/hooks';
+import { usePlannerDraft } from '../hooks/usePlannerDraft.js';
 import {
-  Badge,
-  SectionHeader,
+  ActionGroup,
   Button,
   Card,
-  ContextMenu,
   EmptyState,
-  Heading,
-  IconButton,
   Input,
-  Progress
+  Progress,
+  SectionHeader,
+  SummaryList,
+  Tabs
 } from '../../../design-system/components/index.js';
-import { OUTCOMES, performance } from '../models/planner.js';
-import { PriorityDetails } from './PriorityDetails.jsx';
-export function WeekPlan({ state, week, busy, act }) {
-  const [goal, setGoal] = useState(week.goal);
+import { OUTCOMES, performance, weekStart } from '../models/planner.js';
+import { attendanceLink, orderedQueue } from '../models/workspace.js';
+import { ClientPreparation } from './ClientPreparation.jsx';
+import { Attendance } from './Attendance.jsx';
+import { WeekQueue } from './WeekQueue.jsx';
+import { WeekClientPicker } from './WeekClientPicker.jsx';
+
+export function WeekPlan({ state, week, busy, act, mode = 'planejar', customerId }) {
+  const [goal, setGoal, goalConflict] = usePlannerDraft(String(week.goal));
+  const [adding, setAdding] = useState(false);
   const metrics = performance(state, week);
-  const prepared = week.queue.filter((entry) =>
-    state.customers.find((customer) => customer.id === entry.customerId)?.preparation.trim()
-  ).length;
+  const queue = orderedQueue(week);
+  const prepared = queue.filter((entry) => state.customers.find((c) => c.id === entry.customerId)?.preparation.trim()).length;
+  const entry = customerId ? queue.find((item) => item.customerId === customerId) : queue.find((item) => !item.outcome);
+  const customer = state.customers.find((item) => item.id === entry?.customerId);
+  const stage = mode === 'atender' ? 'atender' : mode === 'concluir' ? 'concluir' : 'planejar';
+  const current = week.id === weekStart();
   return (
     <>
-      <Card className="planner-week-summary">
-        <div>
-          <Heading level={3}>Uma hora. Conversas bem preparadas.</Heading>
-          <p className="planner-muted">Quinta-feira, 9h30–10h30 · titulares primeiro; reservas quando houver espaço.</p>
-          <Progress
-            label="Cobertura planejada da carteira"
-            value={week.queue.length}
-            max={state.customers.length || 1}
-            formatValue={() => `${week.queue.length}/${state.customers.length} clientes`}
-          />
-          <p>
-            {prepared} preparados · {metrics.done} titulares concluídos de {metrics.planned}
-          </p>
-        </div>
-        <form
-          className="planner-goal-form"
-          onSubmit={(event) => {
-            event.preventDefault();
-            act({ type: 'goal', weekId: week.id, value: Number(goal) }, 'Meta atualizada.');
-          }}
-        >
-          <Input
-            id="planner-goal"
-            label="Meta de atendimentos"
-            type="number"
-            min="1"
-            max="100"
-            required
-            value={goal}
-            onInput={(event) => setGoal(event.currentTarget.value)}
-          />
-          <Button variant="secondary" loading={busy} type="submit">
-            Salvar meta
-          </Button>
-        </form>
-      </Card>
-      <SectionHeader
-        title="Sua fila de atendimento"
-        actions={
-          <Button as="a" variant="secondary" href="#/planner/clientes">
-            Escolher clientes
-          </Button>
-        }
+      {stage === 'planejar' && (
+        <Card className="planner-flow-card">
+          <div className="planner-flow-card">
+            <SectionHeader
+              title="Planeje com espaço para conversar"
+              description="Quinta-feira · 9h30–10h30. Titulares primeiro; reservas quando houver espaço."
+            />
+            <Progress
+              label="Meta da semana"
+              value={metrics.attended}
+              max={week.goal}
+              formatValue={() => `${metrics.attended} de ${week.goal} atendimentos`}
+            />
+            <p className="planner-muted">
+              {metrics.planned} titulares · {queue.length - metrics.planned} reservas · {prepared} preparados
+            </p>
+          </div>
+          <details className="planner-details">
+            <summary>Ajustar meta da semana</summary>
+            <form
+              className="planner-goal-form"
+              onSubmit={(event) => {
+                event.preventDefault();
+                act({ type: 'goal', weekId: week.id, value: Number(goal) }, 'Meta atualizada.');
+              }}
+            >
+              {goalConflict && (
+                <p className="planner-muted">
+                  A meta salva mudou para {week.goal}. Seu rascunho foi mantido.{' '}
+                  <Button size="sm" variant="ghost" onClick={() => setGoal(String(week.goal))}>
+                    Usar meta salva
+                  </Button>
+                </p>
+              )}
+              <Input
+                id="planner-goal"
+                label="Meta de atendimentos"
+                type="number"
+                min="1"
+                max="100"
+                required
+                value={goal}
+                onInput={(event) => setGoal(event.currentTarget.value)}
+              />
+              <Button variant="secondary" loading={busy} type="submit" disabled={Number(goal) === week.goal}>
+                Salvar meta
+              </Button>
+            </form>
+          </details>
+        </Card>
+      )}
+      <Tabs
+        label="Momentos da semana"
+        size="compact"
+        value={stage}
+        onChange={(value) => {
+          window.location.hash =
+            value === 'atender'
+              ? attendanceLink(entry?.outcome ? undefined : customer?.id)
+              : value === 'concluir'
+                ? '#/planner/semana/concluir'
+                : '#/planner/semana';
+        }}
+        items={[
+          { value: 'planejar', label: 'Planejar' },
+          { value: 'atender', label: 'Atender' },
+          { value: 'concluir', label: 'Concluir' }
+        ]}
       />
-      {!week.queue.length && (
-        <EmptyState
-          title="Planeje sua primeira conversa"
-          description="Selecione clientes na carteira e defina os titulares e reservas."
-          actionLabel="Abrir carteira"
-          onAction={() => {
-            window.location.hash = '#/planner/clientes';
+      {stage === 'planejar' && (
+        <>
+          <SectionHeader
+            title="Sua fila de atendimento"
+            actions={
+              <Button variant="secondary" aria-expanded={adding} onClick={() => setAdding(!adding)}>
+                {adding ? 'Fechar seleção' : 'Escolher clientes'}
+              </Button>
+            }
+          />
+          {adding && <WeekClientPicker state={state} week={week} act={act} busy={busy} />}
+          {!queue.length && !customerId && (
+            <EmptyState
+              title="Planeje sua primeira conversa"
+              description="Escolha os clientes aqui mesmo. Depois, organize titulares e reservas."
+              actionLabel="Selecionar clientes"
+              onAction={() => setAdding(true)}
+            />
+          )}
+          {customerId && !entry && (
+            <EmptyState
+              title="Cliente fora desta semana"
+              description="Esse cliente não está na fila selecionada. Volte ao planejamento para escolher uma conversa."
+              actionLabel="Ver fila da semana"
+              onAction={() => {
+                window.location.hash = '#/planner/semana';
+              }}
+            />
+          )}
+          {queue.length > 0 && (
+            <div className={customer ? `planner-week-workspace${mode === 'preparar' ? ' is-preparing' : ''}` : 'planner-flow-card'}>
+              <WeekQueue state={state} week={week} busy={busy} act={act} customerId={customer?.id} />
+              {customer && (
+                <div className="planner-flow-card">
+                  <SectionHeader
+                    title={customer.name}
+                    size="sm"
+                    actions={
+                      <Button as="a" size="sm" variant="ghost" href={`#/planner/clientes/${customer.id}`}>
+                        Ver perfil
+                      </Button>
+                    }
+                  />
+                  <ClientPreparation key={customer.id} customer={customer} state={state} week={week} act={act} busy={busy} />
+                  {current && !entry.outcome && (
+                    <div>
+                      <Button as="a" href={attendanceLink(customer.id)}>
+                        Atender {customer.name}
+                      </Button>
+                    </div>
+                  )}
+                  <p className="planner-muted">
+                    Selecione um nome na fila para preparar a conversa. A ordem de atendimento mantém titulares antes das reservas.
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+        </>
+      )}
+      {stage === 'atender' && (
+        <Attendance
+          key={`${customerId || 'next'}-${week.id}`}
+          state={state}
+          week={week}
+          customerId={customerId}
+          act={act}
+          busy={busy}
+          embedded
+          onAdvance={(next) => {
+            window.location.hash = next ? attendanceLink(next) : '#/planner/semana/concluir';
           }}
         />
       )}
-      <ol className="planner-queue">
-        {week.queue.map((entry, index) => {
-          const customer = state.customers.find((item) => item.id === entry.customerId);
-          return (
-            <li key={entry.customerId}>
-              <Card
-                as={ContextMenu}
-                className="planner-queue-row"
-                label={`Atalhos de ${customer.name}`}
-                items={[
-                  { label: 'Preparar conversa', icon: 'user', href: `#/planner/clientes/${customer.id}` },
-                  ...(!entry.outcome ? [{ label: 'Atender cliente', icon: 'writer', href: `#/planner/atendimento/${customer.id}` }] : []),
-                  {
-                    label: 'Subir na fila',
-                    icon: 'up',
-                    disabled: busy || index === 0,
-                    onSelect: () => act({ type: 'move', weekId: week.id, customerId: customer.id, direction: -1 }, 'Posição atualizada.')
-                  },
-                  {
-                    label: 'Descer na fila',
-                    icon: 'down',
-                    disabled: busy || index === week.queue.length - 1,
-                    onSelect: () => act({ type: 'move', weekId: week.id, customerId: customer.id, direction: 1 }, 'Posição atualizada.')
-                  },
-                  {
-                    label: entry.role === 'primary' ? 'Mudar para reserva' : 'Mudar para titular',
-                    disabled: busy || Boolean(entry.outcome),
-                    onSelect: () => act({ type: 'role', weekId: week.id, customerId: customer.id }, 'Papel atualizado.')
-                  }
-                ]}
-              >
-                <span className="planner-position" aria-label={`Posição ${index + 1}`}>
-                  {String(index + 1).padStart(2, '0')}
-                </span>
-                <div className="planner-queue-copy">
-                  <Heading level={4}>
-                    <a href={`#/planner/clientes/${customer.id}`}>{customer.name}</a>
-                  </Heading>
-                  <p className="planner-muted">
-                    {customer.position || 'Sem posição'} · {customer.preparation.trim() ? 'Abordagem preparada' : 'Preparação pendente'}
-                  </p>
-                  <PriorityDetails customer={customer} state={state} />
-                </div>
-                <div className="planner-queue-controls">
-                  <div className="ds-inline">
-                    <Badge>{entry.role === 'primary' ? 'Titular' : 'Reserva'}</Badge>
-                    {entry.outcome && <Badge tone="success">{OUTCOMES[entry.outcome]}</Badge>}
+      {stage === 'concluir' && (
+        <>
+          <Card className="planner-flow-card">
+            <SectionHeader
+              title={metrics.attended >= week.goal ? 'Meta de contatos alcançada' : 'Fechamento da semana'}
+              description="Revise o que aconteceu e o próximo passo de cada conversa."
+            />
+            <SummaryList
+              emphasis
+              items={[
+                { label: 'Contatados', value: metrics.attended },
+                { label: 'Tentativas', value: metrics.attempts },
+                { label: 'Aguardando na fila', value: queue.filter((item) => !item.outcome).length }
+              ]}
+            />
+            <ActionGroup>
+              {current && queue.some((item) => !item.outcome) && (
+                <Button as="a" href={attendanceLink()}>
+                  Retomar atendimento
+                </Button>
+              )}
+              <Button as="a" href="#/planner/resultados" variant="secondary">
+                Analisar resultados
+              </Button>
+              <Button as="a" href="#/planner/pedidos" variant="ghost">
+                Conferir vendas em Pedidos
+              </Button>
+            </ActionGroup>
+          </Card>
+          <Card className="planner-flow-card">
+            <SectionHeader title="Conversas e próximos passos" />
+            {state.interactions
+              .filter((item) => item.weekId === week.id)
+              .map((item) => (
+                <div key={item.id} className="planner-section-head">
+                  <div>
+                    <strong>{state.customers.find((c) => c.id === item.customerId)?.name || 'Cliente removido da carteira'}</strong>
+                    <p className="planner-muted">
+                      {OUTCOMES[item.outcome]} · {item.note || 'Sem observação adicional.'}
+                    </p>
                   </div>
-                  <div className="ds-inline">
-                    <IconButton
-                      label={`Subir ${customer.name}`}
-                      size="sm"
-                      disabled={busy || index === 0}
-                      onClick={() => act({ type: 'move', weekId: week.id, customerId: customer.id, direction: -1 }, 'Posição atualizada.')}
-                    >
-                      ↑
-                    </IconButton>
-                    <IconButton
-                      label={`Descer ${customer.name}`}
-                      size="sm"
-                      disabled={busy || index === week.queue.length - 1}
-                      onClick={() => act({ type: 'move', weekId: week.id, customerId: customer.id, direction: 1 }, 'Posição atualizada.')}
-                    >
-                      ↓
-                    </IconButton>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      disabled={busy || Boolean(entry.outcome)}
-                      onClick={() => act({ type: 'role', weekId: week.id, customerId: customer.id }, 'Papel atualizado.')}
-                    >
-                      {entry.role === 'primary' ? 'Tornar reserva' : 'Tornar titular'}
+                  {state.customers.some((c) => c.id === item.customerId) && (
+                    <Button as="a" size="sm" variant="ghost" href={`#/planner/clientes/${item.customerId}/combinados`}>
+                      Próximo passo
                     </Button>
-                    <Button
-                      size="sm"
-                      variant="ghost"
-                      disabled={busy || Boolean(entry.outcome)}
-                      onClick={() => act({ type: 'remove', weekId: week.id, customerId: customer.id }, 'Cliente removido da fila.')}
-                    >
-                      Remover
-                    </Button>
-                    {!entry.outcome && (
-                      <Button as="a" size="sm" href={`#/planner/atendimento/${customer.id}`}>
-                        Atender
-                      </Button>
-                    )}
-                  </div>
+                  )}
                 </div>
-              </Card>
-            </li>
-          );
-        })}
-      </ol>
+              ))}
+            {!metrics.attempts && <p className="planner-muted">Nenhum atendimento registrado nesta semana.</p>}
+          </Card>
+        </>
+      )}
     </>
   );
 }
