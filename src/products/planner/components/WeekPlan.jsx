@@ -197,7 +197,7 @@ export function WeekPlan({ state, week, busy, act, mode = 'planejar', customerId
               <Button as="a" href="#/planner/resultados" variant="secondary">
                 Analisar resultados
               </Button>
-              <Button as="a" href="#/planner/pedidos" variant="ghost">
+              <Button as="a" href="#/planner/resultados/pedidos" variant="ghost">
                 Conferir vendas em Pedidos
               </Button>
             </ActionGroup>

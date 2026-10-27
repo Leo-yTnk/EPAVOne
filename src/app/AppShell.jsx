@@ -54,16 +54,7 @@ export function AppShell({ route, preferences, account, onOpenAccount, onToggleT
     ...(sectionNav || []).map((item) => ({
       label: item.label,
       href: item.href,
-      icon:
-        {
-          clientes: 'user',
-          semana: 'planner',
-          oportunidades: 'insights',
-          resultados: 'difficulty',
-          receitas: 'recipe',
-          produtos: 'product',
-          criacao: 'writer'
-        }[item.section] || 'home',
+      icon: item.icon,
       group: 'Nesta área'
     })),
     ...Object.entries(PRODUCT_META)
@@ -174,7 +165,8 @@ export function AppShell({ route, preferences, account, onOpenAccount, onToggleT
                             href={item.href}
                             active={activeSection === item.section}
                           >
-                            {item.label}
+                            <Icon name={item.icon} size="1rem" />
+                            <span>{item.label}</span>
                           </NavItem>
                         ))}
                       </nav>

@@ -9,7 +9,7 @@ export function SaleRegistrationAction({ draft, onNew }) {
         <Button
           onClick={() => {
             salesTransfer.send(draft);
-            window.location.hash = '#/planner/pedidos';
+            window.location.hash = '#/planner/resultados/pedidos';
           }}
         >
           Registrar como venda no Planner

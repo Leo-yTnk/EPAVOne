@@ -71,8 +71,8 @@ export function Performance({ state, week }) {
                 : 'Mantenha o acompanhamento e respeite a frequência de cada cliente.'}
             </li>
           </ul>
-          <p className="planner-muted">Vendas, faturamento, ticket médio, IPC e positivação de vendas ficam em Pedidos.</p>
-          <Button as="a" href="#/planner/pedidos" variant="ghost" size="sm">
+          <p className="planner-muted">Vendas, faturamento, ticket médio, IPC e positivação de vendas ficam em Resultados → Pedidos.</p>
+          <Button as="a" href="#/planner/resultados/pedidos" variant="ghost" size="sm">
             Ver indicadores de vendas
           </Button>
         </Card>

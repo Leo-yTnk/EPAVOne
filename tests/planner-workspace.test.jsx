@@ -25,7 +25,7 @@ describe('Planner workspace', () => {
     ['#/planner/oportunidades', ['clientes', 'oportunidades']],
     ['#/planner/desempenho', ['resultados']],
     ['#/planner/atendimento/demo-1', ['semana', 'atender', 'demo-1']],
-    ['#/planner/pedidos', ['pedidos']]
+    ['#/planner/pedidos', ['resultados', 'pedidos']]
   ])('keeps the old URL %s usable', (hash, segments) => expect(parseHash(hash).segments).toEqual(segments));
   it('replaces the old URL without adding a history entry', () => {
     function Harness() {
@@ -38,6 +38,36 @@ describe('Planner workspace', () => {
     expect(window.location.hash).toBe(attendanceLink('demo-1'));
     expect(replace).toHaveBeenCalledOnce();
     replace.mockRestore();
+  });
+  it('opens orders inside results and lets the user return to attendance metrics', async () => {
+    const service = routedService();
+    const { rerender } = render(<PlannerRoutes route={{ segments: ['resultados', 'pedidos'] }} service={service} />);
+    expect(screen.getByRole('heading', { name: 'Resultados', level: 1 })).toBeTruthy();
+    expect(screen.getByRole('tab', { name: 'Pedidos' }).getAttribute('aria-selected')).toBe('true');
+    expect(screen.getByRole('tabpanel', { name: 'Pedidos' })).toBeTruthy();
+    expect(screen.getByRole('region', { name: 'Pedidos e vendas' })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: /Semana de planejamento/ })).toBeNull();
+    fireEvent.click(screen.getByRole('tab', { name: 'Atendimentos' }));
+    expect(window.location.hash).toBe('#/planner/resultados');
+    rerender(<PlannerRoutes route={{ segments: ['resultados'] }} service={service} />);
+    await screen.findByText('Clientes contatados');
+    expect(screen.getByRole('tabpanel', { name: 'Atendimentos' })).toBeTruthy();
+    fireEvent.keyDown(screen.getByRole('tab', { name: 'Atendimentos' }), { key: 'ArrowRight' });
+    expect(window.location.hash).toBe('#/planner/resultados/pedidos');
+  });
+  it('keeps orders available when the planning service fails', async () => {
+    render(
+      <PlannerRoutes
+        route={{ segments: ['resultados', 'pedidos'] }}
+        service={{
+          load: async () => {
+            throw new Error('offline');
+          }
+        }}
+      />
+    );
+    await waitFor(() => expect(screen.getByRole('region', { name: 'Pedidos e vendas' })).toBeTruthy());
+    expect(screen.queryByText('Planejamento indisponível')).toBeNull();
   });
   it('chooses an actionable next step for each stage and never attends a future week', () => {
     const state = demoData(),

@@ -88,6 +88,8 @@ describe('Mobile and tablet sidebar', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Navegação' }));
     const drawer = await screen.findByRole('dialog');
     const pages = within(drawer).getByRole('navigation', { name: 'Páginas do Planner' });
+    expect(within(pages).queryByRole('link', { name: 'Pedidos' })).toBeNull();
+    for (const link of within(pages).getAllByRole('link')) expect(link.querySelector('svg[aria-hidden="true"] path')).not.toBeNull();
     expect(within(pages).getByRole('link', { name: 'Semana' }).getAttribute('aria-current')).toBe('page');
     fireEvent.click(within(drawer).getByRole('link', { name: /Insights/ }));
     expect(window.location.hash).toBe('#/insights');

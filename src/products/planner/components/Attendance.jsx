@@ -67,7 +67,7 @@ export function Attendance({ state, week, customerId, act, busy, embedded = fals
           }
         ];
       salesTransfer.send(draft);
-      window.location.hash = '#/planner/pedidos';
+      window.location.hash = '#/planner/resultados/pedidos';
       return;
     }
     const saved = await act(

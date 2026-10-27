@@ -30,7 +30,9 @@ describe('App workspace tabs', () => {
   it('uses the same shell navigation for Planner and Insights, including deep routes', () => {
     const { rerender } = render(shell({ product: 'planner', segments: ['clientes', 'demo-1'] }));
     const nav = screen.getByRole('navigation', { name: 'Navegação do Planner' });
-    expect(within(nav).getAllByRole('link')).toHaveLength(5);
+    expect(within(nav).getAllByRole('link')).toHaveLength(4);
+    expect(within(nav).queryByRole('link', { name: 'Pedidos' })).toBeNull();
+    for (const link of within(nav).getAllByRole('link')) expect(link.querySelector('svg[aria-hidden="true"] path')).not.toBeNull();
     expect(within(nav).getByRole('link', { name: 'Clientes' }).getAttribute('aria-current')).toBe('page');
     expect(within(nav).getByRole('link', { name: 'Resultados' }).getAttribute('href')).toBe('#/planner/resultados');
     expect(within(nav).queryByRole('link', { name: 'Oportunidades' })).toBeNull();
@@ -40,6 +42,7 @@ describe('App workspace tabs', () => {
     expect(within(nav).getByRole('link', { name: 'Início' }).getAttribute('aria-current')).toBe('page');
     rerender(shell({ product: 'insights', segments: ['produtos'] }));
     const insights = screen.getByRole('navigation', { name: 'Navegação do Insights' });
+    for (const link of within(insights).getAllByRole('link')) expect(link.querySelector('svg[aria-hidden="true"] path')).not.toBeNull();
     expect(insights).toBe(nav);
     expect(insights.className).toBe('product-section-nav');
     expect(within(insights).getByRole('link', { name: 'Produtos' }).getAttribute('aria-current')).toBe('page');
