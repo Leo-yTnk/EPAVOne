@@ -40,9 +40,13 @@ export function InsightsRoutes({ route, account, onOpenAccount }) {
       )}
       {info && <PageHeader product="insights" title={info.title} />}
       {home ? (
-        <InsightsHomePage />
+        <InsightsHomePage ownerId={account?.session?.user?.id} />
       ) : section === 'receitas' ? (
-        <RecipesPage key={route.segments.join('/')} initialSection={route.segments[1] === 'secao' ? route.segments[2] || '' : ''} />
+        <RecipesPage
+          key={route.segments.join('/')}
+          ownerId={account?.session?.user?.id}
+          initialSection={route.segments[1] === 'secao' ? route.segments[2] || '' : ''}
+        />
       ) : section === 'produtos' ? (
         <ProductCatalogPage
           key={route.segments.join('/')}

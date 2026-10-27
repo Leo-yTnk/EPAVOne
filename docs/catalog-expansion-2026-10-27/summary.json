@@ -1,0 +1,19 @@
+{
+  "date": "2026-10-27",
+  "swiftProducts": 996,
+  "existingProducts": 197,
+  "matchedIdentities": 191,
+  "missingProducts": 805,
+  "recipes": 42,
+  "variants": 5,
+  "recipeCategories": [
+    "Aves",
+    "Lanches",
+    "Bovinos",
+    "Suínos",
+    "Pescados",
+    "Vegetarianas",
+    "Sobremesas"
+  ],
+  "parserErrors": []
+}

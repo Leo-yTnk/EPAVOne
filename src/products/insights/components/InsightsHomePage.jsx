@@ -11,8 +11,9 @@ import { catalogService } from '../services/catalogService.js';
 import { useCatalogResource } from '../hooks/useCatalogResource.js';
 import { discoverySections } from '../models/discovery.js';
 import '../home.css';
+import { PersonalRecipesSection } from './PersonalRecipesSection.jsx';
 
-export function InsightsHomePage() {
+export function InsightsHomePage({ ownerId }) {
   const resource = useCatalogResource(catalogService.loadHome, 'home');
   const structure = useCatalogResource(catalogService.structure, 'public');
   const [recipe, setRecipe] = useState(null);
@@ -65,6 +66,7 @@ export function InsightsHomePage() {
           </nav>
         )}
       </PageHeader>
+      {ownerId && <PersonalRecipesSection key={ownerId} ownerId={ownerId} filters={{ query }} />}
       <div ref={resultsRef} className="insights-results-content">
         {resource.loading ? (
           <CatalogLoading label="Preparando suas sugestões…" />

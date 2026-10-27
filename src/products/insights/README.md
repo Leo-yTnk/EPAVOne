@@ -19,6 +19,7 @@ Usuários e dados continuam no projeto Supabase EPAV existente; o código operac
 - Paginação visual de 24 produtos, nomes completos e imagens sob demanda.
 - Detalhes em Dialog do design system, com receitas publicadas relacionadas.
 - Ingredientes, complementos, preparo e dicas das receitas.
+- **Criados por mim** na Home e em Receitas: receitas pessoais da conta atual em carrossel, com busca e filtros. Visitantes não veem a seção. Ela é independente de falhas do catálogo público e não publica o conteúdo.
 - Preço regular separado do preço promocional e sua quantidade mínima.
 - Indicação de referência quando a última confirmação tem mais de 24 horas
   ou o preço não está confirmado; peças com peso variável têm aviso próprio.
@@ -31,6 +32,9 @@ As relações usam os mesmos nomes de FK do Yourcipe. As leituras de produtos
 restringem `scope=site` e `active=true`; as de receitas restringem
 `scope=site` e `status=published`. As políticas RLS existentes continuam
 sendo a autoridade. Conta e criação usam a sessão autenticada, repositórios e escritores transacionais próprios.
+
+`PersonalRecipesSection → personalRecipesService → personalRecipesRepository → SDK autenticado`.
+O repositório pessoal exige `scope=personal` e `owner_id` da conta atual, mantendo RLS. Os ingredientes usam join da receita e os mesmos filtros. A seção e seus detalhes são remontados por ID da conta, cancelando consultas e descartando respostas antigas ao sair ou trocar de usuário. O catálogo público continua anônimo. A seção pessoal não altera compartilhamentos explicitamente existentes nem publica receitas.
 
 O repositório lê todas as páginas, avançando pelo número efetivamente retornado
 pelo servidor para evitar truncamento. O transporte limita cada requisição a

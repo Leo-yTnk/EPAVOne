@@ -1,5 +1,7 @@
 # Revisão do EPAVOne — 14/10/2026
 
+> Registro histórico. Em 27/10/2026, o proprietário confirmou migrations aplicadas, preços atualizando, publicação funcionando e Yourcipe-EPAV encerrado/arquivado. Para receitas pessoais e ampliação do catálogo, consultar [a atualização de 27/10](catalog-expansion-2026-10-27/README.md). A tabela de pendências abaixo representa o diagnóstico de 14/10, não o estado operacional atual.
+
 ## Resultado e escopo
 
 Revisão baseada no main `c9c9d173` (PR #52). Yourcipe-EPAV foi consultado: continua com a aplicação antiga e workflow de deploy. Alterações foram preparadas no EPAVOne, sem alterar services, repositories, permissões, validações, gravações, importação, exclusão ou lógica de criação/administração.
