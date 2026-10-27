@@ -78,3 +78,9 @@ it('translates database statement timeouts and retains the SQLSTATE for callers'
     result(Promise.resolve({ error: { code: '57014', message: 'canceling statement due to statement timeout' } }))
   ).rejects.toMatchObject({ code: '57014', message: 'O banco interrompeu a operação por exceder o tempo limite.' });
 });
+
+it('distinguishes a catalog lock timeout from a statement timeout', async () => {
+  await expect(
+    result(Promise.resolve({ error: { code: '55P03', message: 'canceling statement due to lock timeout' } }))
+  ).rejects.toMatchObject({ code: '55P03', message: 'Outra operação está usando os dados. Não foi possível obter acesso para gravar.' });
+});

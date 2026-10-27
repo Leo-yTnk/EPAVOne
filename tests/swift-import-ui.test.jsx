@@ -105,3 +105,22 @@ it('holds progress while awaiting the database and shows a timeout without repor
   expect(screen.queryByRole('progressbar')).toBeNull();
   expect(screen.getByRole('checkbox').checked).toBe(false);
 });
+
+it('explains lock contention and requires another confirmation without retrying automatically', async () => {
+  adminService.context.mockResolvedValue({ categories: [], products: [], recipes: [], structure: { pages: [], sections: [] } });
+  adminService.importCatalog.mockClear();
+  adminService.importCatalog.mockRejectedValueOnce(
+    Object.assign(new Error('Outra operação está usando os dados. Não foi possível obter acesso para gravar.'), { code: '55P03' })
+  );
+  render(<ImportPanel />);
+  fireEvent.input(await screen.findByLabelText('Planilha do catálogo'), { target: { files: [{ name: 'catalogo.xlsx' }] } });
+  const confirm = await screen.findByRole('button', { name: 'Confirmar importação' });
+  fireEvent.click(screen.getByRole('checkbox'));
+  fireEvent.click(confirm);
+  const error = await screen.findByRole('alert');
+  expect(error.textContent).toContain('Aguarde a outra operação terminar');
+  expect(error.textContent).not.toContain('Se a conexão caiu');
+  expect(adminService.importCatalog).toHaveBeenCalledTimes(1);
+  expect(screen.getByRole('checkbox').checked).toBe(false);
+  expect(screen.queryByRole('progressbar')).toBeNull();
+});

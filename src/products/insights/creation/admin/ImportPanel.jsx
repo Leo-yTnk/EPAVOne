@@ -29,6 +29,7 @@ export function ImportPanel() {
   const [progress, setProgress] = useState(null);
   const pending = useRef(false);
   const [error, setError] = useState('');
+  const [errorCode, setErrorCode] = useState('');
   const [message, setMessage] = useState('');
   const [confirmed, setConfirmed] = useState(false);
   async function prepare(file) {
@@ -36,6 +37,7 @@ export function ImportPanel() {
     pending.current = true;
     setBusy(true);
     setError('');
+    setErrorCode('');
     setMessage('');
     setChoices({});
     setPayload(null);
@@ -54,6 +56,7 @@ export function ImportPanel() {
       setProgress({ value: 100, label: 'Leitura concluída. Revise a prévia antes de gravar.' });
     } catch (failure) {
       setError(failure.message);
+      setErrorCode(failure.code || '');
     } finally {
       pending.current = false;
       setBusy(false);
@@ -64,6 +67,7 @@ export function ImportPanel() {
     pending.current = true;
     setBusy(true);
     setError('');
+    setErrorCode('');
     setMessage('');
     setProgress({ value: 0, label: 'Conferindo o catálogo atualizado' });
     try {
@@ -94,6 +98,7 @@ export function ImportPanel() {
       resource.reload();
     } catch (failure) {
       setError(failure.message);
+      setErrorCode(failure.code || '');
       setConfirmed(false);
     } finally {
       pending.current = false;
@@ -122,6 +127,7 @@ export function ImportPanel() {
                 await downloadImportTemplate();
               } catch (failure) {
                 setError(failure.message);
+                setErrorCode(failure.code || '');
               }
             }}
           >
@@ -200,9 +206,11 @@ export function ImportPanel() {
       {error && (
         <Alert tone="danger" title="Importação não concluída">
           {error}{' '}
-          {error.includes('tempo limite')
-            ? 'Nenhuma alteração dessa transação foi salva. Tente novamente. Se persistir, peça ao administrador para verificar o tempo de processamento e os bloqueios do banco.'
-            : 'Confira a mensagem antes de tentar novamente. Se a conexão caiu durante a gravação, atualize o catálogo e prepare outra prévia para verificar o resultado.'}
+          {errorCode === '55P03'
+            ? 'Nenhuma alteração dessa transação foi salva. Aguarde a outra operação terminar e prepare uma nova prévia antes de tentar novamente.'
+            : error.includes('tempo limite')
+              ? 'Nenhuma alteração dessa transação foi salva. Tente novamente. Se persistir, peça ao administrador para verificar o tempo de processamento e os bloqueios do banco.'
+              : 'Confira a mensagem antes de tentar novamente. Se a conexão caiu durante a gravação, atualize o catálogo e prepare outra prévia para verificar o resultado.'}
         </Alert>
       )}
       {message && (
