@@ -26,7 +26,7 @@ describe('Deferred app loading', () => {
   it('defers Writer until first use and keeps its state across app switches and subpages', async () => {
     window.scrollTo = vi.fn();
     window.location.hash = '#/';
-    localStorage.setItem('epavone-introduction-v1', 'done');
+    localStorage.setItem('epavone-tutorial-v1', 'done');
     render(<App />);
     await screen.findByText('Home de teste');
     expect(lifecycle.mounts).toBe(0);
@@ -40,21 +40,43 @@ describe('Deferred app loading', () => {
     navigate('#/insights/receitas');
     navigate('#/writer');
     expect((await screen.findByLabelText('Pedido em andamento')).value).toBe('Cliente e carrinho preservados');
+    navigate('#/welcome');
+    await screen.findByRole('dialog', { name: 'Como usar o EPAVOne' });
+    fireEvent.click(screen.getByRole('button', { name: 'Pular tutorial' }));
+    navigate('#/writer');
+    expect((await screen.findByLabelText('Pedido em andamento')).value).toBe('Cliente e carrinho preservados');
     expect(lifecycle.mounts).toBe(1);
     expect(lifecycle.unmounts).toBe(0);
   });
 });
 
-it('shows the introduction only at home, remembers completion and allows revisiting it', async () => {
-  localStorage.removeItem('epavone-introduction-v1');
+it('shows the tutorial once, remembers dismissal across routes and allows manual replay', async () => {
+  localStorage.removeItem('epavone-tutorial-v1');
   window.scrollTo = vi.fn();
   window.location.hash = '#/';
   render(<App />);
-  fireEvent.click(await screen.findByRole('button', { name: /Começar minha experiência/ }));
+  fireEvent.click(await screen.findByRole('button', { name: 'Pular tutorial' }));
   await screen.findByText('Home de teste');
-  expect(localStorage.getItem('epavone-introduction-v1')).toBe('done');
+  expect(localStorage.getItem('epavone-tutorial-v1')).toBe('done');
+  navigate('#/insights/produtos');
+  await screen.findByText('Insights de teste');
+  expect(screen.queryByRole('dialog', { name: 'Como usar o EPAVOne' })).toBeNull();
   navigate('#/welcome');
-  fireEvent.click(await screen.findByRole('button', { name: 'Já conheço o EPAVOne' }));
+  fireEvent.click(await screen.findByRole('button', { name: 'Pular tutorial' }));
   await screen.findByText('Home de teste');
   expect(window.location.hash).toBe('#/');
+});
+
+it('also introduces a first visit through a deep link and preserves its destination', async () => {
+  localStorage.removeItem('epavone-tutorial-v1');
+  window.scrollTo = vi.fn();
+  window.location.hash = '#/insights/produtos';
+  const view = render(<App />);
+  await screen.findByRole('dialog', { name: 'Como usar o EPAVOne' });
+  fireEvent.keyDown(document, { key: 'Escape' });
+  expect(localStorage.getItem('epavone-tutorial-v1')).toBe('done');
+  expect(window.location.hash).toBe('#/insights/produtos');
+  view.unmount();
+  render(<App />);
+  expect(screen.queryByRole('dialog', { name: 'Como usar o EPAVOne' })).toBeNull();
 });

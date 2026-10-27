@@ -21,7 +21,7 @@ import { entities, statusLabels } from '../models/editor.js';
 import { EntityEditor } from './EntityEditor.jsx';
 import { CreationThumbnail } from './CreationThumbnail.jsx';
 import { DeleteDialog } from './DeleteDialog.jsx';
-export function EntityManager({ type, scope = 'personal', onShare, onSubmit }) {
+export function EntityManager({ type, scope = 'personal', onShare, onSubmit, createRequested = false, onCreateClose }) {
   const resource = useCreationResource(() => creationService.load(type, scope), `${type}:${scope}`);
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState('all');
@@ -54,8 +54,13 @@ export function EntityManager({ type, scope = 'personal', onShare, onSubmit }) {
     'y'
   );
   const meta = entities[type];
-  function saved() {
+  const visibleEditor = editor || (createRequested ? { item: null } : null);
+  function closeEditor() {
     setEditor(null);
+    if (createRequested) onCreateClose?.();
+  }
+  function saved() {
+    closeEditor();
     setDeleting(null);
     setMessage('Alterações salvas.');
     resource.reload();
@@ -210,7 +215,7 @@ export function EntityManager({ type, scope = 'personal', onShare, onSubmit }) {
         )}
       </div>
       <ModalPresence>
-        {editor && <EntityEditor type={type} scope={scope} item={editor.item} onClose={() => setEditor(null)} onSaved={saved} />}
+        {visibleEditor && <EntityEditor type={type} scope={scope} item={visibleEditor.item} onClose={closeEditor} onSaved={saved} />}
       </ModalPresence>
       <ModalPresence>
         {deleting && <DeleteDialog type={type} item={deleting} onClose={() => setDeleting(null)} onSaved={saved} />}

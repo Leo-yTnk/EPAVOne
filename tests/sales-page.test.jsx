@@ -62,3 +62,15 @@ it('requires authentication before listing or registering sales', () => {
   fireEvent.click(screen.getByText('Entrar para registrar vendas'));
   expect(open).toHaveBeenCalled();
 });
+
+it('opens a manual sale from the create shortcut only after login and consumes the shortcut on close', async () => {
+  const close = vi.fn();
+  const repository = { list: vi.fn().mockResolvedValue([]) };
+  const view = render(<SalesPage createRequested onCreateClose={close} repository={repository} />);
+  expect(screen.queryByRole('dialog')).toBeNull();
+  expect(repository.list).not.toHaveBeenCalled();
+  view.rerender(<SalesPage createRequested onCreateClose={close} account={{ session: { user: { id: 'a' } } }} repository={repository} />);
+  await screen.findByRole('dialog', { name: 'Registrar venda' });
+  fireEvent.click(screen.getByRole('button', { name: 'Fechar' }));
+  expect(close).toHaveBeenCalledOnce();
+});

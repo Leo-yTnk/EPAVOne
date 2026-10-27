@@ -73,3 +73,15 @@ describe('Creation editor', () => {
     );
   });
 });
+
+it.each(['recipes', 'products', 'categories'])(
+  'opens the %s editor from the global create shortcut and consumes it on close',
+  async (type) => {
+    creationService.load.mockResolvedValue([]);
+    const close = vi.fn();
+    render(<EntityManager type={type} createRequested onCreateClose={close} />);
+    await screen.findByLabelText('Nome');
+    fireEvent.click(screen.getByRole('button', { name: 'Fechar' }));
+    expect(close).toHaveBeenCalledOnce();
+  }
+);

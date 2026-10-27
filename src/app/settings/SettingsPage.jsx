@@ -199,7 +199,7 @@ export function SettingsPage({
       </div>
       <div className="settings-reset">
         <Button as="a" href="#/welcome" variant="ghost">
-          Rever a introdução
+          Rever tutorial
         </Button>
         <Text size="sm">Restaure aparência, navegação e movimento sem alterar seus conteúdos.</Text>
         <Button

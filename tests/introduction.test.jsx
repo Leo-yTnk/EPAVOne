@@ -6,14 +6,27 @@ afterEach(() => {
   localStorage.clear();
   vi.restoreAllMocks();
 });
-it('explains all three steps and connects both entry actions', () => {
+it('covers the whole workflow with next, previous, topic selection and completion', () => {
   const complete = vi.fn();
   render(<IntroductionPage onComplete={complete} />);
-  expect(screen.getAllByRole('listitem')).toHaveLength(3);
-  expect(screen.getByText(/enviado por você ao suporte/)).toBeTruthy();
-  fireEvent.click(screen.getByRole('button', { name: /Começar minha experiência/ }));
-  fireEvent.click(screen.getByRole('button', { name: /Já conheço/ }));
-  expect(complete).toHaveBeenCalledTimes(2);
+  expect(screen.getByRole('progressbar').getAttribute('aria-valuenow')).toBe('1');
+  expect(screen.getByRole('button', { name: /Anterior/ }).disabled).toBe(true);
+  fireEvent.click(screen.getByRole('button', { name: /Próximo/ }));
+  expect(screen.getByRole('progressbar').getAttribute('aria-valuenow')).toBe('2');
+  fireEvent.click(screen.getByRole('button', { name: /Anterior/ }));
+  expect(screen.getByRole('progressbar').getAttribute('aria-valuenow')).toBe('1');
+  fireEvent.click(screen.getByRole('button', { name: /09 · Download e envio/ }));
+  expect(screen.getByText(/Baixar o pedido não faz o envio automaticamente/)).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: /Próximo/ }));
+  expect(screen.getByText(/ticket médio/)).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: 'Começar a usar' }));
+  expect(complete).toHaveBeenCalledOnce();
+});
+it('allows skipping at any point', () => {
+  const complete = vi.fn();
+  render(<IntroductionPage onComplete={complete} />);
+  fireEvent.click(screen.getByRole('button', { name: 'Pular tutorial' }));
+  expect(complete).toHaveBeenCalledOnce();
 });
 it('remembers completion independently of preferences and handles unavailable storage', () => {
   expect(hasSeenIntroduction()).toBe(false);

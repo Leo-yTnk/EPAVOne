@@ -25,18 +25,20 @@ export function App() {
   const route = useHashRoute();
   useWeeklyOrderRestore(route.product);
   const [introductionSeen, setIntroductionSeen] = useState(hasSeenIntroduction);
-  const showIntroduction = route.product === 'home' && (!introductionSeen || route.raw === 'welcome');
+  const showIntroduction = !introductionSeen || route.raw === 'welcome';
   const finishIntroduction = () => {
     completeIntroduction();
     setIntroductionSeen(true);
     if (route.raw === 'welcome') window.location.hash = '#/';
-    requestAnimationFrame(() => document.querySelector('#main')?.focus({ preventScroll: true }));
+    requestAnimationFrame(() => {
+      if (!document.activeElement?.closest('[role="dialog"]')) document.querySelector('#main')?.focus({ preventScroll: true });
+    });
   };
   const pageRef = useRef(null);
   const writerRef = useRef(null);
   usePressFeedback();
   const writerVisited = useRef(false);
-  if (route.product === 'writer') writerVisited.current = true;
+  if (route.product === 'writer' && !showIntroduction) writerVisited.current = true;
   const account = useAccount();
   const [accountOpen, setAccountOpen] = useState(false);
   const [theme, setTheme] = useState(getInitialTheme);
@@ -61,11 +63,13 @@ export function App() {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'auto' });
+    if (showIntroduction) return;
     const frame = requestAnimationFrame(() => {
-      if (!document.activeElement?.closest('[role="tablist"]')) document.querySelector('#main')?.focus({ preventScroll: true });
+      if (!document.activeElement?.closest('[role="tablist"], [role="dialog"]'))
+        document.querySelector('#main')?.focus({ preventScroll: true });
     });
     return () => cancelAnimationFrame(frame);
-  }, [routeKey]);
+  }, [routeKey, showIntroduction]);
 
   function toggleTheme() {
     const next = theme === 'dark' ? 'light' : 'dark';
@@ -73,7 +77,7 @@ export function App() {
     setTheme(next);
   }
 
-  let page = showIntroduction ? <IntroductionPage onComplete={finishIntroduction} /> : <HomePage preferences={preferences} />;
+  let page = <HomePage preferences={preferences} />;
   if (route.product === 'insights') page = <InsightsRoutes route={route} account={account} onOpenAccount={() => setAccountOpen(true)} />;
   if (route.product === 'planner')
     page = (
@@ -109,6 +113,8 @@ export function App() {
       />
     );
 
+  if (showIntroduction) page = null;
+
   return (
     <AppShell
       preferences={preferences}
@@ -143,6 +149,7 @@ export function App() {
           </Suspense>
         )}
       </div>
+      <ModalPresence>{showIntroduction && <IntroductionPage onComplete={finishIntroduction} />}</ModalPresence>
       <ModalPresence>
         {accountOpen && (
           <Suspense fallback={<Spinner label="Carregando conta" />}>

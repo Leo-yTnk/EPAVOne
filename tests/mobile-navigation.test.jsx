@@ -39,7 +39,7 @@ describe('Mobile and tablet sidebar', () => {
     expect(screen.queryByRole('tablist')).toBeNull();
     expect(screen.getByRole('region', { name: 'Planner' })).not.toBeNull();
     expect(
-      screen.getByRole('link', { name: 'Configurações' }).closest('.workspace-utilities').querySelector('.workspace-account')
+      screen.getByRole('link', { name: 'Configurações' }).closest('.workspace-utilities').querySelector('[aria-label="Criar"]')
     ).not.toBeNull();
     trigger.focus();
     fireEvent.click(trigger);
@@ -62,6 +62,7 @@ describe('Mobile and tablet sidebar', () => {
       </AppShell>
     );
     expect(screen.getByRole('button', { name: 'Navegação: Planner, Resultados' })).not.toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: 'Navegação: Planner, Resultados' }));
     fireEvent.click(screen.getByRole('button', { name: 'Entrar na conta' }));
     expect(account).toHaveBeenCalledTimes(1);
   });

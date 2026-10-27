@@ -1,95 +1,81 @@
-.introduction-page {
+.tutorial {
   display: grid;
-  gap: var(--space-7);
-  max-width: 72rem;
-  margin-inline: auto;
-  padding-block: var(--space-6);
+  gap: var(--space-5);
   min-width: 0;
 }
-.introduction-heading {
+.tutorial-layout {
   display: grid;
-  justify-items: center;
-  text-align: center;
-  gap: var(--space-5);
+  grid-template-columns: minmax(10rem, 1fr) minmax(0, 2.5fr);
+  gap: var(--space-6);
+  align-items: start;
 }
-.introduction-heading .ds-overline {
-  color: var(--text-brand);
-}
-.introduction-heading h1 {
-  font-size: clamp(2.5rem, 5vw, 4.5rem);
-  max-width: 16ch;
-}
-.introduction-lead {
-  color: var(--text-secondary);
-  max-width: 39rem;
-  text-wrap: balance;
-}
-.introduction-steps {
+.tutorial-topics {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-1);
+  min-width: 0;
+}
+.tutorial-content {
+  display: grid;
   gap: var(--space-4);
-  list-style: none;
-  padding: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.tutorial-content:focus {
+  outline: none;
+  box-shadow: none;
+}
+.tutorial-content > p,
+.tutorial-instructions p {
+  color: var(--text-secondary);
+}
+.tutorial-instructions {
+  display: grid;
+  gap: var(--space-4);
+  padding-inline-start: var(--space-5);
   margin: 0;
 }
-.introduction-steps li {
-  min-width: 0;
-  display: grid;
+.tutorial-instructions li {
+  padding-inline-start: var(--space-2);
 }
-.introduction-step {
-  --container-padding: var(--space-6);
-  display: grid;
-  align-content: start;
-  gap: var(--space-4);
+.tutorial-instructions li::marker {
+  color: var(--text-brand);
 }
-.introduction-step-top {
+.tutorial-instructions p {
+  margin: var(--space-1) 0 0;
+}
+.tutorial-tip {
+  display: flex;
+  align-items: start;
+  gap: var(--space-3);
+}
+.tutorial-tip > svg {
+  flex: none;
+  color: var(--text-brand);
+}
+.tutorial-actions {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
   gap: var(--space-3);
-  padding-bottom: var(--space-4);
-}
-.introduction-step-top > span:last-child {
-  font: 400 1.5rem/1 var(--font-display);
-  color: var(--text-brand);
-}
-.introduction-step p {
-  color: var(--text-secondary);
-}
-.introduction-start {
-  display: grid;
-  justify-items: center;
-  gap: var(--space-3);
-  text-align: center;
-}
-.introduction-start p,
-.introduction-footnote {
-  color: var(--text-secondary);
-}
-.introduction-footnote {
-  text-align: center;
-  font-size: var(--text-caption);
 }
 @media (max-width: 48rem) {
-  .introduction-page {
-    gap: var(--space-6);
-    padding-block: var(--space-4);
-  }
-  .introduction-heading {
+  .tutorial-layout {
+    grid-template-columns: minmax(0, 1fr);
     gap: var(--space-4);
   }
-  .introduction-steps {
-    grid-template-columns: minmax(0, 1fr);
-    gap: var(--space-3);
+  .tutorial-topics {
+    display: flex;
+    overflow-x: auto;
+    max-width: 100%;
+    padding-block-end: var(--space-2);
   }
-  .introduction-step {
-    --container-padding: var(--space-5);
-    gap: var(--space-3);
+  .tutorial-topics > * {
+    flex: none;
+    max-width: 17rem;
   }
-  .introduction-step-top {
-    padding-bottom: var(--space-2);
-  }
-  .introduction-start > .ds-btn-primary {
-    width: 100%;
+  .tutorial-actions {
+    justify-content: center;
   }
 }

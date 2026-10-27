@@ -1,3 +1,4 @@
+import { CreateMenu } from './CreateMenu.jsx';
 import { useCallback, useEffect, useRef, useState } from 'preact/hooks';
 import { MobileNavigation } from './MobileNavigation.jsx';
 import { useHeaderMotion } from './useHeaderMotion.js';
@@ -86,16 +87,19 @@ export function AppShell({ route, preferences, account, onOpenAccount, onToggleT
       </a>
       <header className="site-header">
         {mobileSidebar ? (
-          <Button
-            className="mobile-navigation-trigger"
-            variant="secondary"
-            onClick={() => setNavigationOpen(true)}
-            aria-haspopup="dialog"
-            aria-expanded={navigationOpen}
-            aria-controls="mobile-navigation"
-          >
-            <Icon name="menu" /> Navegação
-          </Button>
+          <div className="workspace-bar">
+            <Button
+              className="mobile-navigation-trigger"
+              variant="secondary"
+              onClick={() => setNavigationOpen(true)}
+              aria-haspopup="dialog"
+              aria-expanded={navigationOpen}
+              aria-controls="mobile-navigation"
+            >
+              <Icon name="menu" /> Navegação
+            </Button>
+            <CreateMenu />
+          </div>
         ) : (
           <div className="workspace-bar">
             {compactHeader ? (
@@ -187,16 +191,7 @@ export function AppShell({ route, preferences, account, onOpenAccount, onToggleT
                 <Icon name="settings" />
                 <span className="workspace-settings-label">Configurações</span>
               </NavItem>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="workspace-account"
-                onClick={onOpenAccount}
-                aria-label={account?.session ? 'Minha conta' : 'Entrar na conta'}
-              >
-                <Icon name="user" />
-                <span className="workspace-account-label">Conta</span>
-              </Button>
+              <CreateMenu />
             </div>
           </div>
         )}

@@ -133,6 +133,10 @@ export function CreationPage({ route, account, onOpenAccount }) {
             <EntityManager
               key={section.type}
               type={section.type}
+              createRequested={route.segments[2] === 'novo'}
+              onCreateClose={() => {
+                window.location.hash = `#/insights/criacao/${section.value}`;
+              }}
               onShare={setSharing}
               onSubmit={(type, item) => setSubmission({ type, item })}
             />

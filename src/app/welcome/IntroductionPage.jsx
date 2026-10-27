@@ -1,69 +1,85 @@
-import { AppLogo, Button, Card, Heading, Icon, Text } from '../../design-system/components/index.js';
+import { useEffect, useRef, useState } from 'preact/hooks';
+import { AppLogo, Button, Card, Dialog, Heading, Icon, Progress, Text } from '../../design-system/components/index.js';
+import { tutorialSteps } from './tutorialSteps.js';
 import './introduction.css';
 
-const steps = [
-  {
-    app: 'planner',
-    number: '01',
-    title: 'Planeje cada conversa.',
-    copy: 'Organize sua semana, conheça seus clientes e escolha a próxima oportunidade.'
-  },
-  {
-    app: 'insights',
-    number: '02',
-    title: 'Encontre a ideia certa.',
-    copy: 'Explore produtos e receitas para oferecer algo que faça sentido para cada cliente.'
-  },
-  {
-    app: 'writer',
-    number: '03',
-    title: 'Transforme em pedido.',
-    copy: 'Anexe o formulário da semana, monte o pedido e confira tudo antes de enviar ao suporte.'
-  }
-];
 export function IntroductionPage({ onComplete }) {
+  const [index, setIndex] = useState(0);
+  const contentRef = useRef(null);
+  const topicRef = useRef(null);
+  const step = tutorialSteps[index];
+  const last = index === tutorialSteps.length - 1;
+  useEffect(() => {
+    topicRef.current?.scrollIntoView?.({ block: 'nearest', inline: 'nearest', behavior: 'instant' });
+    contentRef.current?.focus({ preventScroll: true });
+    contentRef.current?.closest('.ds-dialog-content')?.scrollTo?.({ top: 0, behavior: 'instant' });
+  }, [index]);
   return (
-    <section className="introduction-page" aria-label="Introdução ao EPAVOne">
-      <div className="introduction-heading">
-        <AppLogo product="one" wordmark size="lg" />
-        <Text as="p" className="ds-overline">
-          Seu próximo atendimento começa aqui
-        </Text>
-        <Heading as="h1" display="large">
-          Três apps.
-          <br />
-          Uma rotina mais leve.
-        </Heading>
-        <Text className="introduction-lead">
-          Da primeira ideia ao pedido conferido, o EPAVOne acompanha cada etapa da sua experiência de vendas.
-        </Text>
-      </div>
-      <ol className="introduction-steps">
-        {steps.map((step) => (
-          <li key={step.app}>
-            <Card className="introduction-step" data-product={step.app}>
-              <div className="introduction-step-top">
-                <AppLogo product={step.app} wordmark />
-                <span aria-hidden="true">{step.number}</span>
-              </div>
-              <Heading as="h2" level={3}>
-                {step.title}
-              </Heading>
-              <Text size="sm">{step.copy}</Text>
+    <Dialog
+      open
+      title="Como usar o EPAVOne"
+      size="lg"
+      onClose={onComplete}
+      actions={
+        <div className="tutorial-actions">
+          <Button variant="ghost" onClick={onComplete}>
+            Pular tutorial
+          </Button>
+          <div className="ds-inline">
+            <Button variant="secondary" disabled={index === 0} onClick={() => setIndex(index - 1)}>
+              <Icon name="back" /> Anterior
+            </Button>
+            <Button onClick={() => (last ? onComplete() : setIndex(index + 1))}>
+              {last ? 'Começar a usar' : 'Próximo'} <Icon name={last ? 'check' : 'next'} />
+            </Button>
+          </div>
+        </div>
+      }
+    >
+      <section className="tutorial" aria-label="Guia completo do EPAVOne">
+        <Progress
+          label="Seu guia do EPAVOne"
+          value={index + 1}
+          max={tutorialSteps.length}
+          formatValue={(value, max) => `${value} de ${max}`}
+        />
+        <div className="tutorial-layout">
+          <nav className="tutorial-topics" aria-label="Etapas do tutorial">
+            {tutorialSteps.map((item, position) => (
+              <Button
+                key={item.topic}
+                ref={position === index ? topicRef : undefined}
+                variant={position === index ? 'secondary' : 'ghost'}
+                aria-current={position === index ? 'step' : undefined}
+                onClick={() => setIndex(position)}
+              >
+                <span>
+                  {String(position + 1).padStart(2, '0')} · {item.topic}
+                </span>
+              </Button>
+            ))}
+          </nav>
+          <div ref={contentRef} className="tutorial-content" tabIndex="-1" aria-label={`Etapa ${index + 1}: ${step.topic}`}>
+            <AppLogo product={step.app} wordmark />
+            <Heading as="h3" level={2}>
+              {step.title}
+            </Heading>
+            <Text>{step.copy}</Text>
+            <ol className="tutorial-instructions">
+              {step.items.map(([title, copy]) => (
+                <li key={title}>
+                  <strong>{title}</strong>
+                  <p>{copy}</p>
+                </li>
+              ))}
+            </ol>
+            <Card padding="compact" className="tutorial-tip">
+              <Icon name="insights" />
+              <Text size="sm">{step.tip}</Text>
             </Card>
-          </li>
-        ))}
-      </ol>
-      <div className="introduction-start">
-        <Button size="lg" onClick={onComplete}>
-          Começar minha experiência <Icon name="next" />
-        </Button>
-        <Text size="sm">Comece sem uma conta. Entre quando quiser salvar sua biblioteca.</Text>
-        <Button variant="ghost" onClick={onComplete}>
-          Já conheço o EPAVOne
-        </Button>
-      </div>
-      <p className="introduction-footnote">O pedido final é baixado no Writer e enviado por você ao suporte do EPAV.</p>
-    </section>
+          </div>
+        </div>
+      </section>
+    </Dialog>
   );
 }
