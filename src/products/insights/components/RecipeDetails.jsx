@@ -5,9 +5,14 @@ import { catalogService } from '../services/catalogService.js';
 import { useCatalogResource } from '../hooks/useCatalogResource.js';
 import { RecipeIngredients } from './RecipeIngredients.jsx';
 import { CatalogImage } from './CatalogImage.jsx';
+import { personalRecipesService } from '../services/personalRecipesService.js';
 
 export function RecipeDetails({ recipe, onOpenProduct, titleId }) {
-  const resource = useCatalogResource(catalogService.recipeIngredients, recipe.id);
+  const personal = recipe.scope === 'personal';
+  const resource = useCatalogResource(
+    personal ? personalRecipesService.ingredients : catalogService.recipeIngredients,
+    personal ? recipe : recipe.id
+  );
   const steps = Array.isArray(recipe.instructions)
     ? recipe.instructions
     : String(recipe.instructions || '')

@@ -37,3 +37,9 @@
   .insights-recipes-collection .insights-product-name { font-size: var(--text-sm); }
   .insights-recipes-collection .insights-recipe-meta { font-size: var(--text-xs); }
 }
+
+.insights-personal-recipes {
+  display: grid;
+  gap: var(--space-3);
+  min-width: 0;
+}

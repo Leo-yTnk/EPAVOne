@@ -8,6 +8,8 @@ No celular (até 768px), a opção de barra no topo usa um header compacto: app 
 
 Portal do EPAV para **EPAVInsights**, **EPAVPlanner** e **EPAVWriter**.
 
+Yourcipe-EPAV encerrado e arquivado em 27/10/2026, conforme confirmação do proprietário. Desenvolvimento e operação seguem no EPAVOne. Na Home do Insights e em Receitas, contas autenticadas encontram **Criados por mim**, seção privada de receitas pessoais com ingredientes autenticados. [Visibilidade, privacidade e lote de 42 receitas com inventário de produtos Swift ausentes](docs/catalog-expansion-2026-10-27/README.md).
+
 ## Espaço de trabalho
 
 As abas **One**, **Insights**, **Planner** e **Writer** separam os apps da navegação entre páginas. O header usa ilhas suspensas. No Insights e no Planner, os apps aparecem como ícones e a navegação de páginas fica ao lado, após um separador, na mesma linha. Os destaques de app e seção usam cards costurados que deslizam entre as seleções. Ao alternar apps, cada aba volta à última rota visitada durante a sessão.

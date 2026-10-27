@@ -19,8 +19,9 @@ import { useCatalogResource } from '../hooks/useCatalogResource.js';
 import { filterRecipes } from '../models/recipes.js';
 import { RecipeCard } from './RecipeCard.jsx';
 import { RecipeDialog } from './RecipeDialog.jsx';
+import { PersonalRecipesSection } from './PersonalRecipesSection.jsx';
 
-export function RecipesPage({ initialSection = '' }) {
+export function RecipesPage({ initialSection = '', ownerId }) {
   const resource = useCatalogResource(catalogService.recipes, 'published');
   const structure = useCatalogResource(catalogService.structure, 'public');
   const [filters, setFilters] = useState({ query: '', category: '', quick: false, section: initialSection });
@@ -47,9 +48,6 @@ export function RecipesPage({ initialSection = '' }) {
   function reset() {
     update({ query: '', category: '', quick: false, section: '' });
   }
-  if (resource.loading) return <CatalogLoading label="Carregando receitas…" />;
-  if (resource.error)
-    return <ErrorState title="Não foi possível carregar as receitas" description={resource.error} onAction={resource.retry} />;
   return (
     <section className="insights-catalog" aria-label="Catálogo de receitas">
       <Card as="section" className="insights-catalog-tools" aria-label="Explorar receitas">
@@ -119,6 +117,7 @@ export function RecipesPage({ initialSection = '' }) {
         <div className="insights-results">
           <p className="insights-muted" role="status">
             {filtered.length} {filtered.length === 1 ? 'receita encontrada' : 'receitas encontradas'}
+            {ownerId && ' no catálogo público'}
           </p>
           {filtered.length > 0 && (filters.query || filters.section || filters.category || filters.quick) && (
             <Button variant="ghost" size="sm" onClick={reset}>
@@ -127,8 +126,13 @@ export function RecipesPage({ initialSection = '' }) {
           )}
         </div>
       </Card>
+      {ownerId && <PersonalRecipesSection key={ownerId} ownerId={ownerId} filters={filters} />}
       <div ref={resultsRef} className="insights-results-content">
-        {!filtered.length ? (
+        {resource.loading ? (
+          <CatalogLoading label="Carregando receitas…" />
+        ) : resource.error ? (
+          <ErrorState title="Não foi possível carregar as receitas" description={resource.error} onAction={resource.retry} />
+        ) : !filtered.length ? (
           <EmptyState
             title={recipes.length ? 'Nenhuma receita encontrada' : 'Ainda não há receitas publicadas'}
             description={

@@ -2,9 +2,13 @@
 
 ## Status
 
-Código consolidado e preparado para revisão. **Yourcipe-EPAV ainda não pode ser arquivado com segurança.** Faltam implantação de 041 e frontend, transferência exclusiva do deploy de preços, importação autenticada do lote e aceitação em produção com contas reais. A página antiga deve permanecer operacional até essas verificações. Não arquivar automaticamente.
+**Yourcipe-EPAV encerrado e arquivado**, conforme confirmação do proprietário em 27/10/2026. O EPAVOne é o repositório operacional. O proprietário também confirmou migrations aplicadas, atualização de preços e publicação funcionando. Essas confirmações substituem os bloqueios antigos de arquivamento deste documento.
 
-## Ações do proprietário
+Esta sessão não reaplicou SQL nem alterou infraestrutura. As tabelas e o checklist abaixo registram o procedimento de migração para referência histórica, não uma nova lista de tarefas a executar. Não reativar o repositório antigo nem repetir migrations para cumprir este histórico.
+
+Próximas verificações: homologação do fluxo completo com contas reais A/B/admin, backup/restauração e piloto com outro aluno. A visibilidade privada de receitas e o novo lote de importação estão descritos em [receitas e catálogo de 27/10/2026](catalog-expansion-2026-10-27/README.md).
+
+## Procedimento histórico de migração
 
 | Serviço / tela exata                                                                   | Nome / valor                                                                                                                   | Armazenamento / natureza                                                                  | Motivo e verificação                                                                                                                                                |
 | -------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
