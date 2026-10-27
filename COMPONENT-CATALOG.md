@@ -26,7 +26,7 @@ Os componentes públicos são Preact/JSX e vivem individualmente em `src/design-
 | Button | primary/secondary/ghost/danger, tamanhos, loading e disabled |
 | IconButton | ação compacta acessível |
 | Input | label/helper/error/success |
-| FileInput | botão de seleção, nome do arquivo, loading e nova seleção do mesmo arquivo |
+| FileInput | botão de seleção, nome do arquivo, loading e nova seleção do mesmo arquivo; `chooseLabel` adapta o texto ao formato (padrão Excel, backup JSON) |
 | Textarea | campo multilinha padronizado |
 | Select | **único Select público**, portal, teclado e anchored layer; busca opcional dentro do menu |
 | Option | option do Select |

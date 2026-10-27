@@ -7,6 +7,7 @@ import {
   ErrorState,
   FileInput,
   Spinner,
+  Progress,
   SectionHeader
 } from '../../../../design-system/components/index.js';
 import { importReplacementChoices } from './catalogDuplicates.js';
@@ -14,7 +15,6 @@ import { ImportReviewPreview } from './ImportReviewPreview.jsx';
 import { adminService } from '../services/adminService.js';
 import { useCreationResource } from '../hooks/useCreationResource.js';
 import { readCatalogFile, downloadImportTemplate } from './workbookService.js';
-import { prepareSwiftBundle } from './swiftBundleService.js';
 import { parseCatalogWorkbook } from './importParser.js';
 import { addModes, reviewCatalogImport } from './importReview.js';
 export function ImportPanel() {
@@ -26,6 +26,7 @@ export function ImportPanel() {
   const [review, setReview] = useState(null);
   const [group, setGroup] = useState('products');
   const [busy, setBusy] = useState(false);
+  const [progress, setProgress] = useState(null);
   const pending = useRef(false);
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
@@ -40,23 +41,17 @@ export function ImportPanel() {
     setPayload(null);
     setReview(null);
     setConfirmed(false);
-    setFilename(file?.name || 'Produtos oficiais Swift · 07/10/2026');
+    setFilename(file.name);
+    setProgress({ value: 0, label: 'Carregando catálogo para comparação' });
     try {
       const context = await adminService.context();
-      const parsed = file
-        ? parseCatalogWorkbook(await readCatalogFile(file), context)
-        : prepareSwiftBundle(context, { includeExisting: true });
-      // An already imported official bundle is a successful no-op, not an empty-file error.
-      if (!file && !parsed.products.length) {
-        setMessage('Todos os produtos deste lote já existem no catálogo. Nenhum registro foi alterado.');
-      } else {
-        setPayload(parsed);
-        setReview(reviewCatalogImport(parsed, context));
-        if (!file)
-          setMessage(
-            `${parsed.products.length} produtos para revisar, incluindo possíveis duplicatas. Imagens oficiais, preços pendentes de sincronização.`
-          );
-      }
+      const workbook = await readCatalogFile(file, ({ value, label }) => setProgress({ value, label }));
+      setProgress({ value: 90, label: 'Validando registros e duplicatas' });
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      const parsed = parseCatalogWorkbook(workbook, context);
+      setPayload(parsed);
+      setReview(reviewCatalogImport(parsed, context));
+      setProgress({ value: 100, label: 'Leitura concluída. Revise a prévia antes de gravar.' });
     } catch (failure) {
       setError(failure.message);
     } finally {
@@ -69,8 +64,11 @@ export function ImportPanel() {
     pending.current = true;
     setBusy(true);
     setError('');
+    setMessage('');
+    setProgress({ value: 0, label: 'Conferindo o catálogo atualizado' });
     try {
-      const data = await adminService.importCatalog(addModes, payload, importReplacementChoices(review, choices));
+      const data = await adminService.importCatalog(addModes, payload, importReplacementChoices(review, choices), setProgress);
+      setProgress({ value: 100, label: 'Importação concluída' });
       const total = Object.values(data)
         .filter((row) => row && typeof row === 'object')
         .reduce(
@@ -112,8 +110,8 @@ export function ImportPanel() {
           description={<>Traga produtos, receitas, categorias e seções para o catálogo público.</>}
         />
         <p>
-          Use as seis abas do modelo Yourcipe. Nas abas sem registros, mantenha somente os cabeçalhos. Este arquivo é o catálogo, separado
-          do formulário de pedidos.
+          Use as seis abas do modelo EPAVOne. Nas abas sem registros, mantenha somente os cabeçalhos. Este arquivo é o catálogo, separado do
+          formulário de pedidos.
         </p>
         <div className="creation-toolbar">
           <Button
@@ -128,9 +126,6 @@ export function ImportPanel() {
             }}
           >
             Baixar modelo Excel
-          </Button>
-          <Button variant="secondary" disabled={busy || resource.loading || Boolean(resource.error)} onClick={() => prepare()}>
-            Preparar produtos oficiais Swift
           </Button>
         </div>
         {resource.loading ? (
@@ -152,6 +147,15 @@ export function ImportPanel() {
           existentes serão reutilizadas. Identidades conflitantes impedem a importação.
         </Alert>
       </Card>
+      {progress && !error && (
+        <div aria-live="polite">
+          <Progress
+            label={progress.label}
+            value={progress.value}
+            formatValue={progress.waiting ? () => 'Aguardando confirmação do banco' : undefined}
+          />
+        </div>
+      )}
       {payload && review && (
         <>
           <ImportReviewPreview
@@ -195,7 +199,10 @@ export function ImportPanel() {
       )}
       {error && (
         <Alert tone="danger" title="Importação não concluída">
-          {error} Revise a planilha e tente novamente; a gravação é realizada por inteiro.
+          {error}{' '}
+          {error.includes('tempo limite')
+            ? 'Nenhuma alteração dessa transação foi salva. Tente novamente. Se persistir, peça ao administrador para verificar o tempo de processamento e os bloqueios do banco.'
+            : 'Confira a mensagem antes de tentar novamente. Se a conexão caiu durante a gravação, atualize o catálogo e prepare outra prévia para verificar o resultado.'}
         </Alert>
       )}
       {message && (

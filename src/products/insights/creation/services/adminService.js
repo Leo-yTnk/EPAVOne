@@ -60,9 +60,10 @@ export const adminService = {
     await requireAdmin();
     return result(id ? api.refreshProductPrice(id) : api.refreshAllProductPrices());
   },
-  async importCatalog(modes, payload, replacements = []) {
+  async importCatalog(modes, payload, replacements = [], onProgress = () => {}) {
     await requireAdmin();
     if (Object.values(modes).some((mode) => mode !== 'add')) throw new Error('Esta importação aceita somente Adicionar novos.');
+    onProgress({ value: 10, label: 'Conferindo permissões e duplicatas' });
     const review = reviewCatalogImport(payload, await adminService.context());
     if (review.errors.length) throw new Error(review.errors.join('\n'));
     if (!Array.isArray(replacements)) throw new Error('Escolhas de duplicatas inválidas.');
@@ -74,7 +75,16 @@ export const adminService = {
       if (choice.entity === 'sections' ? existing.updated_at !== choice.updated_at : existing.version !== choice.version)
         throw new Error('Este registro mudou desde a comparação. Prepare a prévia novamente antes de substituir.');
     }
+    onProgress({ value: 40, label: 'Gravando catálogo em uma única transação', waiting: true });
     return result(replacements.length ? api.adminImportReviewedCatalog(payload, replacements) : api.adminAddPublicCatalog(payload));
+  },
+  async exportBackup() {
+    await requireAdmin();
+    return result(api.exportCatalogBackup());
+  },
+  async restoreBackup(backup) {
+    await requireAdmin();
+    return result(api.restoreCatalogBackup(backup));
   },
   async cleanup(mode, password) {
     await requireAdmin();

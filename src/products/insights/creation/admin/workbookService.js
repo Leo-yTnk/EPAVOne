@@ -9,9 +9,11 @@ const normalizePath = (path) => {
   }
   return parts.join('/');
 };
-export async function readCatalogFile(file) {
+export async function readCatalogFile(file, onProgress = () => {}) {
   if (file.size > 10 * 1024 * 1024) throw new Error('Use uma planilha com até 10 MB.');
   if (!/\.xlsx$/i.test(file.name)) throw new Error('Escolha um arquivo .xlsx.');
+  onProgress({ value: 10, label: 'Abrindo arquivo Excel' });
+  await new Promise((resolve) => setTimeout(resolve, 0));
   const zip = await JSZip.loadAsync(await file.arrayBuffer());
   let expanded = 0;
   async function xml(path) {
@@ -32,7 +34,13 @@ export async function readCatalogFile(file) {
       )
     : [];
   const Sheets = {};
-  for (const sheet of localNodes(workbook, 'sheet')) {
+  const sheets = localNodes(workbook, 'sheet');
+  for (const [index, sheet] of sheets.entries()) {
+    onProgress({
+      value: 20 + Math.round((65 * index) / sheets.length),
+      label: `Lendo aba ${index + 1} de ${sheets.length}: ${sheet.getAttribute('name')}`
+    });
+    await new Promise((resolve) => setTimeout(resolve, 0));
     const relation = relationships.find((x) => x.getAttribute('Id') === sheet.getAttribute('r:id'));
     if (!relation || relation.getAttribute('TargetMode') === 'External') throw new Error('Referência de aba inválida.');
     const target = relation.getAttribute('Target');
@@ -65,6 +73,7 @@ export async function readCatalogFile(file) {
     }
     Sheets[sheet.getAttribute('name')] = rows;
   }
+  onProgress({ value: 85, label: 'Abas lidas' });
   return { SheetNames: Object.keys(Sheets), Sheets };
 }
 const escape = (value) => String(value).replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
