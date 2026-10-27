@@ -72,3 +72,9 @@ describe('Creation writes', () => {
     expect(fetchCreationItem).toHaveBeenCalledWith('products', 'p');
   });
 });
+
+it('translates database statement timeouts and retains the SQLSTATE for callers', async () => {
+  await expect(
+    result(Promise.resolve({ error: { code: '57014', message: 'canceling statement due to statement timeout' } }))
+  ).rejects.toMatchObject({ code: '57014', message: 'O banco interrompeu a operação por exceder o tempo limite.' });
+});

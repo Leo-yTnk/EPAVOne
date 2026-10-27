@@ -1000,3 +1000,10 @@ export async function acceptSwiftMetadata(id, checkedAt, version, selected) {
     'acceptSwiftMetadata'
   );
 }
+
+export async function exportCatalogBackup() {
+  return unwrap(await supabase.rpc('admin_export_catalog_backup'), 'exportCatalogBackup');
+}
+export async function restoreCatalogBackup(backup) {
+  return unwrap(await supabase.rpc('admin_restore_catalog_backup', { p_backup: backup }), 'restoreCatalogBackup');
+}

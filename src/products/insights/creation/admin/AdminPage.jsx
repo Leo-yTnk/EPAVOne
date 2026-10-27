@@ -4,6 +4,7 @@ import { Alert, Button, Card, Icon, Select, SectionHeader } from '../../../../de
 import { EntityManager } from '../components/EntityManager.jsx';
 import { RequestsPage } from '../components/RequestsPage.jsx';
 import { SectionsManager } from './SectionsManager.jsx';
+import { BackupPanel } from './BackupPanel.jsx';
 import { ImportPanel } from './ImportPanel.jsx';
 import { DuplicateCheckPanel } from './DuplicateCheckPanel.jsx';
 import { MaintenancePanel } from './MaintenancePanel.jsx';
@@ -14,6 +15,7 @@ const areas = [
   ['sections', 'Páginas e seções'],
   ['requests', 'Revisar solicitações'],
   ['import', 'Importar catálogo'],
+  ['backup', 'Backup e restauração'],
   ['duplicates', 'Verificar duplicatas'],
   ['maintenance', 'Preços e manutenção']
 ].map(([value, label]) => ({ value, label }));
@@ -24,6 +26,7 @@ const descriptions = {
   sections: 'Escolha onde cada conteúdo aparece na vitrine.',
   requests: 'Avalie conteúdos enviados para publicação.',
   import: 'Confira o arquivo e escolha o conteúdo de cada duplicata.',
+  backup: 'Exporte uma cópia do catálogo público ou restaure um backup JSON.',
   duplicates: 'Encontre correspondências antes de alterar o catálogo.',
   maintenance: 'Acompanhe os preços e revise as observações da Swift.'
 };
@@ -59,6 +62,9 @@ export function AdminPage({ profile }) {
           <Button variant="secondary" onClick={() => setArea('import')}>
             Importar Excel do catálogo
           </Button>
+          <Button variant="ghost" onClick={() => setArea('backup')}>
+            Backup e restauração
+          </Button>
           <Button variant="ghost" onClick={() => setArea('duplicates')}>
             Verificar duplicatas
           </Button>
@@ -84,6 +90,8 @@ export function AdminPage({ profile }) {
           <SectionsManager />
         ) : area === 'duplicates' ? (
           <DuplicateCheckPanel />
+        ) : area === 'backup' ? (
+          <BackupPanel />
         ) : area === 'import' ? (
           <ImportPanel />
         ) : (

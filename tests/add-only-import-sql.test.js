@@ -34,7 +34,7 @@ beforeAll(async () => {
     create table categories(id uuid primary key default gen_random_uuid(),scope text,owner_id uuid,type text,name text,slug text,active boolean,sort_order int,created_by uuid,updated_by uuid,updated_at timestamptz);
     create table products(id uuid primary key default gen_random_uuid(),scope text,owner_id uuid,name text,category_id uuid references categories,unit text,price numeric, image_url text, swift_product_url text,swift_sku text,price_source text,price_last_success_at timestamptz,price_status product_price_status,price_error text,active boolean,created_by uuid,updated_by uuid,updated_at timestamptz,version integer default 1);
     create table recipes(id uuid primary key default gen_random_uuid(),scope text,owner_id uuid,status text,name text,category_id uuid references categories,prep_time integer,servings integer,difficulty text,image_url text,featured boolean,instructions text[],extras text[],tips text[]);
-    create table recipe_ingredients(recipe_id uuid references recipes,product_id uuid references products,quantity numeric,sort_order integer,primary key(recipe_id,product_id));
+    create table recipe_ingredients(id uuid primary key default gen_random_uuid(),recipe_id uuid references recipes,product_id uuid references products,quantity numeric,sort_order integer);
     create table recipe_categories(recipe_id uuid references recipes,category_id uuid references categories,sort_order integer);
     create table catalog_pages(id uuid primary key default gen_random_uuid(),key text unique);
     create table catalog_sections(id uuid primary key default gen_random_uuid(),page_id uuid references catalog_pages,name text,slug text,sort_order integer,active boolean,updated_at timestamptz,unique(page_id,slug));
@@ -60,6 +60,11 @@ beforeAll(async () => {
     create trigger bump_categories before update on categories for each row execute function bump_import_version();
     create trigger bump_recipes before update on recipes for each row execute function bump_import_version();`);
   await db.exec(readFileSync(new URL('../supabase/045_reviewed_catalog_duplicates.sql', import.meta.url), 'utf8'));
+  await db.exec(readFileSync(new URL('../supabase/047_catalog_import_performance.sql', import.meta.url), 'utf8'));
+  await db.exec(`alter table catalog_pages add column sort_order integer default 0;
+    create table product_categories(product_id uuid references products,category_id uuid references categories,sort_order integer,primary key(product_id,category_id));
+    alter table recipe_categories add primary key(recipe_id,category_id);`);
+  await db.exec(readFileSync(new URL('../supabase/048_catalog_backup.sql', import.meta.url), 'utf8'));
   await db.exec("set role authenticated; set request.uid='10000000-0000-0000-0000-000000000001'; set request.admin='true';");
 }, 30000);
 afterAll(async () => db?.close());
@@ -219,7 +224,7 @@ it('replaces recipe details and ingredients with the same ID and publication sta
     insert into categories(scope,type,name,slug,active) values('site','receita','Familia','familia',true);
     insert into recipes(scope,status,name,category_id,prep_time,servings,difficulty,instructions)
       select 'site','published','Almoco',id,10,1,'Fácil',array['Original'] from categories where name='Familia';
-    insert into recipe_ingredients select r.id,p.id,1,0 from recipes r,products p where r.name='Almoco' and p.name='Fraldinha';
+    insert into recipe_ingredients(recipe_id,product_id,quantity,sort_order) select r.id,p.id,1,0 from recipes r,products p where r.name='Almoco' and p.name='Fraldinha';
     set role authenticated;`);
   const original = (await db.query("select * from recipes where name='Almoco'")).rows[0];
   const row = {
@@ -284,3 +289,102 @@ it('applies reviewed category and section content while preserving IDs and check
     reviewed({ sections: payload.sections }, [{ entity: 'sections', index: 0, id: section.id, updated_at: section.updated_at }])
   ).rejects.toThrow('version_conflict');
 });
+
+it('backs up inactive/public content and restores details, ingredients and sections atomically without deleting later items', async () => {
+  // Use the real category/ingredient integrity triggers during backup recovery.
+  await db.exec('reset role;');
+  const schema = readFileSync(new URL('../supabase/004_catalog_schema.sql', import.meta.url), 'utf8');
+  for (const name of [
+    'validate_reference_scope',
+    'enforce_products_category_reference',
+    'enforce_recipes_category_reference',
+    'enforce_recipe_ingredients_product_reference'
+  ]) {
+    await db.exec(schema.match(new RegExp('create or replace function public\\.' + name + '\\([\\s\\S]*?\\$\\$;'))[0]);
+  }
+  await db.exec(`create trigger backup_product_reference before insert or update of category_id on products for each row execute function enforce_products_category_reference();
+    create trigger backup_recipe_reference before insert or update of category_id on recipes for each row execute function enforce_recipes_category_reference();
+    create trigger backup_ingredient_reference before insert or update on recipe_ingredients for each row execute function enforce_recipe_ingredients_product_reference(); set role authenticated;`);
+  const backup = (await db.query('select admin_export_catalog_backup() as b')).rows[0].b;
+  expect(backup.format).toBe('epavone-catalog');
+  expect(backup.data.products.some((p) => p.active === false)).toBe(true);
+  const original = backup.data.recipes[0];
+  await db.exec('reset role;');
+  await db.query('update recipes set instructions=$1 where id=$2', [['Changed'], original.id]);
+  await db.exec('set role authenticated;');
+  await call([{ type: 'proteina', name: 'Later active' }], [{ ...item('Later'), category: 'Later active' }]);
+  await db.query('select admin_restore_catalog_backup($1)', [backup]);
+  expect((await db.query('select instructions from recipes where id=$1', [original.id])).rows[0].instructions).toEqual(
+    original.instructions
+  );
+  expect((await db.query("select * from products where name='Later'")).rows).toHaveLength(1);
+  expect((await db.query('select * from recipe_ingredients')).rows).toHaveLength(backup.data.recipe_ingredients.length);
+  // A corrupt late relationship must roll back prior deletes/updates.
+  const invalid = structuredClone(backup);
+  invalid.data.catalog_sections[0].page_id = '11111111-1111-1111-1111-111111111111';
+  await expect(db.query('select admin_restore_catalog_backup($1)', [invalid])).rejects.toThrow('backup_page_missing');
+  expect((await db.query('select * from recipe_ingredients')).rows).toHaveLength(backup.data.recipe_ingredients.length);
+  const lateFailure = structuredClone(backup);
+  lateFailure.data.recipes[0].instructions = ['Must roll back'];
+  lateFailure.data.catalog_section_products[0].sort_order = 'invalid integer';
+  await expect(db.query('select admin_restore_catalog_backup($1)', [lateFailure])).rejects.toThrow();
+  expect((await db.query('select instructions from recipes where id=$1', [original.id])).rows[0].instructions).toEqual(
+    original.instructions
+  );
+  await db.exec('reset role;');
+  await db.query('delete from recipe_ingredients where recipe_id=$1', [original.id]);
+  await db.query('delete from recipe_categories where recipe_id=$1', [original.id]);
+  await db.query('delete from catalog_section_recipes where recipe_id=$1', [original.id]);
+  await db.query('delete from recipes where id=$1', [original.id]);
+  await db.exec('set role authenticated;');
+  await db.query('select admin_restore_catalog_backup($1)', [backup]);
+  expect((await db.query('select instructions from recipes where id=$1', [original.id])).rows[0].instructions).toEqual(
+    original.instructions
+  );
+});
+it('denies backup to ordinary accounts and prevents restore from targeting personal rows or references', async () => {
+  const backup = (await db.query('select admin_export_catalog_backup() as b')).rows[0].b;
+  await db.exec("set request.admin='false';");
+  await expect(db.query('select admin_export_catalog_backup()')).rejects.toThrow('not_authorized');
+  await expect(db.query('select admin_restore_catalog_backup($1)', [backup])).rejects.toThrow('not_authorized');
+  await db.exec("set request.admin='true';reset role;");
+  const privateId = '11111111-1111-1111-1111-111111111111';
+  await db.query("insert into categories(id,scope,owner_id,type,name) values($1,'personal',$1,'proteina','Private')", [privateId]);
+  await db.exec('set role authenticated;');
+  const current = (await db.query('select admin_export_catalog_backup() as b')).rows[0].b;
+  expect(current.data.categories.some((c) => c.id === privateId)).toBe(false);
+  const collision = structuredClone(backup);
+  collision.data.categories[0].id = privateId;
+  await expect(db.query('select admin_restore_catalog_backup($1)', [collision])).rejects.toThrow('backup_personal_id_conflict');
+  const injected = structuredClone(backup);
+  injected.data.categories[0].scope = 'personal';
+  await expect(db.query('select admin_restore_catalog_backup($1)', [injected])).rejects.toThrow('invalid_backup_scope');
+  const broken = structuredClone(backup);
+  broken.data.recipe_ingredients[0].product_id = privateId;
+  await expect(db.query('select admin_restore_catalog_backup($1)', [broken])).rejects.toThrow('backup_ingredient_reference_missing');
+  await db.exec('reset role;set role anon;');
+  await expect(db.query('select admin_export_catalog_backup()')).rejects.toThrow('permission denied');
+  await db.exec("reset role;set role authenticated;set request.admin='true';");
+});
+it('keeps indexed import identities consistent and imports a realistic recipe batch', async () => {
+  const product = (await db.query("select * from products where name='Later'")).rows[0];
+  expect(product.import_name_key).toBe('later');
+  expect(product.import_swift_key).toBe('/later');
+  await db.exec('reset role;');
+  await db.query("update products set name='LATER Renamed',import_name_key='spoof' where id=$1", [product.id]);
+  expect((await db.query('select import_name_key from products where id=$1', [product.id])).rows[0].import_name_key).toBe('later renamed');
+  await db.exec('set role authenticated;');
+  const recipes = Array.from({ length: 100 }, (_, i) => ({
+    name: `Batch ${i}`,
+    category: 'Familia',
+    prep_time: 20,
+    servings: 2,
+    difficulty: 'Fácil',
+    instructions: ['Prepare'],
+    ingredients: [{ product: 'Fraldinha', quantity: 1 }],
+    sections: []
+  }));
+  const imported = await call([], [], recipes);
+  expect(imported.rows[0].result.recipes.added).toBe(100);
+  expect((await call([], [], recipes)).rows[0].result.recipes.ignored).toBe(100);
+}, 30000);

@@ -375,7 +375,11 @@ try {
       });
       await page.evaluate(() => window.reviewDuplicateContext.products.pop());
       await page.getByRole('button', { name: 'Importar Excel do catálogo' }).click();
-      await page.getByRole('button', { name: 'Preparar produtos oficiais Swift' }).click();
+      await page.locator('input[type=file]').setInputFiles({
+        name: 'catalogo.xlsx',
+        mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        buffer: Buffer.from(await createSwiftWorkbookFixture())
+      });
       await page.getByRole('button', { name: 'Comparar original e importado' }).click();
       await page.getByRole('checkbox').check({ force: true });
       const duplicateSelect = page.getByRole('button', { name: /Duplicata de Petit Gateau/ });

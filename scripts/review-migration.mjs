@@ -1,3 +1,4 @@
+import { createSwiftWorkbookFixture } from '../tests/fixtures/swiftWorkbook.js';
 import fs from 'node:fs';
 import { spawn } from 'node:child_process';
 import { createRequire } from 'node:module';
@@ -142,8 +143,12 @@ try {
         document.getElementById('app')
       );
     });
-    await page.getByRole('button', { name: 'Preparar produtos oficiais Swift' }).click();
-    await page.getByText('11 produtos novos para revisar', { exact: false }).waitFor();
+    await page.locator('input[type=file]').setInputFiles({
+      name: 'catalogo.xlsx',
+      mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      buffer: Buffer.from(await createSwiftWorkbookFixture())
+    });
+    await page.getByRole('button', { name: 'Confirmar importação' }).waitFor();
     await page.screenshot({ path: `${output}/swift-import-fixture-${width}-${theme}.png`, fullPage: true });
     results.push({
       view: 'admin additive import fixture',

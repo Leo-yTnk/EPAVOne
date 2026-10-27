@@ -5,19 +5,22 @@ import { lines, validateEditor } from '../models/editor.js';
 export async function result(promise) {
   const { data, error } = await promise;
   if (error) {
-    const message = error.message?.includes('version_conflict')
-      ? 'Este conteúdo foi alterado em outra sessão. Copie suas alterações e reabra o editor para carregar a versão atual.'
-      : error.code === '42501'
-        ? 'Sua conta não tem permissão para esta operação. Confira a sessão e o acesso ao conteúdo.'
-        : error.code === '23503'
-          ? 'Uma categoria ou produto usado neste conteúdo deixou de estar disponível. Reabra o editor para atualizar as opções.'
-          : error.code === '23505'
-            ? 'Já existe um conteúdo com esses dados. Confira o nome e os vínculos antes de salvar.'
-            : error.code === 'PGRST116'
-              ? 'O conteúdo não está mais disponível para esta conta. Feche o editor e atualize a biblioteca.'
-              : error.code === 'PGRST202'
-                ? 'Uma função necessária ainda não está instalada. Execute o diagnóstico do banco indicado na documentação de criação.'
-                : error.message || 'Não foi possível concluir a operação.';
+    const message =
+      error.code === '57014' || error.message?.includes('statement timeout')
+        ? 'O banco interrompeu a operação por exceder o tempo limite.'
+        : error.message?.includes('version_conflict')
+          ? 'Este conteúdo foi alterado em outra sessão. Copie suas alterações e reabra o editor para carregar a versão atual.'
+          : error.code === '42501'
+            ? 'Sua conta não tem permissão para esta operação. Confira a sessão e o acesso ao conteúdo.'
+            : error.code === '23503'
+              ? 'Uma categoria ou produto usado neste conteúdo deixou de estar disponível. Reabra o editor para atualizar as opções.'
+              : error.code === '23505'
+                ? 'Já existe um conteúdo com esses dados. Confira o nome e os vínculos antes de salvar.'
+                : error.code === 'PGRST116'
+                  ? 'O conteúdo não está mais disponível para esta conta. Feche o editor e atualize a biblioteca.'
+                  : error.code === 'PGRST202'
+                    ? 'Uma função necessária ainda não está instalada. Execute o diagnóstico do banco indicado na documentação de criação.'
+                    : error.message || 'Não foi possível concluir a operação.';
     throw Object.assign(new Error(message), { code: error.code });
   }
   return data;
