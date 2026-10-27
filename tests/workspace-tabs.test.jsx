@@ -69,7 +69,7 @@ describe('App workspace tabs', () => {
     const { container, rerender } = render(shell({ product: 'planner', segments: [] }));
     const settings = screen.getByRole('link', { name: 'Configurações' });
     expect(settings.closest('.workspace-utilities')).not.toBeNull();
-    expect(settings.closest('.workspace-utilities').querySelector('.workspace-account')).not.toBeNull();
+    expect(settings.closest('.workspace-utilities').querySelector('[aria-label="Criar"]')).not.toBeNull();
     expect(screen.queryByRole('tab', { name: 'Configurações' })).toBeNull();
     rerender(shell({ product: 'settings', segments: [] }));
     expect(settings.getAttribute('aria-current')).toBe('page');

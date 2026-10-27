@@ -168,3 +168,11 @@ describe('Writer association contract', () => {
     expect(commercialContext.get()).toEqual(second);
   });
 });
+
+it('opens a new client directly from the create shortcut and returns to the portfolio on cancel', async () => {
+  render(<PlannerRoutes route={{ segments: ['clientes', 'novo'] }} service={serviceFor()} />);
+  await screen.findByRole('dialog', { name: 'Novo cliente' });
+  expect(screen.queryByText('Cliente não encontrado')).toBeNull();
+  fireEvent.click(screen.getByRole('button', { name: 'Cancelar' }));
+  expect(window.location.hash).toBe('#/planner/clientes');
+});

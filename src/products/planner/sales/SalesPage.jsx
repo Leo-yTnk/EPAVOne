@@ -16,7 +16,7 @@ import { salesRepository } from '../../../shared/services/salesRepository.js';
 import { useSales } from './useSales.js';
 import { SalesDashboard } from './SalesDashboard.jsx';
 import { SaleEditor } from './SaleEditor.jsx';
-export function SalesPage({ account, onOpenAccount, repository = salesRepository }) {
+export function SalesPage({ account, onOpenAccount, repository = salesRepository, createRequested = false, onCreateClose }) {
   const enabled = Boolean(account?.session);
   const [start, setStart] = useState(() => saleDay().slice(0, 7) + '-01'),
     [end, setEnd] = useState(saleDay);
@@ -42,9 +42,16 @@ export function SalesPage({ account, onOpenAccount, repository = salesRepository
       active = false;
     };
   }, [enabled, pending, repository]);
+  useEffect(() => {
+    if (createRequested && enabled && !pending) setEditing(newSale());
+  }, [createRequested, enabled]);
+  function closeEditor() {
+    setEditing(null);
+    if (createRequested) onCreateClose?.();
+  }
   async function save(order) {
     if (await sales.save(order)) {
-      setEditing(null);
+      closeEditor();
       salesTransfer.clear(order.id);
       setNotice('Venda salva na sua conta.');
     }
@@ -146,14 +153,7 @@ export function SalesPage({ account, onOpenAccount, repository = salesRepository
         />
       )}
       {editing && (
-        <SaleEditor
-          key={editing.id}
-          initial={editing}
-          busy={sales.busy}
-          error={sales.error}
-          onSave={save}
-          onClose={() => setEditing(null)}
-        />
+        <SaleEditor key={editing.id} initial={editing} busy={sales.busy} error={sales.error} onSave={save} onClose={closeEditor} />
       )}
       {deleting && (
         <Dialog

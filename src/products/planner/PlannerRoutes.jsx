@@ -55,7 +55,12 @@ export function PlannerRoutes({ route = { segments: [] }, service, account, onOp
   }
   const props = { state: resource.state, week, act: resource.act, busy: resource.busy || resource.refreshing };
   const customer = resource.state?.customers.find((item) => item.id === route.segments[1]);
-  const clientProfile = section === 'clientes' && route.segments[1] && route.segments[1] !== 'oportunidades';
+  const creatingClient = section === 'clientes' && route.segments[1] === 'novo';
+  const clientProfile = section === 'clientes' && route.segments[1] && !['oportunidades', 'novo'].includes(route.segments[1]);
+  function closeClientEditor() {
+    setEditing(null);
+    if (creatingClient) window.location.hash = '#/planner/clientes';
+  }
   return (
     <section className="product-page planner-page">
       <PageHeader
@@ -137,7 +142,15 @@ export function PlannerRoutes({ route = { segments: [] }, service, account, onOp
         className="planner-panel"
       >
         {showingOrders ? (
-          <SalesPage key={account?.session?.user?.id || 'guest'} account={account} onOpenAccount={onOpenAccount} />
+          <SalesPage
+            key={account?.session?.user?.id || 'guest'}
+            account={account}
+            onOpenAccount={onOpenAccount}
+            createRequested={route.segments[2] === 'novo'}
+            onCreateClose={() => {
+              window.location.hash = '#/planner/resultados/pedidos';
+            }}
+          />
         ) : resource.loading || account?.initializing ? (
           <div aria-label="Carregando planejamento" role="status" className="planner-loading">
             <Skeleton variant="title" />
@@ -201,14 +214,14 @@ export function PlannerRoutes({ route = { segments: [] }, service, account, onOp
         )}
       </ModalPresence>
       <ModalPresence>
-        {editing && (
+        {(editing || (creatingClient && resource.state && !resource.loading && !resource.error && !account?.initializing)) && (
           <ClientEditor
-            customer={editing === 'new' ? null : editing}
+            customer={!editing || editing === 'new' ? null : editing}
             act={resource.act}
             busy={resource.busy}
             notice={resource.notice}
             saveError={resource.saveError}
-            onClose={() => setEditing(null)}
+            onClose={closeClientEditor}
           />
         )}
       </ModalPresence>

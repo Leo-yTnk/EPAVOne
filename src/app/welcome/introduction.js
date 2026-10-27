@@ -1,4 +1,4 @@
-const KEY = 'epavone-introduction-v1';
+const KEY = 'epavone-tutorial-v1';
 export function hasSeenIntroduction() {
   try {
     return localStorage.getItem(KEY) === 'done';
