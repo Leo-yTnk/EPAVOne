@@ -104,9 +104,6 @@ body {
   background: var(--surface-primary);
   box-shadow: var(--shadow-sm);
   pointer-events: none;
-  transition:
-    inset-inline-start var(--duration-slow) var(--ease-emphasized),
-    inset-inline-end var(--duration-slow) var(--ease-emphasized);
 }
 .workspace-navigation-scroll {
   display: flex;
@@ -123,14 +120,6 @@ body {
   flex: none;
   min-width: 0;
 }
-/* Active end caps cover the rail without reducing the safe scroll area. */
-.navigation-horizontal .workspace-navigation:has(.app-tabs > .ds-tab:first-of-type.is-active)::before {
-  inset-inline-start: calc(var(--container-padding) + var(--space-1));
-}
-.navigation-horizontal .workspace-navigation:has(.product-section-nav > .section-tab:last-child.is-active)::before,
-.navigation-horizontal .workspace-navigation:not(:has(.product-section-nav)):has(.app-tabs > .ds-tab:last-child.is-active)::before {
-  inset-inline-end: calc(var(--container-padding) + var(--space-1));
-}
 .app-tabs {
   gap: var(--space-1);
   border: 0;
@@ -143,7 +132,8 @@ body {
   justify-content: center;
   min-height: var(--control-md);
   min-width: 3.5rem;
-  padding: var(--space-2) var(--space-3);
+  --shell-app-padding: var(--space-3);
+  padding: var(--space-2) var(--shell-app-padding);
   border-radius: var(--radius-navigation);
   font-size: var(--text-caption);
   white-space: nowrap;
@@ -198,7 +188,8 @@ body {
   z-index: 1;
   flex: none;
   min-height: var(--control-md);
-  padding-inline: var(--space-4);
+  --shell-section-padding: var(--space-4);
+  padding-inline: var(--shell-section-padding);
   border-radius: var(--radius-navigation);
   font-size: var(--text-caption);
   white-space: nowrap;
@@ -225,10 +216,13 @@ body {
 .navigation-horizontal .product-section-nav {
   gap: 0.125rem;
 }
+/* Keep the rail fixed. Edge spacing belongs to the clickable end caps. */
 .navigation-horizontal .workspace-navigation-scroll {
   gap: var(--space-1);
+  padding-inline: 0;
 }
 .navigation-horizontal .app-tabs .ds-tab:not(.is-active) {
+  --shell-app-padding: var(--space-2);
   min-width: var(--control-md);
   padding-inline: var(--space-2);
   font-size: var(--text-xs);
@@ -241,8 +235,18 @@ body {
   height: 1.125rem;
 }
 .navigation-horizontal .product-tab:not(.is-active) {
+  --shell-section-padding: var(--space-3);
   padding-inline: var(--space-3);
   font-size: var(--text-xs);
+}
+.navigation-horizontal .app-tabs > .ds-tab:first-of-type {
+  padding-inline-start: calc(var(--shell-app-padding) + var(--container-padding));
+}
+.navigation-horizontal .product-section-nav > .section-tab:last-child {
+  padding-inline-end: calc(var(--shell-section-padding) + var(--container-padding));
+}
+.navigation-horizontal .workspace-navigation:not(:has(.product-section-nav)) .app-tabs > .ds-tab:last-of-type {
+  padding-inline-end: calc(var(--shell-app-padding) + var(--container-padding));
 }
 .navigation-horizontal .app-tabs > .ds-selection-indicator,
 .navigation-horizontal .product-section-nav > .ds-selection-indicator {

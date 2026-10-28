@@ -41,3 +41,12 @@ export const PLANNER_NAV = [
   { label: 'Semana', icon: 'planner', href: '#/planner/semana', section: 'semana' },
   { label: 'Resultados', icon: 'results', href: '#/planner/resultados', section: 'resultados' }
 ];
+
+// Tabs share a reading position; entering another client or page starts at the top.
+export function routeScrollKey({ product, segments }) {
+  if (product === 'planner' && segments[0] === 'clientes') {
+    const client = segments[1];
+    return !client || client === 'oportunidades' ? 'planner/clientes' : `planner/clientes/${client}`;
+  }
+  return [product, ...segments].join('/');
+}
