@@ -59,18 +59,17 @@ describe('Insights public catalog', () => {
     expect(screen.getByText('Nenhum produto encontrado')).toBeTruthy();
     expect(animate).toHaveBeenCalledTimes(2);
   });
-  it('paginates, searches accents and codes, filters category and quantity prices, and resets pagination', async () => {
+  it('shows the full catalog, searches accents and codes, filters category and quantity prices, and clears filters', async () => {
     render(<ProductCatalogPage />);
     await screen.findByText('25 produtos encontrados');
-    expect(screen.getAllByRole('article')).toHaveLength(24);
-    fireEvent.click(screen.getByRole('button', { name: 'Próxima página' }));
-    expect(screen.getAllByRole('article')).toHaveLength(1);
+    expect(screen.getAllByRole('article')).toHaveLength(25);
+    expect(screen.queryByRole('button', { name: 'Próxima página' })).toBeNull();
     expect(screen.getByRole('heading', { name: products[24].name }).textContent).toBe(products[24].name);
     fireEvent.input(screen.getByLabelText('Buscar produto'), { target: { value: 'file frango' } });
     expect(screen.getByText('1 produto encontrado')).toBeTruthy();
     expect(screen.queryByRole('navigation', { name: 'Páginas do catálogo' })).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'Limpar filtros' }));
-    expect(screen.getAllByRole('article')).toHaveLength(24);
+    expect(screen.getAllByRole('article')).toHaveLength(25);
     fireEvent.click(screen.getByRole('button', { name: 'Categoria Todas as categorias' }));
     fireEvent.click(screen.getByRole('option', { name: 'Aves' }));
     expect(screen.getAllByRole('article')).toHaveLength(1);

@@ -11,8 +11,6 @@ import {
   Icon,
   Input,
   Menu,
-  Pagination,
-  Select,
   Spinner
 } from '../../../../design-system/components/index.js';
 import { creationService } from '../services/creationService.js';
@@ -25,8 +23,6 @@ export function EntityManager({ type, scope = 'personal', onShare, onSubmit, cre
   const resource = useCreationResource(() => creationService.load(type, scope), `${type}:${scope}`);
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState('all');
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(48);
   const [editor, setEditor] = useState(null);
   const [deleting, setDeleting] = useState(null);
   const [error, setError] = useState('');
@@ -41,18 +37,8 @@ export function EntityManager({ type, scope = 'personal', onShare, onSubmit, cre
       ),
     [resource.data, query, filter, type]
   );
-  const current = Math.min(page, Math.max(1, Math.ceil(items.length / pageSize)));
   const resultsRef = useRef(null);
-  useContentMotion(
-    resultsRef,
-    JSON.stringify([
-      resource.loading,
-      Boolean(resource.error),
-      items.slice((current - 1) * pageSize, current * pageSize).map((item) => item.id)
-    ]),
-    0,
-    'y'
-  );
+  useContentMotion(resultsRef, JSON.stringify([resource.loading, Boolean(resource.error), items.map((item) => item.id)]), 0, 'y');
   const meta = entities[type];
   const visibleEditor = editor || (createRequested ? { item: null } : null);
   function closeEditor() {
@@ -88,16 +74,6 @@ export function EntityManager({ type, scope = 'personal', onShare, onSubmit, cre
             value={query}
             onInput={(e) => {
               setQuery(e.currentTarget.value);
-              setPage(1);
-            }}
-          />
-          <Select
-            label="Itens por página"
-            value={String(pageSize)}
-            options={['24', '48', '96'].map((value) => ({ value, label: value }))}
-            onChange={(value) => {
-              setPageSize(Number(value));
-              setPage(1);
             }}
           />
           <Button onClick={() => setEditor({ item: null })}>
@@ -124,7 +100,6 @@ export function EntityManager({ type, scope = 'personal', onShare, onSubmit, cre
                   aria-pressed={filter === value}
                   onClick={() => {
                     setFilter(value);
-                    setPage(1);
                   }}
                 >
                   {value === 'all'
@@ -170,12 +145,11 @@ export function EntityManager({ type, scope = 'personal', onShare, onSubmit, cre
         ) : (
           <>
             <p className="insights-muted" role="status">
-              {items.length} {items.length === 1 ? 'item' : 'itens'} · Exibindo {(current - 1) * pageSize + 1}–
-              {Math.min(current * pageSize, items.length)}
+              {items.length} {items.length === 1 ? 'item' : 'itens'}
               {query ? ' para esta busca' : ''}.
             </p>
             <div className={`creation-list creation-gallery creation-gallery-${type}`}>
-              {items.slice((current - 1) * pageSize, current * pageSize).map((item) => (
+              {items.map((item) => (
                 <Card className="creation-row creation-content-card" key={item.id}>
                   <CreationThumbnail item={item} type={type} />
                   <div className="creation-card-copy">
@@ -210,7 +184,6 @@ export function EntityManager({ type, scope = 'personal', onShare, onSubmit, cre
                 </Card>
               ))}
             </div>
-            {items.length > pageSize && <Pagination page={current} pageCount={Math.ceil(items.length / pageSize)} onChange={setPage} />}
           </>
         )}
       </div>

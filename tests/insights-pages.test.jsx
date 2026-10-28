@@ -218,3 +218,20 @@ describe('Insights pages and contextual navigation', () => {
     expect(screen.getByRole('heading', { name: 'Ideias para hoje' })).toBeTruthy();
   });
 });
+
+it('shows every product in one page and restores the complete list after filtering', async () => {
+  catalogService.loadCatalog.mockResolvedValue({
+    categories,
+    products: Array.from({ length: 60 }, (_, i) => ({ ...products[0], id: `p${i}`, name: `Produto ${i}` }))
+  });
+  render(<InsightsRoutes route={route(['produtos'])} />);
+  await screen.findByText('60 produtos encontrados');
+  expect(screen.getAllByRole('button', { name: /^Ver detalhes de Produto / })).toHaveLength(60);
+  expect(screen.getByRole('button', { name: 'Ver detalhes de Produto 59' })).toBeTruthy();
+  expect(screen.queryByRole('button', { name: 'Próxima página' })).toBeNull();
+  expect(screen.queryByText(/Página \d+ de/)).toBeNull();
+  fireEvent.input(screen.getByLabelText('Buscar produto'), { target: { value: 'Produto 59' } });
+  expect(screen.getByText('1 produto encontrado')).toBeTruthy();
+  fireEvent.click(screen.getByRole('button', { name: 'Limpar filtros' }));
+  expect(screen.getAllByRole('button', { name: /^Ver detalhes de Produto / })).toHaveLength(60);
+});

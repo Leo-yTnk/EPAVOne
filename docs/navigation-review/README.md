@@ -21,3 +21,13 @@ A prévia HTTP não disponibiliza crypto.randomUUID, usado pelo Writer existente
 ## Validação
 
 `npm run verify`: lint, arquitetura, catálogo de tokens, 98 arquivos de teste / 490 testes e build de produção. Testes de regressão cobrem a chave de rolagem e as trocas reais de abas da carteira e do perfil no App.
+
+## Insights em página única
+
+Removida a paginação das três listagens que ainda a usavam: catálogo público de produtos, EntityManager (receitas, produtos e categorias, nos escopos pessoal e administrativo) e solicitações (usuário e revisão administrativa). Removido também o seletor de itens por página. Receitas, biblioteca compartilhada e demais seções já exibiam suas listas sem paginação. As prateleiras, os filtros e o índice de seções permanecem disponíveis.
+
+Revisão em Chromium desktop com o catálogo público: 1002 produtos carregados e 1002 cards na mesma página, organizados em 23 grupos, sem componente de paginação. Busca por “file frango” retornou 10 produtos. [Captura do catálogo completo](insights-single-page.jpg).
+
+Os testes usam listas acima dos limites anteriores: 60 produtos públicos, 100 itens por tipo e escopo da biblioteca e 45 solicitações em cada modo. Cobrem busca e restauração da lista completa; os testes existentes continuam cobrindo filtros. Consultas internas em lotes permanecem no repositório para evitar truncamento pelo servidor.
+
+Validação final desta atualização: `npm run verify` aprovado, com 98 arquivos / 498 testes e build de produção.

@@ -7,7 +7,6 @@ import {
   EmptyState,
   ErrorState,
   Input,
-  Pagination,
   Select,
   Spinner,
   SectionHeader
@@ -21,7 +20,6 @@ export function RequestsPage({ admin = false }) {
   const [selected, setSelected] = useState(null);
   const [query, setQuery] = useState('');
   const [status, setStatus] = useState('all');
-  const [page, setPage] = useState(1);
   const rows = useMemo(
     () =>
       (resource.data || []).filter(
@@ -31,7 +29,6 @@ export function RequestsPage({ admin = false }) {
       ),
     [resource.data, query, status]
   );
-  const current = Math.min(page, Math.max(1, Math.ceil(rows.length / 20)));
   return (
     <section className="creation-fields">
       <Card className="creation-fields creation-operation">
@@ -52,7 +49,6 @@ export function RequestsPage({ admin = false }) {
             value={query}
             onInput={(e) => {
               setQuery(e.currentTarget.value);
-              setPage(1);
             }}
           />
           <Select
@@ -64,7 +60,6 @@ export function RequestsPage({ admin = false }) {
             ]}
             onChange={(value) => {
               setStatus(value);
-              setPage(1);
             }}
           />
         </div>
@@ -77,7 +72,7 @@ export function RequestsPage({ admin = false }) {
         <EmptyState title="Nenhuma solicitação encontrada" />
       ) : (
         <div className="creation-list creation-request-grid">
-          {rows.slice((current - 1) * 20, current * 20).map((request) => (
+          {rows.map((request) => (
             <Card key={request.id} className="creation-row">
               <Badge tone={request.status === 'approved' ? 'success' : request.status === 'rejected' ? 'danger' : 'neutral'}>
                 {statusLabels[request.status] || request.status}
@@ -93,7 +88,6 @@ export function RequestsPage({ admin = false }) {
           ))}
         </div>
       )}
-      {rows.length > 20 && <Pagination page={current} pageCount={Math.ceil(rows.length / 20)} onChange={setPage} />}
       <ModalPresence>
         {selected && (
           <RequestDetails

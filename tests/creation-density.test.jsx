@@ -9,18 +9,35 @@ vi.mock('../src/products/insights/creation/services/creationService.js', () => (
 vi.mock('../src/products/insights/creation/services/collaborationService.js', () => ({
   collaborationService: { shared: vi.fn(), requests: vi.fn() }
 }));
-it('changes page size without losing items or leaving the page out of range', async () => {
-  creationService.load.mockResolvedValue(Array.from({ length: 50 }, (_, i) => ({ id: String(i), name: `Produto ${i}`, active: true })));
-  render(<EntityManager type="products" />);
-  await screen.findByText('Produto 47');
-  expect(screen.queryByText('Produto 48')).toBeNull();
-  fireEvent.click(screen.getByRole('button', { name: /Itens por página/ }));
-  fireEvent.click(screen.getByRole('option', { name: '96' }));
-  expect(screen.getByText('Produto 49')).toBeTruthy();
-  fireEvent.click(screen.getByRole('button', { name: /Itens por página/ }));
-  fireEvent.click(screen.getByRole('option', { name: '24' }));
-  expect(screen.getByText('Produto 23')).toBeTruthy();
-  expect(screen.queryByText('Produto 24')).toBeNull();
+it.each(['products', 'recipes', 'categories'].flatMap((type) => ['personal', 'site'].map((scope) => [type, scope])))(
+  'shows the complete %s list in %s scope and searches beyond the former page limit',
+  async (type, scope) => {
+    creationService.load.mockResolvedValue(
+      Array.from({ length: 100 }, (_, i) => ({ id: String(i), name: `Item ${i}`, active: true, status: 'private' }))
+    );
+    render(<EntityManager type={type} scope={scope} />);
+    await screen.findByRole('heading', { name: 'Item 99', exact: true });
+    expect(screen.getAllByRole('button', { name: /^Editar Item / })).toHaveLength(100);
+    expect(screen.queryByRole('button', { name: /Itens por página|Próxima página/ })).toBeNull();
+    expect(screen.queryByText(/Página \d+ de/)).toBeNull();
+    fireEvent.input(screen.getByRole('searchbox'), { target: { value: 'Item 99' } });
+    expect(screen.getAllByRole('button', { name: /^Editar Item / })).toHaveLength(1);
+    fireEvent.input(screen.getByRole('searchbox'), { target: { value: '' } });
+    expect(screen.getAllByRole('button', { name: /^Editar Item / })).toHaveLength(100);
+  }
+);
+it.each([false, true])('shows every publication request without pagination (admin=%s)', async (admin) => {
+  collaborationService.requests.mockResolvedValue(
+    Array.from({ length: 45 }, (_, i) => ({ id: String(i), source_code: `REQ${i}`, status: i % 2 ? 'approved' : 'rejected' }))
+  );
+  render(<RequestsPage admin={admin} />);
+  await screen.findByText('REQ44');
+  expect(screen.getAllByRole('button', { name: 'Ver solicitação' })).toHaveLength(45);
+  expect(screen.queryByRole('button', { name: 'Próxima página' })).toBeNull();
+  fireEvent.input(screen.getByLabelText('Buscar solicitações'), { target: { value: 'REQ44' } });
+  expect(screen.getAllByRole('button', { name: 'Ver solicitação' })).toHaveLength(1);
+  fireEvent.input(screen.getByLabelText('Buscar solicitações'), { target: { value: '' } });
+  expect(screen.getAllByRole('button', { name: 'Ver solicitação' })).toHaveLength(45);
 });
 it('searches shared recipes without changing the shared library', async () => {
   collaborationService.shared.mockResolvedValue([{ recipe: { id: 'a', name: 'Frango assado' } }, { recipe: { id: 'b', name: 'Arroz' } }]);

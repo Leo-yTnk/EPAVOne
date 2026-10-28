@@ -66,10 +66,12 @@ Insights, Planner e Writer acessíveis. Conta, biblioteca, criação e administr
 ## Verificação
 
 `npm run verify` executa lint, verificação de arquitetura, testes e build.
-Os testes desta etapa cobrem paginação, pesquisa, filtros, preços condicionais,
+Os testes desta etapa cobrem listagens completas, pesquisa, filtros, preços condicionais,
 receitas, recuperação de erros, cancelamento e respostas atrasadas.
 
 A Home usa contagens e sugestões derivadas do catálogo real. Receitas em destaque
 são priorizadas, seguidas pelas de menor tempo conhecido. Produtos com preço por
 quantidade só aparecem quando essa condição existe no catálogo; não são criadas
 promoções nem indicadores de vendas fictícios.
+
+Todas as listagens do Insights usam uma única página: produtos, receitas, biblioteca, catálogo administrativo e solicitações. Busca, filtros e organização por seções continuam disponíveis. As consultas em lotes do repositório são mantidas para carregar todos os registros, sem truncamento pelo limite do servidor.
