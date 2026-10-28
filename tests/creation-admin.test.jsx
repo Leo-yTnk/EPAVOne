@@ -55,3 +55,18 @@ it('shows real progress and resumes a paused catalog update', async () => {
   await screen.findByText('Consulta concluída');
   expect(screen.getByRole('progressbar').getAttribute('aria-valuenow')).toBe('5');
 });
+
+it('displays the estimated remaining time alongside confirmed progress', async () => {
+  catalogPriceSync.start.mockImplementation(async () => {});
+  let update;
+  catalogPriceSync.subscribe.mockImplementation((callback) => {
+    update = callback;
+    return () => {};
+  });
+  render(<MaintenancePanel />);
+  update({ phase: 'running', processed: 6, total: 1002, updated: 6, unchanged: 0, failed: 0, failures: [], remainingMs: 996000 });
+  expect(await screen.findByText('Tempo restante estimado: 17 min')).toBeTruthy();
+  expect(screen.getByRole('progressbar').getAttribute('aria-valuenow')).toBe('6');
+  update({ phase: 'running', processed: 6, total: 1002, updated: 6, unchanged: 0, failed: 0, failures: [], waiting: true });
+  expect(await screen.findByText('Tempo restante: aguardando confirmação do serviço…')).toBeTruthy();
+});

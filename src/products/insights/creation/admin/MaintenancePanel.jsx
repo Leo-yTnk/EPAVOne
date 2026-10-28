@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'preact/hooks';
 import { Alert, Button, Card, Checkbox, Icon, Input, Progress, SectionHeader } from '../../../../design-system/components/index.js';
 import { adminService, catalogPriceSync } from '../services/adminService.js';
+import { formatSyncRemaining } from '../services/formatSyncRemaining.js';
 import { SwiftMetadataReview } from './SwiftMetadataReview.jsx';
 export function MaintenancePanel() {
   const [progress, setProgress] = useState(catalogPriceSync.snapshot);
@@ -88,6 +89,7 @@ export function MaintenancePanel() {
                 {progress.waiting ? 'Aguardando confirmação do serviço' : 'Consultando'}: {progress.currentName || 'carregando catálogo…'}
               </p>
             )}
+            {syncing && <p>{formatSyncRemaining(progress.remainingMs, progress.waiting)}</p>}
             <p>
               {progress.updated} atualizado(s) · {progress.unchanged} mantido(s) · {progress.failed} falha(s)
             </p>

@@ -45,3 +45,15 @@ it('never attributes a different concurrent run result to the requested sync', a
   expect(finished.data).toBeNull();
   expect(finished.error.code).toBe('sync_other_run_completed');
 });
+
+it('keeps selection identity across a pending batch and polls without repeating writes', async () => {
+  const { refreshProductPriceBatch } = await import('../src/products/insights/creation/repositories/creationRepository.js');
+  client.functions.invoke.mockClear();
+  client.functions.invoke.mockResolvedValueOnce({ data: { pending: true, run_id: 92 } });
+  await refreshProductPriceBatch(['a', 'b']);
+  const original = client.functions.invoke.mock.calls[0][1].body;
+  expect(original).toMatchObject({ productIds: ['a', 'b'], productId: 'a' });
+  client.functions.invoke.mockResolvedValueOnce({ data: { products_failed: 0, products_updated: 2 } });
+  await refreshProductPriceBatch(['a', 'b']);
+  expect(client.functions.invoke.mock.calls[1][1].body).toEqual({ ...original, statusOnly: true, runId: 92 });
+});
