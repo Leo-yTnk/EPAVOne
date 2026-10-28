@@ -80,3 +80,32 @@ it('also introduces a first visit through a deep link and preserves its destinat
   render(<App />);
   expect(screen.queryByRole('dialog', { name: 'Como usar o EPAVOne' })).toBeNull();
 });
+
+it('does not reset scroll or focus when changing tabs within Clientes', async () => {
+  const scroll = vi.fn();
+  window.scrollTo = scroll;
+  localStorage.setItem('epavone-tutorial-v1', 'done');
+  window.location.hash = '#/planner/clientes';
+  render(<App />);
+  await screen.findByRole('tab', { name: 'Todos os clientes' });
+  await waitFor(() => expect(scroll).toHaveBeenCalled());
+  scroll.mockClear();
+  fireEvent.click(screen.getByRole('tab', { name: 'Oportunidades', exact: true }));
+  await waitFor(() => expect(window.location.hash).toBe('#/planner/clientes/oportunidades'));
+  expect(scroll).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('tab', { name: 'Todos os clientes' }));
+  await waitFor(() => expect(window.location.hash).toBe('#/planner/clientes'));
+  expect(scroll).not.toHaveBeenCalled();
+  navigate('#/planner/clientes/demo-1');
+  await screen.findByRole('tab', { name: 'Preparar', exact: true });
+  await waitFor(() => expect(scroll).toHaveBeenCalled());
+  scroll.mockClear();
+  fireEvent.click(screen.getByRole('tab', { name: 'Combinados', exact: true }));
+  await screen.findByRole('heading', { name: 'Combinados e retornos' });
+  expect(scroll).not.toHaveBeenCalled();
+  fireEvent.click(screen.getByRole('tab', { name: 'Histórico', exact: true }));
+  await screen.findByRole('heading', { name: 'Histórico do relacionamento' });
+  expect(scroll).not.toHaveBeenCalled();
+  navigate('#/planner/semana');
+  await waitFor(() => expect(scroll).toHaveBeenCalledWith({ top: 0, behavior: 'auto' }));
+});

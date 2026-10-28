@@ -44,9 +44,11 @@ export function AppShell({ route, preferences, account, onOpenAccount, onToggleT
   }, []);
   useEffect(() => {
     lastRoutes.current[route.product] = routeHash(route.product, route.segments);
+  }, [route]);
+  useEffect(() => {
     sectionsRef.current?.querySelector('[aria-current="page"]')?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
     tabsRef.current?.querySelector('[aria-selected="true"]')?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
-  }, [route, vertical]);
+  }, [route.product, activeSection, vertical]);
 
   function selectApp(product) {
     window.location.hash = lastRoutes.current[product] || PRODUCT_META[product].href;

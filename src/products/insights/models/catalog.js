@@ -1,4 +1,3 @@
-export const CATALOG_PAGE_SIZE = 24;
 export const fold = (value) =>
   String(value ?? '')
     .normalize('NFD')

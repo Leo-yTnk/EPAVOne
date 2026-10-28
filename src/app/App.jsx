@@ -5,6 +5,7 @@ import { usePressFeedback } from '../design-system/behaviors/usePressFeedback.js
 import { CommercialReturn } from './CommercialReturn.jsx';
 import { AppShell } from './AppShell.jsx';
 import { useAccount } from './account/useAccount.js';
+import { routeScrollKey } from './routes.js';
 import { useHashRoute } from './useHashRoute.js';
 import { applyTheme, getInitialTheme } from './theme.js';
 import { productTheme } from './productTheme.js';
@@ -50,6 +51,7 @@ export function App() {
     );
   }, [preferences]);
   const routeKey = [route.product, ...route.segments].join('/');
+  const scrollKey = routeScrollKey(route);
   useRouteMotion(route.product === 'writer' ? writerRef : pageRef, routeKey, route.product);
 
   useEffect(() => {
@@ -69,7 +71,7 @@ export function App() {
         document.querySelector('#main')?.focus({ preventScroll: true });
     });
     return () => cancelAnimationFrame(frame);
-  }, [routeKey, showIntroduction]);
+  }, [scrollKey, showIntroduction]);
 
   function toggleTheme() {
     const next = theme === 'dark' ? 'light' : 'dark';

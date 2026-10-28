@@ -13,12 +13,11 @@ import {
   EmptyState,
   ErrorState,
   Input,
-  Pagination,
   Select
 } from '../../../design-system/components/index.js';
 import { catalogService } from '../services/catalogService.js';
 import { useCatalogResource } from '../hooks/useCatalogResource.js';
-import { CATALOG_PAGE_SIZE, filterProducts, productPricing } from '../models/catalog.js';
+import { filterProducts, productPricing } from '../models/catalog.js';
 import { ProductCard } from './ProductCard.jsx';
 import { ProductDetails } from './ProductDetails.jsx';
 
@@ -27,7 +26,6 @@ export function ProductCatalogPage({ initialCategory = '', initialSection = '', 
   const resource = useCatalogResource(load, 'public');
   const structure = useCatalogResource(catalogService.structure, 'public');
   const [filters, setFilters] = useState({ query: initialQuery, category: initialCategory, promotion: false, section: initialSection });
-  const [page, setPage] = useState(1);
   const [selected, setSelected] = useState(null);
   const candidates = useMemo(() => filterProducts(resource.data?.products || [], filters), [resource.data, filters]);
   const sectionOptions = (structure.data?.sections || []).filter((section) =>
@@ -38,18 +36,11 @@ export function ProductCatalogPage({ initialCategory = '', initialSection = '', 
   );
   const filtered = filters.section && structure.data ? candidates.filter((item) => memberIds.has(item.id)) : candidates;
   const ordered = orderedCatalogItems(filtered, structure.data, 'products', 'products');
-  const pageCount = Math.max(1, Math.ceil(filtered.length / CATALOG_PAGE_SIZE));
-  const currentPage = Math.min(page, pageCount);
   const resultsRef = useRef(null);
-  const resultKey = JSON.stringify([
-    resource.loading,
-    Boolean(resource.error),
-    ordered.slice((currentPage - 1) * CATALOG_PAGE_SIZE, currentPage * CATALOG_PAGE_SIZE).map((item) => item.id)
-  ]);
+  const resultKey = JSON.stringify([resource.loading, Boolean(resource.error), ordered.map((item) => item.id)]);
   useContentMotion(resultsRef, resultKey, 0, 'y');
   function update(patch) {
     setFilters((current) => ({ ...current, ...patch }));
-    setPage(1);
   }
   function reset() {
     update({ query: '', category: '', promotion: false, section: '' });
@@ -157,17 +148,11 @@ export function ProductCatalogPage({ initialCategory = '', initialSection = '', 
           />
         ) : (
           <CatalogSections
-            groups={browseCatalogGroups(
-              ordered.slice((currentPage - 1) * CATALOG_PAGE_SIZE, currentPage * CATALOG_PAGE_SIZE),
-              structure.data,
-              'products',
-              'products'
-            )}
+            groups={browseCatalogGroups(ordered, structure.data, 'products', 'products')}
             renderItem={(item) => <ProductCard key={item.id} product={item} onOpen={setSelected} />}
           />
         )}
       </div>
-      {pageCount > 1 && <Pagination page={currentPage} pageCount={pageCount} onChange={setPage} label="Páginas do catálogo" />}
       <ModalPresence>{selected && <ProductDetails key={selected.id} product={selected} onClose={() => setSelected(null)} />}</ModalPresence>
     </section>
   );
