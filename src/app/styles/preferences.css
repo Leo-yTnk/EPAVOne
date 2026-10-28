@@ -1,0 +1,23 @@
+html[data-text-size='large'] {
+  font-size: 112.5%;
+}
+html[data-show-grid='false'] body {
+  background-image: none;
+}
+
+/* Loaded by the shell so saved choices work on direct links and reload. */
+html[data-content-width='focused'] .app-shell {
+  --shell-content-width: 66rem;
+}
+html[data-content-width='wide'] .app-shell {
+  --shell-content-width: 100rem;
+}
+html[data-stitch-style='subtle'] .ds-stitch {
+  opacity: 0.4;
+}
+html[data-stitch-style='none'] .ds-stitch {
+  display: none;
+}
+html[data-show-breadcrumbs='false'] .ds-breadcrumb {
+  display: none;
+}

@@ -87,3 +87,27 @@ it('reports unavailable preference storage while preserving the applied session 
     spy.mockRestore();
   }
 });
+
+it('selects and explains all three performance modes without changing the accessibility override', () => {
+  const change = vi.fn();
+  const view = render(
+    <SettingsPage theme="light" preferences={{ ...DEFAULT_PREFERENCES, reducedMotion: true }} onPreferencesChange={change} />
+  );
+  for (const [label, mode] of [
+    ['Alto desempenho', 'performance'],
+    ['Equilibrado', 'balanced'],
+    ['Fabuloso', 'fabulous']
+  ]) {
+    fireEvent.click(screen.getByRole('button', { name: /Modo de desempenho/ }));
+    fireEvent.click(screen.getByRole('option', { name: label, exact: true }));
+    expect(change).toHaveBeenLastCalledWith({ ...DEFAULT_PREFERENCES, reducedMotion: true, performanceMode: mode });
+    view.rerender(
+      <SettingsPage
+        theme="light"
+        preferences={{ ...DEFAULT_PREFERENCES, reducedMotion: true, performanceMode: mode }}
+        onPreferencesChange={change}
+      />
+    );
+  }
+  expect(screen.getByText(/exige mais memória e internet/)).toBeTruthy();
+});

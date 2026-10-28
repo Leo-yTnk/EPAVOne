@@ -1,3 +1,4 @@
+import { fullMotion } from '../design-system/behaviors/performanceMode.js';
 import { useEffect, useLayoutEffect, useRef } from 'preact/hooks';
 
 function measure(node) {
@@ -38,7 +39,7 @@ export function useHeaderMotion(ref, product, horizontal) {
     previous.current = after;
     const reduced =
       document.documentElement.dataset.reducedMotion === 'true' || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-    if (!before || reduced || !node.animate) return;
+    if (!before || reduced || !fullMotion() || !node.animate) return;
 
     const style = getComputedStyle(node);
     const duration = parseFloat(style.getPropertyValue('--duration-slow')) || 320;
@@ -86,7 +87,7 @@ export function useHeaderMotion(ref, product, horizontal) {
       previous.current = ref.current ? measure(ref.current) : null;
     };
     const observer = new MutationObserver(reset);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-reduced-motion'] });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-reduced-motion', 'data-performance-mode'] });
     window.addEventListener('resize', reset);
     media?.addEventListener('change', reset);
     return () => {

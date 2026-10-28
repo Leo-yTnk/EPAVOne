@@ -1,3 +1,5 @@
+import './styles/preferences.css';
+import { PerformanceModeContext } from '../design-system/behaviors/performanceMode.js';
 import { useWeeklyOrderRestore } from './useWeeklyOrderRestore.js';
 import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { useRouteMotion } from './useRouteMotion.js';
@@ -45,7 +47,7 @@ export function App() {
   const [theme, setTheme] = useState(getInitialTheme);
   const [preferences, setPreferences] = useState(readPreferences);
   const [preferencesStatus, setPreferencesStatus] = useState('Salvo neste navegador');
-  useEffect(() => {
+  useLayoutEffect(() => {
     setPreferencesStatus(
       applyPreferences(preferences) ? 'Salvo neste navegador' : 'Não foi possível salvar. Suas preferências estão aplicadas nesta sessão.'
     );
@@ -118,47 +120,49 @@ export function App() {
   if (showIntroduction) page = null;
 
   return (
-    <AppShell
-      preferences={preferences}
-      route={route}
-      theme={theme}
-      onToggleTheme={toggleTheme}
-      account={account}
-      onOpenAccount={() => setAccountOpen(true)}
-    >
-      {route.product === 'insights' && <CommercialReturn />}
-      <div ref={pageRef} key={route.product === 'planner' ? 'planner' : routeKey} className="route-frame">
-        <Suspense
-          fallback={
-            <span data-route-loading>
-              <Spinner label="Carregando app" />
-            </span>
-          }
-        >
-          {page}
-        </Suspense>
-      </div>
-      <div ref={writerRef} key="writer-workspace" className="route-frame" hidden={route.product !== 'writer'}>
-        {writerVisited.current && (
+    <PerformanceModeContext.Provider value={preferences.performanceMode}>
+      <AppShell
+        preferences={preferences}
+        route={route}
+        theme={theme}
+        onToggleTheme={toggleTheme}
+        account={account}
+        onOpenAccount={() => setAccountOpen(true)}
+      >
+        {route.product === 'insights' && <CommercialReturn />}
+        <div ref={pageRef} key={route.product === 'planner' ? 'planner' : routeKey} className="route-frame">
           <Suspense
             fallback={
               <span data-route-loading>
-                <Spinner label="Carregando Writer" />
+                <Spinner label="Carregando app" />
               </span>
             }
           >
-            <WriterRoutes active={route.product === 'writer'} />
+            {page}
           </Suspense>
-        )}
-      </div>
-      <ModalPresence>{showIntroduction && <IntroductionPage onComplete={finishIntroduction} />}</ModalPresence>
-      <ModalPresence>
-        {accountOpen && (
-          <Suspense fallback={<Spinner label="Carregando conta" />}>
-            <AccountDialog account={account} onClose={() => setAccountOpen(false)} />
-          </Suspense>
-        )}
-      </ModalPresence>
-    </AppShell>
+        </div>
+        <div ref={writerRef} key="writer-workspace" className="route-frame" hidden={route.product !== 'writer'}>
+          {writerVisited.current && (
+            <Suspense
+              fallback={
+                <span data-route-loading>
+                  <Spinner label="Carregando Writer" />
+                </span>
+              }
+            >
+              <WriterRoutes active={route.product === 'writer'} />
+            </Suspense>
+          )}
+        </div>
+        <ModalPresence>{showIntroduction && <IntroductionPage onComplete={finishIntroduction} />}</ModalPresence>
+        <ModalPresence>
+          {accountOpen && (
+            <Suspense fallback={<Spinner label="Carregando conta" />}>
+              <AccountDialog account={account} onClose={() => setAccountOpen(false)} />
+            </Suspense>
+          )}
+        </ModalPresence>
+      </AppShell>
+    </PerformanceModeContext.Provider>
   );
 }

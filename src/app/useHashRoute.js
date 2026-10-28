@@ -1,3 +1,4 @@
+import { initialRouteHash, readPreferences } from './settings/preferences.js';
 import { useEffect, useState } from 'preact/hooks';
 import { parseHash } from './routes.js';
 
@@ -9,7 +10,11 @@ function readRoute() {
 }
 
 export function useHashRoute() {
-  const [route, setRoute] = useState(readRoute);
+  const [route, setRoute] = useState(() => {
+    const hash = initialRouteHash(window.location.hash, readPreferences());
+    if (hash !== window.location.hash) window.history.replaceState(window.history.state, '', hash);
+    return readRoute();
+  });
 
   useEffect(() => {
     const handleHashChange = () => setRoute(readRoute);

@@ -30,6 +30,7 @@ export const Button = forwardRef(function Button(
         fullWidth && 'ds-btn-block',
         radius === 'nested' && 'ds-btn-nested',
         align === 'between' && 'ds-btn-between',
+        align === 'start' && 'ds-btn-start',
         className
       )}
       disabled={isButton ? disabled || loading : undefined}

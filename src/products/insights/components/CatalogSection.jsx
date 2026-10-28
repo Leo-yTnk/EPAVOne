@@ -1,7 +1,10 @@
+import { usePerformanceMode } from '../../../design-system/behaviors/performanceMode.js';
 import { useState } from 'preact/hooks';
-import { Button, Carousel } from '../../../design-system/components/index.js';
+import { Button, Carousel, DeferredItem } from '../../../design-system/components/index.js';
 
 export function CatalogSection({ group, renderItem }) {
+  const mode = usePerformanceMode();
+  const defer = mode !== 'fabulous' && group.items.length > 24;
   const [expanded, setExpanded] = useState(false);
   return (
     <section
@@ -11,6 +14,9 @@ export function CatalogSection({ group, renderItem }) {
       aria-labelledby={`heading-${group.id}`}
     >
       <Carousel
+        items={defer && !expanded ? group.items : undefined}
+        renderItem={renderItem}
+        overscan={mode === 'performance' ? 1 : 3}
         label={group.name}
         headingId={`heading-${group.id}`}
         expanded={expanded}
@@ -31,7 +37,15 @@ export function CatalogSection({ group, renderItem }) {
           )
         }
       >
-        {group.items.map(renderItem)}
+        {(defer && !expanded ? [] : group.items).map((item) =>
+          defer ? (
+            <DeferredItem key={item.id} label={item.name} margin={mode === 'performance' ? 120 : 600}>
+              {() => renderItem(item)}
+            </DeferredItem>
+          ) : (
+            renderItem(item)
+          )
+        )}
       </Carousel>
       {group.href && expanded && (
         <Button as="a" href={group.href} variant="ghost" size="sm" className="insights-section-explore">

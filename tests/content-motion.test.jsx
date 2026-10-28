@@ -1,6 +1,6 @@
 import { act, render } from '@testing-library/preact';
 import { useRef } from 'preact/hooks';
-import { afterEach, expect, it, vi } from 'vitest';
+import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { useContentMotion } from '../src/design-system/behaviors/useContentMotion.js';
 
 function Example({ current, depth, axis }) {
@@ -12,7 +12,11 @@ function Example({ current, depth, axis }) {
     </div>
   );
 }
+beforeEach(() => {
+  document.documentElement.dataset.performanceMode = 'fabulous';
+});
 afterEach(() => {
+  delete document.documentElement.dataset.performanceMode;
   delete Element.prototype.animate;
   delete document.documentElement.dataset.reducedMotion;
   vi.unstubAllGlobals();

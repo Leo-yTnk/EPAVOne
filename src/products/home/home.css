@@ -265,3 +265,10 @@
 .one-welcome:not(:has(.one-inspiration)) {
   grid-template-columns: minmax(0, 1fr);
 }
+
+/* Fixed scenery only changes color; greetings keep the device's actual time. */
+.one-home[data-background='dawn'] { --home-tint: #e6a976; }
+.one-home[data-background='morning'] { --home-tint: #e2c57d; }
+.one-home[data-background='afternoon'] { --home-tint: #92bad6; }
+.one-home[data-background='evening'] { --home-tint: #be9cc5; }
+.one-home[data-background='night'] { --home-tint: #8f9ecb; }

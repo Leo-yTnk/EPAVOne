@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/preact';
 import { useState } from 'preact/hooks';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 import { Dialog } from '../src/design-system/components/Dialog.jsx';
 
 function Example({ expand = true }) {
@@ -16,7 +16,13 @@ function Example({ expand = true }) {
     </>
   );
 }
-afterEach(() => vi.restoreAllMocks());
+beforeEach(() => {
+  document.documentElement.dataset.performanceMode = 'fabulous';
+});
+afterEach(() => {
+  delete document.documentElement.dataset.performanceMode;
+  vi.restoreAllMocks();
+});
 describe('Dialog expansion from its initiating card', () => {
   it('limits arrival without stretching the card, cancels on close and restores trigger focus', () => {
     const cancel = vi.fn();

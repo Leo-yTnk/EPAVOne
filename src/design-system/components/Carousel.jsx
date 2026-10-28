@@ -1,3 +1,4 @@
+import { WindowedItems } from './WindowedItems.jsx';
 import { useLayoutEffect, useRef, useState } from 'preact/hooks';
 import { useControlId } from '../behaviors/useControlId.js';
 import { observeSize } from '../behaviors/observeSize.js';
@@ -8,7 +9,18 @@ import { SectionHeader } from './SectionHeader.jsx';
 import { IconButton } from './IconButton.jsx';
 
 // Native touch/trackpad scrolling: no drag handlers, cloning, autoplay or per-item observers.
-export function Carousel({ label, headingId, children, action, headingSurface = false, expanded = false, className = '' }) {
+export function Carousel({
+  label,
+  headingId,
+  children,
+  action,
+  headingSurface = false,
+  expanded = false,
+  items,
+  renderItem,
+  overscan,
+  className = ''
+}) {
   const generatedId = useControlId();
   const titleId = headingId || generatedId;
   const ref = useRef(null);
@@ -34,7 +46,7 @@ export function Carousel({ label, headingId, children, action, headingSurface = 
       cancelAnimationFrame(frame);
       node.removeEventListener('scroll', schedule);
     };
-  }, [children?.length, expanded]);
+  }, [children?.length, items?.length, expanded]);
   const move = (direction) => {
     const node = ref.current;
     node.scrollBy({ left: direction * Math.max(1, node.clientWidth * 0.85), behavior: reducedMotion() ? 'instant' : 'smooth' });
@@ -81,7 +93,7 @@ export function Carousel({ label, headingId, children, action, headingSurface = 
           else move(event.key === 'ArrowRight' ? 1 : -1);
         }}
       >
-        {children}
+        {items ? <WindowedItems trackRef={ref} items={items} renderItem={renderItem} overscan={overscan} /> : children}
       </div>
     </div>
   );

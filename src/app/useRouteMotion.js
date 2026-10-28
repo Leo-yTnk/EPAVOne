@@ -47,7 +47,7 @@ export function useRouteMotion(ref, routeKey, product) {
     const stop = () => running.current?.cancel();
     const media = window.matchMedia?.('(prefers-reduced-motion: reduce)');
     const observer = new MutationObserver(stop);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-reduced-motion'] });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-reduced-motion', 'data-performance-mode'] });
     media?.addEventListener?.('change', stop);
     window.addEventListener('resize', stop);
     return () => {

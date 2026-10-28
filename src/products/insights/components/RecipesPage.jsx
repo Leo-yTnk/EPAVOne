@@ -1,3 +1,4 @@
+import { usePerformanceMode } from '../../../design-system/behaviors/performanceMode.js';
 import { useContentMotion } from '../../../design-system/behaviors/useContentMotion.js';
 import { CatalogChoices } from './CatalogChoices.jsx';
 import { CatalogLoading } from './CatalogLoading.jsx';
@@ -5,6 +6,7 @@ import { orderedCatalogItems } from '../models/sections.js';
 import { useMemo, useRef, useState } from 'preact/hooks';
 import {
   ModalPresence,
+  DeferredItem,
   Button,
   Card,
   Checkbox,
@@ -22,6 +24,7 @@ import { RecipeDialog } from './RecipeDialog.jsx';
 import { PersonalRecipesSection } from './PersonalRecipesSection.jsx';
 
 export function RecipesPage({ initialSection = '', ownerId }) {
+  const mode = usePerformanceMode();
   const resource = useCatalogResource(catalogService.recipes, 'published');
   const structure = useCatalogResource(catalogService.structure, 'public');
   const [filters, setFilters] = useState({ query: '', category: '', quick: false, section: initialSection });
@@ -145,9 +148,15 @@ export function RecipesPage({ initialSection = '', ownerId }) {
           />
         ) : (
           <div className="insights-recipes-collection" aria-label="Todas as receitas encontradas">
-            {ordered.map((item) => (
-              <RecipeCard key={item.id} recipe={item} onOpen={setSelected} />
-            ))}
+            {ordered.map((item) =>
+              mode !== 'fabulous' && ordered.length > 24 ? (
+                <DeferredItem key={item.id} label={item.name} margin={mode === 'performance' ? 120 : 600}>
+                  {() => <RecipeCard recipe={item} onOpen={setSelected} />}
+                </DeferredItem>
+              ) : (
+                <RecipeCard key={item.id} recipe={item} onOpen={setSelected} />
+              )
+            )}
           </div>
         )}
       </div>

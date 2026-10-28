@@ -87,7 +87,8 @@ it('does not reset scroll or focus when changing tabs within Clientes', async ()
   localStorage.setItem('epavone-tutorial-v1', 'done');
   window.location.hash = '#/planner/clientes';
   render(<App />);
-  await screen.findByRole('tab', { name: 'Todos os clientes' });
+  // Allow the first lazy Planner import to finish when the full suite runs concurrently.
+  await screen.findByRole('tab', { name: 'Todos os clientes' }, { timeout: 3000 });
   await waitFor(() => expect(scroll).toHaveBeenCalled());
   scroll.mockClear();
   fireEvent.click(screen.getByRole('tab', { name: 'Oportunidades', exact: true }));

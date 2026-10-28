@@ -1,9 +1,11 @@
+import { useDebouncedValue } from '../../../design-system/behaviors/useDebouncedValue.js';
+import { usePerformanceMode } from '../../../design-system/behaviors/performanceMode.js';
 import { useContentMotion } from '../../../design-system/behaviors/useContentMotion.js';
 import { CatalogChoices } from './CatalogChoices.jsx';
 import { CatalogLoading } from './CatalogLoading.jsx';
 import { CatalogSections } from './CatalogSections.jsx';
 import { browseCatalogGroups, orderedCatalogItems } from '../models/sections.js';
-import { useMemo, useRef, useState } from 'preact/hooks';
+import { useCallback, useMemo, useRef, useState } from 'preact/hooks';
 import {
   ModalPresence,
   Button,
@@ -17,27 +19,38 @@ import {
 } from '../../../design-system/components/index.js';
 import { catalogService } from '../services/catalogService.js';
 import { useCatalogResource } from '../hooks/useCatalogResource.js';
-import { filterProducts, productPricing } from '../models/catalog.js';
+import { filterProducts, productPricing, productSearchIndex } from '../models/catalog.js';
 import { ProductCard } from './ProductCard.jsx';
 import { ProductDetails } from './ProductDetails.jsx';
 
-const load = (_id, options) => catalogService.loadCatalog(options);
+const load = catalogService.loadCatalog;
 export function ProductCatalogPage({ initialCategory = '', initialSection = '', initialQuery = '' }) {
   const resource = useCatalogResource(load, 'public');
   const structure = useCatalogResource(catalogService.structure, 'public');
   const [filters, setFilters] = useState({ query: initialQuery, category: initialCategory, promotion: false, section: initialSection });
   const [selected, setSelected] = useState(null);
-  const candidates = useMemo(() => filterProducts(resource.data?.products || [], filters), [resource.data, filters]);
+  const mode = usePerformanceMode();
+  const query = useDebouncedValue(filters.query, mode === 'fabulous' ? 0 : 150);
+  const searchIndex = useMemo(() => productSearchIndex(resource.data?.products || []), [resource.data]);
+  const candidates = useMemo(
+    () => filterProducts(resource.data?.products || [], { ...filters, query }, searchIndex),
+    [resource.data, query, filters.category, filters.promotion, searchIndex]
+  );
   const sectionOptions = (structure.data?.sections || []).filter((section) =>
     (structure.data?.products || []).some((link) => link.section_id === section.id)
   );
-  const memberIds = new Set(
-    (structure.data?.products || []).filter((link) => link.section_id === filters.section).map((link) => link.product_id)
-  );
-  const filtered = filters.section && structure.data ? candidates.filter((item) => memberIds.has(item.id)) : candidates;
-  const ordered = orderedCatalogItems(filtered, structure.data, 'products', 'products');
+  const filtered = useMemo(() => {
+    if (!filters.section || !structure.data) return candidates;
+    const memberIds = new Set(
+      (structure.data.products || []).filter((link) => link.section_id === filters.section).map((link) => link.product_id)
+    );
+    return candidates.filter((item) => memberIds.has(item.id));
+  }, [candidates, structure.data, filters.section]);
+  const ordered = useMemo(() => orderedCatalogItems(filtered, structure.data, 'products', 'products'), [filtered, structure.data]);
+  const groups = useMemo(() => browseCatalogGroups(ordered, structure.data, 'products', 'products'), [ordered, structure.data]);
+  const renderProduct = useCallback((item) => <ProductCard key={item.id} product={item} onOpen={setSelected} />, []);
   const resultsRef = useRef(null);
-  const resultKey = JSON.stringify([resource.loading, Boolean(resource.error), ordered.map((item) => item.id)]);
+  const resultKey = mode === 'fabulous' ? JSON.stringify([resource.loading, Boolean(resource.error), ordered.map((item) => item.id)]) : '';
   useContentMotion(resultsRef, resultKey, 0, 'y');
   function update(patch) {
     setFilters((current) => ({ ...current, ...patch }));
@@ -136,7 +149,14 @@ export function ProductCatalogPage({ initialCategory = '', initialSection = '', 
           )}
         </div>
       </Card>
-      <div ref={resultsRef} className="insights-results-content">
+      {resource.refreshError && (
+        <ErrorState
+          title="Não foi possível atualizar os preços"
+          description="Exibindo a última consulta deste navegador. Confirme os preços antes do pedido."
+          onAction={resource.retry}
+        />
+      )}
+      <div ref={resultsRef} className="insights-results-content" aria-busy={filters.query !== query}>
         {!filtered.length ? (
           <EmptyState
             title={resource.data.products.length ? 'Nenhum produto encontrado' : 'Catálogo vazio'}
@@ -147,10 +167,7 @@ export function ProductCatalogPage({ initialCategory = '', initialSection = '', 
             onAction={reset}
           />
         ) : (
-          <CatalogSections
-            groups={browseCatalogGroups(ordered, structure.data, 'products', 'products')}
-            renderItem={(item) => <ProductCard key={item.id} product={item} onOpen={setSelected} />}
-          />
+          <CatalogSections groups={groups} renderItem={renderProduct} />
         )}
       </div>
       <ModalPresence>{selected && <ProductDetails key={selected.id} product={selected} onClose={() => setSelected(null)} />}</ModalPresence>

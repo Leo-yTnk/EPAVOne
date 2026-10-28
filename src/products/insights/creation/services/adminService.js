@@ -1,3 +1,4 @@
+import { invalidatePublicCatalog } from '../../services/publicResourceCache.js';
 import { createCatalogPriceSync } from './catalogPriceSync.js';
 import { authenticatedClient } from '../../../../shared/services/accountService.js';
 import * as api from '../repositories/creationRepository.js';
@@ -29,7 +30,7 @@ export const adminService = {
   async acceptMetadata(item, selected) {
     await requireAdmin();
     if (!selected?.name && !selected?.image) throw new Error('Selecione uma alteração para salvar.');
-    return result(api.acceptSwiftMetadata(item.product_id, item.checked_at, item.product.version, selected));
+    return writeResult(api.acceptSwiftMetadata(item.product_id, item.checked_at, item.product.version, selected));
   },
   async structure() {
     await requireAdmin();
@@ -37,7 +38,7 @@ export const adminService = {
   },
   async saveSection(section, fields) {
     await requireAdmin();
-    return result(
+    return writeResult(
       authenticatedClient.rpc('admin_save_creation_section', {
         p_id: section?.id || null,
         p_page_key: fields.page,
@@ -49,7 +50,7 @@ export const adminService = {
   },
   async reorder(page, rows) {
     await requireAdmin();
-    return result(
+    return writeResult(
       api.adminReorderCatalogSections(
         page,
         rows.map((row, i) => ({ id: row.id, sort_order: i }))
@@ -58,7 +59,7 @@ export const adminService = {
   },
   async sync(id) {
     await requireAdmin();
-    return result(id ? api.refreshProductPrice(id) : api.refreshAllProductPrices());
+    return writeResult(id ? api.refreshProductPrice(id) : api.refreshAllProductPrices());
   },
   async importCatalog(modes, payload, replacements = [], onProgress = () => {}) {
     await requireAdmin();
@@ -76,7 +77,7 @@ export const adminService = {
         throw new Error('Este registro mudou desde a comparação. Prepare a prévia novamente antes de substituir.');
     }
     onProgress({ value: 40, label: 'Gravando catálogo em uma única transação', waiting: true });
-    return result(replacements.length ? api.adminImportReviewedCatalog(payload, replacements) : api.adminAddPublicCatalog(payload));
+    return writeResult(replacements.length ? api.adminImportReviewedCatalog(payload, replacements) : api.adminAddPublicCatalog(payload));
   },
   async exportBackup() {
     await requireAdmin();
@@ -84,12 +85,14 @@ export const adminService = {
   },
   async restoreBackup(backup) {
     await requireAdmin();
-    return result(api.restoreCatalogBackup(backup));
+    return writeResult(api.restoreCatalogBackup(backup));
   },
   async cleanup(mode, password) {
     await requireAdmin();
     if (!password) throw new Error('Informe sua senha para confirmar.');
-    return result(mode === 'inactive' ? api.adminDeleteInactiveCatalogItems(password) : api.adminDeleteAllProductsAndRecipes(password));
+    return writeResult(
+      mode === 'inactive' ? api.adminDeleteInactiveCatalogItems(password) : api.adminDeleteAllProductsAndRecipes(password)
+    );
   }
 };
 
@@ -98,5 +101,15 @@ export const catalogPriceSync = createCatalogPriceSync({
     await requireAdmin();
     return result(api.fetchAdminProducts());
   },
-  refreshBatch: (ids) => api.refreshProductPriceBatch(ids)
+  refreshBatch: async (ids) => {
+    const response = await api.refreshProductPriceBatch(ids);
+    invalidatePublicCatalog();
+    return response;
+  }
 });
+
+async function writeResult(promise) {
+  const data = await result(promise);
+  invalidatePublicCatalog();
+  return data;
+}

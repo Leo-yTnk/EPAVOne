@@ -1,10 +1,20 @@
+import { publicResource, refreshPublicResource } from '../services/publicResourceCache.js';
 import { useEffect, useState } from 'preact/hooks';
 
 // A cleanup guards stale responses even when a transport does not honor abort.
 export function useCatalogResource(loader, id) {
   const [attempt, setAttempt] = useState(0);
-  const [state, setState] = useState({ loading: true, data: null, error: null });
+  const [state, setState] = useState(() =>
+    loader.publicCatalog ? publicResource(loader, id).state : { loading: true, data: null, error: null }
+  );
   useEffect(() => {
+    if (loader.publicCatalog) {
+      const entry = publicResource(loader, id);
+      entry.listeners.add(setState);
+      setState(entry.state);
+      refreshPublicResource(entry, loader, id, attempt > 0);
+      return () => entry.listeners.delete(setState);
+    }
     let active = true;
     const controller = new AbortController();
     setState({ loading: true, data: null, error: null });

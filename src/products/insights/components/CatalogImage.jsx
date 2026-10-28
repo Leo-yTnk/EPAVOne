@@ -1,8 +1,10 @@
+import { usePerformanceMode } from '../../../design-system/behaviors/performanceMode.js';
 import { useState } from 'preact/hooks';
 import { Card, Icon } from '../../../design-system/components/index.js';
 import { safeImage } from '../models/catalog.js';
 
 export function CatalogImage({ url, name, stitched = true, compactFallback = false, fit }) {
+  const mode = usePerformanceMode();
   const [failedUrl, setFailedUrl] = useState(null);
   const source = safeImage(url);
   return (
@@ -14,7 +16,13 @@ export function CatalogImage({ url, name, stitched = true, compactFallback = fal
       stitchContrast
     >
       {source && failedUrl !== source ? (
-        <img src={source} alt={name} loading="lazy" decoding="async" onError={() => setFailedUrl(source)} />
+        <img
+          src={source}
+          alt={name}
+          loading={mode === 'fabulous' ? 'eager' : 'lazy'}
+          decoding="async"
+          onError={() => setFailedUrl(source)}
+        />
       ) : compactFallback ? (
         <>
           <Icon name="product" />

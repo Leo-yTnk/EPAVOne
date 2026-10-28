@@ -93,12 +93,6 @@
   border-radius: var(--radius-xs);
   background: var(--text-brand);
 }
-html[data-text-size='large'] {
-  font-size: 112.5%;
-}
-html[data-show-grid='false'] body {
-  background-image: none;
-}
 @media (max-width: 48rem) {
   .settings-section {
     --card-padding: var(--panel-padding-compact);
@@ -118,4 +112,23 @@ html[data-show-grid='false'] body {
   .settings-reset p {
     flex-basis: 100%;
   }
+}
+
+.settings-page { max-width: 84rem; }
+.settings-layout { display: grid; grid-template-columns: 15.5rem minmax(0, 1fr); gap: var(--space-5); align-items: start; }
+.settings-overview { position: sticky; top: 6rem; display: grid; gap: var(--space-5); }
+.settings-overview-summary { display: grid; gap: var(--space-3); }
+.settings-index { display: grid; gap: var(--space-1); }
+.settings-section { scroll-margin-top: 7rem; }
+.settings-section:focus-visible { outline: 2px solid var(--border-focus); outline-offset: var(--space-1); }
+.settings-layout .settings-section { grid-template-columns: minmax(0, .8fr) minmax(0, 1fr); column-gap: var(--space-5); }
+@media (max-width: 70rem) {
+  .settings-layout { grid-template-columns: minmax(0, 1fr); }
+  .settings-overview { position: static; }
+  .settings-index { display: flex; overflow-x: auto; padding-bottom: var(--space-2); }
+  .settings-index > .ds-btn { flex: none; }
+  .settings-overview-summary { display: flex; align-items: center; flex-wrap: wrap; }
+}
+@media (max-width: 48rem) {
+  .settings-layout .settings-section { grid-template-columns: minmax(0, 1fr); }
 }

@@ -619,3 +619,24 @@ html[data-reduced-motion='true'] .mobile-sidebar-utilities { animation: none; }
 @media (prefers-reduced-motion: reduce) {
   .mobile-sidebar-apps, .mobile-sidebar-sections, .mobile-sidebar-utilities { animation: none; }
 }
+
+/* Performance mode also stops infinite CSS loaders and decorative effects. */
+html[data-performance-mode='performance'] *,
+html[data-performance-mode='performance'] *::before,
+html[data-performance-mode='performance'] *::after {
+  animation-duration: 0s;
+  animation-iteration-count: 1;
+  transition-duration: 0s;
+  scroll-behavior: auto;
+}
+html[data-performance-mode='balanced'] .ds-skeleton::after,
+html[data-performance-mode='balanced'] .ds-chart-bar,
+html[data-performance-mode='balanced'] .mobile-context-label {
+  animation: none;
+}
+html[data-performance-mode='performance'] {
+  --duration-instant: 0ms;
+  --duration-fast: 0ms;
+  --duration-normal: 0ms;
+  --duration-slow: 0ms;
+}
