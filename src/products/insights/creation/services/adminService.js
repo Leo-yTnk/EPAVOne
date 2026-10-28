@@ -98,8 +98,5 @@ export const catalogPriceSync = createCatalogPriceSync({
     await requireAdmin();
     return result(api.fetchAdminProducts());
   },
-  refresh: async (id) => {
-    await requireAdmin();
-    return api.refreshProductPrice(id);
-  }
+  refreshBatch: (ids) => api.refreshProductPriceBatch(ids)
 });

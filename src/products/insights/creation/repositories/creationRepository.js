@@ -724,7 +724,7 @@ export async function saveSiteProductAtomic(id, fields, sectionIds) {
 const syncInFlight = new Map();
 const pendingSync = new Map();
 async function invokeSwiftPriceSync(body) {
-  const key = body.productId || 'batch';
+  const key = body.productIds ? `selection:${body.productIds.join(',')}` : body.productId || 'batch';
   if (syncInFlight.has(key)) return syncInFlight.get(key);
   const operation = (async () => {
     const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
@@ -812,6 +812,11 @@ async function invokeSwiftPriceSync(body) {
 }
 export async function refreshProductPrice(productId) {
   return invokeSwiftPriceSync({ productId });
+}
+export async function refreshProductPriceBatch(productIds) {
+  // Older deployed handlers safely limit themselves to the first product. The queue
+  // rejects their incomplete metrics and asks for the current backend deployment.
+  return invokeSwiftPriceSync({ productIds, productId: productIds[0] });
 }
 export async function refreshAllProductPrices() {
   return invokeSwiftPriceSync({});

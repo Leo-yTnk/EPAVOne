@@ -7,6 +7,8 @@ import {
   parseSwiftProductPage
 } from '../_shared/swift-price-core.js';
 
+import { validSwiftSyncSelection } from '../_shared/swift-sync-batch.js';
+
 import { swiftSyncRunResponse } from '../_shared/swift-sync-run-response.js';
 
 const env = (key: string, fallback?: string) => Deno.env.get(key) || fallback;
@@ -134,13 +136,17 @@ Deno.serve(async (req) => {
   }
   if (!cronAuthorized && !authenticated) return json({ error: 'unauthorized', code: 'unauthorized' }, 401);
   if (!cronAuthorized && !adminAuthorized) return json({ error: 'forbidden', code: 'forbidden' }, 403);
-  let body: { productId?: string; staleOnly?: boolean; requestId?: string; statusOnly?: boolean; runId?: number } = {};
+  let body: { productId?: string; productIds?: string[]; staleOnly?: boolean; requestId?: string; statusOnly?: boolean; runId?: number } =
+    {};
   try {
     body = await req.json();
   } catch {
     /* cron may have no body */
   }
-  const requestKey = body.requestId ? `${body.productId || 'batch'}:${body.requestId}` : null;
+  if (!validSwiftSyncSelection(body)) return json({ code: 'invalid_sync_selection', error: 'invalid_sync_selection' }, 400);
+  const requestKey = body.requestId
+    ? `${body.productIds ? `selection:${body.productIds.join(',')}` : body.productId || 'batch'}:${body.requestId}`
+    : null;
   async function runResponse(runId?: number, conflicting = false) {
     let query = supabase.from('swift_price_sync_runs').select('*');
     if (runId) query = query.eq('id', runId);
@@ -155,7 +161,7 @@ Deno.serve(async (req) => {
   // Authentication/administrator checks above apply equally to status reads.
   // This path cannot start a run or repeat price writes.
   if (body.statusOnly) return runResponse(body.runId);
-  if (cronAuthorized && !body.productId) {
+  if (cronAuthorized && !body.productId && !body.productIds) {
     const { data: lastRun, error: intervalError } = await supabase
       .from('swift_price_sync_runs')
       .select('started_at')
@@ -192,7 +198,8 @@ Deno.serve(async (req) => {
   let internalErrorCode: string | null = null;
   try {
     let query = supabase.from('products').select('*').eq('scope', 'site').eq('active', true);
-    if (body.productId) query = query.eq('id', body.productId);
+    if (body.productIds) query = query.in('id', body.productIds);
+    else if (body.productId) query = query.eq('id', body.productId);
     const { data: products, error } = await query;
     if (error) {
       stage = 'query_products';
@@ -200,7 +207,7 @@ Deno.serve(async (req) => {
       finalErrors = { query: error.code };
       return json({ error: 'product_query_failed', code: 'sync_internal_error', run_id: run.id, correlation_id: run.correlation_id }, 500);
     }
-    if (body.productId && !products?.length) {
+    if ((body.productId && !products?.length) || (body.productIds && products?.length !== body.productIds.length)) {
       stage = 'product_not_found';
       internalErrorCode = 'product_not_found';
       finalErrors = { product: 'not_found' };
@@ -305,11 +312,13 @@ Deno.serve(async (req) => {
       }
     }
     const queue = [...(products || [])];
-    await Promise.all(
+    const workers = await Promise.allSettled(
       Array.from({ length: Math.max(1, Math.min(CONCURRENCY, 10)) }, async () => {
         while (queue.length) await refresh(queue.shift()!);
       })
     );
+    const failedWorker = workers.find((worker) => worker.status === 'rejected');
+    if (failedWorker?.status === 'rejected') throw failedWorker.reason;
     const duration_ms = Date.now() - started;
     finalMetrics = { ...metrics, duration_ms };
     finalErrors = failures;
@@ -336,7 +345,7 @@ Deno.serve(async (req) => {
         }
       }
     }
-    if (body.productId && metrics.products_failed) {
+    if (body.productId && !body.productIds && metrics.products_failed) {
       const failureCode = failures[0]?.code || '';
       const code = /price_not_found|invalid_price/.test(failureCode)
         ? 'price_not_found'
