@@ -263,3 +263,17 @@
 }
 
 .insights-recipe-meta { display: block; text-wrap: pretty; }
+
+/* Deferred slots preserve the shelf's card composition and native scrolling. */
+.insights-catalog-section :is(.ds-deferred-item, .ds-windowed-item) > .insights-catalog-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  min-width: 0;
+  height: 100%;
+}
+
+.insights-recipes-collection .ds-deferred-item > .insights-catalog-card {
+  height: 100%;
+  gap: var(--space-3);
+}

@@ -1,3 +1,4 @@
+import { invalidatePublicCatalog } from '../../services/publicResourceCache.js';
 import { authenticatedClient as client } from '../../../../shared/services/accountService.js';
 import * as repository from '../repositories/creationRepository.js';
 import { lines, validateEditor } from '../models/editor.js';
@@ -76,7 +77,7 @@ export function createCreationService(api = repository, db = client, getUser = s
       if (problem) throw new Error(problem);
       const user = await getUser();
       if (type === 'recipes')
-        return result(
+        return writeResult(
           db.rpc('save_creation_recipe', {
             p_id: item?.id || null,
             p_scope: scope,
@@ -99,7 +100,7 @@ export function createCreationService(api = repository, db = client, getUser = s
           })
         );
       if (type === 'products')
-        return result(
+        return writeResult(
           db.rpc('save_creation_product', {
             p_id: item?.id || null,
             p_scope: scope,
@@ -118,16 +119,16 @@ export function createCreationService(api = repository, db = client, getUser = s
         );
       const fields = { name: values.name.trim(), type: values.type, active: values.active };
       if (item?.id)
-        return result(
+        return writeResult(
           scope === 'site'
             ? api.updateSiteCategory(item.id, { name: fields.name, active: fields.active })
             : api.updateCategoryName(item.id, fields.name)
         );
-      return result(scope === 'site' ? api.createSiteCategory(fields) : api.createCategory(user.id, fields));
+      return writeResult(scope === 'site' ? api.createSiteCategory(fields) : api.createCategory(user.id, fields));
     },
     async toggle(type, item) {
       await getUser();
-      return result(type === 'products' ? api.setProductActive(item.id, !item.active) : api.setCategoryActive(item.id, !item.active));
+      return writeResult(type === 'products' ? api.setProductActive(item.id, !item.active) : api.setCategoryActive(item.id, !item.active));
     },
     async impact(type, id) {
       await getUser();
@@ -138,7 +139,7 @@ export function createCreationService(api = repository, db = client, getUser = s
     async remove(type, id, options) {
       await getUser();
       const method = { recipes: 'deleteRecipeChecked', products: 'deleteProductResolved', categories: 'deleteCategoryResolved' }[type];
-      return result(api[method](id, options));
+      return writeResult(api[method](id, options));
     },
     async submit(type, id, reason) {
       await getUser();
@@ -149,3 +150,9 @@ export function createCreationService(api = repository, db = client, getUser = s
   };
 }
 export const creationService = createCreationService();
+
+async function writeResult(promise) {
+  const data = await result(promise);
+  invalidatePublicCatalog();
+  return data;
+}

@@ -1,3 +1,4 @@
+import { fullMotion } from './performanceMode.js';
 import { useLayoutEffect, useRef } from 'preact/hooks';
 import { motionDuration, reducedMotion } from './motion.js';
 
@@ -11,7 +12,7 @@ export function useContentMotion(ref, contentKey, depth = 0, axis = 'x') {
     previous.current = { contentKey, depth };
     const node = ref.current;
     if (!before || before.contentKey === contentKey) return;
-    if (!node?.animate || reducedMotion()) {
+    if (!node?.animate || reducedMotion() || !fullMotion()) {
       running.current?.stop();
       return;
     }
@@ -45,7 +46,7 @@ export function useContentMotion(ref, contentKey, depth = 0, axis = 'x') {
       if (running.current?.animation === animation) running.current = null;
     };
     const observer = new MutationObserver(stop);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-reduced-motion'] });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-reduced-motion', 'data-performance-mode'] });
     media?.addEventListener?.('change', stop);
     window.addEventListener('resize', stop);
     running.current = { node, animation, stop };

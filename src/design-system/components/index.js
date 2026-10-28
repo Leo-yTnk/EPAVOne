@@ -55,3 +55,5 @@ export { SectionHeader } from './SectionHeader.jsx';
 export { FieldGrid } from './FieldGrid.jsx';
 export { ActionGroup } from './ActionGroup.jsx';
 export { SummaryList } from './SummaryList.jsx';
+
+export { DeferredItem } from './DeferredItem.jsx';

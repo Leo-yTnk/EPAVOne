@@ -1,7 +1,8 @@
+import { memo } from 'preact/compat';
 import { CatalogSection } from './CatalogSection.jsx';
 import { reducedMotion } from '../../../design-system/behaviors/motion.js';
 
-export function CatalogSections({ groups, renderItem, index = true }) {
+export const CatalogSections = memo(function CatalogSections({ groups, renderItem, index = true }) {
   return (
     <div className="insights-catalog-sections">
       {index && groups.length > 1 && (
@@ -29,4 +30,4 @@ export function CatalogSections({ groups, renderItem, index = true }) {
       ))}
     </div>
   );
-}
+});

@@ -1,3 +1,4 @@
+import { fullMotion } from './performanceMode.js';
 import { useLayoutEffect, useRef } from 'preact/hooks';
 import { consumeMotionOrigin, motionDuration, reducedMotion } from './motion.js';
 
@@ -11,7 +12,7 @@ export function useDialogExpansion(ref, open, enabled) {
     origin.current = enabled ? consumeMotionOrigin() || source?.getBoundingClientRect() : null;
     const node = ref.current;
     const from = origin.current;
-    if (!node || !node.animate || reducedMotion()) {
+    if (!node || !node.animate || reducedMotion() || !fullMotion()) {
       return undefined;
     }
     node.classList.add('ds-dialog-expanding');
@@ -40,7 +41,7 @@ export function useDialogExpansion(ref, open, enabled) {
     const media = window.matchMedia?.('(prefers-reduced-motion: reduce)');
     media?.addEventListener?.('change', stop);
     const observer = new MutationObserver(stop);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-reduced-motion'] });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-reduced-motion', 'data-performance-mode'] });
     return () => {
       observer.disconnect();
       media?.removeEventListener?.('change', stop);

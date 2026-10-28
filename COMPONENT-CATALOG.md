@@ -172,3 +172,13 @@ Novos componentes públicos: `SectionHeader`, `FieldGrid`, `ActionGroup` e `Summ
 `FoundationPreview` compara os mesmos componentes em quatro paletas no Component Lab, sem adicionar uma rota pública.
 
 `Tabs` aceita `size="compact"` para fluxos curtos em espaços estreitos. A variante usa `--space-3` no eixo horizontal e preserva alvo mínimo de `--touch-target`, teclado, indicador e movimento reduzido. O padrão dos demais consumidores permanece igual.
+
+## Carregamento e movimento por modo
+
+- `PerformanceModeContext` (comportamento do DS) fornece `performance`, `balanced` (padrão) ou `fabulous`; o shell aplica a preferência persistida e mantém os limites de acessibilidade.
+- `Carousel` aceita `items`, `renderItem` e `overscan` para coleções grandes: a janela horizontal mantém a rolagem nativa, os controles e a navegação por teclado com espaçadores focáveis. A renderização padrão por `children` permanece disponível.
+- `DeferredItem` recebe uma função em `children`, `label` e `margin`. Reserva um slot para a grade, monta o conteúdo perto da tela e desmonta fora dela. Compartilha IntersectionObserver/ResizeObserver; não desmonta o foco ativo e permite montar o conteúdo por teclado. A altura medida é preservada ao desmontar; o primeiro slot usa estimativa de 26rem.
+- `useDebouncedValue` atrasa somente texto não vazio, cancela entradas obsoletas e limpa imediatamente. Conteúdo e filtros não dependem da montagem dos cards.
+- `useContentMotion`, expansão de diálogos e coreografia de largura do header são opcionais no modo Fabuloso; navegação, press feedback simples e camadas leves são mantidos em Equilibrado. Alto desempenho também desativa loaders decorativos e rolagem suave.
+
+`Button align="start"` alinha o conteúdo ao início; `align="between"` continua disponível. A renderização em âncora usa a mesma apresentação de botão, sem sublinhado. O contraste reforçado usa os tokens semânticos definidos em `tokens.css`, com modos claro e escuro.

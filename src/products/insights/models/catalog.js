@@ -3,7 +3,8 @@ export const fold = (value) =>
     .normalize('NFD')
     .replace(/\p{Diacritic}/gu, '')
     .toLowerCase();
-export const money = (cents) => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(cents / 100);
+const currency = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
+export const money = (cents) => currency.format(cents / 100);
 const positive = (value) => value !== null && value !== undefined && Number.isFinite(Number(value)) && Number(value) > 0;
 
 export function productPricing(product) {
@@ -35,13 +36,21 @@ export function productPricing(product) {
   };
 }
 
-export function filterProducts(products, { query, category, promotion }) {
+export function productSearchIndex(products) {
+  return new Map(
+    products.map((product) => [product, fold(`${product.name} ${product.product_code ?? ''} ${product.category?.name ?? ''}`)])
+  );
+}
+
+export function filterProducts(products, { query, category, promotion }, index) {
   const words = fold(query).trim().split(/\s+/).filter(Boolean);
   return products.filter(
     (product) =>
       (!category || product.category_id === category) &&
       (!promotion || productPricing(product).promo !== null) &&
-      words.every((word) => fold(`${product.name} ${product.product_code ?? ''} ${product.category?.name ?? ''}`).includes(word))
+      words.every((word) =>
+        (index?.get(product) ?? fold(`${product.name} ${product.product_code ?? ''} ${product.category?.name ?? ''}`)).includes(word)
+      )
   );
 }
 

@@ -1,5 +1,5 @@
 import { render, fireEvent, screen } from '@testing-library/preact';
-import { afterEach, expect, it, vi } from 'vitest';
+import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { usePressFeedback } from '../src/design-system/behaviors/usePressFeedback.js';
 function Example({ onClick }) {
   usePressFeedback();
@@ -10,7 +10,11 @@ function Example({ onClick }) {
     </>
   );
 }
+beforeEach(() => {
+  document.documentElement.dataset.performanceMode = 'fabulous';
+});
 afterEach(() => {
+  delete document.documentElement.dataset.performanceMode;
   delete Element.prototype.animate;
   delete document.documentElement.dataset.reducedMotion;
   vi.unstubAllGlobals();

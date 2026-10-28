@@ -290,3 +290,19 @@ html[data-density='compact'] {
     --layout-section-gap: var(--space-5);
   }
 }
+
+/* Optional stronger reading contrast; product accent colors remain unchanged. */
+html[data-contrast='high'] {
+  --text-secondary: #443a35;
+  --text-tertiary: #443a35;
+  --border-subtle: #95867b;
+  --border-default: #807065;
+  --border-control: #70635d;
+}
+html[data-theme='dark'][data-contrast='high'] {
+  --text-secondary: #f0e6de;
+  --text-tertiary: #e3d6cc;
+  --border-subtle: #9e9085;
+  --border-default: #c0b4ac;
+  --border-control: #c0b4ac;
+}

@@ -1,3 +1,4 @@
+import { fullMotion } from './performanceMode.js';
 import { useEffect } from 'preact/hooks';
 import { motionDuration, reducedMotion, rememberMotionOrigin } from './motion.js';
 
@@ -50,7 +51,12 @@ export function usePressFeedback() {
         stop(node);
         return;
       }
-      play(node, [{ scale }, { scale: '1.018', offset: 0.55 }, { scale: '1' }], '--duration-slow', 320);
+      play(
+        node,
+        fullMotion() ? [{ scale }, { scale: '1.018', offset: 0.55 }, { scale: '1' }] : [{ scale }, { scale: '1' }],
+        fullMotion() ? '--duration-slow' : '--duration-fast',
+        fullMotion() ? 320 : 150
+      );
     };
     const move = (event) => {
       if (pressed?.pointerId === event.pointerId && Math.hypot(event.clientX - pressed.x, event.clientY - pressed.y) > 10) clear();
@@ -63,7 +69,7 @@ export function usePressFeedback() {
     };
     const media = window.matchMedia?.('(prefers-reduced-motion: reduce)');
     const observer = new MutationObserver(clear);
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-reduced-motion'] });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-reduced-motion', 'data-performance-mode'] });
     const listeners = {
       pointerdown: down,
       pointerup: release,

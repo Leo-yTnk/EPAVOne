@@ -1,8 +1,8 @@
 import { Card, Icon, SectionHeader } from '../../design-system/components/index.js';
 
-export function SettingsSection({ title, description, icon = 'settings', children }) {
+export function SettingsSection({ id, title, description, icon = 'settings', children }) {
   return (
-    <Card as="section" className="settings-section" aria-label={title}>
+    <Card as="section" id={id} tabIndex={-1} className="settings-section" aria-label={title}>
       <div className="settings-section-copy">
         <span className="settings-section-icon">
           <Icon name={icon} />

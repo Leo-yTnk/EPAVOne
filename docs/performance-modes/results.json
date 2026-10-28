@@ -1,0 +1,307 @@
+{
+  "base_commit": "909d5a19ab7825feb0cc714e9d57057ae82e58e4",
+  "profile": {
+    "cpu_throttling": 6,
+    "viewport_css": [
+      601,
+      1007
+    ],
+    "device_scale_factor": 1.33,
+    "js_heap_cap_mb": 512,
+    "physical_device": false,
+    "catalog": "1002 synthetic products across 8 categories; no photos; anonymous REST fixture; production build; local server; fresh browser context per run",
+    "repetitions_per_mode": 3,
+    "timing": "wall-clock automation-to-ready, includes framework rendering and two animation frames; awaits settled debounce and final result count; no internet latency",
+    "browser": "Chromium 153 headless with software rendering; not calibrated to Helio P22T"
+  },
+  "results": [
+    {
+      "mode": "baseline",
+      "run": 0,
+      "route": "/insights/produtos",
+      "ready": 7336,
+      "heapMB": 35.53571701049805,
+      "nodes": 17284,
+      "searchMedian": 965,
+      "searchMax": 6921,
+      "frameP95": 799.8999999999996,
+      "longTasks": 24,
+      "maxTask": 4509,
+      "errors": [],
+      "paint": [
+        {
+          "name": "first-paint",
+          "start": 140
+        },
+        {
+          "name": "first-contentful-paint",
+          "start": 364
+        }
+      ]
+    },
+    {
+      "mode": "baseline",
+      "run": 1,
+      "route": "/insights/produtos",
+      "ready": 7892,
+      "heapMB": 34.75482940673828,
+      "nodes": 17284,
+      "searchMedian": 868,
+      "searchMax": 6321,
+      "frameP95": 783.2999999999993,
+      "longTasks": 26,
+      "maxTask": 4061,
+      "errors": [],
+      "paint": [
+        {
+          "name": "first-paint",
+          "start": 116
+        },
+        {
+          "name": "first-contentful-paint",
+          "start": 312
+        }
+      ]
+    },
+    {
+      "mode": "baseline",
+      "run": 2,
+      "route": "/insights/produtos",
+      "ready": 7246,
+      "heapMB": 34.765464782714844,
+      "nodes": 17284,
+      "searchMedian": 998,
+      "searchMax": 7203,
+      "frameP95": 833.3000000000011,
+      "longTasks": 25,
+      "maxTask": 4702,
+      "errors": [],
+      "paint": [
+        {
+          "name": "first-paint",
+          "start": 132
+        },
+        {
+          "name": "first-contentful-paint",
+          "start": 296
+        }
+      ]
+    },
+    {
+      "mode": "performance",
+      "run": 0,
+      "route": "/insights/produtos",
+      "ready": 1325,
+      "heapMB": 4.306427001953125,
+      "nodes": 834,
+      "searchMedian": 450,
+      "searchMax": 1033,
+      "frameP95": 166.69999999999982,
+      "longTasks": 17,
+      "maxTask": 422,
+      "errors": [],
+      "paint": [
+        {
+          "name": "first-paint",
+          "start": 260
+        },
+        {
+          "name": "first-contentful-paint",
+          "start": 260
+        }
+      ]
+    },
+    {
+      "mode": "performance",
+      "run": 1,
+      "route": "/insights/produtos",
+      "ready": 1492,
+      "heapMB": 4.302288055419922,
+      "nodes": 834,
+      "searchMedian": 530,
+      "searchMax": 1035,
+      "frameP95": 166.69999999999982,
+      "longTasks": 16,
+      "maxTask": 456,
+      "errors": [],
+      "paint": [
+        {
+          "name": "first-paint",
+          "start": 312
+        },
+        {
+          "name": "first-contentful-paint",
+          "start": 312
+        }
+      ]
+    },
+    {
+      "mode": "performance",
+      "run": 2,
+      "route": "/insights/produtos",
+      "ready": 1405,
+      "heapMB": 4.299327850341797,
+      "nodes": 834,
+      "searchMedian": 505,
+      "searchMax": 917,
+      "frameP95": 150,
+      "longTasks": 16,
+      "maxTask": 369,
+      "errors": [],
+      "paint": [
+        {
+          "name": "first-paint",
+          "start": 104
+        },
+        {
+          "name": "first-contentful-paint",
+          "start": 316
+        }
+      ]
+    },
+    {
+      "mode": "balanced",
+      "run": 0,
+      "route": "/insights/produtos",
+      "ready": 1437,
+      "heapMB": 4.3603363037109375,
+      "nodes": 1122,
+      "searchMedian": 483,
+      "searchMax": 1365,
+      "frameP95": 150,
+      "longTasks": 16,
+      "maxTask": 498,
+      "errors": [],
+      "paint": [
+        {
+          "name": "first-paint",
+          "start": 332
+        },
+        {
+          "name": "first-contentful-paint",
+          "start": 332
+        }
+      ]
+    },
+    {
+      "mode": "balanced",
+      "run": 1,
+      "route": "/insights/produtos",
+      "ready": 1504,
+      "heapMB": 6.925891876220703,
+      "nodes": 1122,
+      "searchMedian": 652,
+      "searchMax": 1134,
+      "frameP95": 183.29999999999973,
+      "longTasks": 16,
+      "maxTask": 541,
+      "errors": [],
+      "paint": [
+        {
+          "name": "first-paint",
+          "start": 292
+        },
+        {
+          "name": "first-contentful-paint",
+          "start": 292
+        }
+      ]
+    },
+    {
+      "mode": "balanced",
+      "run": 2,
+      "route": "/insights/produtos",
+      "ready": 1570,
+      "heapMB": 4.357391357421875,
+      "nodes": 1122,
+      "searchMedian": 468,
+      "searchMax": 1135,
+      "frameP95": 166.69999999999982,
+      "longTasks": 16,
+      "maxTask": 433,
+      "errors": [],
+      "paint": [
+        {
+          "name": "first-paint",
+          "start": 112
+        },
+        {
+          "name": "first-contentful-paint",
+          "start": 376
+        }
+      ]
+    },
+    {
+      "mode": "fabulous",
+      "run": 0,
+      "route": "/insights/produtos",
+      "ready": 6799,
+      "heapMB": 35.13153839111328,
+      "nodes": 17284,
+      "searchMedian": 983,
+      "searchMax": 5411,
+      "frameP95": 800,
+      "longTasks": 24,
+      "maxTask": 3518,
+      "errors": [],
+      "paint": [
+        {
+          "name": "first-paint",
+          "start": 304
+        },
+        {
+          "name": "first-contentful-paint",
+          "start": 304
+        }
+      ]
+    },
+    {
+      "mode": "fabulous",
+      "run": 1,
+      "route": "/insights/produtos",
+      "ready": 6228,
+      "heapMB": 35.1369743347168,
+      "nodes": 17284,
+      "searchMedian": 1000,
+      "searchMax": 7565,
+      "frameP95": 816.6000000000004,
+      "longTasks": 24,
+      "maxTask": 5211,
+      "errors": [],
+      "paint": [
+        {
+          "name": "first-paint",
+          "start": 108
+        },
+        {
+          "name": "first-contentful-paint",
+          "start": 284
+        }
+      ]
+    },
+    {
+      "mode": "fabulous",
+      "run": 2,
+      "route": "/insights/produtos",
+      "ready": 7244,
+      "heapMB": 35.14753723144531,
+      "nodes": 17284,
+      "searchMedian": 915,
+      "searchMax": 6143,
+      "frameP95": 800,
+      "longTasks": 22,
+      "maxTask": 5386,
+      "errors": [],
+      "paint": [
+        {
+          "name": "first-paint",
+          "start": 128
+        },
+        {
+          "name": "first-contentful-paint",
+          "start": 344
+        }
+      ]
+    }
+  ]
+}

@@ -11,7 +11,11 @@ vi.mock('../src/app/account/Turnstile.jsx', () => ({
   )
 }));
 beforeEach(() => vi.clearAllMocks());
+beforeEach(() => {
+  document.documentElement.dataset.performanceMode = 'fabulous';
+});
 afterEach(() => {
+  delete document.documentElement.dataset.performanceMode;
   delete Element.prototype.animate;
 });
 describe('account dialog', () => {

@@ -1,7 +1,11 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/preact';
-import { afterEach, expect, it, vi } from 'vitest';
+import { beforeEach, afterEach, expect, it, vi } from 'vitest';
 import { Carousel } from '../src/design-system/components/Carousel.jsx';
+beforeEach(() => {
+  document.documentElement.dataset.performanceMode = 'fabulous';
+});
 afterEach(() => {
+  delete document.documentElement.dataset.performanceMode;
   delete document.documentElement.dataset.reducedMotion;
   delete Element.prototype.animate;
 });

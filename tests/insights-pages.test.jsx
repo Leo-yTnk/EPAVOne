@@ -1,5 +1,6 @@
-import { fireEvent, render, screen, within } from '@testing-library/preact';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { PerformanceModeContext } from '../src/design-system/behaviors/performanceMode.js';
+import { fireEvent, render as renderUI, screen, within } from '@testing-library/preact';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { InsightsRoutes } from '../src/products/insights/InsightsRoutes.jsx';
 import { AppShell } from '../src/app/AppShell.jsx';
 import { catalogService } from '../src/products/insights/services/catalogService.js';
@@ -25,9 +26,15 @@ const recipes = Array.from({ length: 25 }, (_, index) => ({
   extras: ['Sal'],
   featured: index === 0
 }));
+const render = (ui) => {
+  const wrap = (child) => <PerformanceModeContext.Provider value="fabulous">{child}</PerformanceModeContext.Provider>;
+  const view = renderUI(wrap(ui));
+  return { ...view, rerender: (next) => view.rerender(wrap(next)) };
+};
 const products = [{ id: 'p1', name: 'Frango Swift', category_id: 'aves', category: { name: 'Aves' }, price: 20 }];
 const categories = [{ id: 'aves', name: 'Aves' }];
 beforeEach(() => {
+  document.documentElement.dataset.performanceMode = 'fabulous';
   vi.clearAllMocks();
   catalogService.recipes.mockResolvedValue(recipes);
   catalogService.loadCatalog.mockResolvedValue({ products, categories });
@@ -234,4 +241,8 @@ it('shows every product in one page and restores the complete list after filteri
   expect(screen.getByText('1 produto encontrado')).toBeTruthy();
   fireEvent.click(screen.getByRole('button', { name: 'Limpar filtros' }));
   expect(screen.getAllByRole('button', { name: /^Ver detalhes de Produto / })).toHaveLength(60);
+});
+
+afterEach(() => {
+  delete document.documentElement.dataset.performanceMode;
 });

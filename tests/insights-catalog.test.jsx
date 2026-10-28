@@ -1,4 +1,5 @@
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/preact';
+import { PerformanceModeContext } from '../src/design-system/behaviors/performanceMode.js';
+import { fireEvent, render as renderUI, screen, waitFor, within } from '@testing-library/preact';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ProductCatalogPage } from '../src/products/insights/components/ProductCatalogPage.jsx';
 import { catalogService } from '../src/products/insights/services/catalogService.js';
@@ -11,6 +12,11 @@ vi.mock('../src/products/insights/services/catalogService.js', () => ({
     recipeIngredients: vi.fn()
   }
 }));
+const render = (ui) => {
+  const wrap = (child) => <PerformanceModeContext.Provider value="fabulous">{child}</PerformanceModeContext.Provider>;
+  const view = renderUI(wrap(ui));
+  return { ...view, rerender: (next) => view.rerender(wrap(next)) };
+};
 const products = Array.from({ length: 25 }, (_, index) => ({
   id: String(index),
   name: index === 24 ? 'Filé de frango com ervas finas e especiarias Swift embalagem econômica 1,5 kg' : `Produto ${index}`,
@@ -25,6 +31,7 @@ afterEach(() => {
   delete Element.prototype.animate;
 });
 beforeEach(() => {
+  document.documentElement.dataset.performanceMode = 'fabulous';
   vi.clearAllMocks();
   catalogService.loadCatalog.mockResolvedValue({
     products,
@@ -148,4 +155,8 @@ describe('Insights public catalog', () => {
     await waitFor(() => expect(screen.queryByText('Receita antiga')).toBeNull());
     expect(within(screen.getByRole('dialog')).getByRole('heading', { name: 'Produto 1' })).toBeTruthy();
   });
+});
+
+afterEach(() => {
+  delete document.documentElement.dataset.performanceMode;
 });

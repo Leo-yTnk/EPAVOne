@@ -1,6 +1,6 @@
 import { useRef } from 'preact/hooks';
 import { act, render } from '@testing-library/preact';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
 import { useHeaderMotion } from '../src/app/useHeaderMotion.js';
 
 function Header({ product, horizontal = true }) {
@@ -15,7 +15,11 @@ function Header({ product, horizontal = true }) {
   );
 }
 
+beforeEach(() => {
+  document.documentElement.dataset.performanceMode = 'fabulous';
+});
 afterEach(() => {
+  delete document.documentElement.dataset.performanceMode;
   vi.restoreAllMocks();
   delete document.documentElement.dataset.reducedMotion;
 });
