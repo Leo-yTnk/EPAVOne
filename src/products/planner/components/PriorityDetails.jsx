@@ -1,13 +1,16 @@
+import { useIntelligence } from '../hooks/useIntelligence.js';
 import { Badge } from '../../../design-system/components/index.js';
 import { priority } from '../models/planner.js';
 export function PriorityDetails({ customer, state }) {
-  const result = priority(customer, state);
+  const intelligence = useIntelligence();
+  const result = intelligence?.byId.get(customer.id) || priority(customer, state);
   return (
     <details className="planner-priority">
       <summary>
-        <Badge>Prioridade {result.score}</Badge>
+        <Badge>{result.score === null ? 'Sem pontuação' : `Prioridade ${result.score} / 100`}</Badge>
         <span>Entenda os fatores</span>
       </summary>
+      <p className="planner-muted">{result.reason || result.insufficient}</p>
       <ul>
         {result.factors.map((factor) => (
           <li key={factor.label}>

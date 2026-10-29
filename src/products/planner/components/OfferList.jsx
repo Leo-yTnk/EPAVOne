@@ -1,3 +1,5 @@
+import { CatalogSuggestions } from './CatalogSuggestions.jsx';
+import { useIntelligence } from '../hooks/useIntelligence.js';
 import { useWeeklyOrder } from '../../../shared/services/useWeeklyOrder.js';
 import { matchText } from '../../../shared/services/orderMatching.js';
 import { today } from '../models/planner.js';
@@ -5,6 +7,7 @@ import { Badge, Button, EmptyState, Heading } from '../../../design-system/compo
 import { recommendations } from '../models/planner.js';
 import { commercialContext, insightsProductLink } from '../../../shared/services/commercialContext.js';
 export function OfferList({ customer, state, returnTo, weekId }) {
+  const intelligence = useIntelligence();
   const { template } = useWeeklyOrder();
   const current = template && template.period.start <= today() && template.period.end >= today();
   const offers = recommendations(customer, state.offers).map((offer) => ({
@@ -20,6 +23,7 @@ export function OfferList({ customer, state, returnTo, weekId }) {
   }
   return (
     <div className="planner-offers">
+      <CatalogSuggestions customer={customer} weekId={weekId} returnTo={returnTo} />
       <Button as="a" size="sm" variant="ghost" href="#/writer">
         {current ? `Pedido vigente: ${template.filename}` : 'Carregar pedido atualizado'}
       </Button>
@@ -29,28 +33,30 @@ export function OfferList({ customer, state, returnTo, weekId }) {
           description="Nenhuma sugestão compatível encontrada. Atualize o perfil; restrições nunca são ignoradas."
         />
       )}
-      {offers.map((offer) => (
-        <div key={offer.id} className="planner-offer">
-          <div>
-            <Badge>{offer.kind === 'principal' ? 'Principal' : 'Complemento'}</Badge>
-            <Heading level={5}>{offer.title}</Heading>
-            <p className="planner-muted">
-              Buscar {offer.query} · {offer.reason}
-            </p>
-            <p className="planner-muted">
-              {offer.weekly
-                ? `${offer.weekly.length} opção(ões) no Excel vigente. ${offer.weekly
-                    .slice(0, 2)
-                    .map((item) => item.name)
-                    .join(' · ')}`
-                : 'Carregue o Excel atualizado no Writer para cruzar as sugestões com os produtos da semana.'}
-            </p>
+      {(!intelligence ||
+        (!intelligence.catalog.loading && !intelligence.analyzing && !intelligence.matches.get(customer.id)?.products.length)) &&
+        offers.map((offer) => (
+          <div key={offer.id} className="planner-offer">
+            <div>
+              <Badge>Referência de busca · {offer.kind === 'principal' ? 'Principal' : 'Complemento'}</Badge>
+              <Heading level={5}>{offer.title}</Heading>
+              <p className="planner-muted">
+                Buscar {offer.query} · {offer.reason}
+              </p>
+              <p className="planner-muted">
+                {offer.weekly
+                  ? `${offer.weekly.length} nome(s) semelhante(s) no Excel vigente; confirme categoria e restrições antes de oferecer. ${offer.weekly
+                      .slice(0, 2)
+                      .map((item) => item.name)
+                      .join(' · ')}`
+                  : 'Carregue o Excel atualizado no Writer para cruzar as sugestões com os produtos da semana.'}
+              </p>
+            </div>
+            <Button as="a" size="sm" variant="secondary" href={insightsProductLink(offer.query)} onClick={() => open(offer)}>
+              Consultar no Insights
+            </Button>
           </div>
-          <Button as="a" size="sm" variant="secondary" href={insightsProductLink(offer.query)} onClick={() => open(offer)}>
-            Consultar no Insights
-          </Button>
-        </div>
-      ))}
+        ))}
     </div>
   );
 }

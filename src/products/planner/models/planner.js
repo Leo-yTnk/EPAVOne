@@ -1,3 +1,4 @@
+import { rankCustomers } from '../../../shared/intelligence/priority.js';
 export const OUTCOMES = {
   bought: 'Comprou',
   interested: 'Interessado',
@@ -53,44 +54,16 @@ export function lastInteraction(customer, interactions) {
     .sort((a, b) => b.date.localeCompare(a.date))[0];
 }
 export function priority(customer, state, now = today()) {
-  const contact = lastInteraction(customer, state.interactions);
-  const elapsed = daysSince(contact?.date, now);
-  const planned = state.weeks.find((week) => week.id === weekStart(now))?.queue.find((entry) => entry.customerId === customer.id);
-  const recent = contact && daysSince(contact.date, now) < 7;
-  const factors = [
-    { label: customer.intent ? 'Intenção de compra registrada' : 'Sem promessa de compra', points: customer.intent ? 25 : 0 },
-    {
-      label: `Frequência desejada: ${customer.frequencyDays} dias`,
-      points: elapsed === null || elapsed >= customer.frequencyDays ? 10 : 0
-    },
-    {
-      label: elapsed === null ? 'Ainda sem contato' : `${elapsed} dias desde o contato`,
-      points: elapsed === null ? 20 : elapsed >= 21 ? 15 : elapsed >= 7 ? 8 : 0
-    },
-    {
-      label: 'Histórico de compras',
-      points: state.interactions.some((item) => item.customerId === customer.id && item.outcome === 'bought') ? 10 : 0
-    },
-    { label: 'Aderência a sugestões compatíveis', points: recommendations(customer, state.offers).length ? 15 : 0 },
-    { label: 'Cobertura da carteira: sem contato neste mês', points: !contact || contact.date.slice(0, 7) !== now.slice(0, 7) ? 10 : 0 },
-    { label: customer.preparation.trim() ? 'Abordagem preparada' : 'Preparação pendente', points: customer.preparation.trim() ? 10 : -5 },
-    {
-      label: recent && contact.outcome === 'declined' ? 'Recusa recente: respeitar espaço' : 'Sem recusa recente',
-      points: recent && contact.outcome === 'declined' ? -30 : 0
-    },
-    { label: planned?.outcome ? 'Já atendido nesta semana' : 'Disponível para planejamento', points: planned?.outcome ? -40 : 0 }
-  ];
-  return {
-    score: Math.min(
-      100,
-      Math.max(
-        0,
-        factors.reduce((sum, item) => sum + item.points, 0)
-      )
-    ),
-    factors
-  };
+  const currentWeek = state.weeks.find((week) => week.id === weekStart(now)) || emptyWeek(weekStart(now));
+  return (
+    rankCustomers(state, currentWeek, now).find((item) => item.customerId === customer.id) || {
+      score: null,
+      factors: [],
+      insufficient: 'Cliente fora da carteira atual'
+    }
+  );
 }
+
 export function performance(state, week) {
   const interactions = state.interactions.filter((item) => item.weekId === week.id);
   const contacted = interactions.filter((item) => item.outcome !== 'unavailable');

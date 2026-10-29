@@ -1,8 +1,11 @@
+import { useIntelligence } from '../hooks/useIntelligence.js';
 import { useState } from 'preact/hooks';
 import { Button, Card, Input, SectionHeader } from '../../../design-system/components/index.js';
 export function WeekClientPicker({ state, week, act, busy }) {
+  const intelligence = useIntelligence();
   const [query, setQuery] = useState('');
-  const candidates = state.customers.filter(
+  const ordered = intelligence ? intelligence.ranked.map((r) => state.customers.find((c) => c.id === r.customerId)) : state.customers;
+  const candidates = ordered.filter(
     (item) =>
       !week.queue.some((entry) => entry.customerId === item.id) &&
       item.name.toLocaleLowerCase('pt-BR').includes(query.toLocaleLowerCase('pt-BR'))
@@ -21,7 +24,10 @@ export function WeekClientPicker({ state, week, act, busy }) {
       <Input label="Buscar cliente para a semana" type="search" value={query} onInput={(event) => setQuery(event.currentTarget.value)} />
       {candidates.slice(0, 8).map((item) => (
         <div key={item.id} className="planner-section-head">
-          <span>{item.name}</span>
+          <div>
+            <strong>{item.name}</strong>
+            <p className="planner-muted">{intelligence?.byId.get(item.id)?.reason}</p>
+          </div>
           <Button
             size="sm"
             variant="secondary"

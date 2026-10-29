@@ -375,3 +375,31 @@
 .planner-queue-item > :last-child {
   flex-shrink: 0;
 }
+
+.planner-intelligence-list {
+  display: grid;
+  gap: var(--space-5);
+}
+.planner-intelligence-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: var(--space-4);
+  align-items: center;
+}
+.planner-intelligence-row > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.planner-intelligence-row p {
+  margin-block: var(--space-2) 0;
+  color: var(--text-secondary);
+}
+@media (max-width: 768px) {
+  .planner-intelligence-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .planner-intelligence-row > .ds-btn {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}

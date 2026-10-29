@@ -1,3 +1,4 @@
+import { useIntelligence } from '../hooks/useIntelligence.js';
 import { Badge, Button, Card, Heading, SectionHeader, SummaryList, Tabs } from '../../../design-system/components/index.js';
 import { dateLabel, lastInteraction, money, OUTCOMES, weekStart } from '../models/planner.js';
 import { attendanceLink } from '../models/workspace.js';
@@ -7,6 +8,8 @@ import { ClientPreparation } from './ClientPreparation.jsx';
 import { ClientCommitments } from './ClientCommitments.jsx';
 
 export function ClientProfile({ customer, state, week, act, busy, onEdit, onDelete, tab = 'preparar' }) {
+  const intelligence = useIntelligence();
+  const opportunity = intelligence?.byId.get(customer.id);
   const history = state.interactions.filter((item) => item.customerId === customer.id).sort((a, b) => b.date.localeCompare(a.date));
   const purchases = history.filter((item) => item.outcome === 'bought');
   const measured = purchases.filter((item) => Number.isInteger(item.amountCents));
@@ -63,6 +66,8 @@ export function ClientProfile({ customer, state, week, act, busy, onEdit, onDele
               Ver semana
             </Button>
           )}
+          {opportunity && <p className="planner-muted">{opportunity.reason}</p>}
+          <PriorityDetails customer={customer} state={state} />
           <p className="planner-muted">Último contato: {dateLabel(lastInteraction(customer, state.interactions)?.date)}</p>
         </div>
       </Card>
@@ -136,7 +141,6 @@ export function ClientProfile({ customer, state, week, act, busy, onEdit, onDele
           <SectionHeader title="Informações complementares" size="sm" />
           <p>{customer.notes || 'Nenhuma observação registrada.'}</p>
           <p className="planner-muted">Frequência desejada: {customer.frequencyDays} dias</p>
-          <PriorityDetails customer={customer} state={state} />
           <div>
             <Button variant="danger" disabled={busy} onClick={onDelete}>
               Excluir cliente

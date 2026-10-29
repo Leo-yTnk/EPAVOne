@@ -146,3 +146,7 @@ O checker valida também:
 - boundaries entre produtos.
 
 Decisão de movimento: [continuidade e resposta ao toque](docs/continuous-motion.md).
+
+## Motor comercial V1
+
+Regras puras e reutilizáveis em `src/shared/intelligence`; repository público e loaders de catálogo compartilhados em `src/shared`. Planner orquestra carteira privada e dados públicos no hook de feature, com memoização e matching em fatias canceláveis. Insights conserva reexports compatíveis e o mesmo cache público. Nenhum produto importa internals de outro. [Fontes, regras, privacidade e limites](docs/commercial-intelligence.md).

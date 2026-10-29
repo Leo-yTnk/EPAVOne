@@ -1,3 +1,4 @@
+import { contactGoalInsight } from '../../../shared/intelligence/goals.js';
 import {
   Button,
   Card,
@@ -12,6 +13,11 @@ import { dateLabel, OUTCOMES, performance } from '../models/planner.js';
 
 export function Performance({ state, week }) {
   const metrics = performance(state, week);
+  const insight = contactGoalInsight({
+    attended: metrics.attended,
+    goal: week.goal,
+    plannedRemaining: week.queue.filter((e) => !e.outcome).length
+  });
   const rows = [...state.weeks]
     .sort((a, b) => b.id.localeCompare(a.id))
     .map((item) => ({ id: item.id, week: dateLabel(item.id), goal: item.goal, ...performance(state, item) }));
@@ -36,7 +42,7 @@ export function Performance({ state, week }) {
       </div>
       <div className="planner-two-columns">
         <Card className="planner-flow-card">
-          <SectionHeader title="Meta e próximo passo" />
+          <SectionHeader title="Meta e próximo passo" description={insight.title} />
           <Progress
             label="Atendimentos realizados"
             value={metrics.attended}
@@ -48,6 +54,7 @@ export function Performance({ state, week }) {
               ? 'Meta de contatos alcançada. Revise os combinados antes de planejar a próxima semana.'
               : `Faltam ${week.goal - metrics.attended} contatos para alcançar a meta.`}
           </p>
+          <p className="planner-muted">{insight.reason}</p>
           <p className="planner-muted">{pending} combinados em aberto na carteira.</p>
           <div>
             <Button as="a" href="#/planner/semana">

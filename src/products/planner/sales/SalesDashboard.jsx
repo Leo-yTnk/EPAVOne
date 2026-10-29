@@ -1,3 +1,5 @@
+import { salesInsights } from '../../../shared/intelligence/goals.js';
+import { Card, SectionHeader } from '../../../design-system/components/index.js';
 import { ChartContainer, MetricCard } from '../../../design-system/components/index.js';
 import { salesMetrics, saleMoney } from '../../../shared/services/sales.js';
 export function SalesDashboard({ rows }) {
@@ -37,6 +39,15 @@ export function SalesDashboard({ rows }) {
           {metrics.ambiguous} vendas com homônimos sem referência precisam de conferência e não adicionam clientes à positivação.
         </p>
       )}
+      <Card className="planner-flow-card" aria-label="Leitura dos indicadores">
+        <SectionHeader title="O que os registros permitem concluir" />
+        {salesInsights(rows).map((insight) => (
+          <div key={insight.title}>
+            <strong>{insight.title}</strong>
+            <p className="planner-muted">{insight.reason}</p>
+          </div>
+        ))}
+      </Card>
       <div className="planner-sales-charts">
         <ChartContainer
           title="Faturamento por mês"
