@@ -45,6 +45,7 @@ export function InsightsRoutes({ route, account, onOpenAccount }) {
         <RecipesPage
           key={route.segments.join('/')}
           ownerId={account?.session?.user?.id}
+          initialRecipeId={route.segments[1] === 'receita' ? route.segments[2] || '' : ''}
           initialSection={route.segments[1] === 'secao' ? route.segments[2] || '' : ''}
         />
       ) : section === 'produtos' ? (

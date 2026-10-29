@@ -1,3 +1,5 @@
+import { useIntelligence } from '../hooks/useIntelligence.js';
+import { PriorityDetails } from './PriorityDetails.jsx';
 import { useMemo, useRef, useState } from 'preact/hooks';
 import { useContentMotion } from '../../../design-system/behaviors/useContentMotion.js';
 import { usePlannerView } from '../hooks/usePlannerView.js';
@@ -20,10 +22,14 @@ import { selectClients } from '../models/workspace.js';
 import { OfferList } from './OfferList.jsx';
 
 export function ClientList({ state, week, act, busy, onCreate, opportunities = false }) {
+  const intelligence = useIntelligence();
   const [view, setView] = usePlannerView('clients', { query: '', segment: '', filter: '', page: 1, campaign: '' });
   const [filtersOpen, setFiltersOpen] = useState(() => Boolean(view.segment || view.filter));
   const [expanded, setExpanded] = useState(null);
-  const filtered = useMemo(() => selectClients(state, week, { ...view, opportunities }), [state, week, view, opportunities]);
+  const filtered = useMemo(
+    () => selectClients(state, week, { ...view, opportunities }, intelligence?.ranked),
+    [state, week, view, opportunities, intelligence?.ranked]
+  );
   const count = Math.max(1, Math.ceil(filtered.length / 8));
   const current = Math.min(view.page, count);
   const shown = filtered.slice((current - 1) * 8, current * 8);
@@ -168,6 +174,7 @@ export function ClientList({ state, week, act, busy, onCreate, opportunities = f
                   />
                 </ActionGroup>
               </div>
+              <PriorityDetails customer={customer} state={state} />
               {opportunities && (
                 <>
                   <Button

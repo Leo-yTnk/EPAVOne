@@ -1,16 +1,31 @@
+import { IntelligenceBrief } from './IntelligenceBrief.jsx';
+import { useIntelligence } from '../hooks/useIntelligence.js';
 import { Badge, Button, Card, EmptyState, Heading, Progress, SectionHeader, SummaryList } from '../../../design-system/components/index.js';
 import { dateLabel, performance, today } from '../models/planner.js';
 import { attendanceLink, contactDue, nextAction, orderedQueue, pendingCommitments, preparationLink } from '../models/workspace.js';
 
 export function Overview({ state, week }) {
   const metrics = performance(state, week);
-  const action = nextAction(state, week);
+  const intelligence = useIntelligence();
+  const urgent = intelligence?.ranked.find((r) => r.due);
+  const fallback = nextAction(state, week);
+  const action = urgent
+    ? { title: urgent.name, description: urgent.reason, label: urgent.action.label, href: urgent.action.href }
+    : fallback;
   const next = orderedQueue(week)
     .filter((entry) => !entry.outcome)
     .slice(0, 4);
   const pending = pendingCommitments(state);
   const due = pending.filter((item) => item.due <= today());
-  const attention = state.customers.filter((customer) => contactDue(customer, state)).slice(0, 3);
+  const attention = (
+    intelligence
+      ? intelligence.ranked
+          .filter((r) => !r.deferred && !r.completed && r.score !== null)
+          .map((r) => state.customers.find((c) => c.id === r.customerId))
+      : state.customers
+  )
+    .filter((customer) => contactDue(customer, state))
+    .slice(0, 3);
   const hour = Number(
     new Intl.DateTimeFormat('en-GB', { hour: '2-digit', hourCycle: 'h23', timeZone: 'America/Sao_Paulo' }).format(new Date())
   );
@@ -60,6 +75,7 @@ export function Overview({ state, week }) {
           />
         </div>
       </Card>
+      <IntelligenceBrief />
       <div className="planner-two-columns">
         <Card className="planner-flow-card">
           <SectionHeader

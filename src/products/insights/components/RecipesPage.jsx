@@ -3,7 +3,7 @@ import { useContentMotion } from '../../../design-system/behaviors/useContentMot
 import { CatalogChoices } from './CatalogChoices.jsx';
 import { CatalogLoading } from './CatalogLoading.jsx';
 import { orderedCatalogItems } from '../models/sections.js';
-import { useMemo, useRef, useState } from 'preact/hooks';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import {
   ModalPresence,
   DeferredItem,
@@ -23,13 +23,16 @@ import { RecipeCard } from './RecipeCard.jsx';
 import { RecipeDialog } from './RecipeDialog.jsx';
 import { PersonalRecipesSection } from './PersonalRecipesSection.jsx';
 
-export function RecipesPage({ initialSection = '', ownerId }) {
+export function RecipesPage({ initialSection = '', initialRecipeId = '', ownerId }) {
   const mode = usePerformanceMode();
   const resource = useCatalogResource(catalogService.recipes, 'published');
   const structure = useCatalogResource(catalogService.structure, 'public');
   const [filters, setFilters] = useState({ query: '', category: '', quick: false, section: initialSection });
   const [selected, setSelected] = useState(null);
   const recipes = resource.data || [];
+  useEffect(() => {
+    if (initialRecipeId && resource.data) setSelected(resource.data.find((recipe) => recipe.id === initialRecipeId) || null);
+  }, [initialRecipeId, resource.data]);
   const candidates = useMemo(() => filterRecipes(recipes, filters), [resource.data, filters]);
   const categories = [
     ...new Map(recipes.filter((recipe) => recipe.category).map((recipe) => [recipe.category.id, recipe.category])).values()

@@ -1,4 +1,5 @@
-import { daysSince, lastInteraction, priority, recommendations, today, weekStart } from './planner.js';
+import { rankCustomers } from '../../../shared/intelligence/priority.js';
+import { daysSince, lastInteraction, recommendations, today, weekStart } from './planner.js';
 
 export const attendanceLink = (id) => '#/planner/semana/atender' + (id ? '/' + id : '');
 export const preparationLink = (id) => '#/planner/semana/preparar/' + id;
@@ -58,13 +59,14 @@ const fold = (text) =>
     .normalize('NFD')
     .replace(/\p{Diacritic}/gu, '')
     .toLowerCase();
-export function selectClients(state, week, { query = '', segment = '', filter = '', campaign = '', opportunities = false }) {
+export function selectClients(state, week, { query = '', segment = '', filter = '', campaign = '', opportunities = false }, ranked) {
   const planned = new Set(week.queue.map((entry) => entry.customerId));
   const commitments = new Set(
     pendingCommitments(state)
       .filter((item) => item.due <= today())
       .map((item) => item.customerId)
   );
+  const order = new Map((ranked || rankCustomers(state, week, today())).map((item, i) => [item.customerId, i]));
   return state.customers
     .filter((customer) => {
       if (
@@ -79,9 +81,8 @@ export function selectClients(state, week, { query = '', segment = '', filter = 
       if (filter === 'unplanned' && planned.has(customer.id)) return false;
       if (!opportunities) return true;
       if (campaign === 'contact') return (daysSince(lastInteraction(customer, state.interactions)?.date, today()) ?? Infinity) >= 21;
+      if (!campaign && ranked?.some((r) => r.customerId === customer.id && (r.catalogCount > 0 || r.due > 0))) return true;
       return recommendations(customer, state.offers).some((offer) => !campaign || offer.id === campaign);
     })
-    .map((customer) => ({ customer, score: priority(customer, state).score }))
-    .sort((a, b) => b.score - a.score || a.customer.name.localeCompare(b.customer.name))
-    .map(({ customer }) => customer);
+    .sort((a, b) => order.get(a.id) - order.get(b.id));
 }

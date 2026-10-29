@@ -22,6 +22,8 @@ Home e Configurações: [personalização, cenários por horário e preferência
 
 ## EPAVPlanner
 
+[Inteligência comercial V1](docs/commercial-intelligence.md): prioridades explicadas, produtos e receitas do catálogo real e leitura de metas, com cálculo local e sem IA generativa. [Screenshots e validação](docs/commercial-intelligence-review/README.md).
+
 O Planner reúne Visão geral, Semana, Clientes, Oportunidades e Desempenho, com preparação e Modo Atendimento. Visitantes usam demonstração local. Contas autenticadas usam workspace próprio no Supabase (migration 041) e consultam o histórico real em `sales`. Compras confirmadas são registradas junto com o atendimento numa transação idempotente. Sugestões respeitam as restrições cadastradas e abrem a busca do Insights com retorno ao contexto. O Writer associa o cliente explicitamente ao cadastro do Excel; exportar um formulário não registra compra.
 
 Operação e encerramento: [ações privadas e aceitação](docs/migration-closeout.md).

@@ -1,3 +1,4 @@
+import { IntelligenceBrief } from './IntelligenceBrief.jsx';
 import { useState } from 'preact/hooks';
 import { usePlannerDraft } from '../hooks/usePlannerDraft.js';
 import {
@@ -101,6 +102,7 @@ export function WeekPlan({ state, week, busy, act, mode = 'planejar', customerId
       />
       {stage === 'planejar' && (
         <>
+          <IntelligenceBrief />
           <SectionHeader
             title="Sua fila de atendimento"
             actions={

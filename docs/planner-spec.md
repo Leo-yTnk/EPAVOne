@@ -26,23 +26,9 @@ Preferências e restrições usam categorias comerciais explícitas. Uma categor
 
 Referências de busca (frango, patinho, linguiça, tilápia, pão de queijo, sobremesa e acompanhamento) demonstram a abordagem; não representam produtos em estoque ou campanhas oficiais. Não existem preços ou cópias do catálogo no Planner. Insights mostra o catálogo real; Writer/Excel define o que está disponível na semana. Observações livres não são interpretadas automaticamente como restrições: cadastre a restrição na lista do perfil. Esta v1 não faz validação alimentar/alergênica.
 
-## Priority Score explicável
+## Prioridade e inteligência comercial V1
 
-As contribuições são somadas e limitadas a 0–100. Cada perfil/lista permite expandir a lista completa, inclusive fatores com contribuição zero. É uma ordem comercial sugerida, não uma probabilidade de compra. Data de referência: hoje, considerando atendimento concluído na semana atual, mesmo quando a semana selecionada é outra.
-
-| Fator | Contribuição |
-|---|---|
-| Intenção declarada | +25 |
-| Frequência desejada vencida ou nenhum contato | +10 |
-| Sem contato / ≥21 dias / ≥7 dias / contato recente | +20 / +15 / +8 / 0 |
-| Compra anterior registrada | +10 |
-| Ao menos uma sugestão compatível | +15 |
-| Sem contato no mês atual | +10 |
-| Abordagem preenchida / pendente | +10 / −5 |
-| Recusa no contato mais recente há menos de 7 dias | −30 |
-| Resultado registrado na fila da semana atual | −40 |
-
-Indisponibilidade é uma tentativa, não atualiza o último contato efetivo. A intenção é mantida após “interessado” e removida nos demais resultados. Falar depois cria compromisso com data não anterior a hoje. Promessas antigas são editáveis; a v1 não tenta deduzir intenção de texto livre.
+A política anterior foi substituída pelo [motor comercial compartilhado](commercial-intelligence.md). Consulte esse documento para pesos, normalização, elegibilidade e limitações atuais. Clientes sem sinais suficientes permanecem sem nota. Retornos combinados, semana selecionada, histórico datado e produtos reais participam da análise; a ordem manual da fila permanece intacta. Produtos e receitas são conferidos por categorias comerciais, com disponibilidade desconhecida ou evidência explícita de presença no Excel, sem prometer estoque.
 
 ## Resultados e métricas
 
@@ -54,7 +40,7 @@ Indisponibilidade é uma tentativa, não atualiza o último contato efetivo. A i
 
 Uma entrada da fila aceita um resultado; tentativas duplicadas são rejeitadas pelo serviço. Entradas concluídas não podem ser removidas ou trocar papel, preservando o histórico. Correção/estorno de resultado é extensão futura.
 
-Atendimentos e compradores contam clientes distintos na semana; positivação = compradores / clientes contatados. Ticket = valor / compras com valor e unidades; IPC = unidades / mesmas compras. Compras sem medição são indicadas, excluídas de valor/TM/IPC. Cobertura = clientes contatados / carteira. Planejado × realizado compara titulares com resultados, distinguindo contatos de tentativas indisponíveis. Divisão por zero retorna zero ou “—”, conforme a métrica.
+Atendimentos e compradores contam clientes distintos na semana; positivação = compradores / clientes contatados. Ticket = valor / compras com valor e unidades; A razão histórica de unidades por compra não é o IPC comercial. O IPC atual usa produtos distintos por venda detalhada em Resultados → Pedidos. Compras sem medição são indicadas, excluídas de valor/TM/IPC. Cobertura = clientes contatados / carteira. Planejado × realizado compara titulares com resultados, distinguindo contatos de tentativas indisponíveis. Divisão por zero retorna zero ou “—”, conforme a métrica.
 
 ## Integrações e continuidade
 

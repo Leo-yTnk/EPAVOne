@@ -1,3 +1,4 @@
+import { IntelligenceContext, useIntelligenceModel } from './hooks/useIntelligence.js';
 import { SalesPage } from './sales/SalesPage.jsx';
 import { useMemo, useState } from 'preact/hooks';
 import { ModalPresence, Alert, Button, ErrorState, Heading, PageHeader, Select, Skeleton } from '../../design-system/components/index.js';
@@ -21,7 +22,7 @@ const info = {
   clientes: ['Clientes', 'Conheça as pessoas e encontre a próxima conversa.'],
   resultados: ['Resultados', 'Acompanhe seus atendimentos, pedidos e indicadores de vendas.']
 };
-export function PlannerRoutes({ route = { segments: [] }, service, account, onOpenAccount }) {
+function PlannerWorkspace({ route = { segments: [] }, service, account, onOpenAccount }) {
   const chosenService = useMemo(
     () => service || (account?.session ? createPlannerService(createRemotePlannerRepository()) : undefined),
     [service, account?.session?.user?.id]
@@ -41,7 +42,10 @@ export function PlannerRoutes({ route = { segments: [] }, service, account, onOp
   const showingOrders = section === 'resultados' && route.segments[1] === 'pedidos';
   const recognized = Object.hasOwn(info, section);
   const title = info[section] || ['Página não encontrada', 'Volte ao início do Planner.'];
-  const week = resource.state?.weeks.find((item) => item.id === weekId) || emptyWeek(weekId);
+  const week = useMemo(
+    () => resource.state?.weeks.find((item) => item.id === weekId) || emptyWeek(weekId),
+    [resource.state?.weeks, weekId]
+  );
   const options = [...new Set([...(resource.state?.weeks || []).map((item) => item.id), weekStart(), shiftDay(weekStart(), 7), weekId])]
     .sort()
     .reverse();
@@ -53,6 +57,7 @@ export function PlannerRoutes({ route = { segments: [] }, service, account, onOp
       /* Selection remains available in memory. */
     }
   }
+  const intelligence = useIntelligenceModel(resource.state, week);
   const props = { state: resource.state, week, act: resource.act, busy: resource.busy || resource.refreshing };
   const customer = resource.state?.customers.find((item) => item.id === route.segments[1]);
   const creatingClient = section === 'clientes' && route.segments[1] === 'novo';
@@ -62,169 +67,176 @@ export function PlannerRoutes({ route = { segments: [] }, service, account, onOp
     if (creatingClient) window.location.hash = '#/planner/clientes';
   }
   return (
-    <section className="product-page planner-page">
-      <PageHeader
-        product="planner"
-        title={title[0]}
-        description={title[1]}
-        actions={
-          !showingOrders ? (
-            <div className="planner-week-selector">
-              <Select
-                label="Semana de planejamento"
-                value={weekId}
-                options={options.map((id) => ({
-                  value: id,
-                  label: `${dateLabel(id)} – ${dateLabel(shiftDay(id, 6))}${id === weekStart() ? ' · atual' : ''}`
-                }))}
-                onChange={chooseWeek}
+    <IntelligenceContext.Provider value={intelligence}>
+      <section className="product-page planner-page">
+        <PageHeader
+          product="planner"
+          title={title[0]}
+          description={title[1]}
+          actions={
+            !showingOrders ? (
+              <div className="planner-week-selector">
+                <Select
+                  label="Semana de planejamento"
+                  value={weekId}
+                  options={options.map((id) => ({
+                    value: id,
+                    label: `${dateLabel(id)} – ${dateLabel(shiftDay(id, 6))}${id === weekStart() ? ' · atual' : ''}`
+                  }))}
+                  onChange={chooseWeek}
+                />
+              </div>
+            ) : undefined
+          }
+        />
+        {section === 'resultados' && <ResultsNavigation showingOrders={showingOrders} />}
+        {!showingOrders && (
+          <div className="planner-demo-note">
+            <strong>{account?.session ? 'Seu planejamento' : 'Modo demonstração'}</strong>
+            <span>{account?.session ? 'Planejamento salvo na sua conta.' : 'Dados de exemplo. Entre para usar sua carteira real.'}</span>
+            {account?.session ? (
+              <div className="ds-inline">
+                <span role="status">
+                  {resource.loading
+                    ? 'Carregando sua conta…'
+                    : resource.refreshing
+                      ? 'Atualizando dados…'
+                      : resource.busy
+                        ? 'Salvando na conta…'
+                        : resource.error || resource.saveError || resource.syncWarning
+                          ? 'Sincronização indisponível'
+                          : 'Sincronizado com sua conta'}
+                </span>
+                <Button
+                  size="sm"
+                  variant="secondary"
+                  disabled={resource.loading || resource.busy || resource.refreshing}
+                  onClick={resource.reload}
+                >
+                  Atualizar dados
+                </Button>
+              </div>
+            ) : (
+              onOpenAccount && (
+                <Button size="sm" onClick={onOpenAccount}>
+                  Entrar para sincronizar
+                </Button>
+              )
+            )}
+          </div>
+        )}
+        {!showingOrders && resource.syncWarning && (
+          <Alert tone="warning" title="Sincronização parcial">
+            {resource.syncWarning}
+          </Alert>
+        )}
+        {!showingOrders && resource.volatile && (
+          <Alert tone="warning" title="Armazenamento indisponível">
+            Alterações disponíveis somente nesta sessão. O navegador não permitiu salvar localmente.
+          </Alert>
+        )}
+        {!showingOrders && resource.notice && (
+          <p className="planner-notice" role={resource.saveError ? 'alert' : 'status'}>
+            {resource.notice}
+          </p>
+        )}
+        <div
+          id="planner-panel"
+          role={section === 'resultados' ? 'tabpanel' : 'region'}
+          aria-label={section === 'resultados' ? undefined : 'Conteúdo do Planner'}
+          aria-labelledby={section === 'resultados' ? (showingOrders ? 'results-orders-tab' : 'results-attendance-tab') : undefined}
+          className="planner-panel"
+        >
+          {showingOrders ? (
+            <SalesPage
+              key={account?.session?.user?.id || 'guest'}
+              account={account}
+              onOpenAccount={onOpenAccount}
+              createRequested={route.segments[2] === 'novo'}
+              onCreateClose={() => {
+                window.location.hash = '#/planner/resultados/pedidos';
+              }}
+            />
+          ) : resource.loading || account?.initializing ? (
+            <div aria-label="Carregando planejamento" role="status" className="planner-loading">
+              <Skeleton variant="title" />
+              <Skeleton className="planner-loading-block" />
+              <Skeleton className="planner-loading-block" />
+            </div>
+          ) : resource.error ? (
+            <ErrorState title="Planejamento indisponível" description={resource.error} onAction={resource.reload} />
+          ) : !recognized ? (
+            <>
+              <Heading level={3}>Essa área não existe.</Heading>
+              <Button as="a" href="#/planner">
+                Início
+              </Button>
+            </>
+          ) : clientProfile ? (
+            customer ? (
+              <ClientProfile
+                key={`${customer.id}-${weekId}`}
+                {...props}
+                customer={customer}
+                tab={route.segments[2]}
+                onEdit={() => setEditing(customer)}
+                onDelete={() => setDeleting(customer)}
               />
-            </div>
-          ) : undefined
-        }
-      />
-      {section === 'resultados' && <ResultsNavigation showingOrders={showingOrders} />}
-      {!showingOrders && (
-        <div className="planner-demo-note">
-          <strong>{account?.session ? 'Seu planejamento' : 'Modo demonstração'}</strong>
-          <span>{account?.session ? 'Planejamento salvo na sua conta.' : 'Dados de exemplo. Entre para usar sua carteira real.'}</span>
-          {account?.session ? (
-            <div className="ds-inline">
-              <span role="status">
-                {resource.loading
-                  ? 'Carregando sua conta…'
-                  : resource.refreshing
-                    ? 'Atualizando dados…'
-                    : resource.busy
-                      ? 'Salvando na conta…'
-                      : resource.error || resource.saveError || resource.syncWarning
-                        ? 'Sincronização indisponível'
-                        : 'Sincronizado com sua conta'}
-              </span>
-              <Button
-                size="sm"
-                variant="secondary"
-                disabled={resource.loading || resource.busy || resource.refreshing}
-                onClick={resource.reload}
-              >
-                Atualizar dados
-              </Button>
-            </div>
-          ) : (
-            onOpenAccount && (
-              <Button size="sm" onClick={onOpenAccount}>
-                Entrar para sincronizar
-              </Button>
+            ) : (
+              <ErrorState
+                title="Cliente não encontrado"
+                description="Esse cliente não está na carteira atual."
+                actionLabel="Voltar à carteira"
+                onAction={() => {
+                  window.location.hash = '#/planner/clientes';
+                }}
+              />
             )
+          ) : section === 'clientes' ? (
+            <ClientList {...props} opportunities={route.segments[1] === 'oportunidades'} onCreate={() => setEditing('new')} />
+          ) : section === 'semana' ? (
+            <WeekPlan key={weekId} {...props} mode={route.segments[1]} customerId={route.segments[2]} />
+          ) : section === 'resultados' ? (
+            <Performance {...props} />
+          ) : (
+            <Overview {...props} />
           )}
         </div>
-      )}
-      {!showingOrders && resource.syncWarning && (
-        <Alert tone="warning" title="Sincronização parcial">
-          {resource.syncWarning}
-        </Alert>
-      )}
-      {!showingOrders && resource.volatile && (
-        <Alert tone="warning" title="Armazenamento indisponível">
-          Alterações disponíveis somente nesta sessão. O navegador não permitiu salvar localmente.
-        </Alert>
-      )}
-      {!showingOrders && resource.notice && (
-        <p className="planner-notice" role={resource.saveError ? 'alert' : 'status'}>
-          {resource.notice}
-        </p>
-      )}
-      <div
-        id="planner-panel"
-        role={section === 'resultados' ? 'tabpanel' : 'region'}
-        aria-label={section === 'resultados' ? undefined : 'Conteúdo do Planner'}
-        aria-labelledby={section === 'resultados' ? (showingOrders ? 'results-orders-tab' : 'results-attendance-tab') : undefined}
-        className="planner-panel"
-      >
-        {showingOrders ? (
-          <SalesPage
-            key={account?.session?.user?.id || 'guest'}
-            account={account}
-            onOpenAccount={onOpenAccount}
-            createRequested={route.segments[2] === 'novo'}
-            onCreateClose={() => {
-              window.location.hash = '#/planner/resultados/pedidos';
-            }}
-          />
-        ) : resource.loading || account?.initializing ? (
-          <div aria-label="Carregando planejamento" role="status" className="planner-loading">
-            <Skeleton variant="title" />
-            <Skeleton className="planner-loading-block" />
-            <Skeleton className="planner-loading-block" />
-          </div>
-        ) : resource.error ? (
-          <ErrorState title="Planejamento indisponível" description={resource.error} onAction={resource.reload} />
-        ) : !recognized ? (
-          <>
-            <Heading level={3}>Essa área não existe.</Heading>
-            <Button as="a" href="#/planner">
-              Início
-            </Button>
-          </>
-        ) : clientProfile ? (
-          customer ? (
-            <ClientProfile
-              key={`${customer.id}-${weekId}`}
-              {...props}
-              customer={customer}
-              tab={route.segments[2]}
-              onEdit={() => setEditing(customer)}
-              onDelete={() => setDeleting(customer)}
-            />
-          ) : (
-            <ErrorState
-              title="Cliente não encontrado"
-              description="Esse cliente não está na carteira atual."
-              actionLabel="Voltar à carteira"
-              onAction={() => {
+        <ModalPresence>
+          {deleting && (
+            <DeleteClientDialog
+              customer={deleting}
+              act={resource.act}
+              busy={resource.busy}
+              notice={resource.notice}
+              saveError={resource.saveError}
+              onClose={() => setDeleting(null)}
+              onDeleted={() => {
+                if (commercialContext.get()?.customerId === deleting.id) commercialContext.clear();
+                setDeleting(null);
                 window.location.hash = '#/planner/clientes';
               }}
             />
-          )
-        ) : section === 'clientes' ? (
-          <ClientList {...props} opportunities={route.segments[1] === 'oportunidades'} onCreate={() => setEditing('new')} />
-        ) : section === 'semana' ? (
-          <WeekPlan key={weekId} {...props} mode={route.segments[1]} customerId={route.segments[2]} />
-        ) : section === 'resultados' ? (
-          <Performance {...props} />
-        ) : (
-          <Overview {...props} />
-        )}
-      </div>
-      <ModalPresence>
-        {deleting && (
-          <DeleteClientDialog
-            customer={deleting}
-            act={resource.act}
-            busy={resource.busy}
-            notice={resource.notice}
-            saveError={resource.saveError}
-            onClose={() => setDeleting(null)}
-            onDeleted={() => {
-              if (commercialContext.get()?.customerId === deleting.id) commercialContext.clear();
-              setDeleting(null);
-              window.location.hash = '#/planner/clientes';
-            }}
-          />
-        )}
-      </ModalPresence>
-      <ModalPresence>
-        {(editing || (creatingClient && resource.state && !resource.loading && !resource.error && !account?.initializing)) && (
-          <ClientEditor
-            customer={!editing || editing === 'new' ? null : editing}
-            act={resource.act}
-            busy={resource.busy}
-            notice={resource.notice}
-            saveError={resource.saveError}
-            onClose={closeClientEditor}
-          />
-        )}
-      </ModalPresence>
-    </section>
+          )}
+        </ModalPresence>
+        <ModalPresence>
+          {(editing || (creatingClient && resource.state && !resource.loading && !resource.error && !account?.initializing)) && (
+            <ClientEditor
+              customer={!editing || editing === 'new' ? null : editing}
+              act={resource.act}
+              busy={resource.busy}
+              notice={resource.notice}
+              saveError={resource.saveError}
+              onClose={closeClientEditor}
+            />
+          )}
+        </ModalPresence>
+      </section>
+    </IntelligenceContext.Provider>
   );
+}
+
+// Remount private state immediately on account changes, before effects or late reads.
+export function PlannerRoutes(props) {
+  return <PlannerWorkspace key={props.account?.session?.user?.id || 'demo'} {...props} />;
 }
